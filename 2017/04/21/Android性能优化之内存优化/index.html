@@ -100,7 +100,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-04-22T12:11:52.214Z">
+<meta property="og:updated_time" content="2017-04-22T12:23:05.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android性能优化之内存优化">
 <meta name="twitter:description" content="上一章讲了Android性能优化之耗电优化 ，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。   养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。 如何保证已使用内存顺利被回收？ Java对象生命周">
@@ -419,12 +419,12 @@
 </li>
 <li><p>Webview</p>
 <p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
-<ul>
-<li><p>容器中的对象未清理对象</p>
-<p>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。</p>
 </li>
 </ul>
-</li>
+<ul>
+<li><p>容器中的对象未清理对象</p>
+<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
+</code></pre></li>
 </ul>
 </li>
 </ul>
