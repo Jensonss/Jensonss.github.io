@@ -405,20 +405,20 @@
 <p>C语言年代久远，有很多现成的库，如果Java需要使用同样的功能，不需要自己从新实现，jni直接调用库即可。</p>
 </li>
 </ul>
-<h1 id="jni步骤流程"><a href="#jni步骤流程" class="headerlink" title="jni步骤流程"></a>jni步骤流程</h1><p>就像使用Java类要先加载类文件一样，要使用jni，首先要加载类库，然后通过Java层方法调用Native层方法。调用流程如下：</p>
+<h1 id="jni步骤流程"><a href="#jni步骤流程" class="headerlink" title="jni步骤流程"></a>jni步骤流程</h1><p>就像使用Java类要先加载类文件一样，要使用jni，首先要加载类库，然后通过Java层方法调用JNI层方法。调用流程如下：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4792879d689f210.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-21 下午1.29.01.png"></p>
 <p>上面是调用流程，调用的前提是先完成开发，也就是说开发流程是要先完成Java层方法和Native层方法。</p>
 <p>基础介绍的差不多了，下面开始进入实际开发部分：</p>
-<h1 id="Java调用C"><a href="#Java调用C" class="headerlink" title="Java调用C"></a>Java调用C</h1><h2 id="看看一般开发时Java如何调用C"><a href="#看看一般开发时Java如何调用C" class="headerlink" title="看看一般开发时Java如何调用C"></a>看看一般开发时Java如何调用C</h2><p>Java层和Native层之间源码是有对应规律的。</p>
-<p>Native实现文件命名为：Java全类名(下划线作分隔符)</p>
-<p>Native实现方法命名为：Java_为前缀+全类名(下划线作分隔符)+方法名</p>
+<h1 id="Java调用C"><a href="#Java调用C" class="headerlink" title="Java调用C"></a>Java调用C</h1><h2 id="看看一般开发时Java如何调用C"><a href="#看看一般开发时Java如何调用C" class="headerlink" title="看看一般开发时Java如何调用C"></a>看看一般开发时Java如何调用C</h2><p>Java层和JNI层之间源码是有对应规律的。</p>
+<p>JNI实现文件命名为：Java全类名(下划线作分隔符)</p>
+<p>JNI实现方法命名为：Java_为前缀+全类名(下划线作分隔符)+方法名</p>
 <p>例如，现在Java定义native方法如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class TestNative &#123;</div><div class="line">    // Used to load the &apos;native-lib&apos; library on application startup.</div><div class="line">    public native int add(int a,int b);</div><div class="line">    public native String stringFromJNI();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>那么按照规范，jni实现方法名为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Java_com_example_jenson_myapplication_TestNative_add(JNIEnv *env, jobject instance, jint a,</div><div class="line">                                                     jint b) &#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Java声明方法和jni实现方法都已经实现了，接下来就是调用实现库(.so文件):</p>
+<p>Java声明方法和jni实现方法都已经实现了，接下来就是调用实现库(.so文件，关于so的编译不在讲):</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static &#123;</div><div class="line">       System.loadLibrary(&quot;native-lib&quot;);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>上面是最普通也是最简单的jni开发流程三步走，但是其中有很多问题没有弄明白，比如JNIENV是什么，参数init为什么变为jint了等等。</p>
+<p>上面是最普通也是最简单的jni开发流程三步走，但是其中有很多问题没有弄明白，比如JNIENV是什么，Java中参数int为什么变为jint了等等。</p>
 <p>学习最好的方法就是看代码，那么我们就看看系统jni使用示例：Log打印系统。</p>
 <h2 id="看看Log打印系统Java如何调用C"><a href="#看看Log打印系统Java如何调用C" class="headerlink" title="看看Log打印系统Java如何调用C"></a>看看Log打印系统Java如何调用C</h2><p>首先我们看下Log.java的源码才好下手。</p>
 <h3 id="简单介绍Log-java源码"><a href="#简单介绍Log-java源码" class="headerlink" title="简单介绍Log.java源码"></a>简单介绍Log.java源码</h3><p>看看Log.i()方法实现：</p>
@@ -434,65 +434,74 @@ public static int w(String tag, String msg) {
 <blockquote>
 <p>原来JNI中Java层的实现这么简单，只需要声明一个native修饰的方法，传入必须的参数就行了。</p>
 </blockquote>
-<p>下面研究中心要转移到native层实现了，源码那么多如何找到native实现呢？</p>
-<h3 id="Native层源码探究"><a href="#Native层源码探究" class="headerlink" title="Native层源码探究"></a>Native层源码探究</h3><ul>
-<li><p>查找Native层实现</p>
+<p>下面研究中心要转移到jni层实现了，源码那么多如何找到jni实现呢？</p>
+<h3 id="JNI层源码探究"><a href="#JNI层源码探究" class="headerlink" title="JNI层源码探究"></a>JNI层源码探究</h3><ul>
+<li><p>查找JNI层实现</p>
 <p>按照上面说的规范，直接查找Java类Log的全类名。</p>
 <p>例如 Log类全类名为android.util.Log，其对应的Native文件名称应该为android_util_Log。我们试下：</p>
-<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
 <p>果真找到了，下面开始探究源码：</p>
 </li>
-<li><p>Native源码开扒</p>
-<p>我们首先找到Java层println_native方法Native层的实现，按照上面的命名规范，没有找到 <code>Java_android_util_Log_println_native</code>但是却找到了这个方法：<code>android_util_Log_println_native</code> ，看来Android系统级的JNI没有遵循规范啊。不过没关系，<em>只要记住JNI有两种方式：一种是遵守JNI命名规范的日常使用方法，另一种是是这种系统级JNI没有Java_前缀就行了</em> 。不影响我们看代码：</p>
-<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
-<p>可以看出该方法代码比较少，因为我们是研究JNI，而不是研究Log如何打印，所以方法中对于其他方法调用不再深入研究，但是现在Java声明方法和Native实现方法都找到了，但是系统式如何把这两个给关联起来的呢？我们继续往下看：</p>
+<li><p>JNI源码开扒</p>
+<p>我们首先找到Java层println_native方法JNI层的实现，按照上面的命名规范，没有找到 Java_android_util_Log_println_native ，但是却找到了这个方法：android_util_Log_println<em>native ，看来Android系统级的JNI没有遵循规范啊。不过没关系，*只要记住JNI有两种方式：一种是遵守JNI命名规范的日常使用方法，另一种是是这种系统级JNI没有Java</em>前缀就行了* 。不影响我们看代码：</p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
+<p>可以看出该方法代码比较少，因为我们是研究JNI，而不是研究Log如何打印，所以方法中对于其他方法调用不再深入研究，但是现在Java声明方法和JNI实现方法都找到了，但是系统式如何把这两个给关联起来的呢？我们继续往下看：</p>
 <p>​</p>
 </li>
-<li><p>Java和Native双方的方法如何对上眼的</p>
-<p>在该文件中有这样一个方法<code>register_android_util_Log</code> ，我们看下实现：</p>
-<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
+<li><p>Java和JNI双方的方法如何对上眼的</p>
+<p>在该文件中有这样一个方法 register_android_util_Log，我们看下实现：</p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
 <p>这个方法前面大部分代码给我的第一感觉就是：这么TM和Java的反射好像啊！难道是C++版反射？反正意思就是通过Java的Log类拿到该类的几个变量(C语言中习惯称为域)</p>
-<p>看最后一行调用了AndroidRunTime的方法，顾名思义是注册本地方法，其中参数<code>gMethods</code> 值得一看：</p>
-<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
+<p>看最后一行调用了AndroidRunTime的方法，顾名思义是注册本地方法，其中参数 gMethods  值得一看：</p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
 <p>这是一个静态结构体数组，这个比较有意思，看注释可以看出大括弧的三个元素分别是名称、签名和函数指针。而名称恰恰是Java里面声明的本地方法，签名是本地方法的签名，函数指针指向的是Native实现方法。一个数组就把Java方法和Native方法给关联起来了。因为Java支持方法重载，为了确保调用的唯一性，于是就有了方法签名，下面说说方法签名机制：</p>
 <p>首先看下签名规则：</p>
 <p>| Java类型  | 类型签名    |<br>| ——- | ——- |<br>| boolean | Z       |<br>| byte    | B       |<br>| char    | C       |<br>| long    | J       |<br>| float   | F       |<br>| double  | D       |<br>| short   | S       |<br>| int     | I       |<br>| 其他类     | L全类名;   |<br>| 数组      | [元素类型签名 |</p>
 <blockquote>
 <p>注意：方法签名格式分为两部分：参数类型签名+返回值类型签名，类型签名之间没有空格，其中参数类型签名使用()括起来，有多少参数就有多少参数类型签名，格式为： <em>(参数1类型签名参数n类型签名)返回值类型签名</em> ,注意全类名用”/“分隔。</p>
 </blockquote>
-<p>拿<code>boolean isLoggable(String tag, int level)</code> 举例来说其方法签名为<code>(Ljava/lang/String;I)Z</code> 。</p>
-<p>说完了方法签名规则，我们继续，既然 <code>register_android_util_Log</code> 方法里把双方方法进行了关联，那么该方法又是啥时候调用的呢？</p>
-<p>且看<code>AndroidRunTime</code> :</p>
-<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-25 上午12.26.47.png" alt="屏幕快照 2017-04-25 上午12.26.47"></p>
-<p>该文件中声明了 <code>namespace</code> ，而后又调用了 <code>using namespace android ;</code> 而namespace中又调用了函数<code>register_android_util_Log</code> ，extern关键字就是告诉我们调用的方法来自外部文件。</p>
-<p>说完了方法签名规则，我们继续<code>AndroidRunTime::registerNativeMethods</code> 这个方法看下：</p>
-<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.57.46.png" alt="屏幕快照 2017-04-24 下午11.57.46"></p>
-<p>这里又是一个包工头方法，承揽了方法自己不实现，总是调用别人的。<code>jniRegisterNativeMethods</code> 方法是在JniHelp.cpp中实现的，</p>
-<p>接下来看之前的第二个问题：</p>
+<p>拿 boolean isLoggable(String tag, int level) 举例来说其方法签名为(Ljava/lang/String;I)Z 。</p>
+<p>说完了方法签名规则，我们继续，在android_util_Log文件中有jni方法，所以有了 register_android_util_Log 来注册该文件的jni方法，那么在其他有jni方法的文件中是不是也有类似的register_xxx方法呢？怀着好奇心，打开Parcel看看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">int register_android_os_Parcel(JNIEnv* env)</div><div class="line">&#123;</div><div class="line">    jclass clazz;</div><div class="line"></div><div class="line">    clazz = env-&gt;FindClass(kParcelPathName);</div><div class="line">    LOG_FATAL_IF(clazz == NULL, &quot;Unable to find class android.os.Parcel&quot;);</div><div class="line"></div><div class="line">    gParcelOffsets.clazz = (jclass) env-&gt;NewGlobalRef(clazz);</div><div class="line">    gParcelOffsets.mNativePtr = env-&gt;GetFieldID(clazz, &quot;mNativePtr&quot;, &quot;J&quot;);</div><div class="line">    gParcelOffsets.obtain = env-&gt;GetStaticMethodID(clazz, &quot;obtain&quot;,</div><div class="line">                                                   &quot;()Landroid/os/Parcel;&quot;);</div><div class="line">    gParcelOffsets.recycle = env-&gt;GetMethodID(clazz, &quot;recycle&quot;, &quot;()V&quot;);</div><div class="line"></div><div class="line">    return AndroidRuntime::registerNativeMethods(</div><div class="line">        env, kParcelPathName,</div><div class="line">        gParcelMethods, NELEM(gParcelMethods));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看到register_android_os_Parcel 方法证实了我的猜测，所以根据归纳法暂且可以认为系统的涉及jni方法的文件中都会有对应的注册方法而且最终都调用了AndroidRunTime::registerNativeMethods()。</p>
+<p>其实registerNativeMethods方法的第二个参数是类文件路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AndroidRuntime::registerNativeMethods(env, &quot;android/util/Log&quot;, gMethods, NELEM(gMethods));</div></pre></td></tr></table></figure>
+<p>而mMethods数组中又对应了JNI实现方法和Java方法，通过registerNativeMethods方法调用jniRegisterNativeMethods()然后调用RegisterNatives方法最终告诉了JVM Java类和JNI实现方法的映射关系，这样就完了Java调用C。</p>
+<p>​</p>
 </li>
-<li><p>Java类型和Native类型如何对应的</p>
+<li><p>Java类型和JNI类型如何对应的</p>
 <p>首先看下基本类型的对应关系：</p>
 <p>| Java类型  | JNI类型    | 字长   |<br>| ——- | ——– | —- |<br>| boolean | jboolean | 8位   |<br>| byte    | jbyte    | 8位   |<br>| char    | jchar    | 16位  |<br>| short   | jshort   | 16位  |<br>| int     | jint     | 32位  |<br>| long    | jlong    | 64位  |<br>| float   | jfloat   | 32位  |<br>| double  | jdouble  | 64位  |<br>| void    | void     |      |</p>
-<p>引用类型对应关系：</p>
+<p>很好奇jboolean这些类型是怎么来的，既然是jni类型就先去jni.h头文件下看看有没有定义：</p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-25 下午12.56.36.png" alt="屏幕快照 2017-04-25 下午12.56.36"></p>
+<p>竟然找到了，本来以为jxx是jni新开发的类型，原来就是对C类型起了一个别名。简单理解就是把Java基本类型的值给到了占用同样字节大小的C类型上。</p>
+<p>下面再看看引用类型对应关系：</p>
 <p>| Java类型                                   | JNI类型                                    |<br>| —————————————- | —————————————- |<br>| java.lang.Class                          | class                                    |<br>| java.lang.String                         | string                                   |<br>| java.lang.Throwable                      | throwable                                |<br>| Object[]、boolean[]、byte[]、char[]、short[]、int[]、long[]、float[]、double[] | jobjectArray、jbooleanArray、jbyteArray、jcharArray、jshortArray、jintArray、jlongArray、jfloatArray、jdoubleArray |<br>| java.lang.Object                         | jobject                                  |</p>
 <p>​</p>
-<p>​</p>
-</li>
-<li><p>JNIENV和jobject都是什么鬼</p>
-<p>​</p>
 </li>
 </ul>
-<h2 id="看看我们常规的Java如何调用C"><a href="#看看我们常规的Java如何调用C" class="headerlink" title="看看我们常规的Java如何调用C"></a>看看我们常规的Java如何调用C</h2><h1 id="C调用Java"><a href="#C调用Java" class="headerlink" title="C调用Java"></a>C调用Java</h1><h1 id="深入剖析JNi"><a href="#深入剖析JNi" class="headerlink" title="深入剖析JNi"></a>深入剖析JNi</h1><ul>
-<li>jni如何根据Java方法找到对应的native方法的？<br>方法签名</li>
-<li>传的init，String参数到了jni怎么就成了jnit，jstring了？<br>数据类型转换<br>基本类型<br>引用类型</li>
-<li><p>JNIEnv是什么鬼？</p>
-</li>
-<li><p>jobject是什么鬼？<br>操作Java对象，访问其域和方法<br>引用问题</p>
-</li>
-<li><p>jni异常如何处理？</p>
-</li>
-</ul>
-
+<h1 id="C调用Java"><a href="#C调用Java" class="headerlink" title="C调用Java"></a>C调用Java</h1><p>上面介绍了Java如何调用C，本节讲下C如何调用Java：</p>
+<p>C调用Java按流程走也很简单，通过全类名找到类，找到类构造方法，根据构造方法构建对象，根据对象调用变量和方法。OK，我们通过一个示例来讲解下：</p>
+<p>示例流程是这样子，我们通过Java方法stringFromJNI调用JNI实现方法，但是在实现方法中并没有直接返回一个字符串，而是该方法中调用了一个Java方法，其实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public String callByNative( )&#123;</div><div class="line">    return &quot;callByNative&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>返回的字符串直接显示在TextView中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sample_text = (TextView) findViewById(R.id.sample_text);</div><div class="line">TestNative testNative = new TestNative();</div><div class="line">sample_text.setText(testNative.stringFromJNI());</div></pre></td></tr></table></figure>
+<p>接下来我们需要自己在stringFromJNI的实现方法中调用Java层的callByNative：</p>
+<p>首先通过全类名找到类，通过FindClass方法,参数为全类名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jclass clazz = env-&gt;FindClass(&quot;com/example/jenson/myapplication/TestNative&quot;);</div></pre></td></tr></table></figure>
+<p>然后通过构造方法构建对象，要调用构造方法先找到构造方法的ID：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jmethodID mid = env-&gt;GetMethodID(clazz,&quot;&lt;init&gt;&quot;,&quot;()V&quot;);</div><div class="line">jobject  obj= env-&gt;NewObject(clazz,mid);</div></pre></td></tr></table></figure>
+<p>要注意的是：构造方法比较特殊，所以第二个参数的方法名要传”<init>“，第三个参数为方法签名，至于签名规则上面有介绍，根据参数自己填写签名。</init></p>
+<p>创建对象时使用NewObject，需要传入创建对象使用的类及构造方法对应的id。</p>
+<p>对象上面已经创建完成，接下来可以调用实例方法callByNative了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mid = env-&gt;GetMethodID(clazz,&quot;callByNative&quot;,&quot;()Ljava/lang/String;&quot;);</div><div class="line">jstring js = (jstring) env-&gt;CallObjectMethod(obj, mid);</div></pre></td></tr></table></figure>
+<p>注意调用一个方法前要先获取方法ID，然后通过Call<type>Method方法传入对象和方法ID，达到实例方法调用。</type></p>
+<p>因为callByNative方法返回的是String，所以按照上面说的应该调用CallStringMethod方法，但是jni没有这个方法，所以直接使用了CallObjectMethod，然后强制转换来得到String，比较Object是一切类基类。</p>
+<p>最终stringFromJNI实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Java_com_example_jenson_myapplication_TestNative_stringFromJNI(JNIEnv *env, jobject instance) &#123;</div><div class="line"></div><div class="line">    // 这里通过C调用callByNative方法</div><div class="line">    jclass clazz = env-&gt;FindClass(&quot;com/example/jenson/myapplication/TestNative&quot;);</div><div class="line">    jmethodID mid = env-&gt;GetMethodID(clazz,&quot;&lt;init&gt;&quot;,&quot;()V&quot;);</div><div class="line">    jobject  obj= env-&gt;NewObject(clazz,mid);</div><div class="line">    mid = env-&gt;GetMethodID(clazz,&quot;callByNative&quot;,&quot;()Ljava/lang/String;&quot;);</div><div class="line">    jstring js = (jstring) env-&gt;CallObjectMethod(obj, mid);</div><div class="line">    if (js ==NULL) &#123;</div><div class="line">        js = (jstring) &quot;hello&quot;;</div><div class="line">    &#125;</div><div class="line">    return js;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看下执行结果，达到了我们的要求：<img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-25 下午2.54.18.png" alt="屏幕快照 2017-04-25 下午2.54.18"></p>
+<p>jnienv提供了很多参数实现C调用Java，诸如：GetMethodID、FindClass、GetFieldID，还有静态方法和域：GetStaticMethodID、GetStaticFieldID等，感兴趣的可以去jni.h去研究下。</p>
+<h1 id="JNIENV是什么鬼"><a href="#JNIENV是什么鬼" class="headerlink" title="JNIENV是什么鬼"></a>JNIENV是什么鬼</h1><h1 id="JNI异常处理"><a href="#JNI异常处理" class="headerlink" title="JNI异常处理"></a>JNI异常处理</h1>
           
         
       
@@ -922,299 +931,6 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/pycharm黄线问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/pycharm黄线问题/" itemprop="url">
-                  pycharm黄线问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
-<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" itemprop="url">
-                  Python入门系列(0):OSX系统下Python3的配置与安装
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
-<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
-<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
-<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
-<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx如何安装Homrbrew/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1522,7 +1238,7 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -1544,8 +1260,8 @@ public static int w(String tag, String msg) {
             
               
                 
-                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
-                  osx下如何使用SublimeText阅读Android系统源码
+                <a class="post-title-link" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" itemprop="url">
+                  Python入门系列(2):字符串、变量和简单数据类型的上手
                 </a>
               
             
@@ -1584,8 +1300,8 @@ public static int w(String tag, String msg) {
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
                   </a>
                 </span>
 
@@ -1620,49 +1336,55 @@ public static int w(String tag, String msg) {
       
         
           
-            <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>java在声明变量时都要先指定数据类型 比如 int a=3 ; Stringt name = “jenson”;<br>但是在python中可以直接使用变量<br>python中的注释使用”#”</p>
+<h1 id="字符串的使用"><a href="#字符串的使用" class="headerlink" title="字符串的使用"></a>字符串的使用</h1><ul>
+<li>直接声明变量</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;jenson&quot;)</div><div class="line">name =&quot;jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
+<p>打印如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jenson</div><div class="line">jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
 <ul>
-<li><p>安装CTags</p>
+<li>字符串拼接直接使用+号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;hello jenson&quot;)</div><div class="line">name = &quot;hello&quot;+ &quot; jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
+<p>打印结果一样一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">hello jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
 <ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
+<li>去除字符串的空白</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">name = &quot;   jenson   &quot;</div><div class="line">print(name.lstrip())</div><div class="line">print(name.rstrip())</div><div class="line">print(name.strip())</div></pre></td></tr></table></figure>
+<p>结果如下</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c10ea4a7be3c8130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.01.19.png"></p>
+<p>这里去除的空白分别是左边、右边和两边的空白，并不能去除中间空白</p>
 <ul>
-<li>3.创建索引</li>
+<li>字符串的大小写</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">say = &quot;hello jenson&quot;</div><div class="line">print(say)</div><div class="line">print(say.upper())</div><div class="line">print(say.lower())</div><div class="line">print(say.title())</div></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">HELLO JENSON</div><div class="line">hello jenson</div><div class="line">Hello Jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<p>可见三个函数的作用分别是使字符串大写、小写、单词首字母大写。</p>
+<ul>
+<li>基本类型和运算</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print(3+5)</div><div class="line">print(10-2)</div><div class="line">print(2*4)</div><div class="line">print(16/2)</div><div class="line">print(2+3*4)</div><div class="line">print(2**3)</div></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">8</div><div class="line">8</div><div class="line">8.0</div><div class="line">14</div><div class="line">8</div><div class="line">[Finished in 0.2s]</div></pre></td></tr></table></figure>
+<p>可以看出python对四则运算支持优先级，注意一下<em>这里的幂用2个乘号表示</em></p>
+<ul>
+<li>基本类型转为字符串<br>基本类型和字符串混合使用时注意把基本类型先转换为字符串，使用str(基本类型值)，否则会引发异常。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">age = 25;</div><div class="line">print(str(age))</div><div class="line">say = &quot;I&apos;am &quot;+age </div><div class="line">print(say)</div></pre></td></tr></table></figure>
 </li>
 </ul>
-</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">25</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jenson/Desktop/python_work/str_text.py&quot;, line 15, in &lt;module&gt;</div><div class="line">    say = &quot;I&apos;am &quot;+age </div><div class="line">TypeError: Can&apos;t convert &apos;int&apos; object to str implicitly</div><div class="line">[Finished in 0.0s with exit code 1]</div><div class="line">[cmd: [&apos;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&apos;, &apos;-u&apos;, &apos;/Users/jenson/Desktop/python_work/str_text.py&apos;]]</div><div class="line">[dir: /Users/jenson/Desktop/python_work]</div><div class="line">[path: /usr/bin:/bin:/usr/sbin:/sbin]</div></pre></td></tr></table></figure>
+<p>第一个print已经打印，第二个却报了异常，因为没有转换。</p>
+<ul>
+<li>python2和python3整数除法比较</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
+<p>在python2下做除法运算3/2，得到结果是1 ，并不是1.5</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92eac21fee40ffd9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.34.19.png"></p>
+<p>而在python3下是正常的</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4b8c5bd6f9354a2e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.35.27.png"></p>
+<p>这是因为python2中计算整数结果时不是采取四舍五入，而是将整数部分直接删除，所以在python2中如果要避免这种情况，要确保至少有一个操作数为浮点数，这样得到的结果也为浮点数</p>
+<p>完毕。</p>
 
           
         
@@ -1849,7 +1571,7 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -1871,8 +1593,192 @@ public static int w(String tag, String msg) {
             
               
                 
-                <a class="post-title-link" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" itemprop="url">
-                  Python入门系列(2):字符串、变量和简单数据类型的上手
+                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
+                  osx下如何使用SublimeText阅读Android系统源码
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
+</blockquote>
+<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
+<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
+<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
+<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
+<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
+方法2：ctrl+~
+</code></pre>  2.输入代码：<br>python2.x代码:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<p>python3.x代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<ul>
+<li><p>安装CTags</p>
+<ul>
+<li><ol>
+<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
+</ol>
+</li>
+<li><ol>
+<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
+</ol>
+<ul>
+<li>3.创建索引</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
+<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
+<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
+<li>ctag rebuild时弹窗异常如图：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
+<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
+<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
+<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
+<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" itemprop="url">
+                  Python入门系列(0):OSX系统下Python3的配置与安装
                 </a>
               
             
@@ -1947,55 +1853,158 @@ public static int w(String tag, String msg) {
       
         
           
-            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>java在声明变量时都要先指定数据类型 比如 int a=3 ; Stringt name = “jenson”;<br>但是在python中可以直接使用变量<br>python中的注释使用”#”</p>
-<h1 id="字符串的使用"><a href="#字符串的使用" class="headerlink" title="字符串的使用"></a>字符串的使用</h1><ul>
-<li>直接声明变量</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;jenson&quot;)</div><div class="line">name =&quot;jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
-<p>打印如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jenson</div><div class="line">jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<ul>
-<li>字符串拼接直接使用+号</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;hello jenson&quot;)</div><div class="line">name = &quot;hello&quot;+ &quot; jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
-<p>打印结果一样一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">hello jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<ul>
-<li>去除字符串的空白</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">name = &quot;   jenson   &quot;</div><div class="line">print(name.lstrip())</div><div class="line">print(name.rstrip())</div><div class="line">print(name.strip())</div></pre></td></tr></table></figure>
-<p>结果如下</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c10ea4a7be3c8130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.01.19.png"></p>
-<p>这里去除的空白分别是左边、右边和两边的空白，并不能去除中间空白</p>
-<ul>
-<li>字符串的大小写</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">say = &quot;hello jenson&quot;</div><div class="line">print(say)</div><div class="line">print(say.upper())</div><div class="line">print(say.lower())</div><div class="line">print(say.title())</div></pre></td></tr></table></figure>
-<p>结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">HELLO JENSON</div><div class="line">hello jenson</div><div class="line">Hello Jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<p>可见三个函数的作用分别是使字符串大写、小写、单词首字母大写。</p>
-<ul>
-<li>基本类型和运算</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print(3+5)</div><div class="line">print(10-2)</div><div class="line">print(2*4)</div><div class="line">print(16/2)</div><div class="line">print(2+3*4)</div><div class="line">print(2**3)</div></pre></td></tr></table></figure>
-<p>输出如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">8</div><div class="line">8</div><div class="line">8.0</div><div class="line">14</div><div class="line">8</div><div class="line">[Finished in 0.2s]</div></pre></td></tr></table></figure>
-<p>可以看出python对四则运算支持优先级，注意一下<em>这里的幂用2个乘号表示</em></p>
-<ul>
-<li>基本类型转为字符串<br>基本类型和字符串混合使用时注意把基本类型先转换为字符串，使用str(基本类型值)，否则会引发异常。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">age = 25;</div><div class="line">print(str(age))</div><div class="line">say = &quot;I&apos;am &quot;+age </div><div class="line">print(say)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">25</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jenson/Desktop/python_work/str_text.py&quot;, line 15, in &lt;module&gt;</div><div class="line">    say = &quot;I&apos;am &quot;+age </div><div class="line">TypeError: Can&apos;t convert &apos;int&apos; object to str implicitly</div><div class="line">[Finished in 0.0s with exit code 1]</div><div class="line">[cmd: [&apos;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&apos;, &apos;-u&apos;, &apos;/Users/jenson/Desktop/python_work/str_text.py&apos;]]</div><div class="line">[dir: /Users/jenson/Desktop/python_work]</div><div class="line">[path: /usr/bin:/bin:/usr/sbin:/sbin]</div></pre></td></tr></table></figure>
-<p>第一个print已经打印，第二个却报了异常，因为没有转换。</p>
-<ul>
-<li>python2和python3整数除法比较</li>
-</ul>
-<p>在python2下做除法运算3/2，得到结果是1 ，并不是1.5</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92eac21fee40ffd9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.34.19.png"></p>
-<p>而在python3下是正常的</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4b8c5bd6f9354a2e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.35.27.png"></p>
-<p>这是因为python2中计算整数结果时不是采取四舍五入，而是将整数部分直接删除，所以在python2中如果要避免这种情况，要确保至少有一个操作数为浮点数，这样得到的结果也为浮点数</p>
-<p>完毕。</p>
+            <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
+<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
+<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
+<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
+<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/pycharm黄线问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/pycharm黄线问题/" itemprop="url">
+                  pycharm黄线问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
+<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
 
           
         
