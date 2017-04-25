@@ -622,190 +622,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
-                  osx下如何使用SublimeText阅读Android系统源码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<ul>
-<li><p>安装CTags</p>
-<ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
-<ul>
-<li>3.创建索引</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -949,7 +765,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -971,8 +787,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" itemprop="url">
-                  使用Sublime text编译python3时中文打印异常问题
+                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
+                  osx下如何使用SublimeText阅读Android系统源码
                 </a>
               
             
@@ -1011,8 +827,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
                   </a>
                 </span>
 
@@ -1047,11 +863,49 @@
       
         
           
-            <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
-<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
-<p>mark一下</p>
+            <blockquote>
+<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
+</blockquote>
+<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
+<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
+<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
+<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
+<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
+方法2：ctrl+~
+</code></pre>  2.输入代码：<br>python2.x代码:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<p>python3.x代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<ul>
+<li><p>安装CTags</p>
+<ul>
+<li><ol>
+<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
+</ol>
+</li>
+<li><ol>
+<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
+</ol>
+<ul>
+<li>3.创建索引</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
+<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
+<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
+<li>ctag rebuild时弹窗异常如图：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
+<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
+<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
+<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
+<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
 
           
         
@@ -1552,169 +1406,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/详解设计模式之简单工厂模式/" itemprop="url">
-                  详解设计模式之简单工厂模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T22:22:50+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
-<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
-<p>####3、如何使用工厂模式？</p>
-<ul>
-<li>先看下不使用模式如何创建接口实例</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>起亚汽车实现代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>客户端代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
-<p>public class BmwImpl implements CarApi {</p>
-<pre><code>@Override
-public void run() {
-    // TODO Auto-generated method stub
-    System.out.println(&quot;宝马跑起来&quot;);
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
-<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
-<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
-<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
-<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之单例模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1878,6 +1569,334 @@ public void run() {
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/详解设计模式之简单工厂模式/" itemprop="url">
+                  详解设计模式之简单工厂模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T22:22:50+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
+<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
+<p>####3、如何使用工厂模式？</p>
+<ul>
+<li>先看下不使用模式如何创建接口实例</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>起亚汽车实现代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>客户端代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
+<p>public class BmwImpl implements CarApi {</p>
+<pre><code>@Override
+public void run() {
+    // TODO Auto-generated method stub
+    System.out.println(&quot;宝马跑起来&quot;);
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
+<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
+<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
+<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
+<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/UML--类图详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/UML--类图详解/" itemprop="url">
+                  UML--类图详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T21:22:50+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>类图是面向对象系统建模中很常用也很重要的图，是定义其它图的基础。类图主要是用来显示系统中的类、接口间关系的一种模型。<br>类之间的关系主要有泛化、实现、聚合、组合、依赖、关联6种关系。</p>
+<p>###泛化关系(generalization)</p>
+<p>uml中的泛化关系也就是继承关系。继承关系的2个类可以使用 is-a来表示。继承关系使用实线空心箭头来表示，箭头从子类指向父类。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be6493449edd5912.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.39.00.png"></p>
+<p>PS：泛化关系中的父类为非抽象类,泛化关系为面向对象中耦合度最大的一种关系</p>
+<p>###实现关系(Realization)</p>
+<p>实现关系使用空心三角箭头的虚线表示，箭头从实现类指向接口。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92a163450b82adc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.51.25.png"></p>
+<p>不知道为什么在我的osx版的startuml中实现关系只是一条线，不晓得是不是bug</p>
+<p>###聚合关系(Aggregation) </p>
+<p>聚合关系表示has-a的关系，是一种不稳定的包含关系。较强于一般关联,有整体与局部的关系,如果没有了整体,局部仍然可单独存在。如公司和员工的关系，公司包含员工，但如果公司倒闭，员工依然可以换公司。在类图使用空心的菱形的实线表示，菱形从局部指向整体。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3018f76e4b869260.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.56.37.png"></p>
+<p>###组合关系(Composition)</p>
+<p>组合关系表示contains-a的关系，是一种强烈的包含关系。组合类负责被组合类的生命周期。是一种更强的聚合关系。部分不能脱离整体存在。如公司和部门的关系，没有了公司，部门也不能存在了。在类图使用实心菱形的实线表示，菱形从局部指向整体。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-cf5edcf29e224e3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.59.43.png"></p>
+<p>###依赖关系(Dependency)</p>
+<p>依赖关系是对象关系最弱的一种关联方式，是临时性的关联。代码中一般指由局部变量、函数参数、返回值建立的对于其他对象的调用关系。一个类调用被依赖类中的某些方法而得以完成这个类的一些职责。在类图使用带箭头的虚线表示，箭头从使用类指向被依赖的类。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-77d40f8a95f1f73d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.03.48.png"></p>
+<p>###关联关系(Association)</p>
+<p>关联关系是对象之间一种引用关系，比如吃饭时客户与餐具类之间的关系。这种关系通常使用类的属性表达。关联又分为一般关联、聚合关联与组合关联。在类图使用带箭头的实线表示，箭头从使用类指向被关联的类。可以是单向和双向。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-78619e44991e9581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.43.15.png"></p>
+<p>###聚合和组合如何区别？</p>
+<p>直白点的理解就是聚合关系的两个类，局部类的生命周期不受整体类的影响，能够剥离整体单独存在。<br>而组合关系的两个类，局部类的生命周期受限于整体类，整体类不存在时，局部类也将消亡。<br>举个栗子：<br>学生去学校上学被分配到x年级：<br>其中学生和学校属于聚合关系，学生可以脱离学校独立存在，县里学校不好可以去市里学校。而学校和班级是组合关系，就是说班级存在的前提是要有个学校。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a3572272c2413345.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.31.06.png"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1927,7 +1946,7 @@ public void run() {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
