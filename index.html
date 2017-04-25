@@ -374,17 +374,21 @@
             <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
 <p>本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。</p>
 </blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-84c9b4e1a9ccfc4e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="日了狗.jpg"></p>
 <h1 id="通过本章可以了解到这些："><a href="#通过本章可以了解到这些：" class="headerlink" title="通过本章可以了解到这些："></a>通过本章可以了解到这些：</h1><ul>
-<li>jni介绍</li>
-<li>为什么要学习jni</li>
-<li>jni使用流程是怎样的</li>
-<li>如何Java调用C</li>
-<li>如何C调用Java</li>
-<li>源码和讲解穿插说明</li>
+<li><p>jni介绍</p>
+</li>
+<li><p>为什么要学习jni</p>
+</li>
+<li><p>jni使用流程是怎样的</p>
+</li>
+<li><p>如何Java调用C</p>
+</li>
+<li><p>如何C调用Java</p>
+</li>
+<li><p>了解jni源码和机制</p>
+<p>​</p>
+</li>
 </ul>
-<p>进入正题：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-807a4e3b92ae00a6.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="开始表演.jpeg"></p>
 <h1 id="什么是jni、ndk"><a href="#什么是jni、ndk" class="headerlink" title="什么是jni、ndk"></a>什么是jni、ndk</h1><p>jni(java native interface)，Java本地接口。在Java中接口就是一套协议标准，同样这里也是如此，jni是一套让Java和C互通有无的一套标准。看到这脑子里应该有个大概情况：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-062e7ea6f0c17ef3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-21 下午12.17.32.png"><br>ndk,它只是一套开发工具集，如果再给它加个形容词，那就是本地开发工具集，即Native Development Kit。</p>
 <blockquote>
@@ -405,10 +409,20 @@
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4792879d689f210.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-21 下午1.29.01.png"></p>
 <p>上面是调用流程，调用的前提是先完成开发，也就是说开发流程是要先完成Java层方法和Native层方法。</p>
 <p>基础介绍的差不多了，下面开始进入实际开发部分：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-163651037bed302a.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="皮皮鳝.jpeg"></p>
-<h1 id="Java调用C"><a href="#Java调用C" class="headerlink" title="Java调用C"></a>Java调用C</h1><p>学习最好的方法就是看代码，那么我们就看看系统一个简单的jni使用示例：Log打印系统。</p>
-<h2 id="看看Log打印系统是如何Java调用C"><a href="#看看Log打印系统是如何Java调用C" class="headerlink" title="看看Log打印系统是如何Java调用C"></a>看看Log打印系统是如何Java调用C</h2><p>首先我们看下Log.java的源码才好下手。</p>
-<h3 id="简单介绍Log-java源码"><a href="#简单介绍Log-java源码" class="headerlink" title="简单介绍Log.java源码"></a>简单介绍Log.java源码</h3><pre><code>public static int i(String tag, String msg, Throwable tr) {
+<h1 id="Java调用C"><a href="#Java调用C" class="headerlink" title="Java调用C"></a>Java调用C</h1><h2 id="看看一般开发时Java如何调用C"><a href="#看看一般开发时Java如何调用C" class="headerlink" title="看看一般开发时Java如何调用C"></a>看看一般开发时Java如何调用C</h2><p>Java层和Native层之间源码是有对应规律的。</p>
+<p>Native实现文件命名为：Java全类名(下划线作分隔符)</p>
+<p>Native实现方法命名为：Java_为前缀+全类名(下划线作分隔符)+方法名</p>
+<p>例如，现在Java定义native方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class TestNative &#123;</div><div class="line">    // Used to load the &apos;native-lib&apos; library on application startup.</div><div class="line">    public native int add(int a,int b);</div><div class="line">    public native String stringFromJNI();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>那么按照规范，jni实现方法名为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Java_com_example_jenson_myapplication_TestNative_add(JNIEnv *env, jobject instance, jint a,</div><div class="line">                                                     jint b) &#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Java声明方法和jni实现方法都已经实现了，接下来就是调用实现库(.so文件):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static &#123;</div><div class="line">       System.loadLibrary(&quot;native-lib&quot;);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>上面是最普通也是最简单的jni开发流程三步走，但是其中有很多问题没有弄明白，比如JNIENV是什么，参数init为什么变为jint了等等。</p>
+<p>学习最好的方法就是看代码，那么我们就看看系统jni使用示例：Log打印系统。</p>
+<h2 id="看看Log打印系统Java如何调用C"><a href="#看看Log打印系统Java如何调用C" class="headerlink" title="看看Log打印系统Java如何调用C"></a>看看Log打印系统Java如何调用C</h2><p>首先我们看下Log.java的源码才好下手。</p>
+<h3 id="简单介绍Log-java源码"><a href="#简单介绍Log-java源码" class="headerlink" title="简单介绍Log.java源码"></a>简单介绍Log.java源码</h3><p>看看Log.i()方法实现：</p>
+<pre><code>public static int i(String tag, String msg, Throwable tr) {
     return println_native(LOG_ID_MAIN, INFO, tag, msg + &apos;\n&apos; + getStackTraceString(tr));
 }
 
@@ -423,28 +437,23 @@ public static int w(String tag, String msg) {
 <p>下面研究中心要转移到native层实现了，源码那么多如何找到native实现呢？</p>
 <h3 id="Native层源码探究"><a href="#Native层源码探究" class="headerlink" title="Native层源码探究"></a>Native层源码探究</h3><ul>
 <li><p>查找Native层实现</p>
-<p>Java层和Native层之间源码是有对应规律的。</p>
-<p>Native实现文件命名为：Java全类名(下划线作分隔符)</p>
-<p>Native实现方法命名为：Java_为前缀+全类名(下划线作分隔符)+方法名</p>
+<p>按照上面说的规范，直接查找Java类Log的全类名。</p>
 <p>例如 Log类全类名为android.util.Log，其对应的Native文件名称应该为android_util_Log。我们试下：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
+<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
 <p>果真找到了，下面开始探究源码：</p>
 </li>
 <li><p>Native源码开扒</p>
 <p>我们首先找到Java层println_native方法Native层的实现，按照上面的命名规范，没有找到 <code>Java_android_util_Log_println_native</code>但是却找到了这个方法：<code>android_util_Log_println_native</code> ，看来Android系统级的JNI没有遵循规范啊。不过没关系，<em>只要记住JNI有两种方式：一种是遵守JNI命名规范的日常使用方法，另一种是是这种系统级JNI没有Java_前缀就行了</em> 。不影响我们看代码：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
-<p>可以看出该方法代码比较少，因为我们是研究JNI，而不是研究Log如何打印，所以方法中对于其他方法调用不再深入研究，但是看到这参数时心里产生了几个疑问：</p>
-<p>①JNIENV和jobject都是什么鬼？</p>
-<p>②后面几个参数和我们Java层传的参数相似又不是，为什么呢？这里的几个参数和Java层的参数有什么关系？</p>
-<p>③如何根据Java层方法找到对应的Native方法的，换句话说双方各自的方法如何对应上的呢？</p>
-<p>下面我一一来分析，先从第三个开始：</p>
+<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
+<p>可以看出该方法代码比较少，因为我们是研究JNI，而不是研究Log如何打印，所以方法中对于其他方法调用不再深入研究，但是现在Java声明方法和Native实现方法都找到了，但是系统式如何把这两个给关联起来的呢？我们继续往下看：</p>
+<p>​</p>
 </li>
 <li><p>Java和Native双方的方法如何对上眼的</p>
 <p>在该文件中有这样一个方法<code>register_android_util_Log</code> ，我们看下实现：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
-<p>前面大部分代码给我的第一感觉就是：这么TM和Java的反射好像啊！难道是C++版反射？反正意思就是通过Java的Log类拿到该类的几个变量(C语言中习惯称为域)</p>
+<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
+<p>这个方法前面大部分代码给我的第一感觉就是：这么TM和Java的反射好像啊！难道是C++版反射？反正意思就是通过Java的Log类拿到该类的几个变量(C语言中习惯称为域)</p>
 <p>看最后一行调用了AndroidRunTime的方法，顾名思义是注册本地方法，其中参数<code>gMethods</code> 值得一看：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
+<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
 <p>这是一个静态结构体数组，这个比较有意思，看注释可以看出大括弧的三个元素分别是名称、签名和函数指针。而名称恰恰是Java里面声明的本地方法，签名是本地方法的签名，函数指针指向的是Native实现方法。一个数组就把Java方法和Native方法给关联起来了。因为Java支持方法重载，为了确保调用的唯一性，于是就有了方法签名，下面说说方法签名机制：</p>
 <p>首先看下签名规则：</p>
 <p>| Java类型  | 类型签名    |<br>| ——- | ——- |<br>| boolean | Z       |<br>| byte    | B       |<br>| char    | C       |<br>| long    | J       |<br>| float   | F       |<br>| double  | D       |<br>| short   | S       |<br>| int     | I       |<br>| 其他类     | L全类名;   |<br>| 数组      | [元素类型签名 |</p>
@@ -454,10 +463,10 @@ public static int w(String tag, String msg) {
 <p>拿<code>boolean isLoggable(String tag, int level)</code> 举例来说其方法签名为<code>(Ljava/lang/String;I)Z</code> 。</p>
 <p>说完了方法签名规则，我们继续，既然 <code>register_android_util_Log</code> 方法里把双方方法进行了关联，那么该方法又是啥时候调用的呢？</p>
 <p>且看<code>AndroidRunTime</code> :</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-25 上午12.26.47.png" alt="屏幕快照 2017-04-25 上午12.26.47"></p>
+<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-25 上午12.26.47.png" alt="屏幕快照 2017-04-25 上午12.26.47"></p>
 <p>该文件中声明了 <code>namespace</code> ，而后又调用了 <code>using namespace android ;</code> 而namespace中又调用了函数<code>register_android_util_Log</code> ，extern关键字就是告诉我们调用的方法来自外部文件。</p>
 <p>说完了方法签名规则，我们继续<code>AndroidRunTime::registerNativeMethods</code> 这个方法看下：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.57.46.png" alt="屏幕快照 2017-04-24 下午11.57.46"></p>
+<p><img src="Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.57.46.png" alt="屏幕快照 2017-04-24 下午11.57.46"></p>
 <p>这里又是一个包工头方法，承揽了方法自己不实现，总是调用别人的。<code>jniRegisterNativeMethods</code> 方法是在JniHelp.cpp中实现的，</p>
 <p>接下来看之前的第二个问题：</p>
 </li>
