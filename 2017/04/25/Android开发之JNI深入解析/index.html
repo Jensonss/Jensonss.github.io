@@ -102,13 +102,13 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-062e7ea6f0c17ef3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-a4792879d689f210.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-163651037bed302a.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://yoursite.com/Users/jenson/Desktop/屏幕快照%202017-04-24%20下午9.57.43.png">
-<meta property="og:image" content="http://yoursite.com/Users/jenson/Desktop/屏幕快照%202017-04-24%20下午10.29.17.png">
-<meta property="og:image" content="http://yoursite.com/Users/jenson/Desktop/屏幕快照%202017-04-24%20下午11.04.06.png">
-<meta property="og:image" content="http://yoursite.com/Users/jenson/Desktop/屏幕快照%202017-04-24%20下午11.14.36.png">
-<meta property="og:image" content="http://yoursite.com/Users/jenson/Desktop/屏幕快照%202017-04-25%20上午12.26.47.png">
-<meta property="og:image" content="http://yoursite.com/Users/jenson/Desktop/屏幕快照%202017-04-24%20下午11.57.46.png">
-<meta property="og:updated_time" content="2017-04-24T16:57:27.000Z">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午9.57.43.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午10.29.17.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午11.04.06.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午11.14.36.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-25%20上午12.26.47.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午11.57.46.png">
+<meta property="og:updated_time" content="2017-04-25T02:09:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android开发之JNI深入解析">
 <meta name="twitter:description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。   通过本章可以了解到这些： jni介绍 为什么要学习jni jni使用流程是怎样的 如何Java调用C 如何C调用Java 源码和讲解穿插说明  进入正题：  什么是jni、ndkjni(java native interface)，Java本地接口。在Java中接口就是一套协议标">
@@ -415,10 +415,15 @@
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-163651037bed302a.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="皮皮鳝.jpeg"></p>
 <h1 id="Java调用C"><a href="#Java调用C" class="headerlink" title="Java调用C"></a>Java调用C</h1><p>学习最好的方法就是看代码，那么我们就看看系统一个简单的jni使用示例：Log打印系统。</p>
 <h2 id="看看Log打印系统是如何Java调用C"><a href="#看看Log打印系统是如何Java调用C" class="headerlink" title="看看Log打印系统是如何Java调用C"></a>看看Log打印系统是如何Java调用C</h2><p>首先我们看下Log.java的源码才好下手。</p>
-<h3 id="简单介绍Log-java源码"><a href="#简单介绍Log-java源码" class="headerlink" title="简单介绍Log.java源码"></a>简单介绍Log.java源码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public static int i(String tag, String msg, Throwable tr) &#123;</div><div class="line">    return println_native(LOG_ID_MAIN, INFO, tag, msg + &apos;\n&apos; + getStackTraceString(tr));</div><div class="line">&#125;</div><div class="line"></div><div class="line">public static int w(String tag, String msg) &#123;</div><div class="line">    return println_native(LOG_ID_MAIN, WARN, tag, msg);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看出真正的打印是在 <figure class="highlight plain"><figcaption><span>方法中，而这个方法是一个本地方法：</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<p>/<em>* @hide </em>/ public static native int println_native(int bufID,int priority, String tag, String msg);</p>
-<p>public static native boolean isLoggable(String tag, int level);<br>```</p>
+<h3 id="简单介绍Log-java源码"><a href="#简单介绍Log-java源码" class="headerlink" title="简单介绍Log.java源码"></a>简单介绍Log.java源码</h3><pre><code>public static int i(String tag, String msg, Throwable tr) {
+    return println_native(LOG_ID_MAIN, INFO, tag, msg + &apos;\n&apos; + getStackTraceString(tr));
+}
+
+public static int w(String tag, String msg) {
+    return println_native(LOG_ID_MAIN, WARN, tag, msg);
+}
+</code></pre><p>可以看出真正的打印是在 println_native 方法中，而这个方法是一个本地方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public static native int println_native(int bufID,int priority, String tag, String msg);</div><div class="line">public static native boolean isLoggable(String tag, int level);</div></pre></td></tr></table></figure>
 <blockquote>
 <p>原来JNI中Java层的实现这么简单，只需要声明一个native修饰的方法，传入必须的参数就行了。</p>
 </blockquote>
@@ -429,12 +434,12 @@
 <p>Native实现文件命名为：Java全类名(下划线作分隔符)</p>
 <p>Native实现方法命名为：Java_为前缀+全类名(下划线作分隔符)+方法名</p>
 <p>例如 Log类全类名为android.util.Log，其对应的Native文件名称应该为android_util_Log。我们试下：</p>
-<p><img src="/Users/jenson/Desktop/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
 <p>果真找到了，下面开始探究源码：</p>
 </li>
 <li><p>Native源码开扒</p>
 <p>我们首先找到Java层println_native方法Native层的实现，按照上面的命名规范，没有找到 <code>Java_android_util_Log_println_native</code>但是却找到了这个方法：<code>android_util_Log_println_native</code> ，看来Android系统级的JNI没有遵循规范啊。不过没关系，<em>只要记住JNI有两种方式：一种是遵守JNI命名规范的日常使用方法，另一种是是这种系统级JNI没有Java_前缀就行了</em> 。不影响我们看代码：</p>
-<p><img src="/Users/jenson/Desktop/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
 <p>可以看出该方法代码比较少，因为我们是研究JNI，而不是研究Log如何打印，所以方法中对于其他方法调用不再深入研究，但是看到这参数时心里产生了几个疑问：</p>
 <p>①JNIENV和jobject都是什么鬼？</p>
 <p>②后面几个参数和我们Java层传的参数相似又不是，为什么呢？这里的几个参数和Java层的参数有什么关系？</p>
@@ -443,10 +448,10 @@
 </li>
 <li><p>Java和Native双方的方法如何对上眼的</p>
 <p>在该文件中有这样一个方法<code>register_android_util_Log</code> ，我们看下实现：</p>
-<p><img src="/Users/jenson/Desktop/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
 <p>前面大部分代码给我的第一感觉就是：这么TM和Java的反射好像啊！难道是C++版反射？反正意思就是通过Java的Log类拿到该类的几个变量(C语言中习惯称为域)</p>
 <p>看最后一行调用了AndroidRunTime的方法，顾名思义是注册本地方法，其中参数<code>gMethods</code> 值得一看：</p>
-<p><img src="/Users/jenson/Desktop/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
 <p>这是一个静态结构体数组，这个比较有意思，看注释可以看出大括弧的三个元素分别是名称、签名和函数指针。而名称恰恰是Java里面声明的本地方法，签名是本地方法的签名，函数指针指向的是Native实现方法。一个数组就把Java方法和Native方法给关联起来了。因为Java支持方法重载，为了确保调用的唯一性，于是就有了方法签名，下面说说方法签名机制：</p>
 <p>首先看下签名规则：</p>
 <p>| Java类型  | 类型签名    |<br>| ——- | ——- |<br>| boolean | Z       |<br>| byte    | B       |<br>| char    | C       |<br>| long    | J       |<br>| float   | F       |<br>| double  | D       |<br>| short   | S       |<br>| int     | I       |<br>| 其他类     | L全类名;   |<br>| 数组      | [元素类型签名 |</p>
@@ -456,16 +461,18 @@
 <p>拿<code>boolean isLoggable(String tag, int level)</code> 举例来说其方法签名为<code>(Ljava/lang/String;I)Z</code> 。</p>
 <p>说完了方法签名规则，我们继续，既然 <code>register_android_util_Log</code> 方法里把双方方法进行了关联，那么该方法又是啥时候调用的呢？</p>
 <p>且看<code>AndroidRunTime</code> :</p>
-<p><img src="/Users/jenson/Desktop/屏幕快照 2017-04-25 上午12.26.47.png" alt="屏幕快照 2017-04-25 上午12.26.47"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-25 上午12.26.47.png" alt="屏幕快照 2017-04-25 上午12.26.47"></p>
 <p>该文件中声明了 <code>namespace</code> ，而后又调用了 <code>using namespace android ;</code> 而namespace中又调用了函数<code>register_android_util_Log</code> ，extern关键字就是告诉我们调用的方法来自外部文件。</p>
 <p>说完了方法签名规则，我们继续<code>AndroidRunTime::registerNativeMethods</code> 这个方法看下：</p>
-<p><img src="/Users/jenson/Desktop/屏幕快照 2017-04-24 下午11.57.46.png" alt="屏幕快照 2017-04-24 下午11.57.46"></p>
+<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.57.46.png" alt="屏幕快照 2017-04-24 下午11.57.46"></p>
 <p>这里又是一个包工头方法，承揽了方法自己不实现，总是调用别人的。<code>jniRegisterNativeMethods</code> 方法是在JniHelp.cpp中实现的，</p>
 <p>接下来看之前的第二个问题：</p>
 </li>
 <li><p>Java类型和Native类型如何对应的</p>
 <p>首先看下基本类型的对应关系：</p>
 <p>| Java类型  | JNI类型    | 字长   |<br>| ——- | ——– | —- |<br>| boolean | jboolean | 8位   |<br>| byte    | jbyte    | 8位   |<br>| char    | jchar    | 16位  |<br>| short   | jshort   | 16位  |<br>| int     | jint     | 32位  |<br>| long    | jlong    | 64位  |<br>| float   | jfloat   | 32位  |<br>| double  | jdouble  | 64位  |<br>| void    | void     |      |</p>
+<p>引用类型对应关系：</p>
+<p>| Java类型                                   | JNI类型                                    |<br>| —————————————- | —————————————- |<br>| java.lang.Class                          | class                                    |<br>| java.lang.String                         | string                                   |<br>| java.lang.Throwable                      | throwable                                |<br>| Object[]、boolean[]、byte[]、char[]、short[]、int[]、long[]、float[]、double[] | jobjectArray、jbooleanArray、jbyteArray、jcharArray、jshortArray、jintArray、jlongArray、jfloatArray、jdoubleArray |<br>| java.lang.Object                         | jobject                                  |</p>
 <p>​</p>
 <p>​</p>
 </li>
