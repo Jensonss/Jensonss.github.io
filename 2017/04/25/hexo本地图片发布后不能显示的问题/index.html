@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="网络," />
 
 
 
@@ -90,19 +90,21 @@
 
 
 
-<meta name="description" content="####1、什么是简单工厂模式？把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。 ####2、什么时候使用工厂模式？当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="说在前面的话工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是u">
+<meta name="keywords" content="网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="详解设计模式之简单工厂模式">
-<meta property="og:url" content="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/index.html">
+<meta property="og:title" content="hexo本地图片发布后不能显示的问题">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="####1、什么是简单工厂模式？把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。 ####2、什么时候使用工厂模式？当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-04-22T10:34:14.000Z">
+<meta property="og:description" content="说在前面的话工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是u">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.33.13.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.34.46.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/jenson/Downloads/hexo/source/_posts/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.45.37.png">
+<meta property="og:updated_time" content="2017-04-25T08:02:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="详解设计模式之简单工厂模式">
-<meta name="twitter:description" content="####1、什么是简单工厂模式？把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。 ####2、什么时候使用工厂模式？当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="hexo本地图片发布后不能显示的问题">
+<meta name="twitter:description" content="说在前面的话工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是u">
+<meta name="twitter:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.33.13.png">
 
 
 
@@ -130,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/"/>
 
 
 
 
 
-  <title>详解设计模式之简单工厂模式 | Jenson</title>
+  <title>hexo本地图片发布后不能显示的问题 | Jenson</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -275,7 +277,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -296,7 +298,7 @@
             
             
               
-                详解设计模式之简单工厂模式
+                hexo本地图片发布后不能显示的问题
               
             
           </h1>
@@ -311,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T22:22:50+08:00">
-                2017-04-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T15:16:33+08:00">
+                2017-04-25
               </time>
             
 
@@ -334,8 +336,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
                   </a>
                 </span>
 
@@ -368,28 +370,25 @@
       
 
       
-        <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
-<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
-<p>####3、如何使用工厂模式？</p>
-<ul>
-<li>先看下不使用模式如何创建接口实例</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>起亚汽车实现代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>客户端代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
-<p>public class BmwImpl implements CarApi {</p>
-<pre><code>@Override
-public void run() {
-    // TODO Auto-generated method stub
-    System.out.println(&quot;宝马跑起来&quot;);
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
-<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
-<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
-<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
-<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是url地址是本地地址。这样如果你发布文章后，别人肯定是看不到你的图片的。这样体验很不好。最开始的想法就是先在简书发布，发布后图片url都是来自简书网站url，而非本地，这样是没问题的，但是这样自己的网站显示个图片还要依赖简书平台，可能代码写多了，总感觉耦合性太强啊~~所以就在找怎么把两个平台独立开来，而自己网站又能发布图片的方法。</p>
+<p>经过查找发现hexo-asset-image插件可以比较好的支持本地图片发布。</p>
+<h1 id="开启资源文件支持"><a href="#开启资源文件支持" class="headerlink" title="开启资源文件支持"></a>开启资源文件支持</h1><p>在hexo目录下的_config.yml配置文件中找到这个配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: false</div></pre></td></tr></table></figure>
+<p>把这里的false改为true。开启hexo的媒体文件支持。</p>
+<h1 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h1><p>在命令行中，跳转到hexo目录下，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</div></pre></td></tr></table></figure>
+<p>会自动安装插件，插件会安装到node_moudules目录下，<img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.33.13.png" alt="屏幕快照 2017-04-25 下午3.33.13"></p>
+<p>同时还会自动在hexo目录下package.json中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;hexo-asset-image&quot;: &quot;git+https://github.com/CodeFalling/hexo-asset-image.git&quot;,</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说这些就是想告诉你，不用的时候如何卸载：删掉那个文件夹和那一行就行了。</p>
+</blockquote>
+<p>以上执行完毕后，在命令行执行：hexo new “文件”时，会在_post文件夹下同时生成md文件和同名文件夹，这个同名文件夹就是用来放图片的，把你在该文章中需要显示的图片放进去，然后在markdown中选择该目录下的图片使用，这样当md编译生成html文件时，会把图片拷贝到html文件同目录中。最后执行hexo d -g 部署到服务器时，图片也就被部署到服务器中了。</p>
+<p>注意：如果直接把图片拖动到markdown编辑器中，其路径可能为绝对路径，需要改下：</p>
+<p><img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.34.46.png" alt="屏幕快照 2017-04-25 下午3.34.46"></p>
+<p>修改为相对路径：</p>
+<p><img src="/2017/04/25/hexo本地图片发布后不能显示的问题/jenson/Downloads/hexo/source/_posts/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.45.37.png" alt="屏幕快照 2017-04-25 下午3.45.37"></p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>上面说了hexo new “名称” ，这样每次同时生成文件和文件夹，当然也可以不使用命令行，直接在_post目录下手动创建md文件和文件夹亦可，手动创建的好处时如果你的文章不需要图片，那么你可以不创建对应的文件夹。</p>
 
       
     </div>
@@ -419,7 +418,7 @@ public void run() {
       
         <div class="post-tags">
           
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/网络/" rel="tag"># 网络</a>
           
         </div>
       
@@ -432,18 +431,14 @@ public void run() {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事/" rel="next" title="关于家庭网络宽带、路由及上网设备那些事">
-                <i class="fa fa-chevron-left"></i> 关于家庭网络宽带、路由及上网设备那些事
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/21/详解设计模式之单例模式/" rel="prev" title="详解设计模式之单例模式">
-                详解设计模式之单例模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/04/25/Android开发之JNI深入解析/" rel="prev" title="Android开发之JNI深入解析">
+                Android开发之JNI深入解析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -491,8 +486,17 @@ public void run() {
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -554,6 +558,22 @@ public void run() {
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#说在前面的话"><span class="nav-number">1.</span> <span class="nav-text">说在前面的话</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开启资源文件支持"><span class="nav-number">2.</span> <span class="nav-text">开启资源文件支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装插件"><span class="nav-number">3.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
