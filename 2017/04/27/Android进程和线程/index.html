@@ -90,20 +90,17 @@
 
 
 
-<meta name="description" content="说在前面的话win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。 从官网下载下载Android源码首先想到的就是官网按照指示要先安装repo。但是在执行1curl https://storage.googleapis.com/git-repo-downloads/repo &amp;gt; ~/bin/repo 时候就出现异常 12345curl http">
+<meta name="description" content="进程一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 android:process，可以使原本一个应用中的组件运行在多个进程中。  如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareU">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android源码下载">
-<meta property="og:url" content="http://yoursite.com/2017/04/21/Android源码下载/index.html">
+<meta property="og:title" content="Android进程和线程">
+<meta property="og:url" content="http://yoursite.com/2017/04/27/Android进程和线程/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="说在前面的话win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。 从官网下载下载Android源码首先想到的就是官网按照指示要先安装repo。但是在执行1curl https://storage.googleapis.com/git-repo-downloads/repo &amp;gt; ~/bin/repo 时候就出现异常 12345curl http">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-185f5625074cf187.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-04-22T11:48:00.000Z">
+<meta property="og:description" content="进程一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 android:process，可以使原本一个应用中的组件运行在多个进程中。  如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareU">
+<meta property="og:updated_time" content="2017-04-27T12:59:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android源码下载">
-<meta name="twitter:description" content="说在前面的话win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。 从官网下载下载Android源码首先想到的就是官网按照指示要先安装repo。但是在执行1curl https://storage.googleapis.com/git-repo-downloads/repo &amp;gt; ~/bin/repo 时候就出现异常 12345curl http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="Android进程和线程">
+<meta name="twitter:description" content="进程一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 android:process，可以使原本一个应用中的组件运行在多个进程中。  如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareU">
 
 
 
@@ -131,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/21/Android源码下载/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/27/Android进程和线程/"/>
 
 
 
 
 
-  <title>Android源码下载 | Jenson</title>
+  <title>Android进程和线程 | Jenson</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -276,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/Android源码下载/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/Android进程和线程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -297,7 +294,7 @@
             
             
               
-                Android源码下载
+                Android进程和线程
               
             
           </h1>
@@ -312,8 +309,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T20:55:54+08:00">
-                2017-04-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T20:36:13+08:00">
+                2017-04-27
               </time>
             
 
@@ -369,17 +366,36 @@
       
 
       
-        <h4 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h4><p>win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。</p>
-<h4 id="从官网下载"><a href="#从官网下载" class="headerlink" title="从官网下载"></a>从官网下载</h4><p>下载Android源码首先想到的就是<a href="https://source.android.com/source/downloading.html" target="_blank" rel="external">官网</a><br>按照指示要先安装repo。但是在执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div></pre></td></tr></table></figure></p>
-<p>时候就出现异常</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--    0</div><div class="line">curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out</div></pre></td></tr></table></figure>
-<p>搜索了下异常发现很早就有这个问题，比如<a href="https://github.com/npm/npm/issues/10037" target="_blank" rel="external">这里</a><br>但是好像没什么好的解决方法。网传有其他地址可以使用，但是没有继续浪费时间了，不能一条路走到黑。</p>
-<h4 id="使用国内资源"><a href="#使用国内资源" class="headerlink" title="使用国内资源"></a>使用国内资源</h4><p>国外太麻烦，毕竟只是想看源码，不想在下载方面浪费太多精力。所以把想法转战到国内的源上。<br>分享2个源，<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/aosp#已有仓库如何改用科大源" target="_blank" rel="external">科大源</a>和<a href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/" target="_blank" rel="external">清大源</a><br>其中我选择使用的是科大源，打开页面看到初始同步有两个方法，方法1毕竟简单，下载一个打好的包，自己repo sync。方法2还是要下载repo，而且如果中途断掉还要从头下载，所以果断选了方法1，直接使用迅雷下载tar包还是很快的。<br>不到一个小时下载完成，解压后打开aosp文件夹发现没有文件，因为是.开头的，都是隐藏文件，显示后如图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午1.55.14.png"><br>执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo sync</div></pre></td></tr></table></figure></p>
-<p>同步</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-185f5625074cf187.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午2.08.54.png"></p>
-<h4 id="如何修改已经init的repo"><a href="#如何修改已经init的repo" class="headerlink" title="如何修改已经init的repo"></a>如何修改已经init的repo</h4><p>如果想下载其他版本的源码，但是repo已经初始化过，<br>如果再次执行repo init xxx会提示 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Your identity is: jenson &lt;xxx@foxmail.com&gt;</div><div class="line">If you want to change this, please re-run &apos;repo init&apos; with --config-name</div><div class="line">repo has been initialized in /Users/jenson/Downloads/aosp</div></pre></td></tr></table></figure></p>
-<p>上面意思是如果要修改init，需要重新运行repo init +新的url +config<br>这时会自动修改配置并初始化:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-6.0.1_r58  --config</div></pre></td></tr></table></figure>
+        <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 <code>android:process</code>，可以使原本一个应用中的组件运行在多个进程中。</p>
+<blockquote>
+<p>如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareUID方式和它共享一个进程。</p>
+</blockquote>
+<h1 id="进程优先级分类"><a href="#进程优先级分类" class="headerlink" title="进程优先级分类"></a>进程优先级分类</h1><p>根据进程的优先级可以分为五级，</p>
+<ul>
+<li><p>前台进程</p>
+<p>用户当前操作所必需的进程。如果一个进程满足以下任一条件，即视为前台进程：<br>​    托管用户正在交互的 Activity（已调用 Activity 的 onResume() 方法）<br>​    托管某个 Service，后者绑定到用户正在交互的 Activity<br>​    托管正在“前台”运行的 Service（服务已调用 startForeground()）<br>​    托管正执行一个生命周期回调的 Service（onCreate()、onStart() 或 onDestroy()）<br>​    托管正执行其 onReceive() 方法的 BroadcastReceiver<br>通常，在任意给定时间前台进程都为数不多。只有在内存不足以支持它们同时继续运行这一万不得已的情况下，系统才会终止它们。 此时，设备往往已达到内存分页状态，因此需要终止一些前台进程来确保用户界面正常响应。</p>
+</li>
+<li><p>可见进程</p>
+<p>没有任何前台组件、但仍会影响用户在屏幕上所见内容的进程。 如果一个进程满足以下任一条件，即视为可见进程：<br>​    托管不在前台、但仍对用户可见的 Activity（已调用其 onPause() 方法）。例如，如果前台 Activity 启动了一个对话框，允许在其后显示上一 Activity，则有可能会发生这种情况。<br>​    托管绑定到可见（或前台）Activity 的 Service。<br>可见进程被视为是极其重要的进程，除非为了维持所有前台进程同时运行而必须终止，否则系统不会终止这些进程。</p>
+</li>
+<li><p>服务进程</p>
+<p>正在运行已使用 startService() 方法启动的服务且不属于上述两个更高类别进程的进程。尽管服务进程与用户所见内容没有直接关联，但是它们通常在执行一些用户关心的操作（例如，在后台播放音乐或从网络下载数据）。因此，除非内存不足以维持所有前台进程和可见进程同时运行，否则系统会让服务进程保持运行状态。</p>
+</li>
+<li><p>后台进程</p>
+<p>包含目前对用户不可见的 Activity 的进程（已调用 Activity 的 onStop() 方法）。这些进程对用户体验没有直接影响，系统可能随时终止它们，以回收内存供前台进程、可见进程或服务进程使用。 通常会有很多后台进程在运行，因此它们会保存在 LRU （最近最少使用）列表中，以确保包含用户最近查看的 Activity 的进程最后一个被终止。如果某个 Activity 正确实现了生命周期方法，并保存了其当前状态，则终止其进程不会对用户体验产生明显影响，因为当用户导航回该 Activity 时，Activity 会恢复其所有可见状态。 有关保存和恢复状态的信息，请参阅 Activity文档。</p>
+</li>
+<li><p>空进程</p>
+<p>不含任何活动应用组件的进程。保留这种进程的的唯一目的是用作缓存，以缩短下次在其中运行组件所需的启动时间。 为使总体系统资源在进程缓存和底层内核缓存之间保持平衡，系统往往会终止这些进程。</p>
+</li>
+</ul>
+<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>线程可以看作是一个轻量级的进程，在Android中启动应用时系统会为APP创建一个UI线程，Android UI是非线程安全的。</p>
+<p>在Android开发中注意两点：</p>
+<p>①不能在UI线程以外的其他线程操作UI，否则异常。</p>
+<p>②不能阻塞UI线程，否则ANR。</p>
+<p>当然在某些特殊条件下，非UI线程操作 UI没有报错，参考我的[<a href="http://www.jensondev.me/2017/04/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%88%B7%E6%96%B0UI%E6%B2%A1%E6%8A%A5%E9%94%99/" target="_blank" rel="external">为什么我在工作线程刷新UI没报错？</a>] 。</p>
+<p>Android 提供了几种途径来从其他线程访问 UI 线程。 以下列出了几种有用的方法：</p>
+<p>Activity.runOnUiThread(Runnable)<br>View.post(Runnable)<br>View.postDelayed(Runnable, long)</p>
+
       
     </div>
 
@@ -421,18 +437,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/21/Android性能优化之耗电优化/" rel="next" title="Android性能优化之耗电优化">
-                <i class="fa fa-chevron-left"></i> Android性能优化之耗电优化
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/21/Android性能优化之内存优化/" rel="prev" title="Android性能优化之内存优化">
-                Android性能优化之内存优化 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/04/27/Android内存分析工具之MAT详解/" rel="prev" title="Android内存分析工具之MAT详解">
+                Android内存分析工具之MAT详解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -562,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#说在前面的话"><span class="nav-number">1.</span> <span class="nav-text">说在前面的话</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从官网下载"><span class="nav-number">2.</span> <span class="nav-text">从官网下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用国内资源"><span class="nav-number">3.</span> <span class="nav-text">使用国内资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何修改已经init的repo"><span class="nav-number">4.</span> <span class="nav-text">如何修改已经init的repo</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程优先级分类"><span class="nav-number">2.</span> <span class="nav-text">进程优先级分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程"><span class="nav-number">3.</span> <span class="nav-text">线程</span></a></li></ol></div>
             
 
           </div>
