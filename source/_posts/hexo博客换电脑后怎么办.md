@@ -19,6 +19,6 @@ categories: 网络
 
 然后` git add .`把当前目录及子文件都添加到暂存区
 
-然后 ` git commit -"message"`提交到本地库
+然后 ` git commit -m "message"`提交到本地库
 
 最后执行` git push origin branch`推送到分支中。这样以后发布文章后随时push，在其他电脑中把分支内容pull到本地库即可。 
