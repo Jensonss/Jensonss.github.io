@@ -273,6 +273,162 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/03/Java字符串压缩去重/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/03/Java字符串压缩去重/" itemprop="url">
+                  Java字符串压缩去重
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-03T17:42:06+08:00">
+                2017-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>去一家公司面试，开始就一道笔试题，做对了就继续，做不对就不用往下面了。内容是读取文件内容并压缩内容去重，压缩去重意思是如果内容为ABBCCCCAA压缩后字符串显示为A1B2C3A2。以此类推。其实这道题不难，但是我脑子转悠慢，读取文件和遍历字符做出来了，但是其余的没有做出了，或者说大概思路对了，但是卡在某一个点。总之有点废物就是了。。</p>
+<h1 id="我的做法"><a href="#我的做法" class="headerlink" title="我的做法"></a>我的做法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public static String compress(String str)&#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	//我这里是从0开始的</div><div class="line">	int count = 0;</div><div class="line">	//而这也是初始为0，这样的设置导致下面判断时候一直</div><div class="line">	//无所适从，对于何时该给count++，</div><div class="line">	//何时该给mystr.append有点混乱</div><div class="line">	char last = 0;</div><div class="line">	int length = str.length();</div><div class="line">	for(int i=0;i&lt;length;i++)&#123;</div><div class="line">		char c = str.charAt(i);</div><div class="line">		if(last!=c)&#123;</div><div class="line">			last = c;</div><div class="line">			count++;</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">		&#125;else&#123;</div><div class="line">			count++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="正确地做法"><a href="#正确地做法" class="headerlink" title="正确地做法"></a>正确地做法</h1><ul>
+<li><p>直接使用string做法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public String compressBad (String str)  </div><div class="line">&#123;  </div><div class="line">    String mystr = &quot; &quot;;  </div><div class="line">    int count = 1;  </div><div class="line">    char last = str.charAt(0);  </div><div class="line">    for (int i = 1; i &lt; str.length(); i++)  </div><div class="line">    &#123;  </div><div class="line">        if (last == str.charAt(i))  </div><div class="line">        &#123;  </div><div class="line">            count++;  </div><div class="line">        &#125;  </div><div class="line">        else  </div><div class="line">        &#123;  </div><div class="line">            mystr += last + count;  </div><div class="line">            last = str.charAt(i);  </div><div class="line">            count = 1;                </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    return mystr += last + count;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<ul>
+<li><p>使用StringBuffer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public static  String compressBetter(String str) &#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	int count = 1;</div><div class="line">	//取出第一个字符作为比较字符</div><div class="line">	char last = str.charAt(0);</div><div class="line">	for (int i = 1; i &lt; str.length(); i++) &#123;</div><div class="line">		//如果当前字符和之前的字符相同，说明是重复的，</div><div class="line">		//直接在数量值+1；</div><div class="line">		if (last == str.charAt(i)) &#123;</div><div class="line">			count++;</div><div class="line">		&#125; else &#123;</div><div class="line">			//如果不相同，说明开始了一个新的字符，</div><div class="line">			//这时要做的只有两件事：</div><div class="line">			//1、结束上格字符计数并添加字符串，</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">			//2、2、开始新的字符计数</div><div class="line">			last = str.charAt(i);</div><div class="line">			count = 1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	//最后一个字符计数并显示</div><div class="line">	mystr.append(last);</div><div class="line">	mystr.append(count);</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>作为IT从业者，大部分时间都在写业务逻辑，很多基本功已经近乎荒废了，这是非常不可取的。眼光放长远些，我们的技术不应该局限于某一种语言，而应该把重心放在跨语言的那些通用技术。比如：操作系统、算法和数据结构、网络及设计模式重构思想等，这些东西在任何语言中都会用到而且也会是重点。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/02/hexo博客换电脑后怎么办/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1895,154 +2051,11 @@ public static int w(String tag, String msg) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" itemprop="url">
-                  osx下pip3安装matplotlib时 The following required packages can not be built freetype
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2087,7 +2100,7 @@ public static int w(String tag, String msg) {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2098,7 +2111,7 @@ public static int w(String tag, String msg) {
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2109,7 +2122,7 @@ public static int w(String tag, String msg) {
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
