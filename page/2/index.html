@@ -273,6 +273,166 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/25/hexo本地图片发布后不能显示的问题/" itemprop="url">
+                  hexo本地图片发布后不能显示的问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T15:16:33+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是url地址是本地地址。这样如果你发布文章后，别人肯定是看不到你的图片的。这样体验很不好。最开始的想法就是先在简书发布，发布后图片url都是来自简书网站url，而非本地，这样是没问题的，但是这样自己的网站显示个图片还要依赖简书平台，可能代码写多了，总感觉耦合性太强啊~~所以就在找怎么把两个平台独立开来，而自己网站又能发布图片的方法。</p>
+<p>经过查找发现hexo-asset-image插件可以比较好的支持本地图片发布。</p>
+<h1 id="开启资源文件支持"><a href="#开启资源文件支持" class="headerlink" title="开启资源文件支持"></a>开启资源文件支持</h1><p>在hexo目录下的_config.yml配置文件中找到这个配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: false</div></pre></td></tr></table></figure>
+<p>把这里的false改为true。开启hexo的媒体文件支持。</p>
+<h1 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h1><p>在命令行中，跳转到hexo目录下，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</div></pre></td></tr></table></figure>
+<p>会自动安装插件，插件会安装到node_moudules目录下，<img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.33.13.png" alt="屏幕快照 2017-04-25 下午3.33.13"></p>
+<p>同时还会自动在hexo目录下package.json中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;hexo-asset-image&quot;: &quot;git+https://github.com/CodeFalling/hexo-asset-image.git&quot;,</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说这些就是想告诉你，不用的时候如何卸载：删掉那个文件夹和那一行就行了。</p>
+</blockquote>
+<p>以上执行完毕后，在命令行执行：hexo new “文件”时，会在_post文件夹下同时生成md文件和同名文件夹，这个同名文件夹就是用来放图片的，把你在该文章中需要显示的图片放进去，然后在markdown中选择该目录下的图片使用，这样当md编译生成html文件时，会把图片拷贝到html文件同目录中。最后执行hexo d -g 部署到服务器时，图片也就被部署到服务器中了。</p>
+<p>注意：如果直接把图片拖动到markdown编辑器中，其路径可能为绝对路径，需要改下：</p>
+<p><img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.34.46.png" alt="屏幕快照 2017-04-25 下午3.34.46"></p>
+<p>修改为相对路径：</p>
+<p><img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.45.37.png" alt="屏幕快照 2017-04-25 下午3.45.37"></p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>上面说了hexo new “名称” ，这样每次同时生成文件和文件夹，当然也可以不使用命令行，直接在_post目录下手动创建md文件和文件夹亦可，手动创建的好处时如果你的文章不需要图片，那么你可以不创建对应的文件夹。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -785,6 +945,196 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" itemprop="url">
+                  Python入门系列(2):字符串、变量和简单数据类型的上手
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>java在声明变量时都要先指定数据类型 比如 int a=3 ; Stringt name = “jenson”;<br>但是在python中可以直接使用变量<br>python中的注释使用”#”</p>
+<h1 id="字符串的使用"><a href="#字符串的使用" class="headerlink" title="字符串的使用"></a>字符串的使用</h1><ul>
+<li>直接声明变量</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;jenson&quot;)</div><div class="line">name =&quot;jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
+<p>打印如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jenson</div><div class="line">jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<ul>
+<li>字符串拼接直接使用+号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;hello jenson&quot;)</div><div class="line">name = &quot;hello&quot;+ &quot; jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
+<p>打印结果一样一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">hello jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<ul>
+<li>去除字符串的空白</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">name = &quot;   jenson   &quot;</div><div class="line">print(name.lstrip())</div><div class="line">print(name.rstrip())</div><div class="line">print(name.strip())</div></pre></td></tr></table></figure>
+<p>结果如下</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c10ea4a7be3c8130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.01.19.png"></p>
+<p>这里去除的空白分别是左边、右边和两边的空白，并不能去除中间空白</p>
+<ul>
+<li>字符串的大小写</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">say = &quot;hello jenson&quot;</div><div class="line">print(say)</div><div class="line">print(say.upper())</div><div class="line">print(say.lower())</div><div class="line">print(say.title())</div></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">HELLO JENSON</div><div class="line">hello jenson</div><div class="line">Hello Jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<p>可见三个函数的作用分别是使字符串大写、小写、单词首字母大写。</p>
+<ul>
+<li>基本类型和运算</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print(3+5)</div><div class="line">print(10-2)</div><div class="line">print(2*4)</div><div class="line">print(16/2)</div><div class="line">print(2+3*4)</div><div class="line">print(2**3)</div></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">8</div><div class="line">8</div><div class="line">8.0</div><div class="line">14</div><div class="line">8</div><div class="line">[Finished in 0.2s]</div></pre></td></tr></table></figure>
+<p>可以看出python对四则运算支持优先级，注意一下<em>这里的幂用2个乘号表示</em></p>
+<ul>
+<li>基本类型转为字符串<br>基本类型和字符串混合使用时注意把基本类型先转换为字符串，使用str(基本类型值)，否则会引发异常。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">age = 25;</div><div class="line">print(str(age))</div><div class="line">say = &quot;I&apos;am &quot;+age </div><div class="line">print(say)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">25</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jenson/Desktop/python_work/str_text.py&quot;, line 15, in &lt;module&gt;</div><div class="line">    say = &quot;I&apos;am &quot;+age </div><div class="line">TypeError: Can&apos;t convert &apos;int&apos; object to str implicitly</div><div class="line">[Finished in 0.0s with exit code 1]</div><div class="line">[cmd: [&apos;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&apos;, &apos;-u&apos;, &apos;/Users/jenson/Desktop/python_work/str_text.py&apos;]]</div><div class="line">[dir: /Users/jenson/Desktop/python_work]</div><div class="line">[path: /usr/bin:/bin:/usr/sbin:/sbin]</div></pre></td></tr></table></figure>
+<p>第一个print已经打印，第二个却报了异常，因为没有转换。</p>
+<ul>
+<li>python2和python3整数除法比较</li>
+</ul>
+<p>在python2下做除法运算3/2，得到结果是1 ，并不是1.5</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92eac21fee40ffd9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.34.19.png"></p>
+<p>而在python3下是正常的</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4b8c5bd6f9354a2e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.35.27.png"></p>
+<p>这是因为python2中计算整数结果时不是采取四舍五入，而是将整数部分直接删除，所以在python2中如果要避免这种情况，要确保至少有一个操作数为浮点数，这样得到的结果也为浮点数</p>
+<p>完毕。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1081,7 +1431,7 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -1103,192 +1453,8 @@ public static int w(String tag, String msg) {
             
               
                 
-                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
-                  osx下如何使用SublimeText阅读Android系统源码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<ul>
-<li><p>安装CTags</p>
-<ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
-<ul>
-<li>3.创建索引</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" itemprop="url">
-                  Python入门系列(2):字符串、变量和简单数据类型的上手
+                <a class="post-title-link" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" itemprop="url">
+                  osx下pip3安装matplotlib时 The following required packages can not be built freetype
                 </a>
               
             
@@ -1363,55 +1529,8 @@ public static int w(String tag, String msg) {
       
         
           
-            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>java在声明变量时都要先指定数据类型 比如 int a=3 ; Stringt name = “jenson”;<br>但是在python中可以直接使用变量<br>python中的注释使用”#”</p>
-<h1 id="字符串的使用"><a href="#字符串的使用" class="headerlink" title="字符串的使用"></a>字符串的使用</h1><ul>
-<li>直接声明变量</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;jenson&quot;)</div><div class="line">name =&quot;jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
-<p>打印如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jenson</div><div class="line">jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<ul>
-<li>字符串拼接直接使用+号</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;hello jenson&quot;)</div><div class="line">name = &quot;hello&quot;+ &quot; jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
-<p>打印结果一样一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">hello jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<ul>
-<li>去除字符串的空白</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">name = &quot;   jenson   &quot;</div><div class="line">print(name.lstrip())</div><div class="line">print(name.rstrip())</div><div class="line">print(name.strip())</div></pre></td></tr></table></figure>
-<p>结果如下</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c10ea4a7be3c8130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.01.19.png"></p>
-<p>这里去除的空白分别是左边、右边和两边的空白，并不能去除中间空白</p>
-<ul>
-<li>字符串的大小写</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">say = &quot;hello jenson&quot;</div><div class="line">print(say)</div><div class="line">print(say.upper())</div><div class="line">print(say.lower())</div><div class="line">print(say.title())</div></pre></td></tr></table></figure>
-<p>结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">HELLO JENSON</div><div class="line">hello jenson</div><div class="line">Hello Jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<p>可见三个函数的作用分别是使字符串大写、小写、单词首字母大写。</p>
-<ul>
-<li>基本类型和运算</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print(3+5)</div><div class="line">print(10-2)</div><div class="line">print(2*4)</div><div class="line">print(16/2)</div><div class="line">print(2+3*4)</div><div class="line">print(2**3)</div></pre></td></tr></table></figure>
-<p>输出如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">8</div><div class="line">8</div><div class="line">8.0</div><div class="line">14</div><div class="line">8</div><div class="line">[Finished in 0.2s]</div></pre></td></tr></table></figure>
-<p>可以看出python对四则运算支持优先级，注意一下<em>这里的幂用2个乘号表示</em></p>
-<ul>
-<li>基本类型转为字符串<br>基本类型和字符串混合使用时注意把基本类型先转换为字符串，使用str(基本类型值)，否则会引发异常。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">age = 25;</div><div class="line">print(str(age))</div><div class="line">say = &quot;I&apos;am &quot;+age </div><div class="line">print(say)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">25</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jenson/Desktop/python_work/str_text.py&quot;, line 15, in &lt;module&gt;</div><div class="line">    say = &quot;I&apos;am &quot;+age </div><div class="line">TypeError: Can&apos;t convert &apos;int&apos; object to str implicitly</div><div class="line">[Finished in 0.0s with exit code 1]</div><div class="line">[cmd: [&apos;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&apos;, &apos;-u&apos;, &apos;/Users/jenson/Desktop/python_work/str_text.py&apos;]]</div><div class="line">[dir: /Users/jenson/Desktop/python_work]</div><div class="line">[path: /usr/bin:/bin:/usr/sbin:/sbin]</div></pre></td></tr></table></figure>
-<p>第一个print已经打印，第二个却报了异常，因为没有转换。</p>
-<ul>
-<li>python2和python3整数除法比较</li>
-</ul>
-<p>在python2下做除法运算3/2，得到结果是1 ，并不是1.5</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92eac21fee40ffd9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.34.19.png"></p>
-<p>而在python3下是正常的</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4b8c5bd6f9354a2e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.35.27.png"></p>
-<p>这是因为python2中计算整数结果时不是采取四舍五入，而是将整数部分直接删除，所以在python2中如果要避免这种情况，要确保至少有一个操作数为浮点数，这样得到的结果也为浮点数</p>
-<p>完毕。</p>
+            <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
+<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
 
           
         
@@ -1571,149 +1690,6 @@ public static int w(String tag, String msg) {
 <p>编写完代码保存，command+B执行编译</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
 <p>本节完成。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" itemprop="url">
-                  osx下pip3安装matplotlib时 The following required packages can not be built freetype
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
 
           
         
@@ -2088,7 +2064,7 @@ public static int w(String tag, String msg) {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
