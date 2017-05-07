@@ -97,7 +97,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/05/Android关于Activity生命周期误解/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="两个Activity  A和B，先启动A，通过A打开B，在关闭B，这时候两个Activity的生命周期分别是如何执行的？ 我的答案是： A启动时 A onCreate onStart onResume 点击启动B之后 A onPause onStop, B onCreate onStart onResume B关闭之后 B onPause onStop onDestory ,A onRestart">
-<meta property="og:updated_time" content="2017-05-05T03:53:34.000Z">
+<meta property="og:updated_time" content="2017-05-07T06:28:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android关于Activity生命周期误解">
 <meta name="twitter:description" content="两个Activity  A和B，先启动A，通过A打开B，在关闭B，这时候两个Activity的生命周期分别是如何执行的？ 我的答案是： A启动时 A onCreate onStart onResume 点击启动B之后 A onPause onStop, B onCreate onStart onResume B关闭之后 B onPause onStop onDestory ,A onRestart">
@@ -379,7 +379,6 @@
 <blockquote>
 <p>记住一点：启动一个新Activity，先把自己onPause，然后等新Activity启动成功即onResume后再onStop，关闭当前Activity时，还是先把自己onPause，下一帧的Activity(相对于Activity栈来说)执行恢复onResume，然后自己再执行onStop、onDestory</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: A Activity启动</div><div class="line">op1=&gt;operation: A onCreate()</div><div class="line">op2=&gt;operation: A onStart()</div><div class="line">op3=&gt;operation: A onResume()</div><div class="line">op4=&gt;operation: 启动B按钮被点击</div><div class="line">op5=&gt;operation: A onPause()</div><div class="line">op6=&gt;operation: B onCreate()</div><div class="line">op7=&gt;operation: B onStart()</div><div class="line">op8=&gt;operation: B onResume()</div><div class="line">op9=&gt;operation: A onStop()</div><div class="line">op10=&gt;operation: 点击关闭B按钮</div><div class="line">op11=&gt;operation: B onPause()</div><div class="line">op12=&gt;operation: A onRestart()</div><div class="line">op13=&gt;operation: A onStart()</div><div class="line">op14=&gt;operation: A onResume()</div><div class="line">op15=&gt;operation: B onStop()</div><div class="line">op16=&gt;operation: B onDestory()</div><div class="line">st-&gt;op1-&gt;op2-&gt;op3-&gt;op4-&gt;op5-&gt;op6-&gt;op7-&gt;op8-&gt;op9-&gt;op10-&gt;op11-&gt;op12-&gt;op13-&gt;op14-&gt;op15-&gt;op16-&gt;e</div><div class="line">e=&gt;end:结束</div></pre></td></tr></table></figure>
 <p>虽然知道了真相，但是现在还不清楚为什么要这样设计，，有时间还要看看这里的源码，mark下。</p>
 
       
