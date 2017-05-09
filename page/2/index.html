@@ -1246,6 +1246,149 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" itemprop="url">
+                  osx下pip3安装matplotlib时 The following required packages can not be built freetype
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
+<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1353,165 +1496,6 @@ public static int w(String tag, String msg) {
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
 <p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" itemprop="url">
-                  Python入门系列(1):如何使用Sublime text开发Python
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
-<h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
-<li>找到Python3的安装路径<br>终端中输入命令</li>
-</ul>
-<figure class="highlight plain"><figcaption><span>-a python3 ```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到结果</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.io/upload_images/1796052-01e91620f87d697b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">复制路径```/Library/Frameworks/Python.framework/Versions/3.5/bin/python3</div></pre></td></tr></table></figure>
-<ul>
-<li>配置Sublime<br>打开Sublime-&gt;Tools-&gt;build system-&gt;new build system<br>如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.41.06.png"></p>
-<p>点击new build system 后的窗口如下图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
-<p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
-<p>print(“hello python!”)<br>```</p>
-<p>编写完代码保存，command+B执行编译</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
-<p>本节完成。</p>
 
           
         
@@ -1701,7 +1685,7 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -1723,8 +1707,8 @@ public static int w(String tag, String msg) {
             
               
                 
-                <a class="post-title-link" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" itemprop="url">
-                  osx下pip3安装matplotlib时 The following required packages can not be built freetype
+                <a class="post-title-link" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" itemprop="url">
+                  Python入门系列(1):如何使用Sublime text开发Python
                 </a>
               
             
@@ -1799,8 +1783,24 @@ public static int w(String tag, String msg) {
       
         
           
-            <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+            <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
+<h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
+<li>找到Python3的安装路径<br>终端中输入命令</li>
+</ul>
+<figure class="highlight plain"><figcaption><span>-a python3 ```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到结果</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.io/upload_images/1796052-01e91620f87d697b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">复制路径```/Library/Frameworks/Python.framework/Versions/3.5/bin/python3</div></pre></td></tr></table></figure>
+<ul>
+<li>配置Sublime<br>打开Sublime-&gt;Tools-&gt;build system-&gt;new build system<br>如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.41.06.png"></p>
+<p>点击new build system 后的窗口如下图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
+<p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
+<p>print(“hello python!”)<br>```</p>
+<p>编写完代码保存，command+B执行编译</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
+<p>本节完成。</p>
 
           
         
