@@ -273,442 +273,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/为什么我在工作线程刷新UI没报错/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/为什么我在工作线程刷新UI没报错/" itemprop="url">
-                  为什么我在工作线程刷新UI没报错？
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T20:55:54+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>从做Android开发以来就一直被灌输“只能在主线程刷新UI”的思想，但是这两天发现个问题，在onCreate中创建工作线程并刷新UI没有报错。代码是这样的：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">   final TextView tv = (TextView) findViewById(R.id.sample_text);</div><div class="line">   new Thread(new Runnable() &#123;</div><div class="line">       @Override</div><div class="line">       public void run() &#123;</div><div class="line">           tv.setText(&quot;来自&quot;+Thread.currentThread().getName()+&quot;线程的更新&quot;);</div><div class="line">       &#125;</div><div class="line">   &#125;).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>期待已久的crash没有出现，反而页面是这样显示的：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-7be6319d0fc94867.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-26 下午7.14.46.png"><br>不禁让人陷入深思···<br><img src="http://upload-images.jianshu.io/upload_images/1796052-8a0ce88639c31d1d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="思考.jpg"></p>
-<p>第一步，分析问题原因。以前工作线程刷新UI会出现异常并提示只能在UI线程刷新UI。所以假设有个地方(函数)会在刷新UI前判断当前线程是不是主线程，那么现在问题就是验证下是否真的存在这么个地方。问题是从setText引起的，那就从这里出发看看。<br>点进去看下发现又调用了其重载函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@android.view.RemotableViewMethod</div><div class="line">public final void setText(CharSequence text) &#123;</div><div class="line">    setText(text, mBufferType);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>继续深入发现这个方法代码挺多的，但是不用过于关注细节，粗略浏览下不难发现前面大部分代码大多是对text文本格式的一些处理判断，无关刷新UI，直到            checkForRelayout()方法执行，从名字看是“从新布局”，根据view绘制流程测量、布局、绘制，那布局完了不是就绘制刷新了吗？所以决定去checkForRelayout方法看看。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div></pre></td><td class="code"><pre><div class="line">private void setText(CharSequence text, BufferType type,</div><div class="line">                     boolean notifyBefore, int oldlen) &#123;</div><div class="line">    if (text == null) &#123;</div><div class="line">        text = &quot;&quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // If suggestions are not enabled, remove the suggestion spans from the text</div><div class="line">    if (!isSuggestionsEnabled()) &#123;</div><div class="line">        text = removeSuggestionSpans(text);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!mUserSetTextScaleX) mTextPaint.setTextScaleX(1.0f);</div><div class="line"></div><div class="line">    if (text instanceof Spanned &amp;&amp;</div><div class="line">        ((Spanned) text).getSpanStart(TextUtils.TruncateAt.MARQUEE) &gt;= 0) &#123;</div><div class="line">        if (ViewConfiguration.get(mContext).isFadingMarqueeEnabled()) &#123;</div><div class="line">            setHorizontalFadingEdgeEnabled(true);</div><div class="line">            mMarqueeFadeMode = MARQUEE_FADE_NORMAL;</div><div class="line">        &#125; else &#123;</div><div class="line">            setHorizontalFadingEdgeEnabled(false);</div><div class="line">            mMarqueeFadeMode = MARQUEE_FADE_SWITCH_SHOW_ELLIPSIS;</div><div class="line">        &#125;</div><div class="line">        setEllipsize(TextUtils.TruncateAt.MARQUEE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int n = mFilters.length;</div><div class="line">    for (int i = 0; i &lt; n; i++) &#123;</div><div class="line">        CharSequence out = mFilters[i].filter(text, 0, text.length(), EMPTY_SPANNED, 0, 0);</div><div class="line">        if (out != null) &#123;</div><div class="line">            text = out;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (notifyBefore) &#123;</div><div class="line">        if (mText != null) &#123;</div><div class="line">            oldlen = mText.length();</div><div class="line">            sendBeforeTextChanged(mText, 0, oldlen, text.length());</div><div class="line">        &#125; else &#123;</div><div class="line">            sendBeforeTextChanged(&quot;&quot;, 0, 0, text.length());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    boolean needEditableForNotification = false;</div><div class="line"></div><div class="line">    if (mListeners != null &amp;&amp; mListeners.size() != 0) &#123;</div><div class="line">        needEditableForNotification = true;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (type == BufferType.EDITABLE || getKeyListener() != null ||</div><div class="line">            needEditableForNotification) &#123;</div><div class="line">        createEditorIfNeeded();</div><div class="line">        Editable t = mEditableFactory.newEditable(text);</div><div class="line">        text = t;</div><div class="line">        setFilters(t, mFilters);</div><div class="line">        InputMethodManager imm = InputMethodManager.peekInstance();</div><div class="line">        if (imm != null) imm.restartInput(this);</div><div class="line">    &#125; else if (type == BufferType.SPANNABLE || mMovement != null) &#123;</div><div class="line">        text = mSpannableFactory.newSpannable(text);</div><div class="line">    &#125; else if (!(text instanceof CharWrapper)) &#123;</div><div class="line">        text = TextUtils.stringOrSpannedString(text);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (mAutoLinkMask != 0) &#123;</div><div class="line">        Spannable s2;</div><div class="line"></div><div class="line">        if (type == BufferType.EDITABLE || text instanceof Spannable) &#123;</div><div class="line">            s2 = (Spannable) text;</div><div class="line">        &#125; else &#123;</div><div class="line">            s2 = mSpannableFactory.newSpannable(text);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (Linkify.addLinks(s2, mAutoLinkMask)) &#123;</div><div class="line">            text = s2;</div><div class="line">            type = (type == BufferType.EDITABLE) ? BufferType.EDITABLE : BufferType.SPANNABLE;</div><div class="line"></div><div class="line">            /*</div><div class="line">             * We must go ahead and set the text before changing the</div><div class="line">             * movement method, because setMovementMethod() may call</div><div class="line">             * setText() again to try to upgrade the buffer type.</div><div class="line">             */</div><div class="line">            mText = text;</div><div class="line"></div><div class="line">            // Do not change the movement method for text that support text selection as it</div><div class="line">            // would prevent an arbitrary cursor displacement.</div><div class="line">            if (mLinksClickable &amp;&amp; !textCanBeSelected()) &#123;</div><div class="line">                setMovementMethod(LinkMovementMethod.getInstance());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    mBufferType = type;</div><div class="line">    mText = text;</div><div class="line"></div><div class="line">    if (mTransformation == null) &#123;</div><div class="line">        mTransformed = text;</div><div class="line">    &#125; else &#123;</div><div class="line">        mTransformed = mTransformation.getTransformation(text, this);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    final int textLength = text.length();</div><div class="line"></div><div class="line">    if (text instanceof Spannable &amp;&amp; !mAllowTransformationLengthChange) &#123;</div><div class="line">        Spannable sp = (Spannable) text;</div><div class="line"></div><div class="line">        // Remove any ChangeWatchers that might have come from other TextViews.</div><div class="line">        final ChangeWatcher[] watchers = sp.getSpans(0, sp.length(), ChangeWatcher.class);</div><div class="line">        final int count = watchers.length;</div><div class="line">        for (int i = 0; i &lt; count; i++) &#123;</div><div class="line">            sp.removeSpan(watchers[i]);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (mChangeWatcher == null) mChangeWatcher = new ChangeWatcher();</div><div class="line"></div><div class="line">        sp.setSpan(mChangeWatcher, 0, textLength, Spanned.SPAN_INCLUSIVE_INCLUSIVE |</div><div class="line">                   (CHANGE_WATCHER_PRIORITY &lt;&lt; Spanned.SPAN_PRIORITY_SHIFT));</div><div class="line"></div><div class="line">        if (mEditor != null) mEditor.addSpanWatchers(sp);</div><div class="line"></div><div class="line">        if (mTransformation != null) &#123;</div><div class="line">            sp.setSpan(mTransformation, 0, textLength, Spanned.SPAN_INCLUSIVE_INCLUSIVE);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (mMovement != null) &#123;</div><div class="line">            mMovement.initialize(this, (Spannable) text);</div><div class="line"></div><div class="line">            /*</div><div class="line">             * Initializing the movement method will have set the</div><div class="line">             * selection, so reset mSelectionMoved to keep that from</div><div class="line">             * interfering with the normal on-focus selection-setting.</div><div class="line">             */</div><div class="line">            if (mEditor != null) mEditor.mSelectionMoved = false;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (mLayout != null) &#123;</div><div class="line">        checkForRelayout();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    sendOnTextChanged(text, 0, oldlen, textLength);</div><div class="line">    onTextChanged(text, 0, oldlen, textLength);</div><div class="line"></div><div class="line">    notifyViewAccessibilityStateChangedIfNeeded(AccessibilityEvent.CONTENT_CHANGE_TYPE_TEXT);</div><div class="line"></div><div class="line">    if (needEditableForNotification) &#123;</div><div class="line">        sendAfterTextChanged((Editable) text);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // SelectionModifierCursorController depends on textCanBeSelected, which depends on text</div><div class="line">    if (mEditor != null) mEditor.prepareCursorControllers();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>找到checkForRelayout方法查看：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">private void checkForRelayout() &#123;</div><div class="line">    // If we have a fixed width, we can just swap in a new text layout</div><div class="line">    // if the text height stays the same or if the view height is fixed.</div><div class="line"></div><div class="line">    if ((mLayoutParams.width != LayoutParams.WRAP_CONTENT ||</div><div class="line">            (mMaxWidthMode == mMinWidthMode &amp;&amp; mMaxWidth == mMinWidth)) &amp;&amp;</div><div class="line">            (mHint == null || mHintLayout != null) &amp;&amp;</div><div class="line">            (mRight - mLeft - getCompoundPaddingLeft() - getCompoundPaddingRight() &gt; 0)) &#123;</div><div class="line">        // Static width, so try making a new text layout.</div><div class="line"></div><div class="line">        int oldht = mLayout.getHeight();</div><div class="line">        int want = mLayout.getWidth();</div><div class="line">        int hintWant = mHintLayout == null ? 0 : mHintLayout.getWidth();</div><div class="line"></div><div class="line">        /*</div><div class="line">         * No need to bring the text into view, since the size is not</div><div class="line">         * changing (unless we do the requestLayout(), in which case it</div><div class="line">         * will happen at measure).</div><div class="line">         */</div><div class="line">        makeNewLayout(want, hintWant, UNKNOWN_BORING, UNKNOWN_BORING,</div><div class="line">                      mRight - mLeft - getCompoundPaddingLeft() - getCompoundPaddingRight(),</div><div class="line">                      false);</div><div class="line"></div><div class="line">        if (mEllipsize != TextUtils.TruncateAt.MARQUEE) &#123;</div><div class="line">            // In a fixed-height view, so use our new text layout.</div><div class="line">            if (mLayoutParams.height != LayoutParams.WRAP_CONTENT &amp;&amp;</div><div class="line">                mLayoutParams.height != LayoutParams.MATCH_PARENT) &#123;</div><div class="line">                invalidate();</div><div class="line">                return;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            // Dynamic height, but height has stayed the same,</div><div class="line">            // so use our new text layout.</div><div class="line">            if (mLayout.getHeight() == oldht &amp;&amp;</div><div class="line">                (mHintLayout == null || mHintLayout.getHeight() == oldht)) &#123;</div><div class="line">                invalidate();</div><div class="line">                return;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // We lose: the height has changed and we have a dynamic height.</div><div class="line">        // Request a new view layout using our new text layout.</div><div class="line">        requestLayout();</div><div class="line">        invalidate();</div><div class="line">    &#125; else &#123;</div><div class="line">        // Dynamic width, so we have no choice but to request a new</div><div class="line">        // view layout with a new text layout.</div><div class="line">        nullLayouts();</div><div class="line">        requestLayout();</div><div class="line">        invalidate();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>发现不管是if还是else，都要执行invalidate()，那就进去看看，一路进展比较顺利，好像离真理更进一步了。经过连续的三连调跳转到了invalidateInternal方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">public void invalidate() &#123;</div><div class="line">       invalidate(true);</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   /**</div><div class="line">    * This is where the invalidate() work actually happens. A full invalidate()</div><div class="line">    * causes the drawing cache to be invalidated, but this function can be</div><div class="line">    * called with invalidateCache set to false to skip that invalidation step</div><div class="line">    * for cases that do not need it (for example, a component that remains at</div><div class="line">    * the same dimensions with the same content).</div><div class="line">    *</div><div class="line">    * @param invalidateCache Whether the drawing cache for this view should be</div><div class="line">    *            invalidated as well. This is usually true for a full</div><div class="line">    *            invalidate, but may be set to false if the View&apos;s contents or</div><div class="line">    *            dimensions have not changed.</div><div class="line">    */</div><div class="line">   void invalidate(boolean invalidateCache) &#123;</div><div class="line">       invalidateInternal(0, 0, mRight - mLeft, mBottom - mTop, invalidateCache, true);</div><div class="line">   &#125;</div><div class="line"></div><div class="line">  void invalidateInternal(int l, int t, int r, int b, boolean invalidateCache,</div><div class="line">           boolean fullInvalidate) &#123;</div><div class="line">       if (mGhostView != null) &#123;</div><div class="line">           mGhostView.invalidate(true);</div><div class="line">           return;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       if (skipInvalidate()) &#123;</div><div class="line">           return;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       if ((mPrivateFlags &amp; (PFLAG_DRAWN | PFLAG_HAS_BOUNDS)) == (PFLAG_DRAWN | PFLAG_HAS_BOUNDS)</div><div class="line">               || (invalidateCache &amp;&amp; (mPrivateFlags &amp; PFLAG_DRAWING_CACHE_VALID) == PFLAG_DRAWING_CACHE_VALID)</div><div class="line">               || (mPrivateFlags &amp; PFLAG_INVALIDATED) != PFLAG_INVALIDATED</div><div class="line">               || (fullInvalidate &amp;&amp; isOpaque() != mLastIsOpaque)) &#123;</div><div class="line">           if (fullInvalidate) &#123;</div><div class="line">               mLastIsOpaque = isOpaque();</div><div class="line">               mPrivateFlags &amp;= ~PFLAG_DRAWN;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           mPrivateFlags |= PFLAG_DIRTY;</div><div class="line"></div><div class="line">           if (invalidateCache) &#123;</div><div class="line">               mPrivateFlags |= PFLAG_INVALIDATED;</div><div class="line">               mPrivateFlags &amp;= ~PFLAG_DRAWING_CACHE_VALID;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // Propagate the damage rectangle to the parent view.</div><div class="line">           final AttachInfo ai = mAttachInfo;</div><div class="line">           final ViewParent p = mParent;</div><div class="line">           if (p != null &amp;&amp; ai != null &amp;&amp; l &lt; r &amp;&amp; t &lt; b) &#123;</div><div class="line">               final Rect damage = ai.mTmpInvalRect;</div><div class="line">               damage.set(l, t, r, b);</div><div class="line">               p.invalidateChild(this, damage);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // Damage the entire projection receiver, if necessary.</div><div class="line">           if (mBackground != null &amp;&amp; mBackground.isProjected()) &#123;</div><div class="line">               final View receiver = getProjectionReceiver();</div><div class="line">               if (receiver != null) &#123;</div><div class="line">                   receiver.damageInParent();</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // Damage the entire IsolatedZVolume receiving this view&apos;s shadow.</div><div class="line">           if (isHardwareAccelerated() &amp;&amp; getZ() != 0) &#123;</div><div class="line">               damageShadowReceiver();</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>重点看invalidateChild()这个方法，方法里面有do while循环，每次循环出当前view的parent，最后一次循环返回的parent时ViewRootImpl类实例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line">public final void invalidateChild(View child, final Rect dirty) &#123;</div><div class="line">       ViewParent parent = this;</div><div class="line"></div><div class="line">       final AttachInfo attachInfo = mAttachInfo;</div><div class="line">       if (attachInfo != null) &#123;</div><div class="line">           // If the child is drawing an animation, we want to copy this flag onto</div><div class="line">           // ourselves and the parent to make sure the invalidate request goes</div><div class="line">           // through</div><div class="line">           final boolean drawAnimation = (child.mPrivateFlags &amp; PFLAG_DRAW_ANIMATION)</div><div class="line">                   == PFLAG_DRAW_ANIMATION;</div><div class="line"></div><div class="line">           // Check whether the child that requests the invalidate is fully opaque</div><div class="line">           // Views being animated or transformed are not considered opaque because we may</div><div class="line">           // be invalidating their old position and need the parent to paint behind them.</div><div class="line">           Matrix childMatrix = child.getMatrix();</div><div class="line">           final boolean isOpaque = child.isOpaque() &amp;&amp; !drawAnimation &amp;&amp;</div><div class="line">                   child.getAnimation() == null &amp;&amp; childMatrix.isIdentity();</div><div class="line">           // Mark the child as dirty, using the appropriate flag</div><div class="line">           // Make sure we do not set both flags at the same time</div><div class="line">           int opaqueFlag = isOpaque ? PFLAG_DIRTY_OPAQUE : PFLAG_DIRTY;</div><div class="line"></div><div class="line">           if (child.mLayerType != LAYER_TYPE_NONE) &#123;</div><div class="line">               mPrivateFlags |= PFLAG_INVALIDATED;</div><div class="line">               mPrivateFlags &amp;= ~PFLAG_DRAWING_CACHE_VALID;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           final int[] location = attachInfo.mInvalidateChildLocation;</div><div class="line">           location[CHILD_LEFT_INDEX] = child.mLeft;</div><div class="line">           location[CHILD_TOP_INDEX] = child.mTop;</div><div class="line">           if (!childMatrix.isIdentity() ||</div><div class="line">                   (mGroupFlags &amp; ViewGroup.FLAG_SUPPORT_STATIC_TRANSFORMATIONS) != 0) &#123;</div><div class="line">               RectF boundingRect = attachInfo.mTmpTransformRect;</div><div class="line">               boundingRect.set(dirty);</div><div class="line">               Matrix transformMatrix;</div><div class="line">               if ((mGroupFlags &amp; ViewGroup.FLAG_SUPPORT_STATIC_TRANSFORMATIONS) != 0) &#123;</div><div class="line">                   Transformation t = attachInfo.mTmpTransformation;</div><div class="line">                   boolean transformed = getChildStaticTransformation(child, t);</div><div class="line">                   if (transformed) &#123;</div><div class="line">                       transformMatrix = attachInfo.mTmpMatrix;</div><div class="line">                       transformMatrix.set(t.getMatrix());</div><div class="line">                       if (!childMatrix.isIdentity()) &#123;</div><div class="line">                           transformMatrix.preConcat(childMatrix);</div><div class="line">                       &#125;</div><div class="line">                   &#125; else &#123;</div><div class="line">                       transformMatrix = childMatrix;</div><div class="line">                   &#125;</div><div class="line">               &#125; else &#123;</div><div class="line">                   transformMatrix = childMatrix;</div><div class="line">               &#125;</div><div class="line">               transformMatrix.mapRect(boundingRect);</div><div class="line">               dirty.set((int) (boundingRect.left - 0.5f),</div><div class="line">                       (int) (boundingRect.top - 0.5f),</div><div class="line">                       (int) (boundingRect.right + 0.5f),</div><div class="line">                       (int) (boundingRect.bottom + 0.5f));</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           do &#123;</div><div class="line">               View view = null;</div><div class="line">               if (parent instanceof View) &#123;</div><div class="line">                   view = (View) parent;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               if (drawAnimation) &#123;</div><div class="line">                   if (view != null) &#123;</div><div class="line">                       view.mPrivateFlags |= PFLAG_DRAW_ANIMATION;</div><div class="line">                   &#125; else if (parent instanceof ViewRootImpl) &#123;</div><div class="line">                       ((ViewRootImpl) parent).mIsAnimating = true;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               // If the parent is dirty opaque or not dirty, mark it dirty with the opaque</div><div class="line">               // flag coming from the child that initiated the invalidate</div><div class="line">               if (view != null) &#123;</div><div class="line">                   if ((view.mViewFlags &amp; FADING_EDGE_MASK) != 0 &amp;&amp;</div><div class="line">                           view.getSolidColor() == 0) &#123;</div><div class="line">                       opaqueFlag = PFLAG_DIRTY;</div><div class="line">                   &#125;</div><div class="line">                   if ((view.mPrivateFlags &amp; PFLAG_DIRTY_MASK) != PFLAG_DIRTY) &#123;</div><div class="line">                       view.mPrivateFlags = (view.mPrivateFlags &amp; ~PFLAG_DIRTY_MASK) | opaqueFlag;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               parent = parent.invalidateChildInParent(location, dirty);</div><div class="line">               if (view != null) &#123;</div><div class="line">                   // Account for transform on current parent</div><div class="line">                   Matrix m = view.getMatrix();</div><div class="line">                   if (!m.isIdentity()) &#123;</div><div class="line">                       RectF boundingRect = attachInfo.mTmpTransformRect;</div><div class="line">                       boundingRect.set(dirty);</div><div class="line">                       m.mapRect(boundingRect);</div><div class="line">                       dirty.set((int) (boundingRect.left - 0.5f),</div><div class="line">                               (int) (boundingRect.top - 0.5f),</div><div class="line">                               (int) (boundingRect.right + 0.5f),</div><div class="line">                               (int) (boundingRect.bottom + 0.5f));</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">           &#125; while (parent != null);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>现在查看ViewRootImpl类的invalidateChildInParent()方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public ViewParent invalidateChildInParent(int[] location, Rect dirty) &#123;</div><div class="line">    checkThread();</div><div class="line">    if (DEBUG_DRAW) Log.v(TAG, &quot;Invalidate child: &quot; + dirty);</div><div class="line"></div><div class="line">    if (dirty == null) &#123;</div><div class="line">        invalidate();</div><div class="line">        return null;</div><div class="line">    &#125; else if (dirty.isEmpty() &amp;&amp; !mIsAnimating) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (mCurScrollY != 0 || mTranslator != null) &#123;</div><div class="line">        mTempRect.set(dirty);</div><div class="line">        dirty = mTempRect;</div><div class="line">        if (mCurScrollY != 0) &#123;</div><div class="line">            dirty.offset(0, -mCurScrollY);</div><div class="line">        &#125;</div><div class="line">        if (mTranslator != null) &#123;</div><div class="line">            mTranslator.translateRectInAppWindowToScreen(dirty);</div><div class="line">        &#125;</div><div class="line">        if (mAttachInfo.mScalingRequired) &#123;</div><div class="line">            dirty.inset(-1, -1);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    final Rect localDirty = mDirty;</div><div class="line">    if (!localDirty.isEmpty() &amp;&amp; !localDirty.contains(dirty)) &#123;</div><div class="line">        mAttachInfo.mSetIgnoreDirtyState = true;</div><div class="line">        mAttachInfo.mIgnoreDirtyState = true;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Add the new dirty rect to the current one</div><div class="line">    localDirty.union(dirty.left, dirty.top, dirty.right, dirty.bottom);</div><div class="line">    // Intersect with the bounds of the window to skip</div><div class="line">    // updates that lie outside of the visible region</div><div class="line">    final float appScale = mAttachInfo.mApplicationScale;</div><div class="line">    final boolean intersected = localDirty.intersect(0, 0,</div><div class="line">            (int) (mWidth * appScale + 0.5f), (int) (mHeight * appScale + 0.5f));</div><div class="line">    if (!intersected) &#123;</div><div class="line">        localDirty.setEmpty();</div><div class="line">    &#125;</div><div class="line">    if (!mWillDrawSoon &amp;&amp; (intersected || mIsAnimating)) &#123;</div><div class="line">        scheduleTraversals();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>方法块的第一行好像就是我们要找的验证线程的地方checkThread()，而该方法内容也很简单，看到抛出的异常就很熟悉了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">void checkThread() &#123;</div><div class="line">    if (mThread != Thread.currentThread()) &#123;</div><div class="line">        throw new CalledFromWrongThreadException(</div><div class="line">                &quot;Only the original thread that created a view hierarchy can touch its views.&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第二步，验证线程地方已经找到了，假设得到了证实，那么为什么该有的异常没有出现呢？现在再次假设是不是因为某些原因导致checkThread()没有执行呢？</p>
-<p>有人可能会问会不会是mThread == Thread.currentThread()？其实这是不可能的 ，先看下mThread赋值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public ViewRootImpl(Context context, Display display) &#123;</div><div class="line">    mContext = context;</div><div class="line">    mWindowSession = WindowManagerGlobal.getWindowSession();</div><div class="line">    mDisplay = display;</div><div class="line">    mBasePackageName = context.getBasePackageName();</div><div class="line"></div><div class="line">    mDisplayAdjustments = display.getDisplayAdjustments();</div><div class="line"></div><div class="line">    mThread = Thread.currentThread();</div></pre></td></tr></table></figure>
-<p>ViewRootImpl类实例化是在Activity启动时的主线程创建的，所以mThread是主线程实例，而checkThread()中的Thread.currentThread()，最初是由textView.setText()调用的一系列方法栈，并且setText是在子线程调用。</p>
-<p>继续刚才的假设，不过现在要逆推回去，checkThread()方法没有执行，可以认为ViewRootImpl的invalidateChildInParent()方法没有执行，它又是在ViewGroup中invalidateChild()方法里的do while中调用，要使do while不被调用，继续往上看，如果attachInfo为null，进不去if语句块也就不会执行checkThread()了，这是第一个可能的原因。记录下，继续逆推。</p>
-<p>View中的invalidateInternal()方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// Propagate the damage rectangle to the parent view.</div><div class="line">      final AttachInfo ai = mAttachInfo;</div><div class="line">      final ViewParent p = mParent;</div><div class="line">      if (p != null &amp;&amp; ai != null &amp;&amp; l &lt; r &amp;&amp; t &lt; b) &#123;</div><div class="line">          final Rect damage = ai.mTmpInvalRect;</div><div class="line">          damage.set(l, t, r, b);</div><div class="line">          p.invalidateChild(this, damage);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
-<p>根据判断条件，如果p即mParent或者ai即mAttachInfo 任一为null，都不会执行invalidateChild，这是第二个可能原因，这里的ai和第一个原因的attachInfo是一样的，所以第一个原因可能忽略，精力关注在第二个原因上。</p>
-<blockquote>
-<p>现在的关注点是实例p和ai是什么时候创建的，有没有为null的现象？</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">final AttachInfo ai = mAttachInfo;</div></pre></td></tr></table></figure>
-<p>而mAttachInfo是在View的dispatchAttachedToWindow()方法中赋值的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> void dispatchAttachedToWindow(AttachInfo info, int visibility) &#123;</div><div class="line">        //System.out.println(&quot;Attached! &quot; + this);</div><div class="line">        mAttachInfo = info;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>View的dispatchAttachedToWindow()方法是在ViewRootImpl中的performTraversals()方法调用，这个方法是遍历View Tree</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">private void performTraversals() &#123;</div><div class="line">       // cache mView since it is used so much below...</div><div class="line">       final View host = mView;</div><div class="line">       ·······</div><div class="line">       host.dispatchAttachedToWindow(mAttachInfo, 0);</div></pre></td></tr></table></figure>
-<p>可见View中的mAttachInfo来自ViewrootImpl的mAttachInfo，而ViewrootImpl的mAttachInfo是在其构造方法中被赋值的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public ViewRootImpl(Context context, Display display) &#123;</div><div class="line">    mContext = context;</div><div class="line">    mWindowSession = WindowManagerGlobal.getWindowSession();</div><div class="line">    mDisplay = display;</div><div class="line">    mBasePackageName = context.getBasePackageName();</div><div class="line"></div><div class="line">    mDisplayAdjustments = display.getDisplayAdjustments();</div><div class="line"></div><div class="line">    mThread = Thread.currentThread();</div><div class="line">    mLocation = new WindowLeaked(null);</div><div class="line">    mLocation.fillInStackTrace();</div><div class="line">    mWidth = -1;</div><div class="line">    mHeight = -1;</div><div class="line">    mDirty = new Rect();</div><div class="line">    mTempRect = new Rect();</div><div class="line">    mVisRect = new Rect();</div><div class="line">    mWinFrame = new Rect();</div><div class="line">    mWindow = new W(this);</div><div class="line">    mTargetSdkVersion = context.getApplicationInfo().targetSdkVersion;</div><div class="line">    mViewVisibility = View.GONE;</div><div class="line">    mTransparentRegion = new Region();</div><div class="line">    mPreviousTransparentRegion = new Region();</div><div class="line">    mFirst = true; // true for the first time the view is added</div><div class="line">    mAdded = false;</div><div class="line">    mAttachInfo = new View.AttachInfo(mWindowSession, mWindow, display, this, mHandler, this);</div><div class="line">   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>之前说了ViewRootImpl实例是在Activity启动时创建的，现在看看具体是启动的什么时候:在向window添加view的时候即：WindowManagerGlobal的addView方法中创建ViewrootImpl实例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line">public void addView(View view, ViewGroup.LayoutParams params,</div><div class="line">           Display display, Window parentWindow) &#123;</div><div class="line">       if (view == null) &#123;</div><div class="line">           throw new IllegalArgumentException(&quot;view must not be null&quot;);</div><div class="line">       &#125;</div><div class="line">       if (display == null) &#123;</div><div class="line">           throw new IllegalArgumentException(&quot;display must not be null&quot;);</div><div class="line">       &#125;</div><div class="line">       if (!(params instanceof WindowManager.LayoutParams)) &#123;</div><div class="line">           throw new IllegalArgumentException(&quot;Params must be WindowManager.LayoutParams&quot;);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       final WindowManager.LayoutParams wparams = (WindowManager.LayoutParams)params;</div><div class="line">       if (parentWindow != null) &#123;</div><div class="line">           parentWindow.adjustLayoutParamsForSubWindow(wparams);</div><div class="line">       &#125; else &#123;</div><div class="line">           // If there&apos;s no parent and we&apos;re running on L or above (or in the</div><div class="line">           // system context), assume we want hardware acceleration.</div><div class="line">           final Context context = view.getContext();</div><div class="line">           if (context != null</div><div class="line">                   &amp;&amp; context.getApplicationInfo().targetSdkVersion &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</div><div class="line">               wparams.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       ViewRootImpl root;</div><div class="line">       View panelParentView = null;</div><div class="line"></div><div class="line">       synchronized (mLock) &#123;</div><div class="line">           // Start watching for system property changes.</div><div class="line">           if (mSystemPropertyUpdater == null) &#123;</div><div class="line">               mSystemPropertyUpdater = new Runnable() &#123;</div><div class="line">                   @Override public void run() &#123;</div><div class="line">                       synchronized (mLock) &#123;</div><div class="line">                           for (int i = mRoots.size() - 1; i &gt;= 0; --i) &#123;</div><div class="line">                               mRoots.get(i).loadSystemProperties();</div><div class="line">                           &#125;</div><div class="line">                       &#125;</div><div class="line">                   &#125;</div><div class="line">               &#125;;</div><div class="line">               SystemProperties.addChangeCallback(mSystemPropertyUpdater);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           int index = findViewLocked(view, false);</div><div class="line">           if (index &gt;= 0) &#123;</div><div class="line">               if (mDyingViews.contains(view)) &#123;</div><div class="line">                   // Don&apos;t wait for MSG_DIE to make it&apos;s way through root&apos;s queue.</div><div class="line">                   mRoots.get(index).doDie();</div><div class="line">               &#125; else &#123;</div><div class="line">                   throw new IllegalStateException(&quot;View &quot; + view</div><div class="line">                           + &quot; has already been added to the window manager.&quot;);</div><div class="line">               &#125;</div><div class="line">               // The previous removeView() had not completed executing. Now it has.</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           // If this is a panel window, then find the window it is being</div><div class="line">           // attached to for future reference.</div><div class="line">           if (wparams.type &gt;= WindowManager.LayoutParams.FIRST_SUB_WINDOW &amp;&amp;</div><div class="line">                   wparams.type &lt;= WindowManager.LayoutParams.LAST_SUB_WINDOW) &#123;</div><div class="line">               final int count = mViews.size();</div><div class="line">               for (int i = 0; i &lt; count; i++) &#123;</div><div class="line">                   if (mRoots.get(i).mWindow.asBinder() == wparams.token) &#123;</div><div class="line">                       panelParentView = mViews.get(i);</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           root = new ViewRootImpl(view.getContext(), display);</div><div class="line"></div><div class="line">           view.setLayoutParams(wparams);</div><div class="line"></div><div class="line">           mViews.add(view);</div><div class="line">           mRoots.add(root);</div><div class="line">           mParams.add(wparams);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       // do this last because it fires off messages to start doing things</div><div class="line">       try &#123;</div><div class="line">           root.setView(view, wparams, panelParentView);</div><div class="line">       &#125; catch (RuntimeException e) &#123;</div><div class="line">           // BadTokenException or InvalidDisplayException, clean up.</div><div class="line">           synchronized (mLock) &#123;</div><div class="line">               final int index = findViewLocked(view, false);</div><div class="line">               if (index &gt;= 0) &#123;</div><div class="line">                   removeViewLocked(index, true);</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           throw e;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>而调用addView()方法是在ActivityThread类的handleResumeActivity()方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">final void handleResumeActivity(IBinder token,</div><div class="line">        boolean clearHide, boolean isForward, boolean reallyResume) &#123;</div><div class="line">    // If we are getting ready to gc after going to the background, well</div><div class="line">    // we are back active so skip it.</div><div class="line">    unscheduleGcIdler();</div><div class="line">    mSomeActivitiesChanged = true;</div><div class="line"></div><div class="line">    // TODO Push resumeArgs into the activity for consideration</div><div class="line">    ActivityClientRecord r = performResumeActivity(token, clearHide);</div><div class="line"></div><div class="line">    if (r != null) &#123;</div><div class="line">        final Activity a = r.activity;</div><div class="line"></div><div class="line">        if (localLOGV) Slog.v(</div><div class="line">            TAG, &quot;Resume &quot; + r + &quot; started activity: &quot; +</div><div class="line">            a.mStartedActivity + &quot;, hideForNow: &quot; + r.hideForNow</div><div class="line">            + &quot;, finished: &quot; + a.mFinished);</div><div class="line"></div><div class="line">        final int forwardBit = isForward ?</div><div class="line">                WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION : 0;</div><div class="line"></div><div class="line">        // If the window hasn&apos;t yet been added to the window manager,</div><div class="line">        // and this guy didn&apos;t finish itself or start another activity,</div><div class="line">        // then go ahead and add the window.</div><div class="line">        boolean willBeVisible = !a.mStartedActivity;</div><div class="line">        if (!willBeVisible) &#123;</div><div class="line">            try &#123;</div><div class="line">                willBeVisible = ActivityManagerNative.getDefault().willActivityBeVisible(</div><div class="line">                        a.getActivityToken());</div><div class="line">            &#125; catch (RemoteException e) &#123;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        if (r.window == null &amp;&amp; !a.mFinished &amp;&amp; willBeVisible) &#123;</div><div class="line">            r.window = r.activity.getWindow();</div><div class="line">            View decor = r.window.getDecorView();</div><div class="line">            decor.setVisibility(View.INVISIBLE);</div><div class="line">            ViewManager wm = a.getWindowManager();</div><div class="line">            WindowManager.LayoutParams l = r.window.getAttributes();</div><div class="line">            a.mDecor = decor;</div><div class="line">            l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;</div><div class="line">            l.softInputMode |= forwardBit;</div><div class="line">            if (a.mVisibleFromClient) &#123;</div><div class="line">                a.mWindowAdded = true;</div><div class="line">                wm.addView(decor, l);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        // If the window has already been added, but during resume</div><div class="line">        // we started another activity, then don&apos;t yet make the</div><div class="line">        // window visible.</div><div class="line">        &#125; else if (!willBeVisible) &#123;</div><div class="line">            if (localLOGV) Slog.v(</div><div class="line">                TAG, &quot;Launch &quot; + r + &quot; mStartedActivity set&quot;);</div><div class="line">            r.hideForNow = true;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // Get rid of anything left hanging around.</div><div class="line">        cleanUpPendingRemoveWindows(r);</div><div class="line"></div><div class="line">        // The window is now visible if it has been added, we are not</div><div class="line">        // simply finishing, and we are not starting another activity.</div><div class="line">        if (!r.activity.mFinished &amp;&amp; willBeVisible</div><div class="line">                &amp;&amp; r.activity.mDecor != null &amp;&amp; !r.hideForNow) &#123;</div><div class="line">            if (r.newConfig != null) &#123;</div><div class="line">                if (DEBUG_CONFIGURATION) Slog.v(TAG, &quot;Resuming activity &quot;</div><div class="line">                        + r.activityInfo.name + &quot; with newConfig &quot; + r.newConfig);</div><div class="line">                performConfigurationChanged(r.activity, r.newConfig);</div><div class="line">                freeTextLayoutCachesIfNeeded(r.activity.mCurrentConfig.diff(r.newConfig));</div><div class="line">                r.newConfig = null;</div><div class="line">            &#125;</div><div class="line">            if (localLOGV) Slog.v(TAG, &quot;Resuming &quot; + r + &quot; with isForward=&quot;</div><div class="line">                    + isForward);</div><div class="line">            WindowManager.LayoutParams l = r.window.getAttributes();</div><div class="line">            if ((l.softInputMode</div><div class="line">                    &amp; WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION)</div><div class="line">                    != forwardBit) &#123;</div><div class="line">                l.softInputMode = (l.softInputMode</div><div class="line">                        &amp; (~WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION))</div><div class="line">                        | forwardBit;</div><div class="line">                if (r.activity.mVisibleFromClient) &#123;</div><div class="line">                    ViewManager wm = a.getWindowManager();</div><div class="line">                    View decor = r.window.getDecorView();</div><div class="line">                    wm.updateViewLayout(decor, l);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            r.activity.mVisibleFromServer = true;</div><div class="line">            mNumVisibleActivities++;</div><div class="line">            if (r.activity.mVisibleFromClient) &#123;</div><div class="line">                r.activity.makeVisible();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (!r.onlyLocalRequest) &#123;</div><div class="line">            r.nextIdle = mNewActivities;</div><div class="line">            mNewActivities = r;</div><div class="line">            if (localLOGV) Slog.v(</div><div class="line">                TAG, &quot;Scheduling idle handler for &quot; + r);</div><div class="line">            Looper.myQueue().addIdleHandler(new Idler());</div><div class="line">        &#125;</div><div class="line">        r.onlyLocalRequest = false;</div><div class="line"></div><div class="line">        // Tell the activity manager we have resumed.</div><div class="line">        if (reallyResume) &#123;</div><div class="line">            try &#123;</div><div class="line">                ActivityManagerNative.getDefault().activityResumed(token);</div><div class="line">            &#125; catch (RemoteException ex) &#123;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125; else &#123;</div><div class="line">        // If an exception was thrown when trying to resume, then</div><div class="line">        // just end this activity.</div><div class="line">        try &#123;</div><div class="line">            ActivityManagerNative.getDefault()</div><div class="line">                .finishActivity(token, Activity.RESULT_CANCELED, null, false);</div><div class="line">        &#125; catch (RemoteException ex) &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>看到上面的方法有些人心里可能有底儿了，handleResumeActivity()方法是不是让Activity回调onResume？如果是的话一切就都明了了，因为ViewrootImpl是在onReume期间创建，而AttachInfo是在ViewRootImpl实例化时创建，我们的工作线程是在onCreate时刷新UI的，那时候还没有实例化AttachInfo，导致mAttachInfo为null，最终if条件判断失败没有进入。然而这一切都是在YY，实践才是检验真理的唯一标准，动起来：</p>
-<p>看到这一行代码<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ActivityClientRecord r = performResumeActivity(token, clearHide);</div><div class="line">```微微一笑，点进去看看，</div></pre></td></tr></table></figure></p>
-<pre><code>public final ActivityClientRecord performResumeActivity(IBinder token,
-        boolean clearHide) {
-    ActivityClientRecord r = mActivities.get(token);
-    if (localLOGV) Slog.v(TAG, &quot;Performing resume of &quot; + r
-            + &quot; finished=&quot; + r.activity.mFinished);
-    if (r != null &amp;&amp; !r.activity.mFinished) {
-        if (clearHide) {
-            r.hideForNow = false;
-            r.activity.mStartedActivity = false;
-        }
-        try {
-            r.activity.mFragments.noteStateNotSaved();
-            if (r.pendingIntents != null) {
-                deliverNewIntents(r, r.pendingIntents);
-                r.pendingIntents = null;
-            }
-            if (r.pendingResults != null) {
-                deliverResults(r, r.pendingResults);
-                r.pendingResults = null;
-            }
-            r.activity.performResume();
-
-            EventLog.writeEvent(LOG_ON_RESUME_CALLED,
-                    UserHandle.myUserId(), r.activity.getComponentName().getClassName());
-
-            r.paused = false;
-            r.stopped = false;
-            r.state = null;
-            r.persistentState = null;
-        } catch (Exception e) {
-            if (!mInstrumentation.onException(r.activity, e)) {
-                throw new RuntimeException(
-                    &quot;Unable to resume activity &quot;
-                    + r.intent.getComponent().toShortString()
-                    + &quot;: &quot; + e.toString(), e);
-            }
-        }
-    }
-    return r;
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">代码很短，很容易提取有用信息：``` r.activity.performResume();```在进去看看：</div></pre></td></tr></table></figure>
-<pre><code>final void performResume() {
-    performRestart();
-
-    mFragments.execPendingActions();
-
-    mLastNonConfigurationInstances = null;
-
-    mCalled = false;
-    // mResumed is set by the instrumentation
-    mInstrumentation.callActivityOnResume(this);
-    if (!mCalled) {
-        throw new SuperNotCalledException(
-            &quot;Activity &quot; + mComponent.toShortString() +
-            &quot; did not call through to super.onResume()&quot;);
-    }
-
-    // Now really resume, and install the current status bar and menu.
-    mCalled = false;
-
-    mFragments.dispatchResume();
-    mFragments.execPendingActions();
-
-    onPostResume();
-    if (!mCalled) {
-        throw new SuperNotCalledException(
-            &quot;Activity &quot; + mComponent.toShortString() +
-            &quot; did not call through to super.onPostResume()&quot;);
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">看到```mInstrumentation```这个属性就能感觉到越来越接近SDK API层了，看看它的```callActivityOnResume()```方法做了什么：</div></pre></td></tr></table></figure>
-<pre><code>public void callActivityOnResume(Activity activity) {
-    activity.mResumed = true;
-    activity.onResume();
-
-    if (mActivityMonitors != null) {
-        synchronized (mSync) {
-            final int N = mActivityMonitors.size();
-            for (int i=0; i&lt;N; i++) {
-                final ActivityMonitor am = mActivityMonitors.get(i);
-                am.match(activity, activity, activity.getIntent());
-            }
-        }
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">一行```activity.onResume();```已经水落石出。</div><div class="line">回到handleResumeActivity代码中，我精简下：</div></pre></td></tr></table></figure>
-<p> final void handleResumeActivity(IBinder token,<br>            boolean clearHide, boolean isForward, boolean reallyResume) {<br>   //这里是最终回调Activity的onResume()方法<br>        ActivityClientRecord r = performResumeActivity(token, clearHide);<br>//省略若干<br>        if (r != null) {<br>            final Activity a = r.activity;<br>            final int forwardBit = isForward ?<br>            WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION : 0;<br>            boolean willBeVisible = !a.mStartedActivity;</p>
-<pre><code>if (r.window == null &amp;&amp; !a.mFinished &amp;&amp; willBeVisible) {
-    r.window = r.activity.getWindow();
-    View decor = r.window.getDecorView();
-    decor.setVisibility(View.INVISIBLE);
-    ViewManager wm = a.getWindowManager();
-    WindowManager.LayoutParams l = r.window.getAttributes();
-    a.mDecor = decor;
-    l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;
-    l.softInputMode |= forwardBit;
-    if (a.mVisibleFromClient) {
-        a.mWindowAdded = true;
-</code></pre><p>//这里是调用WindowManagerGlobal的addView()方法最终实例化ViewRootImpl，进而实例化AttachInfo<br>                    wm.addView(decor, l);<br>                }</p>
-<pre><code>        } else if (!willBeVisible) {
-            if (localLOGV) Slog.v(
-                TAG, &quot;Launch &quot; + r + &quot; mStartedActivity set&quot;);
-            r.hideForNow = true;
-        }
-    }
-}
-</code></pre><p>```</p>
-<p>另外关于阅读源码问题，win下当然使用SourceInsight不二选，如果是在mac下可以参考我的<a href="http://www.jianshu.com/p/c295d2729ecf" target="_blank" rel="external">osx下如何使用SublimeText阅读Android系统源码</a>.。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/如何知道下载好的aosp版本/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/如何知道下载好的aosp版本/" itemprop="url">
-                  如何知道下载好的aosp版本？
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T20:55:54+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>下载源码时执行的是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
-<p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -870,7 +434,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/Android性能优化之内存优化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/Android源码下载/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -892,8 +456,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/21/Android性能优化之内存优化/" itemprop="url">
-                  Android性能优化之内存优化
+                <a class="post-title-link" href="/2017/04/21/Android源码下载/" itemprop="url">
+                  Android源码下载
                 </a>
               
             
@@ -968,129 +532,17 @@
       
         
           
-            <blockquote>
-<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979" target="_blank" rel="external">Android性能优化之耗电优化
-</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
-<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
-<h4 id="如何保证已使用内存顺利被回收？"><a href="#如何保证已使用内存顺利被回收？" class="headerlink" title="如何保证已使用内存顺利被回收？"></a>如何保证已使用内存顺利被回收？</h4><ul>
-<li><p>Java对象生命周期</p>
-<ul>
-<li>创建阶段<br>申请内存空间，构造对象并初始化相关属性值</li>
-<li>使用阶段<br>根据对象应用调用相关方法完成业务逻辑。对象至少被一个强引用持有，除非对象创建时显示声明使用软引用、弱引用和虚引用。</li>
-<li>不可见阶段<br>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，当然对象还是存在着的。</li>
-<li><p>不可达阶段<br>对象处于不可达阶段是指该对象不再被任何强引用所持有。GC会发现对象已不可达</p>
-</li>
-<li><p>收集阶段<br>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。</p>
-</li>
-<li><p>终结阶段<br>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段，等待垃圾回收器对该对象空间进行回收。</p>
-</li>
-<li><p>对象空间重新分配阶段<br>若垃圾回收器对该对象的所占用的内存空间进行回收或者再分配，则该对象彻底消失，这个阶段称之为“对象空间重新分配阶段”。</p>
-<p>以上是Java对象生命周期的简要介绍，要保证内存顺利回收，正确使用Java对象生命周期很重要，如果不能及时回收，我们就称之为“发生了内存泄露”。</p>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>在不可见阶段，程序本身不再持有对象强引用，但对象仍可能被JVM等系统下的某些已装载的静态变量或线程或JNI等强引用持有着，这些特殊的强引用被称为”GC root”。存在着这些GC root会导致对象的内存泄露情况，无法被回收。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="垃圾回收.jpeg"></p>
-<p>图中灰色的孤立无援的对象对于GC Roots来说不可达，会被回收。知道了内存泄露会影响回收，下面说下哪些方面会导致内存泄露</p>
-<ul>
-<li><p>引起内存泄露的情况</p>
-<ul>
-<li>资源没有适时关闭<br>sqlite的cursor、读写文件使用的File文件流等在使用完后没有及时关闭。虽然cursor会在系统回收时自动关闭，但是这样效率较低。对于资源对象使用还是应该养成良好习惯，使用完毕close并置空。</li>
-<li>注册对象未注销<br>在Android中主要是指注册的广播在Activity销毁时反注销。<br>在Activity中如果有使用的观察者模式在生命周期发生变化时根据需求注销。<br>在Activity中使用的各类传感器(光线、重力等)在页面销毁时及时注销，否则不光导致内存泄露还会因为传感器频繁的采样导致耗电及cpu的占用。</li>
-<li><p>使用static修饰变量<br>这里只说一点，被static修饰的变量可以认为是直接被GC Roots引用了，那你就知道其生命周期有多长了。这时候你如果用static 修饰Bitmap、View、Context和Activity等后果有多严重了吧。</p>
-</li>
-<li><p>非静态内部类的静态实例</p>
-<p>   先看几行代码：</p>
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">public static People people;</div><div class="line"> 		 @Override</div><div class="line">  		protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">     		 super.onCreate(savedInstanceState);</div><div class="line">     		 setContentView(R.layout.activity_main);</div><div class="line">     		 people = new People();</div><div class="line">  		&#125;</div><div class="line"> 		 class  People&#123;</div><div class="line">     		 int age ;</div><div class="line">     		 String name ;</div><div class="line">  		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>   非静态内部类People持有外部类即当前Activity的引用，而该非静态内部类实例又是static修饰        的，导致Activity一直被持有而不得释放，最终导致Activity所包含的view不能释放，如果view         tree中包含多图片，那泄露的内存是很大的。</p>
-</li>
-<li><p>Handler</p>
-<p>   众所周知handler用来发送和处理消息回调的。<br>handler导致泄露主要是handler实例是作为非静态匿名内部类方式创建，并且MessageQueue队列中有未处理消息，这时如果退出Activity，MessageQueue中还有Message，而Message持有handler实例，handler实例作为非静态内部类持有Activity引用，最终的连锁反应导致Activity泄露。</p>
-<blockquote>
-<p>handler引起的内存泄露一般是临时性的，因为消息队列里的Message在延时到时间或者某一情况激活后还是会执行的，除非你是故意搞事情。创建handler时最好使用静态内部类，同时在Activity退出时执行 handler.removeCallbacksAndMessages(null);清空队列消息</p>
-</blockquote>
-</li>
-<li><p>Webview</p>
-<p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
-</li>
-</ul>
-<ul>
-<li><p>容器中的对象未清理对象</p>
-<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<h4 id="如何尽量小的申请内存？"><a href="#如何尽量小的申请内存？" class="headerlink" title="如何尽量小的申请内存？"></a>如何尽量小的申请内存？</h4><p>上面说完了如何保证GC顺利回收，现在来讲讲要最小使用内存应该怎么做：</p>
-<ul>
-<li><p>慎用自动封装</p>
-<p>  来几行代码尝尝：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Integer num=0;</div><div class="line">for (int i=0;i&lt;100;i++) &#123;</div><div class="line">    num+=i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>  Java基本数据类型是有自动装箱机制的。每次执行循环都会发生一次装箱操作创建一个Integer对象，造成内存消耗。包括其他基本数据类型都有可能造成这种情况。</p>
-</li>
-<li><p>内存复用</p>
-<ul>
-<li><p>视图复用</p>
-<pre><code>在ListView中使用ViewHolder复用item组件，一方面节省内存，一方面提高滑动流畅性。都用过不多介绍。
-</code></pre></li>
-<li><p>使用对象池</p>
-<pre><code>看过Handler、Looper、Message、MessageQueue这一套消息循环源码的同志应该知道里面的Message使用了对象池模式。
-</code></pre><blockquote>
-<p>对象池类似线程池， 首先初始化一个固定大小池子，每次创建对象时候先去池子中找有没有，如果有直接取出，如果没有new出来使用后还到池子里。这样便可达到对象复用的目的。<br>对象池模式适用于那些频繁使用创建的对象，比如一个聊天app，里面对象最多的恐怕就是聊天信息(每条聊天信息对应一个信息对象)。都知道对象的创建是很耗费时间和内存的，没事不要new着玩。如果每条消息都创建一个对象，那可想而知该APP的性能。</p>
-</blockquote>
-<pre><code>对象池的使用也很简单，少量代码即可完成：
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class People &#123;</div><div class="line">     			private static final Pools.SynchronizedPool&lt;People&gt; sPool = new Pools.SynchronizedPool&lt;People&gt;(</div><div class="line">        		   	  20);//需要维持对象的数量</div><div class="line">     			int age;</div><div class="line">    			String name;</div><div class="line">   </div><div class="line">     			public static People obtain() &#123;</div><div class="line">       			  People instance = sPool.acquire();</div><div class="line">       			  return (instance != null) ? instance : new People();</div><div class="line">     			&#125;</div><div class="line">     			public void recycle() &#123;</div><div class="line">       			  sPool.release(this);</div><div class="line">    		 	&#125;</div><div class="line"> 			&#125;</div></pre></td></tr></table></figure>
-
-&gt;注意：对象申请(obtain)和释放(recycle)成对出现，使用一个对象后一定要释放还给对象池。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>- Bitmap复用
-
-    如果设置了options.inBitmap属性，以后再使用带有该options参数的decode方法加载图片资源时        ，decode会尝试重用已存在的位图内存，这样节省了加载和分配的时间，同时也节省了内存空间
-
-    &gt;该属性从3.0开始引进，低版本不支持inBitmap，4.4系统之前只能重用大小相同的内存区域，4.4以后可以重用任何比所需内存小的区域。具体使用可参考[官网](https://developer.android.com/topic/performance/graphics/manage-memory.html)。
-</code></pre><ul>
-<li><p>纯色规则形状背景用Color Res代替图片</p>
-<pre><code>经常遇到一些按钮背景是纯色显示，比如选中状态背景变为纯灰，但是设计已经发来了切图用还是不用？大声say NO！如果背景使用图片来显示，那背景每个像素都要绘制。
-
-假设一个分辨率为100x100的图片，占用4通道。那该图片内存占用就是100x100x4 =4万Byte≈40KB；但是如果使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">- 选择合适数据类型</div><div class="line"></div><div class="line">   - 使用ArrayMap替换HashMap</div><div class="line"></div><div class="line">		先看一下HashMap模型和ArrayMap模型：</div><div class="line">![hashmap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-3e3049cb811341c1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">![arraymap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-0d979501c5d1358f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"></div><div class="line">&gt;HashMap是一个散列链表，稀疏阵列导致内存稍大，而ArrayMap提供了和HashMap一样的功能，但是避免了内存过度开销。在执行插入或删除操作时，从性能上看ArrayMap比HashMap稍差，但是如果对象数很小，比如1000以内不用担心性能问题。如果想深入了解这2个的原理请自行搜索，这里不过多阐述。</div><div class="line"></div><div class="line"></div><div class="line">  - 枚举替身来了</div><div class="line">      JDK1.5就支持了枚举类型，使用Enum关键字定义。使用枚举类型很多时候出于参数类型安全迫不得已作出的选择。</div></pre></td></tr></table></figure>
-</code></pre><p>public String  getValue(int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    default:
-        throw new IllegalArgumentException(&quot;不合法参数&quot;);
-}
-</code></pre><p>return “”;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> 试想一下如果一个函数的参数为int type，函数处理时只用到了1，2，3三种值，如果是其他值就抛出异常，这无疑增加了程序的不稳定性，按以前此时最好的解决办法就是参数改为枚举类型，增加了限定也就提高了稳定性。但是枚举类型就是一把双刃剑，增加安全同时也大大增加了内存占用,尤其是在移动设备上，资源有限更应该注意内存节省。</div><div class="line"></div><div class="line">谷歌或许考虑到了这些问题，在提供的注解包里添加了注解方式检查类型安全，目前支持int和String两种，看下使用方式：</div></pre></td></tr></table></figure>
-<p>//1、先声明需要的类型常量值<br>public static final int TYPE_1 = 1;<br>public static final int TYPE_2 = 2;<br>//2、创建注解接口同时把上一步声明的常量囊括到这里<br>@IntDef({TYPE_1,TYPE_2})<br>@Retention(RetentionPolicy.SOURCE)<br>public @interface _TYPE{</p>
-<p>}<br>//3、在函数参数中增加 注解接口名称<br>public String getValue(@_TYPE int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-}
-return &quot;&quot;;
-</code></pre><p>}<br>```</p>
-<p>   经过上面的步骤，再调用getValue()函数时如果传入其他int则报错编译不通过，这样通过注解就增加了安全性：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午7.13.32.png"></p>
-</li>
-</ul>
-<p>结语：基本上APP大部分内存还是被图片占用，处理好图片尤为重要，但是关于图片三级缓存及缩放，目前都使用第三方框架如ImageLoader，所以这里一笔带过。以上就是日常内存优化需要注意的地方，自己做个总结，也希望能对各位看官有所帮助。</p>
-
+            <h4 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h4><p>win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。</p>
+<h4 id="从官网下载"><a href="#从官网下载" class="headerlink" title="从官网下载"></a>从官网下载</h4><p>下载Android源码首先想到的就是<a href="https://source.android.com/source/downloading.html" target="_blank" rel="external">官网</a><br>按照指示要先安装repo。但是在执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div></pre></td></tr></table></figure></p>
+<p>时候就出现异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--    0</div><div class="line">curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out</div></pre></td></tr></table></figure>
+<p>搜索了下异常发现很早就有这个问题，比如<a href="https://github.com/npm/npm/issues/10037" target="_blank" rel="external">这里</a><br>但是好像没什么好的解决方法。网传有其他地址可以使用，但是没有继续浪费时间了，不能一条路走到黑。</p>
+<h4 id="使用国内资源"><a href="#使用国内资源" class="headerlink" title="使用国内资源"></a>使用国内资源</h4><p>国外太麻烦，毕竟只是想看源码，不想在下载方面浪费太多精力。所以把想法转战到国内的源上。<br>分享2个源，<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/aosp#已有仓库如何改用科大源" target="_blank" rel="external">科大源</a>和<a href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/" target="_blank" rel="external">清大源</a><br>其中我选择使用的是科大源，打开页面看到初始同步有两个方法，方法1毕竟简单，下载一个打好的包，自己repo sync。方法2还是要下载repo，而且如果中途断掉还要从头下载，所以果断选了方法1，直接使用迅雷下载tar包还是很快的。<br>不到一个小时下载完成，解压后打开aosp文件夹发现没有文件，因为是.开头的，都是隐藏文件，显示后如图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午1.55.14.png"><br>执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo sync</div></pre></td></tr></table></figure></p>
+<p>同步</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-185f5625074cf187.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午2.08.54.png"></p>
+<h4 id="如何修改已经init的repo"><a href="#如何修改已经init的repo" class="headerlink" title="如何修改已经init的repo"></a>如何修改已经init的repo</h4><p>如果想下载其他版本的源码，但是repo已经初始化过，<br>如果再次执行repo init xxx会提示 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Your identity is: jenson &lt;xxx@foxmail.com&gt;</div><div class="line">If you want to change this, please re-run &apos;repo init&apos; with --config-name</div><div class="line">repo has been initialized in /Users/jenson/Downloads/aosp</div></pre></td></tr></table></figure></p>
+<p>上面意思是如果要修改init，需要重新运行repo init +新的url +config<br>这时会自动修改配置并初始化:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-6.0.1_r58  --config</div></pre></td></tr></table></figure>
           
         
       
@@ -1515,7 +967,7 @@ return &quot;&quot;;
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/Android源码下载/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/Android性能优化之内存优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -1537,8 +989,8 @@ return &quot;&quot;;
             
               
                 
-                <a class="post-title-link" href="/2017/04/21/Android源码下载/" itemprop="url">
-                  Android源码下载
+                <a class="post-title-link" href="/2017/04/21/Android性能优化之内存优化/" itemprop="url">
+                  Android性能优化之内存优化
                 </a>
               
             
@@ -1613,17 +1065,273 @@ return &quot;&quot;;
       
         
           
-            <h4 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h4><p>win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。</p>
-<h4 id="从官网下载"><a href="#从官网下载" class="headerlink" title="从官网下载"></a>从官网下载</h4><p>下载Android源码首先想到的就是<a href="https://source.android.com/source/downloading.html" target="_blank" rel="external">官网</a><br>按照指示要先安装repo。但是在执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div></pre></td></tr></table></figure></p>
-<p>时候就出现异常</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--    0</div><div class="line">curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out</div></pre></td></tr></table></figure>
-<p>搜索了下异常发现很早就有这个问题，比如<a href="https://github.com/npm/npm/issues/10037" target="_blank" rel="external">这里</a><br>但是好像没什么好的解决方法。网传有其他地址可以使用，但是没有继续浪费时间了，不能一条路走到黑。</p>
-<h4 id="使用国内资源"><a href="#使用国内资源" class="headerlink" title="使用国内资源"></a>使用国内资源</h4><p>国外太麻烦，毕竟只是想看源码，不想在下载方面浪费太多精力。所以把想法转战到国内的源上。<br>分享2个源，<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/aosp#已有仓库如何改用科大源" target="_blank" rel="external">科大源</a>和<a href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/" target="_blank" rel="external">清大源</a><br>其中我选择使用的是科大源，打开页面看到初始同步有两个方法，方法1毕竟简单，下载一个打好的包，自己repo sync。方法2还是要下载repo，而且如果中途断掉还要从头下载，所以果断选了方法1，直接使用迅雷下载tar包还是很快的。<br>不到一个小时下载完成，解压后打开aosp文件夹发现没有文件，因为是.开头的，都是隐藏文件，显示后如图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午1.55.14.png"><br>执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo sync</div></pre></td></tr></table></figure></p>
-<p>同步</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-185f5625074cf187.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午2.08.54.png"></p>
-<h4 id="如何修改已经init的repo"><a href="#如何修改已经init的repo" class="headerlink" title="如何修改已经init的repo"></a>如何修改已经init的repo</h4><p>如果想下载其他版本的源码，但是repo已经初始化过，<br>如果再次执行repo init xxx会提示 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Your identity is: jenson &lt;xxx@foxmail.com&gt;</div><div class="line">If you want to change this, please re-run &apos;repo init&apos; with --config-name</div><div class="line">repo has been initialized in /Users/jenson/Downloads/aosp</div></pre></td></tr></table></figure></p>
-<p>上面意思是如果要修改init，需要重新运行repo init +新的url +config<br>这时会自动修改配置并初始化:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-6.0.1_r58  --config</div></pre></td></tr></table></figure>
+            <blockquote>
+<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979" target="_blank" rel="external">Android性能优化之耗电优化
+</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
+<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
+<h4 id="如何保证已使用内存顺利被回收？"><a href="#如何保证已使用内存顺利被回收？" class="headerlink" title="如何保证已使用内存顺利被回收？"></a>如何保证已使用内存顺利被回收？</h4><ul>
+<li><p>Java对象生命周期</p>
+<ul>
+<li>创建阶段<br>申请内存空间，构造对象并初始化相关属性值</li>
+<li>使用阶段<br>根据对象应用调用相关方法完成业务逻辑。对象至少被一个强引用持有，除非对象创建时显示声明使用软引用、弱引用和虚引用。</li>
+<li>不可见阶段<br>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，当然对象还是存在着的。</li>
+<li><p>不可达阶段<br>对象处于不可达阶段是指该对象不再被任何强引用所持有。GC会发现对象已不可达</p>
+</li>
+<li><p>收集阶段<br>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。</p>
+</li>
+<li><p>终结阶段<br>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段，等待垃圾回收器对该对象空间进行回收。</p>
+</li>
+<li><p>对象空间重新分配阶段<br>若垃圾回收器对该对象的所占用的内存空间进行回收或者再分配，则该对象彻底消失，这个阶段称之为“对象空间重新分配阶段”。</p>
+<p>以上是Java对象生命周期的简要介绍，要保证内存顺利回收，正确使用Java对象生命周期很重要，如果不能及时回收，我们就称之为“发生了内存泄露”。</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>在不可见阶段，程序本身不再持有对象强引用，但对象仍可能被JVM等系统下的某些已装载的静态变量或线程或JNI等强引用持有着，这些特殊的强引用被称为”GC root”。存在着这些GC root会导致对象的内存泄露情况，无法被回收。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="垃圾回收.jpeg"></p>
+<p>图中灰色的孤立无援的对象对于GC Roots来说不可达，会被回收。知道了内存泄露会影响回收，下面说下哪些方面会导致内存泄露</p>
+<ul>
+<li><p>引起内存泄露的情况</p>
+<ul>
+<li>资源没有适时关闭<br>sqlite的cursor、读写文件使用的File文件流等在使用完后没有及时关闭。虽然cursor会在系统回收时自动关闭，但是这样效率较低。对于资源对象使用还是应该养成良好习惯，使用完毕close并置空。</li>
+<li>注册对象未注销<br>在Android中主要是指注册的广播在Activity销毁时反注销。<br>在Activity中如果有使用的观察者模式在生命周期发生变化时根据需求注销。<br>在Activity中使用的各类传感器(光线、重力等)在页面销毁时及时注销，否则不光导致内存泄露还会因为传感器频繁的采样导致耗电及cpu的占用。</li>
+<li><p>使用static修饰变量<br>这里只说一点，被static修饰的变量可以认为是直接被GC Roots引用了，那你就知道其生命周期有多长了。这时候你如果用static 修饰Bitmap、View、Context和Activity等后果有多严重了吧。</p>
+</li>
+<li><p>非静态内部类的静态实例</p>
+<p>   先看几行代码：</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">public static People people;</div><div class="line"> 		 @Override</div><div class="line">  		protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">     		 super.onCreate(savedInstanceState);</div><div class="line">     		 setContentView(R.layout.activity_main);</div><div class="line">     		 people = new People();</div><div class="line">  		&#125;</div><div class="line"> 		 class  People&#123;</div><div class="line">     		 int age ;</div><div class="line">     		 String name ;</div><div class="line">  		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   非静态内部类People持有外部类即当前Activity的引用，而该非静态内部类实例又是static修饰        的，导致Activity一直被持有而不得释放，最终导致Activity所包含的view不能释放，如果view         tree中包含多图片，那泄露的内存是很大的。</p>
+</li>
+<li><p>Handler</p>
+<p>   众所周知handler用来发送和处理消息回调的。<br>handler导致泄露主要是handler实例是作为非静态匿名内部类方式创建，并且MessageQueue队列中有未处理消息，这时如果退出Activity，MessageQueue中还有Message，而Message持有handler实例，handler实例作为非静态内部类持有Activity引用，最终的连锁反应导致Activity泄露。</p>
+<blockquote>
+<p>handler引起的内存泄露一般是临时性的，因为消息队列里的Message在延时到时间或者某一情况激活后还是会执行的，除非你是故意搞事情。创建handler时最好使用静态内部类，同时在Activity退出时执行 handler.removeCallbacksAndMessages(null);清空队列消息</p>
+</blockquote>
+</li>
+<li><p>Webview</p>
+<p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
+</li>
+</ul>
+<ul>
+<li><p>容器中的对象未清理对象</p>
+<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h4 id="如何尽量小的申请内存？"><a href="#如何尽量小的申请内存？" class="headerlink" title="如何尽量小的申请内存？"></a>如何尽量小的申请内存？</h4><p>上面说完了如何保证GC顺利回收，现在来讲讲要最小使用内存应该怎么做：</p>
+<ul>
+<li><p>慎用自动封装</p>
+<p>  来几行代码尝尝：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Integer num=0;</div><div class="line">for (int i=0;i&lt;100;i++) &#123;</div><div class="line">    num+=i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  Java基本数据类型是有自动装箱机制的。每次执行循环都会发生一次装箱操作创建一个Integer对象，造成内存消耗。包括其他基本数据类型都有可能造成这种情况。</p>
+</li>
+<li><p>内存复用</p>
+<ul>
+<li><p>视图复用</p>
+<pre><code>在ListView中使用ViewHolder复用item组件，一方面节省内存，一方面提高滑动流畅性。都用过不多介绍。
+</code></pre></li>
+<li><p>使用对象池</p>
+<pre><code>看过Handler、Looper、Message、MessageQueue这一套消息循环源码的同志应该知道里面的Message使用了对象池模式。
+</code></pre><blockquote>
+<p>对象池类似线程池， 首先初始化一个固定大小池子，每次创建对象时候先去池子中找有没有，如果有直接取出，如果没有new出来使用后还到池子里。这样便可达到对象复用的目的。<br>对象池模式适用于那些频繁使用创建的对象，比如一个聊天app，里面对象最多的恐怕就是聊天信息(每条聊天信息对应一个信息对象)。都知道对象的创建是很耗费时间和内存的，没事不要new着玩。如果每条消息都创建一个对象，那可想而知该APP的性能。</p>
+</blockquote>
+<pre><code>对象池的使用也很简单，少量代码即可完成：
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class People &#123;</div><div class="line">     			private static final Pools.SynchronizedPool&lt;People&gt; sPool = new Pools.SynchronizedPool&lt;People&gt;(</div><div class="line">        		   	  20);//需要维持对象的数量</div><div class="line">     			int age;</div><div class="line">    			String name;</div><div class="line">   </div><div class="line">     			public static People obtain() &#123;</div><div class="line">       			  People instance = sPool.acquire();</div><div class="line">       			  return (instance != null) ? instance : new People();</div><div class="line">     			&#125;</div><div class="line">     			public void recycle() &#123;</div><div class="line">       			  sPool.release(this);</div><div class="line">    		 	&#125;</div><div class="line"> 			&#125;</div></pre></td></tr></table></figure>
+
+&gt;注意：对象申请(obtain)和释放(recycle)成对出现，使用一个对象后一定要释放还给对象池。
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<pre><code>- Bitmap复用
+
+    如果设置了options.inBitmap属性，以后再使用带有该options参数的decode方法加载图片资源时        ，decode会尝试重用已存在的位图内存，这样节省了加载和分配的时间，同时也节省了内存空间
+
+    &gt;该属性从3.0开始引进，低版本不支持inBitmap，4.4系统之前只能重用大小相同的内存区域，4.4以后可以重用任何比所需内存小的区域。具体使用可参考[官网](https://developer.android.com/topic/performance/graphics/manage-memory.html)。
+</code></pre><ul>
+<li><p>纯色规则形状背景用Color Res代替图片</p>
+<pre><code>经常遇到一些按钮背景是纯色显示，比如选中状态背景变为纯灰，但是设计已经发来了切图用还是不用？大声say NO！如果背景使用图片来显示，那背景每个像素都要绘制。
+
+假设一个分辨率为100x100的图片，占用4通道。那该图片内存占用就是100x100x4 =4万Byte≈40KB；但是如果使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">- 选择合适数据类型</div><div class="line"></div><div class="line">   - 使用ArrayMap替换HashMap</div><div class="line"></div><div class="line">		先看一下HashMap模型和ArrayMap模型：</div><div class="line">![hashmap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-3e3049cb811341c1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">![arraymap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-0d979501c5d1358f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"></div><div class="line">&gt;HashMap是一个散列链表，稀疏阵列导致内存稍大，而ArrayMap提供了和HashMap一样的功能，但是避免了内存过度开销。在执行插入或删除操作时，从性能上看ArrayMap比HashMap稍差，但是如果对象数很小，比如1000以内不用担心性能问题。如果想深入了解这2个的原理请自行搜索，这里不过多阐述。</div><div class="line"></div><div class="line"></div><div class="line">  - 枚举替身来了</div><div class="line">      JDK1.5就支持了枚举类型，使用Enum关键字定义。使用枚举类型很多时候出于参数类型安全迫不得已作出的选择。</div></pre></td></tr></table></figure>
+</code></pre><p>public String  getValue(int type){</p>
+<pre><code>switch (type) {
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    default:
+        throw new IllegalArgumentException(&quot;不合法参数&quot;);
+}
+</code></pre><p>return “”;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> 试想一下如果一个函数的参数为int type，函数处理时只用到了1，2，3三种值，如果是其他值就抛出异常，这无疑增加了程序的不稳定性，按以前此时最好的解决办法就是参数改为枚举类型，增加了限定也就提高了稳定性。但是枚举类型就是一把双刃剑，增加安全同时也大大增加了内存占用,尤其是在移动设备上，资源有限更应该注意内存节省。</div><div class="line"></div><div class="line">谷歌或许考虑到了这些问题，在提供的注解包里添加了注解方式检查类型安全，目前支持int和String两种，看下使用方式：</div></pre></td></tr></table></figure>
+<p>//1、先声明需要的类型常量值<br>public static final int TYPE_1 = 1;<br>public static final int TYPE_2 = 2;<br>//2、创建注解接口同时把上一步声明的常量囊括到这里<br>@IntDef({TYPE_1,TYPE_2})<br>@Retention(RetentionPolicy.SOURCE)<br>public @interface _TYPE{</p>
+<p>}<br>//3、在函数参数中增加 注解接口名称<br>public String getValue(@_TYPE int type){</p>
+<pre><code>switch (type) {
+    case 1:
+        break;
+    case 2:
+        break;
+}
+return &quot;&quot;;
+</code></pre><p>}<br>```</p>
+<p>   经过上面的步骤，再调用getValue()函数时如果传入其他int则报错编译不通过，这样通过注解就增加了安全性：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午7.13.32.png"></p>
+</li>
+</ul>
+<p>结语：基本上APP大部分内存还是被图片占用，处理好图片尤为重要，但是关于图片三级缓存及缩放，目前都使用第三方框架如ImageLoader，所以这里一笔带过。以上就是日常内存优化需要注意的地方，自己做个总结，也希望能对各位看官有所帮助。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/如何知道下载好的aosp版本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/如何知道下载好的aosp版本/" itemprop="url">
+                  如何知道下载好的aosp版本？
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T20:55:54+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>下载源码时执行的是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
+<p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
           
         
       
@@ -1706,7 +1414,7 @@ return &quot;&quot;;
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
