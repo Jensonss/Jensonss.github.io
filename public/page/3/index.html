@@ -421,6 +421,530 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
+                  osx下如何使用SublimeText阅读Android系统源码
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
+</blockquote>
+<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
+<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
+<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
+<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
+<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
+方法2：ctrl+~
+</code></pre>  2.输入代码：<br>python2.x代码:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<p>python3.x代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<ul>
+<li><p>安装CTags</p>
+<ul>
+<li><ol>
+<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
+</ol>
+</li>
+<li><ol>
+<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
+</ol>
+<ul>
+<li>3.创建索引</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
+<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
+<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
+<li>ctag rebuild时弹窗异常如图：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
+<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
+<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
+<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
+<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" itemprop="url">
+                  Python入门系列(0):OSX系统下Python3的配置与安装
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
+<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
+<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
+<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
+<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" itemprop="url">
+                  Python入门系列(2):字符串、变量和简单数据类型的上手
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>java在声明变量时都要先指定数据类型 比如 int a=3 ; Stringt name = “jenson”;<br>但是在python中可以直接使用变量<br>python中的注释使用”#”</p>
+<h1 id="字符串的使用"><a href="#字符串的使用" class="headerlink" title="字符串的使用"></a>字符串的使用</h1><ul>
+<li>直接声明变量</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;jenson&quot;)</div><div class="line">name =&quot;jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
+<p>打印如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jenson</div><div class="line">jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<ul>
+<li>字符串拼接直接使用+号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;hello jenson&quot;)</div><div class="line">name = &quot;hello&quot;+ &quot; jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
+<p>打印结果一样一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">hello jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<ul>
+<li>去除字符串的空白</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">name = &quot;   jenson   &quot;</div><div class="line">print(name.lstrip())</div><div class="line">print(name.rstrip())</div><div class="line">print(name.strip())</div></pre></td></tr></table></figure>
+<p>结果如下</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c10ea4a7be3c8130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.01.19.png"></p>
+<p>这里去除的空白分别是左边、右边和两边的空白，并不能去除中间空白</p>
+<ul>
+<li>字符串的大小写</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">say = &quot;hello jenson&quot;</div><div class="line">print(say)</div><div class="line">print(say.upper())</div><div class="line">print(say.lower())</div><div class="line">print(say.title())</div></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">HELLO JENSON</div><div class="line">hello jenson</div><div class="line">Hello Jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
+<p>可见三个函数的作用分别是使字符串大写、小写、单词首字母大写。</p>
+<ul>
+<li>基本类型和运算</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print(3+5)</div><div class="line">print(10-2)</div><div class="line">print(2*4)</div><div class="line">print(16/2)</div><div class="line">print(2+3*4)</div><div class="line">print(2**3)</div></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">8</div><div class="line">8</div><div class="line">8.0</div><div class="line">14</div><div class="line">8</div><div class="line">[Finished in 0.2s]</div></pre></td></tr></table></figure>
+<p>可以看出python对四则运算支持优先级，注意一下<em>这里的幂用2个乘号表示</em></p>
+<ul>
+<li>基本类型转为字符串<br>基本类型和字符串混合使用时注意把基本类型先转换为字符串，使用str(基本类型值)，否则会引发异常。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">age = 25;</div><div class="line">print(str(age))</div><div class="line">say = &quot;I&apos;am &quot;+age </div><div class="line">print(say)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">25</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jenson/Desktop/python_work/str_text.py&quot;, line 15, in &lt;module&gt;</div><div class="line">    say = &quot;I&apos;am &quot;+age </div><div class="line">TypeError: Can&apos;t convert &apos;int&apos; object to str implicitly</div><div class="line">[Finished in 0.0s with exit code 1]</div><div class="line">[cmd: [&apos;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&apos;, &apos;-u&apos;, &apos;/Users/jenson/Desktop/python_work/str_text.py&apos;]]</div><div class="line">[dir: /Users/jenson/Desktop/python_work]</div><div class="line">[path: /usr/bin:/bin:/usr/sbin:/sbin]</div></pre></td></tr></table></figure>
+<p>第一个print已经打印，第二个却报了异常，因为没有转换。</p>
+<ul>
+<li>python2和python3整数除法比较</li>
+</ul>
+<p>在python2下做除法运算3/2，得到结果是1 ，并不是1.5</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92eac21fee40ffd9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.34.19.png"></p>
+<p>而在python3下是正常的</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4b8c5bd6f9354a2e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.35.27.png"></p>
+<p>这是因为python2中计算整数结果时不是采取四舍五入，而是将整数部分直接删除，所以在python2中如果要避免这种情况，要确保至少有一个操作数为浮点数，这样得到的结果也为浮点数</p>
+<p>完毕。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/pycharm黄线问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1347,466 +1871,6 @@ public void run() {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/UML--类图详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/UML--类图详解/" itemprop="url">
-                  UML--类图详解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T21:22:50+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>类图是面向对象系统建模中很常用也很重要的图，是定义其它图的基础。类图主要是用来显示系统中的类、接口间关系的一种模型。<br>类之间的关系主要有泛化、实现、聚合、组合、依赖、关联6种关系。</p>
-<p>###泛化关系(generalization)</p>
-<p>uml中的泛化关系也就是继承关系。继承关系的2个类可以使用 is-a来表示。继承关系使用实线空心箭头来表示，箭头从子类指向父类。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be6493449edd5912.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.39.00.png"></p>
-<p>PS：泛化关系中的父类为非抽象类,泛化关系为面向对象中耦合度最大的一种关系</p>
-<p>###实现关系(Realization)</p>
-<p>实现关系使用空心三角箭头的虚线表示，箭头从实现类指向接口。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92a163450b82adc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.51.25.png"></p>
-<p>不知道为什么在我的osx版的startuml中实现关系只是一条线，不晓得是不是bug</p>
-<p>###聚合关系(Aggregation) </p>
-<p>聚合关系表示has-a的关系，是一种不稳定的包含关系。较强于一般关联,有整体与局部的关系,如果没有了整体,局部仍然可单独存在。如公司和员工的关系，公司包含员工，但如果公司倒闭，员工依然可以换公司。在类图使用空心的菱形的实线表示，菱形从局部指向整体。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3018f76e4b869260.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.56.37.png"></p>
-<p>###组合关系(Composition)</p>
-<p>组合关系表示contains-a的关系，是一种强烈的包含关系。组合类负责被组合类的生命周期。是一种更强的聚合关系。部分不能脱离整体存在。如公司和部门的关系，没有了公司，部门也不能存在了。在类图使用实心菱形的实线表示，菱形从局部指向整体。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-cf5edcf29e224e3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.59.43.png"></p>
-<p>###依赖关系(Dependency)</p>
-<p>依赖关系是对象关系最弱的一种关联方式，是临时性的关联。代码中一般指由局部变量、函数参数、返回值建立的对于其他对象的调用关系。一个类调用被依赖类中的某些方法而得以完成这个类的一些职责。在类图使用带箭头的虚线表示，箭头从使用类指向被依赖的类。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-77d40f8a95f1f73d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.03.48.png"></p>
-<p>###关联关系(Association)</p>
-<p>关联关系是对象之间一种引用关系，比如吃饭时客户与餐具类之间的关系。这种关系通常使用类的属性表达。关联又分为一般关联、聚合关联与组合关联。在类图使用带箭头的实线表示，箭头从使用类指向被关联的类。可以是单向和双向。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-78619e44991e9581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.43.15.png"></p>
-<p>###聚合和组合如何区别？</p>
-<p>直白点的理解就是聚合关系的两个类，局部类的生命周期不受整体类的影响，能够剥离整体单独存在。<br>而组合关系的两个类，局部类的生命周期受限于整体类，整体类不存在时，局部类也将消亡。<br>举个栗子：<br>学生去学校上学被分配到x年级：<br>其中学生和学校属于聚合关系，学生可以脱离学校独立存在，县里学校不好可以去市里学校。而学校和班级是组合关系，就是说班级存在的前提是要有个学校。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a3572272c2413345.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.31.06.png"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/Android源码下载/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/Android源码下载/" itemprop="url">
-                  Android源码下载
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T20:55:54+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h4><p>win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。</p>
-<h4 id="从官网下载"><a href="#从官网下载" class="headerlink" title="从官网下载"></a>从官网下载</h4><p>下载Android源码首先想到的就是<a href="https://source.android.com/source/downloading.html" target="_blank" rel="external">官网</a><br>按照指示要先安装repo。但是在执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div></pre></td></tr></table></figure></p>
-<p>时候就出现异常</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--    0</div><div class="line">curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out</div></pre></td></tr></table></figure>
-<p>搜索了下异常发现很早就有这个问题，比如<a href="https://github.com/npm/npm/issues/10037" target="_blank" rel="external">这里</a><br>但是好像没什么好的解决方法。网传有其他地址可以使用，但是没有继续浪费时间了，不能一条路走到黑。</p>
-<h4 id="使用国内资源"><a href="#使用国内资源" class="headerlink" title="使用国内资源"></a>使用国内资源</h4><p>国外太麻烦，毕竟只是想看源码，不想在下载方面浪费太多精力。所以把想法转战到国内的源上。<br>分享2个源，<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/aosp#已有仓库如何改用科大源" target="_blank" rel="external">科大源</a>和<a href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/" target="_blank" rel="external">清大源</a><br>其中我选择使用的是科大源，打开页面看到初始同步有两个方法，方法1毕竟简单，下载一个打好的包，自己repo sync。方法2还是要下载repo，而且如果中途断掉还要从头下载，所以果断选了方法1，直接使用迅雷下载tar包还是很快的。<br>不到一个小时下载完成，解压后打开aosp文件夹发现没有文件，因为是.开头的，都是隐藏文件，显示后如图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午1.55.14.png"><br>执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo sync</div></pre></td></tr></table></figure></p>
-<p>同步</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-185f5625074cf187.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午2.08.54.png"></p>
-<h4 id="如何修改已经init的repo"><a href="#如何修改已经init的repo" class="headerlink" title="如何修改已经init的repo"></a>如何修改已经init的repo</h4><p>如果想下载其他版本的源码，但是repo已经初始化过，<br>如果再次执行repo init xxx会提示 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Your identity is: jenson &lt;xxx@foxmail.com&gt;</div><div class="line">If you want to change this, please re-run &apos;repo init&apos; with --config-name</div><div class="line">repo has been initialized in /Users/jenson/Downloads/aosp</div></pre></td></tr></table></figure></p>
-<p>上面意思是如果要修改init，需要重新运行repo init +新的url +config<br>这时会自动修改配置并初始化:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-6.0.1_r58  --config</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/如何知道下载好的aosp版本/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/如何知道下载好的aosp版本/" itemprop="url">
-                  如何知道下载好的aosp版本？
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T20:55:54+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>下载源码时执行的是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
-<p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1856,7 +1920,7 @@ public void run() {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
