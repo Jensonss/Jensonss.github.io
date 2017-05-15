@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -90,20 +90,15 @@
 
 
 
-<meta name="description" content="从做Android开发以来就一直被灌输“只能在主线程刷新UI”的思想，但是这两天发现个问题，在onCreate中创建工作线程并刷新UI没有报错。代码是这样的：  123456789101112@Overrideprotected void onCreate(Bundle savedInstanceState) &amp;#123;    super.onCreate(savedInstanceState">
-<meta name="keywords" content="Android">
-<meta property="og:type" content="article">
-<meta property="og:title" content="为什么我在工作线程刷新UI没报错？">
-<meta property="og:url" content="http://yoursite.com/2017/04/21/为什么我在工作线程刷新UI没报错/index.html">
+<meta name="description" content="Android Java Python C C++">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jenson">
+<meta property="og:url" content="http://yoursite.com/page/5/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="从做Android开发以来就一直被灌输“只能在主线程刷新UI”的思想，但是这两天发现个问题，在onCreate中创建工作线程并刷新UI没有报错。代码是这样的：  123456789101112@Overrideprotected void onCreate(Bundle savedInstanceState) &amp;#123;    super.onCreate(savedInstanceState">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-7be6319d0fc94867.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-8a0ce88639c31d1d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-04-22T10:11:56.000Z">
+<meta property="og:description" content="Android Java Python C C++">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="为什么我在工作线程刷新UI没报错？">
-<meta name="twitter:description" content="从做Android开发以来就一直被灌输“只能在主线程刷新UI”的思想，但是这两天发现个问题，在onCreate中创建工作线程并刷新UI没有报错。代码是这样的：  123456789101112@Overrideprotected void onCreate(Bundle savedInstanceState) &amp;#123;    super.onCreate(savedInstanceState">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1796052-7be6319d0fc94867.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="Jenson">
+<meta name="twitter:description" content="Android Java Python C C++">
 
 
 
@@ -131,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/21/为什么我在工作线程刷新UI没报错/"/>
+  <link rel="canonical" href="http://yoursite.com/page/5/"/>
 
 
 
 
 
-  <title>为什么我在工作线程刷新UI没报错？ | Jenson</title>
+  <title>Jenson</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -162,7 +157,9 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -265,9 +262,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -297,7 +294,10 @@
             
             
               
-                为什么我在工作线程刷新UI没报错？
+                
+                <a class="post-title-link" href="/2017/04/21/为什么我在工作线程刷新UI没报错/" itemprop="url">
+                  为什么我在工作线程刷新UI没报错？
+                </a>
               
             
           </h1>
@@ -369,7 +369,9 @@
       
 
       
-        <blockquote>
+        
+          
+            <blockquote>
 <p>从做Android开发以来就一直被灌输“只能在主线程刷新UI”的思想，但是这两天发现个问题，在onCreate中创建工作线程并刷新UI没有报错。代码是这样的：</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">   final TextView tv = (TextView) findViewById(R.id.sample_text);</div><div class="line">   new Thread(new Runnable() &#123;</div><div class="line">       @Override</div><div class="line">       public void run() &#123;</div><div class="line">           tv.setText(&quot;来自&quot;+Thread.currentThread().getName()+&quot;线程的更新&quot;);</div><div class="line">       &#125;</div><div class="line">   &#125;).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -521,76 +523,46 @@
 </code></pre><p>```</p>
 <p>另外关于阅读源码问题，win下当然使用SourceInsight不二选，如果是在mac下可以参考我的<a href="http://www.jianshu.com/p/c295d2729ecf" target="_blank" rel="external">osx下如何使用SublimeText阅读Android系统源码</a>.。</p>
 
+          
+        
       
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
-      
-        
-
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Android/" rel="tag"># Android</a>
-          
-        </div>
+
       
 
       
-        
-      
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/04/21/UML--类图详解/" rel="next" title="UML--类图详解">
-                <i class="fa fa-chevron-left"></i> UML--类图详解
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/21/如何知道下载好的aosp版本/" rel="prev" title="如何知道下载好的aosp版本？">
-                如何知道下载好的aosp版本？ <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+  </nav>
+
 
 
           </div>
@@ -598,10 +570,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-  </div>
-
 
         </div>
         
@@ -786,10 +754,6 @@
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
-
-
 
   
 
