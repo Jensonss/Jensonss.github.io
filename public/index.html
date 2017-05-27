@@ -175,7 +175,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">面向对象面向君，不负代码不负卿</p>
+        <p class="site-subtitle">5why法，提升洞见</p>
       
   </div>
 
@@ -263,6 +263,445 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/25/算法之朴素模式匹配/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/25/算法之朴素模式匹配/" itemprop="url">
+                  算法之朴素模式匹配
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-25T15:49:26+08:00">
+                2017-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>不论英文还是中文，在看文章时经常会遇到查找某个单词或字组的时候，把一篇文章看作是一个大的字符串，要查找的内容作为子串，这种在大串中查找子串的操作叫做串的模式匹配。</p>
+<p>我们知道了这种行为叫串的模式匹配，但我们不清楚的是到底如何匹配，具体的操作是什么？</p>
+<h1 id="0x01-我如何操作"><a href="#0x01-我如何操作" class="headerlink" title="0x01 我如何操作"></a>0x01 我如何操作</h1><p>在我看来要从大串中寻找子串，最直接的方法就是从大串起始位置开始，挨个字符比对，如果存在子串总会找出来。这种简单直接的方法称为 <strong>朴素的模式匹配算法</strong></p>
+<h1 id="0x02-代码实现"><a href="#0x02-代码实现" class="headerlink" title="0x02 代码实现"></a>0x02 代码实现</h1><p>如果借用字符串截取操作，直接实现子串的查找就比较方便：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public static int index(String s, String t, int pos) &#123;</div><div class="line">	int m = s.length();</div><div class="line">	int n = t.length();</div><div class="line">	while (pos &lt;= (m - n + 1)) &#123;</div><div class="line">		String sub = s.substring(pos, n);</div><div class="line">		//直接在对比位置截取和子串相同长度的一个串来和子串对比</div><div class="line">		if (t.equals(sub)) &#123;</div><div class="line">			return pos;</div><div class="line">		&#125; else &#123;</div><div class="line">			pos++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/18/两个栈实现队列功能/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/18/两个栈实现队列功能/" itemprop="url">
+                  两个栈实现队列功能
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-18T16:28:16+08:00">
+                2017-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>用2个栈实现队列，首先要明白栈和队列的区别：栈是FILO，队列是FIFO。明白了这两点就比较容易实现了。</p>
+<h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>栈是一端开口，队列是两端开口，如果要让栈实现队列功能，需要2个栈一个负责进数据，一个负责出数据。为了保证出数据的顺序，在出数据栈不为空时，入数据的栈中数据不能往出数据的栈里存。</p>
+<h1 id="0x02-实现"><a href="#0x02-实现" class="headerlink" title="0x02 实现"></a>0x02 实现</h1><p>在2个栈数据都为空时注意抛出异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.Stack;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 两个栈实现队列功能</div><div class="line"> * @author jenson</div><div class="line"> */</div><div class="line">public class StackToQueue &#123;</div><div class="line">	private Stack&lt;Integer&gt; inStack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; outStack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 添加元素</div><div class="line">	 * @param value</div><div class="line">	 */</div><div class="line">	public void add(int value) &#123;</div><div class="line">		inStack.push(value);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 出队列</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	public int poll() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.pop();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 查看队列头的元素 &lt;/br&gt;</div><div class="line">	 * 注意一点：如果出栈队列为空，则把入栈数据倒入到处栈，然后从出栈取&lt;br&gt;</div><div class="line">	 * 如果两个栈都为空抛异常</div><div class="line">	 * </div><div class="line">	 */</div><div class="line">	public int peek() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.peek();</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 入栈数据倒入到出栈</div><div class="line">	 */</div><div class="line">	private void reverse() &#123;</div><div class="line">		while (!inStack.isEmpty()) &#123;</div><div class="line">			outStack.push(inStack.pop());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private void queueEmptyException() &#123;</div><div class="line">		throw new RuntimeException(&quot;队列为空&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackToQueue stackToQueue = new StackToQueue();</div><div class="line">		stackToQueue.add(9);</div><div class="line">		stackToQueue.add(5);</div><div class="line">		stackToQueue.add(2);</div><div class="line">		stackToQueue.add(7);</div><div class="line"></div><div class="line">		System.out.println(stackToQueue.peek());</div><div class="line">		System.out.println(stackToQueue.poll());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/17/设计一个有获取元素最小值getMin的栈/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/" itemprop="url">
+                  设计一个有获取元素最小值getMin的栈
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-17T16:24:42+08:00">
+                2017-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>栈可以看成一个瓶子，只有一个口，另一端被封底。这样数据进出都只能从一个口经过。这样就导致的一个直接结果就是数据FILO问题。要找到栈中最小数据，单靠一个栈不能完成，需要外部提供辅助。</p>
+<h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>一个存好数据的栈，要从里面找到最小数值，不可避免的要把数据出栈，然后进行对比。这时有个问题就来了，找到最小数值后，其他数据还有用吗？换句话说，其他数据还要不要了？如果不要的话，比较完成后不用再次存储，如果要德话，比较期间还要注意数据的保存。这里注意要分这两种情况来考虑。</p>
+<h1 id="0x02-不要其他数据的实现"><a href="#0x02-不要其他数据的实现" class="headerlink" title="0x02 不要其他数据的实现"></a>0x02 不要其他数据的实现</h1><p>既然不需要其他数据，那就直接把数据弹出栈就好了，每次弹栈时对比临时值，如果当前弹栈数据比临时值大则直接弹栈，否则就把值赋给临时值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里代码只实现了getStackMin方法，栈的其他方法就直接定义一个方法后直接调用Stack方法即可。</p>
+<h1 id="0x03-需要其他数据的实现"><a href="#0x03-需要其他数据的实现" class="headerlink" title="0x03 需要其他数据的实现"></a>0x03 需要其他数据的实现</h1><p>如果要保留栈的数据，那最直接的想法是在弹栈比较期间，把弹出栈的数据顺路给入道一个新的栈中，这里相比上面，需要多一个栈即可实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; backUp = new Stack&lt;&gt;();//备份栈</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">			backUp.push(current);//弹出栈时进入备份栈</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -541,7 +980,7 @@
 <p>高斯据此得出以下公式：</p>
 <p>1+2+3…+100 = （100+1）x100/2；</p>
 <p>当然上面只是求1到100的和，那如果要求1到1000，到10000呢，公式是不是仍然成立？</p>
-<p>高斯断言对于任意自然数n：1+2+3…+n = （n+1)xn/2成立；</p>
+<p>高斯断言：对于任意自然数n：1+2+3…+n = （n+1)xn/2都成立；</p>
 <p>接下来要证明高斯的断言是否成立。</p>
 <h1 id="数学归纳法证明"><a href="#数学归纳法证明" class="headerlink" title="数学归纳法证明"></a>数学归纳法证明</h1><p>最简单的数学归纳法是证明当n等于任意一个自然数时断言成立，证明包括两步：</p>
 <p>1.证明n=1时，断言p(1)成立</p>
@@ -555,12 +994,12 @@
 <p>（k+1）x（k+2）/2 =  （k+1）x（k+2）/2 </p>
 <p>左右两边相等，</p>
 <p>得出结论：对于自然数n，断言p(n)都成立。</p>
-<p>推理过程：</p>
-<p>1.证明p(1成立)，也就是n=1成立；</p>
+<h1 id="为什么数学归纳法只证明两步就成立了"><a href="#为什么数学归纳法只证明两步就成立了" class="headerlink" title="为什么数学归纳法只证明两步就成立了"></a>为什么数学归纳法只证明两步就成立了</h1><p>1.证明断言p(1)成立，也就是n=1成立；</p>
 <p>2.通过p(m)成立推导出p(m+1)也成立。</p>
 <p>3.根据上面结论，p(1+1)也就是p(2)成立；</p>
 <p>4.p(2+1)也就是p(3)成立；</p>
-<p>5.循环推导，最终推导出值为n时p(n)成立。</p>
+<p>5.p(3+1)也就是p(4)成立；</p>
+<p>6.循环推导，最终推导出值为n时p(n)成立。</p>
 
           
         
@@ -1521,502 +1960,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/10/Android网络框架执行流程分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/10/Android网络框架执行流程分析/" itemprop="url">
-                  Android网络框架okhttp执行流程分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-10T00:58:46+08:00">
-                2017-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。</p>
-<h1 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h1><p><img src="/2017/05/10/Android网络框架执行流程分析/流程.png" alt="流程"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/05/Android关于Activity生命周期误解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/05/Android关于Activity生命周期误解/" itemprop="url">
-                  Android关于Activity生命周期误解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-05T11:03:36+08:00">
-                2017-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>两个Activity  A和B，先启动A，通过A打开B，在关闭B，这时候两个Activity的生命周期分别是如何执行的？</p>
-<p>我的答案是：</p>
-<p>A启动时</p>
-<p><code>A onCreate onStart onResume</code></p>
-<p>点击启动B之后</p>
-<p><code>A onPause onStop, B onCreate onStart onResume</code></p>
-<p>B关闭之后</p>
-<p><code>B onPause onStop onDestory ,A onRestart onStart onResume</code></p>
-<p>但是想的太简单了，我以为的并不是我以为的。下面是打印的生命周期执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">05-05 11:01:33.801 5494-5494/com.example.jenson.myapplication I/MainActivity: onCreate</div><div class="line">05-05 11:01:33.801 5494-5494/com.example.jenson.myapplication I/MainActivity: onStart</div><div class="line">05-05 11:01:33.801 5494-5494/com.example.jenson.myapplication I/MainActivity: onResume</div><div class="line">05-05 11:01:33.861 5494-5542/com.example.jenson.myapplication I/OpenGLRenderer: Initialized EGL, version 1.4</div><div class="line">05-05 11:01:46.391 5494-5494/com.example.jenson.myapplication I/MainActivity: onPause</div><div class="line">05-05 11:01:46.411 5494-5494/com.example.jenson.myapplication I/FirstActivity: onCreate</div><div class="line">05-05 11:01:46.411 5494-5494/com.example.jenson.myapplication I/FirstActivity: onStart</div><div class="line">05-05 11:01:46.411 5494-5494/com.example.jenson.myapplication I/FirstActivity: onResume</div><div class="line">05-05 11:01:46.691 5494-5494/com.example.jenson.myapplication I/MainActivity: onStop</div><div class="line">05-05 11:02:20.641 5494-5494/com.example.jenson.myapplication I/ViewRootImpl: WindowInputEventReceiver onInputEvent!! KeyCode is 4, action is 0</div><div class="line">05-05 11:02:20.641 5494-5494/com.example.jenson.myapplication I/ViewRootImpl: WindowInputEventReceiver onInputEvent!! KeyCode is 4, action is 1</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/FirstActivity: onPause</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/MainActivity: onRestart</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/MainActivity: onStart</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/MainActivity: onResume</div><div class="line">05-05 11:02:20.871 5494-5494/com.example.jenson.myapplication I/FirstActivity: onStop</div><div class="line">05-05 11:02:20.871 5494-5494/com.example.jenson.myapplication I/FirstActivity: onDestroy</div></pre></td></tr></table></figure>
-<blockquote>
-<p>记住一点：启动一个新Activity，先把自己onPause，然后等新Activity启动成功即onResume后再onStop，关闭当前Activity时，还是先把自己onPause，下一帧的Activity(相对于Activity栈来说)执行恢复onResume，然后自己再执行onStop、onDestory</p>
-</blockquote>
-<p>虽然知道了真相，但是现在还不清楚为什么要这样设计，，有时间还要看看这里的源码，mark下。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/Android性能优化之UI优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/04/Android性能优化之UI优化/" itemprop="url">
-                  Android性能优化之UI优化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T12:00:30+08:00">
-                2017-05-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="为什么要进行UI优化"><a href="#为什么要进行UI优化" class="headerlink" title="为什么要进行UI优化"></a>为什么要进行UI优化</h1><p>UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。</p>
-<h1 id="优化到什么程度"><a href="#优化到什么程度" class="headerlink" title="优化到什么程度"></a>优化到什么程度</h1><p>如今屏幕刷新频率大都是60FPS，就是说每帧绘制只要16ms，即保证你的UI页面在16ms内绘制渲染完成，就会让用户感觉到体验是流畅的，所以我们需要做的就是确保我们的APP页面渲染小于16ms。</p>
-<h1 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h1><h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><ul>
-<li><p>减少xml布局层级</p>
-<ul>
-<li><p>Merge的使用</p>
-<p>Merge是合并的意思，使用Merge合并子元素和父View，而Merge本身可以被忽略。使用Merge的场合：</p>
-<p>xml布局中，根元素是FrameLayout时；</p>
-<p>自定义View中，父元素尽量是FrameLayout或者LinearLayout；</p>
-<blockquote>
-<p>Merge不能乱用：</p>
-<p>Merge只能用在xml布局根元素；</p>
-<p>使用Merge加载一个布局时，必须制定一个ViewGroup作为其父元素，并且设置attachToRoot参数为True（inflate(int,ViewGroup,boolean)）；</p>
-<p>不能在ViewStub中使用Merge标签，原因就是ViewStub的inflate方法中没有attachToRoot的设置</p>
-</blockquote>
-</li>
-<li><p>合理使用RelativeLayout和LinearLayout</p>
-<p>RelativeLayout一定程度上可以减少布局层级，但是其对子View测量次数多于LinearLayout。所以综合考虑：如果层级较多情况下，使用RelativeLayout能减少层级的话，优先使用RelativeLayout以便保持界面扁平化；如果层级相同的情况下优先使用LinearLayout，这样能减少子View多次测量。</p>
-</li>
-</ul>
-</li>
-<li><p>ViewStub提高加载速度</p>
-<p>ViewStub默认不可见不占位置，</p>
-<p>如果在特定情况下才显示某些布局，可以使用ViewStub。</p>
-<p>显示ViewStub有两种方法：ViewStub.inflate()和ViewStub.setVisibility(View.Visible)；</p>
-<blockquote>
-<p>使用ViewStub注意：</p>
-<p>Viewstub只能加载一次，之后该对象引用会被置空；</p>
-<p>Viewstub只能用来加载一个布局文件，而不是某个View</p>
-<p>Viewstub中不能嵌套Merge</p>
-</blockquote>
-</li>
-<li><p>include实现view复用</p>
-<p>对于在多个页面都会使用的公共布局诸如Title栏或导航栏，提取出来通过使用inlucde引入，这样只需要维护一份代码即可。</p>
-</li>
-</ul>
-<h2 id="避免过度绘制"><a href="#避免过度绘制" class="headerlink" title="避免过度绘制"></a>避免过度绘制</h2><ul>
-<li><p>什么是过度绘制</p>
-<p>过度绘制是说屏幕上某一像素在同一帧时间内被绘制多次。在UI布局中如果不可见的部分UI也在进行绘制，这会导致浪费多余的CPU和GPU资源。</p>
-</li>
-<li><p>引起过度绘制原因</p>
-<p>xml布局中控件重叠且都设置了背景或图片</p>
-<p>自定义View，onDraw方法中同一区域绘制了多次</p>
-</li>
-<li><p>如何避免过度绘制</p>
-<ul>
-<li><p>布局优化</p>
-<p>移除xml中非必须背景，或根据条件设置</p>
-<p>移除window默认背景</p>
-<p>按需设置占位背景图</p>
-</li>
-<li><p>自定义View优化</p>
-<p>在自定义 V i e w中可以通过 c a n v a s . c l i p R e c t （ ）来帮助系统识别那些可见的区域 。这个方法可以指定一块矩形区域 ，只有在这个区域内才会被绘制 ，其他的区域会被忽视 。 c a n v a s . c l i p R e c t （ ）可以很好地帮助那些有多组重叠组件的自定义 V i e w来控制显示的区域 。 c l i p R e c t方法还可以帮助节约 C P U与 G P U资源 ，在 c l i p R e c t区域之外的绘制指令都不会被执行 ，那些部分内容在矩形区域内的组件 ，仍然会得到绘制 ，并且可以使用 c a n v a s . q u i c k r e j e c t （ ）来判断是否没和某个矩形相交 ，从而跳过那些非矩形区域内的绘制操作 。</p>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2066,7 +2009,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
