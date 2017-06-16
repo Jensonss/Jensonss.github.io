@@ -175,7 +175,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">5why法，提升洞见</p>
+        <p class="site-subtitle">走出舒适区</p>
       
   </div>
 
@@ -423,7 +423,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -445,8 +445,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" itemprop="url">
-                  osx下pip3安装matplotlib时 The following required packages can not be built freetype
+                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
+                  osx下如何使用SublimeText阅读Android系统源码
                 </a>
               
             
@@ -485,8 +485,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
                   </a>
                 </span>
 
@@ -521,8 +521,49 @@
       
         
           
-            <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+            <blockquote>
+<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
+</blockquote>
+<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
+<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
+<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
+<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
+<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
+方法2：ctrl+~
+</code></pre>  2.输入代码：<br>python2.x代码:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<p>python3.x代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<ul>
+<li><p>安装CTags</p>
+<ul>
+<li><ol>
+<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
+</ol>
+</li>
+<li><ol>
+<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
+</ol>
+<ul>
+<li>3.创建索引</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
+<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
+<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
+<li>ctag rebuild时弹窗异常如图：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
+<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
+<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
+<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
+<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
 
           
         
@@ -1213,6 +1254,169 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/详解设计模式之简单工厂模式/" itemprop="url">
+                  详解设计模式之简单工厂模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T22:22:50+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
+<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
+<p>####3、如何使用工厂模式？</p>
+<ul>
+<li>先看下不使用模式如何创建接口实例</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>起亚汽车实现代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>客户端代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
+<p>public class BmwImpl implements CarApi {</p>
+<pre><code>@Override
+public void run() {
+    // TODO Auto-generated method stub
+    System.out.println(&quot;宝马跑起来&quot;);
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
+<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
+<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
+<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
+<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之单例模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1342,169 +1546,6 @@
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public enum EnumSingleton &#123;</div><div class="line">	</div><div class="line">	INSTANCE ;</div><div class="line">	</div><div class="line">	int num = 33;</div><div class="line">	String config = &quot;jenson&quot;;</div><div class="line">	</div><div class="line">	public void doSomething()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><em>枚举单例也可以有属性可以有方法，重要的是枚举默认就是线程安全的。</em></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/详解设计模式之简单工厂模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/详解设计模式之简单工厂模式/" itemprop="url">
-                  详解设计模式之简单工厂模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T22:22:50+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
-<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
-<p>####3、如何使用工厂模式？</p>
-<ul>
-<li>先看下不使用模式如何创建接口实例</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>起亚汽车实现代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>客户端代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
-<p>public class BmwImpl implements CarApi {</p>
-<pre><code>@Override
-public void run() {
-    // TODO Auto-generated method stub
-    System.out.println(&quot;宝马跑起来&quot;);
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
-<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
-<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
-<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
-<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
 
           
         
@@ -1706,7 +1747,7 @@ public void run() {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/如何知道下载好的aosp版本/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -1728,8 +1769,8 @@ public void run() {
             
               
                 
-                <a class="post-title-link" href="/2017/04/21/如何知道下载好的aosp版本/" itemprop="url">
-                  如何知道下载好的aosp版本？
+                <a class="post-title-link" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/" itemprop="url">
+                  搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼
                 </a>
               
             
@@ -1804,10 +1845,27 @@ public void run() {
       
         
           
-            <p>下载源码时执行的是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
-<p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
+            <blockquote>
+<p>一直以来对这几个SDK版本概念都有点模糊不清，对于API的使用又会产生什么样的影响。所以今天花点时间来记录下。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-947f3215a5f6169e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午12.09.45.png"></p>
+<h4 id="minSDKVersion"><a href="#minSDKVersion" class="headerlink" title="minSDKVersion"></a>minSDKVersion</h4><p>顾名思义是设置sdk最低版本的。作用就是操作系统会拒绝低于<br>该标准的APP的安装。</p>
+<p>例如，minSDKVersion设置为16(Jelly Bean 4.1系统)，那么该APP将只能运行在4.1系统以上的设备中，想要在2.3系统上安装是不被允许的。</p>
+<p>minSDKVersion比较容易理解，经常让我混淆的时其他两个版本设置会对API产生的影响。</p>
+<h4 id="targetSDKVersion"><a href="#targetSDKVersion" class="headerlink" title="targetSDKVersion"></a>targetSDKVersion</h4><p>targetSDKVersion就是设置SDK目标版本，目标版本的设置就是为了告诉Android系统：本APP是设计计划给哪个API级别运行的。</p>
+<p>一般情况下目标版本设置为当前Android最新版本即可。既然是一般那也就有特殊情况，什么情况下需要修改目标版本呢？</p>
+<p>如果新发布的SDK版本会对UI显示甚至操作系统运行机制产生影响，而你的APP又没有做好应对措施，为了保证你的APP正常运行，那你需要降低目标版本。因为你的目标版本仍然是旧的SDK，所以在新版系统中那些新的变化会在你的APP中被忽略，继而保证其正常运行。</p>
+<p>例如，Android6.0系统增加了动态权限机制，如果为了追时髦，盲目把你的targetSDKVersion设置为23(6.0)，那么在需要使用权限的地方将会出现异常。为此，在你做好动态权限申请之前，为保障APP正常运行，你需要将目标版本设置低于23。</p>
+<h4 id="compileSDKVersion"><a href="#compileSDKVersion" class="headerlink" title="compileSDKVersion"></a>compileSDKVersion</h4><p>compileSDKVersion是设置编译版本。</p>
+<p>一般来说编译目标版本是选择最新的SDK，这样可以及时使用体验到新的API提供的新功能。</p>
+<p>值得注意的是，如果minSDKVersion和compileSDKVersion版本差距比较大的话，可能会造成API的不兼容。例如，你的最低版本是2.3 ，但是编译版本是5.0，API中使用了4.0SDK提供的一些新API，这样的后果是在2.3系统中运行到该处代码时会发生异常崩溃。这是因为代码的不兼容造成的。如图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-67bfb13669a8dce2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.05.00.png"></p>
+<p>如何解决这种API的不兼容呢？<br>一种办法是提升minSDKVersion到新API使用的SDK版本，但是这种方法只是回避兼容性，并没有确实解决问题，而且还要放弃低版本部分市场。<br>比较好的做法是在使用新API地方做设备版本的检查。Build.VERSION_SDK_INT常量表示当前Android设备的版本号。可以将该常量同新API版本进行比较，如果版本大于等于新版API版本号，则正常使用新API功能，否则使用旧的调用。兼容设置如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a2d7e548c4a118cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.16.40.png"></p>
+<blockquote>
+<p>注意：compileSDKVersion是和编译器打交道的，而minSDKVersion和targetSDKVersion是和系统打交道的。</p>
+</blockquote>
+
           
         
       
