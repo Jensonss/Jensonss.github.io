@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android," />
+  <meta name="keywords" content="Pytyon," />
 
 
 
@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="进程一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 android:process，可以使原本一个应用中的组件运行在多个进程中。  如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareU">
-<meta name="keywords" content="Android">
+<meta name="description" content="0x00 前言​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。 0x01 列表什么是列表？如何表示列表？​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’">
+<meta name="keywords" content="Pytyon">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android进程和线程">
-<meta property="og:url" content="http://yoursite.com/2017/04/27/Android进程和线程/index.html">
+<meta property="og:title" content="Python入门系列(3):元组、列表和字典">
+<meta property="og:url" content="http://yoursite.com/2017/06/26/Python入门系列-3-元组、列表和字典/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="进程一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 android:process，可以使原本一个应用中的组件运行在多个进程中。  如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareU">
-<meta property="og:updated_time" content="2017-04-27T12:59:25.000Z">
+<meta property="og:description" content="0x00 前言​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。 0x01 列表什么是列表？如何表示列表？​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’">
+<meta property="og:updated_time" content="2017-06-26T15:04:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android进程和线程">
-<meta name="twitter:description" content="进程一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 android:process，可以使原本一个应用中的组件运行在多个进程中。  如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareU">
+<meta name="twitter:title" content="Python入门系列(3):元组、列表和字典">
+<meta name="twitter:description" content="0x00 前言​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。 0x01 列表什么是列表？如何表示列表？​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’">
 
 
 
@@ -128,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/27/Android进程和线程/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/26/Python入门系列-3-元组、列表和字典/"/>
 
 
 
 
 
-  <title>Android进程和线程 | Jenson</title>
+  <title>Python入门系列(3):元组、列表和字典 | Jenson</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -273,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/Android进程和线程/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/26/Python入门系列-3-元组、列表和字典/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jenson">
@@ -294,7 +294,7 @@
             
             
               
-                Android进程和线程
+                Python入门系列(3):元组、列表和字典
               
             
           </h1>
@@ -309,8 +309,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T20:36:13+08:00">
-                2017-04-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-26T19:00:58+08:00">
+                2017-06-26
               </time>
             
 
@@ -332,8 +332,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
                   </a>
                 </span>
 
@@ -366,36 +366,54 @@
       
 
       
-        <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 <code>android:process</code>，可以使原本一个应用中的组件运行在多个进程中。</p>
-<blockquote>
-<p>如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareUID方式和它共享一个进程。</p>
-</blockquote>
-<h1 id="进程优先级分类"><a href="#进程优先级分类" class="headerlink" title="进程优先级分类"></a>进程优先级分类</h1><p>根据进程的优先级可以分为五级，</p>
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。</p>
+<h1 id="0x01-列表"><a href="#0x01-列表" class="headerlink" title="0x01 列表"></a>0x01 列表</h1><h2 id="什么是列表？如何表示列表？"><a href="#什么是列表？如何表示列表？" class="headerlink" title="什么是列表？如何表示列表？"></a>什么是列表？如何表示列表？</h2><p>​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’, ‘dog’, ‘monkey’]</p>
+<h2 id="访问列表"><a href="#访问列表" class="headerlink" title="访问列表"></a>访问列表</h2><p>​    列表的访问通过索引下标来访问，索引和其他大多数语言一样从0开始。</p>
+<p>也就是说访问第一个元素为：animal[0]。而和其他语言不一样的是Python中索引可以为负值，如：animal[-1]实际为最后一个元素，以此类推。</p>
+<h2 id="列表增加元素"><a href="#列表增加元素" class="headerlink" title="列表增加元素"></a>列表增加元素</h2><p>​    元素的添加分为两种，列表末尾追加和任意位置添加</p>
 <ul>
-<li><p>前台进程</p>
-<p>用户当前操作所必需的进程。如果一个进程满足以下任一条件，即视为前台进程：<br>​    托管用户正在交互的 Activity（已调用 Activity 的 onResume() 方法）<br>​    托管某个 Service，后者绑定到用户正在交互的 Activity<br>​    托管正在“前台”运行的 Service（服务已调用 startForeground()）<br>​    托管正执行一个生命周期回调的 Service（onCreate()、onStart() 或 onDestroy()）<br>​    托管正执行其 onReceive() 方法的 BroadcastReceiver<br>通常，在任意给定时间前台进程都为数不多。只有在内存不足以支持它们同时继续运行这一万不得已的情况下，系统才会终止它们。 此时，设备往往已达到内存分页状态，因此需要终止一些前台进程来确保用户界面正常响应。</p>
+<li><p>末尾追加</p>
+<p>使用方法append，animal.append(’fox‘)</p>
 </li>
-<li><p>可见进程</p>
-<p>没有任何前台组件、但仍会影响用户在屏幕上所见内容的进程。 如果一个进程满足以下任一条件，即视为可见进程：<br>​    托管不在前台、但仍对用户可见的 Activity（已调用其 onPause() 方法）。例如，如果前台 Activity 启动了一个对话框，允许在其后显示上一 Activity，则有可能会发生这种情况。<br>​    托管绑定到可见（或前台）Activity 的 Service。<br>可见进程被视为是极其重要的进程，除非为了维持所有前台进程同时运行而必须终止，否则系统不会终止这些进程。</p>
-</li>
-<li><p>服务进程</p>
-<p>正在运行已使用 startService() 方法启动的服务且不属于上述两个更高类别进程的进程。尽管服务进程与用户所见内容没有直接关联，但是它们通常在执行一些用户关心的操作（例如，在后台播放音乐或从网络下载数据）。因此，除非内存不足以维持所有前台进程和可见进程同时运行，否则系统会让服务进程保持运行状态。</p>
-</li>
-<li><p>后台进程</p>
-<p>包含目前对用户不可见的 Activity 的进程（已调用 Activity 的 onStop() 方法）。这些进程对用户体验没有直接影响，系统可能随时终止它们，以回收内存供前台进程、可见进程或服务进程使用。 通常会有很多后台进程在运行，因此它们会保存在 LRU （最近最少使用）列表中，以确保包含用户最近查看的 Activity 的进程最后一个被终止。如果某个 Activity 正确实现了生命周期方法，并保存了其当前状态，则终止其进程不会对用户体验产生明显影响，因为当用户导航回该 Activity 时，Activity 会恢复其所有可见状态。 有关保存和恢复状态的信息，请参阅 Activity文档。</p>
-</li>
-<li><p>空进程</p>
-<p>不含任何活动应用组件的进程。保留这种进程的的唯一目的是用作缓存，以缩短下次在其中运行组件所需的启动时间。 为使总体系统资源在进程缓存和底层内核缓存之间保持平衡，系统往往会终止这些进程。</p>
+<li><p>任意位置添加</p>
+<p>使用方法insert，animal.insert(1,’fox’)。第一个参数为索引值</p>
 </li>
 </ul>
-<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>线程可以看作是一个轻量级的进程，在Android中启动应用时系统会为APP创建一个UI线程，Android UI是非线程安全的。</p>
-<p>在Android开发中注意两点：</p>
-<p>①不能在UI线程以外的其他线程操作UI，否则异常。</p>
-<p>②不能阻塞UI线程，否则ANR。</p>
-<p>当然在某些特殊条件下，非UI线程操作 UI没有报错，参考我的[<a href="http://www.jensondev.me/2017/04/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%88%B7%E6%96%B0UI%E6%B2%A1%E6%8A%A5%E9%94%99/" target="_blank" rel="external">为什么我在工作线程刷新UI没报错？</a>] 。</p>
-<p>Android 提供了几种途径来从其他线程访问 UI 线程。 以下列出了几种有用的方法：</p>
-<p>Activity.runOnUiThread(Runnable)<br>View.post(Runnable)<br>View.postDelayed(Runnable, long)</p>
-
+<h2 id="列表删除元素"><a href="#列表删除元素" class="headerlink" title="列表删除元素"></a>列表删除元素</h2><p>元素删除也可以通过四种方式实现：</p>
+<ul>
+<li><p>使用del</p>
+<p>如果知道元素所处列表位置，则使用del  animal[ i ]</p>
+</li>
+<li><p>使用pop</p>
+<p>如果只需删除了列表末尾元素，则直接使用animal.pop方法。类似出栈</p>
+</li>
+<li><p>使用pop</p>
+<p>如果要删除任意位置元素，使用animal.pop（i)，参数为索引值</p>
+</li>
+<li><p>使用remove</p>
+<p>如果知道元素值而不知道位置，则使用animal.remove（value），参数为元素值</p>
+</li>
+</ul>
+<h2 id="列表修改元素"><a href="#列表修改元素" class="headerlink" title="列表修改元素"></a>列表修改元素</h2><p>​    修改列表元素的语法与访问列表元素的语法类似，如果要进行元素修改只要拿到元素后对其进行从新赋值即可：animal[1] = ‘bird’。</p>
+<h2 id="列表元素遍历"><a href="#列表元素遍历" class="headerlink" title="列表元素遍历"></a>列表元素遍历</h2><p>列表遍历使用循环即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ani <span class="keyword">in</span> animal:</div><div class="line">	print(ani)</div></pre></td></tr></table></figure>
+<h1 id="0x02-元组"><a href="#0x02-元组" class="headerlink" title="0x02 元组"></a>0x02 元组</h1><p>元组使用小括号，列表使用方括号。<br>元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可。</p>
+<ul>
+<li>Python 的元组与列表类似，不同之处在于元组的元素不能修改。</li>
+</ul>
+<ul>
+<li><p>元组中只包含一个元素时，需要在元素后面添加逗号</p>
+<p>​    tup1 = (10,)</p>
+</li>
+<li><p>元组中的元素值是不允许删除的，但我们可以使用del语句来删除整个元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>,<span class="string">'dm'</span>)</div><div class="line">print(cats)</div><div class="line"><span class="keyword">del</span> cats</div><div class="line">print(cats)<span class="comment">#打印异常</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>元组中的元素值是不允许修改的，但我们可以对元组进行连接组合</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>, <span class="string">'dm'</span>)</div><div class="line">cat1 = (<span class="string">'mm'</span>,)</div><div class="line">allCat = cats + cat1</div><div class="line">print(allCat)<span class="comment">#('xm', 'dm', 'mm')</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x03-字典"><a href="#0x03-字典" class="headerlink" title="0x03 字典"></a>0x03 字典</h1>
       
     </div>
 
@@ -424,7 +442,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Android/" rel="tag"># Android</a>
+            <a href="/tags/Pytyon/" rel="tag"># Pytyon</a>
           
         </div>
       
@@ -437,18 +455,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/02/hexo博客换电脑后怎么办/" rel="next" title="hexo网站换电脑后怎么办">
-                <i class="fa fa-chevron-left"></i> hexo网站换电脑后怎么办
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/27/Android内存分析工具之MAT详解/" rel="prev" title="Android内存分析工具之MAT详解">
-                Android内存分析工具之MAT详解 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/05/25/算法之朴素模式匹配/" rel="prev" title="算法之朴素模式匹配">
+                算法之朴素模式匹配 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -578,7 +592,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程优先级分类"><span class="nav-number">2.</span> <span class="nav-text">进程优先级分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程"><span class="nav-number">3.</span> <span class="nav-text">线程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-前言"><span class="nav-number">1.</span> <span class="nav-text">0x00 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-列表"><span class="nav-number">2.</span> <span class="nav-text">0x01 列表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是列表？如何表示列表？"><span class="nav-number">2.1.</span> <span class="nav-text">什么是列表？如何表示列表？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问列表"><span class="nav-number">2.2.</span> <span class="nav-text">访问列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表增加元素"><span class="nav-number">2.3.</span> <span class="nav-text">列表增加元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表删除元素"><span class="nav-number">2.4.</span> <span class="nav-text">列表删除元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表修改元素"><span class="nav-number">2.5.</span> <span class="nav-text">列表修改元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表元素遍历"><span class="nav-number">2.6.</span> <span class="nav-text">列表元素遍历</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-元组"><span class="nav-number">3.</span> <span class="nav-text">0x02 元组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-字典"><span class="nav-number">4.</span> <span class="nav-text">0x03 字典</span></a></li></ol></div>
             
 
           </div>
