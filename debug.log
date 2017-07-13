@@ -4288,3 +4288,5 @@
 {"name":"hexo","hostname":"JensondeMini.lan","pid":6628,"level":20,"msg":"Generator: \u001b[35mjson-content\u001b[39m","time":"2017-07-13T17:07:57.616Z","v":0}
 {"name":"hexo","hostname":"JensondeMini.lan","pid":6628,"level":20,"msg":"Generator: \u001b[35mtag\u001b[39m","time":"2017-07-13T17:07:57.616Z","v":0}
 {"name":"hexo","hostname":"JensondeMini.lan","pid":6628,"level":20,"msg":"Generator: \u001b[35masset\u001b[39m","time":"2017-07-13T17:07:57.645Z","v":0}
+{"name":"hexo","hostname":"JensondeMini.lan","pid":6628,"level":30,"msg":"Farewell","time":"2017-07-13T17:08:44.722Z","v":0}
+{"name":"hexo","hostname":"JensondeMini.lan","pid":6628,"level":20,"msg":"Database saved","time":"2017-07-13T17:08:44.754Z","v":0}
