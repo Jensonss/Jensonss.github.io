@@ -1,7 +1,7 @@
 ---
 title: 'Python入门系列(3):元组、列表和字典'
 date: 2017-06-26 19:00:58
-tags: Pytyon
+tags: Python
 categories: Python
 ---
 
