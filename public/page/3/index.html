@@ -175,7 +175,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">5why法，提升洞见</p>
+        <p class="site-subtitle">走出舒适区</p>
       
   </div>
 
@@ -263,6 +263,664 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/02/hexo博客换电脑后怎么办/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/02/hexo博客换电脑后怎么办/" itemprop="url">
+                  hexo网站换电脑后怎么办
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T16:31:28+08:00">
+                2017-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>这两天遇到个问题，在自己的电脑上面搭建的搭建环境发布了几个文章，后来换了个电脑，这个电脑也有环境和几个老的文章，但是我执行了hexo d -g 后，网站中新的文章都被删除了。所以现在的问题是，换电脑后如何保证hexo环境文件的同步。</p>
+<h1 id="加入版本控制"><a href="#加入版本控制" class="headerlink" title="加入版本控制"></a>加入版本控制</h1><p>作为一名开发，实现同步，首先就想到版本控制，而网站又是hexo+github实现的。所以就打算把hexo环境及文章都纳入Git版本控制。</p>
+<p>当前项目的master分支中被发布后的静态页面占用，所以要么单独开一个项目，要么新建一个分支，最终采用新建分支办法。</p>
+<p>在hexo目录下执行<code>git init</code>初始化</p>
+<p>然后<code>git add .</code>把当前目录及子文件都添加到暂存区</p>
+<p>然后 <code>git commit -m &quot;message&quot;</code>提交到本地库</p>
+<p>最后执行<code>git push origin branch</code>推送到分支中。这样以后发布文章后随时push，在其他电脑中把分支内容pull到本地库即可。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/Android进程和线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/Android进程和线程/" itemprop="url">
+                  Android进程和线程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T20:36:13+08:00">
+                2017-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 <code>android:process</code>，可以使原本一个应用中的组件运行在多个进程中。</p>
+<blockquote>
+<p>如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareUID方式和它共享一个进程。</p>
+</blockquote>
+<h1 id="进程优先级分类"><a href="#进程优先级分类" class="headerlink" title="进程优先级分类"></a>进程优先级分类</h1><p>根据进程的优先级可以分为五级，</p>
+<ul>
+<li><p>前台进程</p>
+<p>用户当前操作所必需的进程。如果一个进程满足以下任一条件，即视为前台进程：<br>​    托管用户正在交互的 Activity（已调用 Activity 的 onResume() 方法）<br>​    托管某个 Service，后者绑定到用户正在交互的 Activity<br>​    托管正在“前台”运行的 Service（服务已调用 startForeground()）<br>​    托管正执行一个生命周期回调的 Service（onCreate()、onStart() 或 onDestroy()）<br>​    托管正执行其 onReceive() 方法的 BroadcastReceiver<br>通常，在任意给定时间前台进程都为数不多。只有在内存不足以支持它们同时继续运行这一万不得已的情况下，系统才会终止它们。 此时，设备往往已达到内存分页状态，因此需要终止一些前台进程来确保用户界面正常响应。</p>
+</li>
+<li><p>可见进程</p>
+<p>没有任何前台组件、但仍会影响用户在屏幕上所见内容的进程。 如果一个进程满足以下任一条件，即视为可见进程：<br>​    托管不在前台、但仍对用户可见的 Activity（已调用其 onPause() 方法）。例如，如果前台 Activity 启动了一个对话框，允许在其后显示上一 Activity，则有可能会发生这种情况。<br>​    托管绑定到可见（或前台）Activity 的 Service。<br>可见进程被视为是极其重要的进程，除非为了维持所有前台进程同时运行而必须终止，否则系统不会终止这些进程。</p>
+</li>
+<li><p>服务进程</p>
+<p>正在运行已使用 startService() 方法启动的服务且不属于上述两个更高类别进程的进程。尽管服务进程与用户所见内容没有直接关联，但是它们通常在执行一些用户关心的操作（例如，在后台播放音乐或从网络下载数据）。因此，除非内存不足以维持所有前台进程和可见进程同时运行，否则系统会让服务进程保持运行状态。</p>
+</li>
+<li><p>后台进程</p>
+<p>包含目前对用户不可见的 Activity 的进程（已调用 Activity 的 onStop() 方法）。这些进程对用户体验没有直接影响，系统可能随时终止它们，以回收内存供前台进程、可见进程或服务进程使用。 通常会有很多后台进程在运行，因此它们会保存在 LRU （最近最少使用）列表中，以确保包含用户最近查看的 Activity 的进程最后一个被终止。如果某个 Activity 正确实现了生命周期方法，并保存了其当前状态，则终止其进程不会对用户体验产生明显影响，因为当用户导航回该 Activity 时，Activity 会恢复其所有可见状态。 有关保存和恢复状态的信息，请参阅 Activity文档。</p>
+</li>
+<li><p>空进程</p>
+<p>不含任何活动应用组件的进程。保留这种进程的的唯一目的是用作缓存，以缩短下次在其中运行组件所需的启动时间。 为使总体系统资源在进程缓存和底层内核缓存之间保持平衡，系统往往会终止这些进程。</p>
+</li>
+</ul>
+<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>线程可以看作是一个轻量级的进程，在Android中启动应用时系统会为APP创建一个UI线程，Android UI是非线程安全的。</p>
+<p>在Android开发中注意两点：</p>
+<p>①不能在UI线程以外的其他线程操作UI，否则异常。</p>
+<p>②不能阻塞UI线程，否则ANR。</p>
+<p>当然在某些特殊条件下，非UI线程操作 UI没有报错，参考我的[<a href="http://www.jensondev.me/2017/04/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%88%B7%E6%96%B0UI%E6%B2%A1%E6%8A%A5%E9%94%99/" target="_blank" rel="external">为什么我在工作线程刷新UI没报错？</a>] 。</p>
+<p>Android 提供了几种途径来从其他线程访问 UI 线程。 以下列出了几种有用的方法：</p>
+<p>Activity.runOnUiThread(Runnable)<br>View.post(Runnable)<br>View.postDelayed(Runnable, long)</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/Android内存分析工具之MAT详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/Android内存分析工具之MAT详解/" itemprop="url">
+                  Android内存分析工具之MAT详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T13:07:09+08:00">
+                2017-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>关于Android内存优化可参见我的另一篇文章[<a href="http://www.jensondev.me/2017/04/21/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/" target="_blank" rel="external">Android性能优化之内存优化</a>]。Android性能优化中内存优化可谓重中之重，而内存泄露又是Android内存优化的重灾区。重灾区就要重拳出击，整治内存泄露，Mat是必备的利器。</p>
+<h1 id="关于Mat"><a href="#关于Mat" class="headerlink" title="关于Mat"></a>关于Mat</h1><p>Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat是由eclipse社区维护，所以如果使用Android studio开发的话，需要单独下载，<a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="external">官方通道</a>。我用的是mac版，后面也会使用mac版来分析。</p>
+<h1 id="Mat使用"><a href="#Mat使用" class="headerlink" title="Mat使用"></a>Mat使用</h1><p>注意：我的测试app包名为：com.example.jenson.myapplication</p>
+<p>在eclipse中集成了Mat，可以直接拿来使用，而使用Android studio时。这两个是分开的，所以我们要先导出dump文件。</p>
+<h2 id="Android-studio导出dump文件"><a href="#Android-studio导出dump文件" class="headerlink" title="Android studio导出dump文件"></a>Android studio导出dump文件</h2><p>打开Android Monitor窗口，<img src="/2017/04/27/Android内存分析工具之MAT详解/0B8D42B7-E5A5-431D-9658-2A99C923CF4E.png" alt="0B8D42B7-E5A5-431D-9658-2A99C923CF4E"></p>
+<p>点击圆圈中的按钮，过几秒中会自动生成一个dump文件，然后自动打开如下图的窗口：<img src="/2017/04/27/Android内存分析工具之MAT详解/1A94CD89-1BE9-46BC-9449-8B55EE34D741.png" alt="1A94CD89-1BE9-46BC-9449-8B55EE34D741"></p>
+<p>在Heap Snapshot下的几个文件就是自动生成的dump文件，但是这不是标准的dump文件，所以需要选择文件右键导出标准dump文件，保存到一个目录下：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午1.49.26.png" alt="屏幕快照 2017-04-27 下午1.49.26"></p>
+<h2 id="Mat打开标准dump文件"><a href="#Mat打开标准dump文件" class="headerlink" title="Mat打开标准dump文件"></a>Mat打开标准dump文件</h2><p>使用Mat，菜单open File选择刚才导出的dump文件，经过分析后回显示如下所示的项目：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午2.08.27.png" alt="屏幕快照 2017-04-27 下午2.08.27"></p>
+<p>Mat从多角度提供了内存分析，其中包括Histogram、Dominator Tree、Leak Suspects和Top consumers等。</p>
+<p>overview是一个概况图，把内存的消耗以饼状图形式显示出来，鼠标在每个饼块区域划过或者点击，就会在Inspector栏目显示这块区域的相关信息。</p>
+<p>Leak Suspectss是一个关于内存泄露猜想的饼图，Problem Suspect 1是泄露猜想的描述。看我这里说的像是字节数组，这么大的数组难不成是图片，要知道图片在内存中就是以字节数组形式存在的。</p>
+<p>平常内存分析比较常用的还是Histogram、Dominator Tree。</p>
+<h2 id="开始分析内存"><a href="#开始分析内存" class="headerlink" title="开始分析内存"></a>开始分析内存</h2><p>这里我们使用Histogram进行分析，切换到Histogram页面。这个页面主要有4个列，Class Name、Objects、Shallow Heap和Retained Heap。其中Class Name是全类名，Objects是这个类的对象实例个数。Shallow Heap是对象本身占用内存大小，非数组的常规对象，本身内存占用很小，所以这个对泄露分析作用不大。Retained Heap指当前对象大小和当前对象能直接或间接引用的对象大小的总和。这个栏目是分析重点。</p>
+<p>内存分析是分析的整个系统的内存泄露，而我们只要查找我们APP的内存泄露情况。这无疑增加了很多工作，不过幸亏Histogram支持正则表达式查找，在Regex中输入我们的包名进行过滤，直奔和我们APP有关的内存泄露：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.11.33.png" alt="屏幕快照 2017-04-27 下午3.11.33"></p>
+<p>过滤后就显示了我们APP相关内存信息，按Retained Heap大小排列下，发现Student和MainActivity这两个类问题比较大。但是MainActivity的Objects数量为1，而Student的为130，看起来Student问题更严重，所以先从Student入手：</p>
+<p>首先看下是哪里的引用导致了Student不能被GC回收。<img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.19.06.png" alt="屏幕快照 2017-04-27 下午3.19.06"></p>
+<p>右键使用Merge Shortest Paths to GC Roots显示距GC Root最短路径，当然选择过程中要排除软引用和弱引用，因为这些标记的一般都是可以被回收的。进入结果页查看：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.22.23.png" alt="屏幕快照 2017-04-27 下午3.22.23"></p>
+<p>啧啧，原来Student不能被回收竟然就是这个MainActivity搞的鬼，可以看到这个类里面有个students集合里面存放的正式不能回收的Student对象。</p>
+<p>看代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">static List&lt;Student&gt; students=new ArrayList&lt;&gt;();</div><div class="line">static final String tag=&quot;MainActivity&quot;;</div><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">    sample_text = (TextView) findViewById(R.id.sample_text);</div><div class="line">    TestNative testNative = new TestNative();</div><div class="line">    sample_text.setText(testNative.stringFromJNI());</div><div class="line">    for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line"></div><div class="line">        Student student = new Student(&quot;jenson&quot; + i, i);</div><div class="line">        students.add(student);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原来不能被回收是因为用static修饰了students集合。这导致其生命周期边长，在Activity销毁时，仍然存在。问题找到了，去掉static完成内存泄露修复。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/2016公司清明节坝上草原/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jenson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jenson">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/25/2016公司清明节坝上草原/" itemprop="url">
+                  2016公司清明节坝上草原
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T17:35:56+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/生活/" itemprop="url" rel="index">
+                    <span itemprop="name">生活</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>公司应承了很久的出游终于兑现了。不过讲真公司还是比较抠门，两年一次的出游只有两天时间，其中赶路时间就占了一半。</p>
+<p>目的：丰宁坝上草原</p>
+<p>人物：公司同事</p>
+<p>在草原玩的照片基本没有拍，当天到那就下午三四点。而后又阴天下雨了，基本没有怎么玩，拍的比较多的是行宫和湖边。</p>
+<h1 id="上图"><a href="#上图" class="headerlink" title="上图"></a>上图</h1><p>到了行宫，看到骑兵都忍不住上前合影：</p>
+<p>小鱼同志，身高不够，蹦起来够~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075354_IMG_6200.JPG" alt="20160610075354_IMG_6200"></p>
+<p>我就刚刚好了。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075557_IMG_6209.JPG" alt="20160610075557_IMG_6209"></p>
+<p>主任幸福的一家~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075842_IMG_6219.JPG" alt="20160610075842_IMG_6219"></p>
+<p>进入行宫大门不久后需要经过的南天门：</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610080912_IMG_6235.JPG" alt="20160610080912_IMG_6235"></p>
+<p>回顾行宫大门，白云压顶，壮观~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610081259_IMG_6245.JPG" alt="20160610081259_IMG_6245"></p>
+<p>这好似是一个古代官员的蒙古包~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610082906_IMG_6261.JPG" alt="20160610082906_IMG_6261"></p>
+<p>嗯~没错，三贱客哈哈</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610083541_IMG_6276.JPG" alt="20160610083541_IMG_6276"></p>
+<p>从小迷宫走出来时，工作人员给的哈达~妥妥的披上。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610084538_IMG_6283.JPG" alt="20160610084538_IMG_6283"></p>
+<p>蓝天白云南天门，怎一个美字了得！</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610091441_IMG_6323.JPG" alt="20160610091441_IMG_6323"></p>
+<p>湿地大门口留念。小鱼、佳姐和李博。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610100357_IMG_6326.JPG" alt="20160610100357_IMG_6326"></p>
+<p>老李的风采，感觉要立地成佛。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101211_IMG_6337.JPG" alt="20160610101211_IMG_6337"></p>
+<p>小末哥看起来好厉害的样子，这样子回公司会不会挨收拾？</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101300_IMG_6342.JPG" alt="20160610101300_IMG_6342"></p>
+<p>主任家的公子套上小鱼的衣服。可爱，那么小就那么帅，长大了还了得</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101355_IMG_6343.JPG" alt="20160610101355_IMG_6343"></p>
+<p>远处的白云、草浪</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610102213_IMG_6353.JPG" alt="20160610102213_IMG_6353"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -1246,349 +1904,6 @@ public static int w(String tag, String msg) {
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" itemprop="url">
-                  osx下如何使用SublimeText阅读Android系统源码
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<ul>
-<li><p>安装CTags</p>
-<ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
-<ul>
-<li>3.创建索引</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" itemprop="url">
-                  Python入门系列(1):如何使用Sublime text开发Python
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
-<h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
-<li>找到Python3的安装路径<br>终端中输入命令</li>
-</ul>
-<figure class="highlight plain"><figcaption><span>-a python3 ```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到结果</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.io/upload_images/1796052-01e91620f87d697b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">复制路径```/Library/Frameworks/Python.framework/Versions/3.5/bin/python3</div></pre></td></tr></table></figure>
-<ul>
-<li>配置Sublime<br>打开Sublime-&gt;Tools-&gt;build system-&gt;new build system<br>如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.41.06.png"></p>
-<p>点击new build system 后的窗口如下图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
-<p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
-<p>print(“hello python!”)<br>```</p>
-<p>编写完代码保存，command+B执行编译</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
-<p>本节完成。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1726,297 +2041,6 @@ public static int w(String tag, String msg) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/osx如何安装Homrbrew/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/osx如何安装Homrbrew/" itemprop="url">
-                  osx如何安装Homrbrew
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
-</li>
-<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
-</li>
-<li>3.执行执行<code>brew help</code>看是否有提示</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/pycharm黄线问题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jenson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jenson">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/22/pycharm黄线问题/" itemprop="url">
-                  pycharm黄线问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T18:55:54+08:00">
-                2017-04-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
-<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2066,7 +2090,7 @@ public static int w(String tag, String msg) {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2088,7 +2112,7 @@ public static int w(String tag, String msg) {
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
