@@ -221,7 +221,7 @@
 <p>相册不要只要注释掉就好了，但是如何添加特定栏目呢？我们在写文章时头部文件都有类似的格式：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">title: hexo更换主题</div><div class="line">date: 2017-07-14 10:42:33</div><div class="line">tags: 网络</div><div class="line">categories: 网络</div></pre></td></tr></table></figure>
 <p>其中tags和categories都是可以在menu中使用的，比如我想添加Android菜单，只要设置<code>Android: /tags/Android</code>即可，前提是我之前的文章中已经存在tags为Android的标签了。当然如果设置categories也可以的，只要之前有设置过这个类型即可，比如<code>Java: /categories/Java</code>。我的配置如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/menu配置.png" alt="menu配置"></p>
+<p><img src="/2017/07/14/hexo更换主题及配置/menu配置.png" alt="menu配置"></p>
 <p>这样在点击Android菜单后，右侧都是Android类型的文章列表。</p>
 </li>
 <li><p>subnav配置</p>
@@ -238,7 +238,7 @@
 <p>把支付宝和微信收款二维码拷贝到上面创建的image文件夹。然后在配置文件中修改如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 打赏</div><div class="line"># 打赏type设定：0-关闭打赏； 1-文章对应的md文件里有reward:true属性，才有打赏； 2-所有文章均有打赏</div><div class="line">reward_type: 2</div><div class="line"># 打赏wording</div><div class="line">reward_wording: &apos;谢谢您的支持!&apos;</div><div class="line"># 支付宝二维码图片地址，跟你设置头像的方式一样。比如：/assets/img/alipay.jpg</div><div class="line">alipay: /image/alipay.jpg</div><div class="line"># 微信二维码图片地址</div><div class="line">weixin: /image/weixin.png</div></pre></td></tr></table></figure>
 <p>显示效果如图：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/打赏效果图.png" alt="打赏效果图"></p>
+<p><img src="/2017/07/14/hexo更换主题及配置/打赏效果图.png" alt="打赏效果图"></p>
 <p>​</p>
 <p>​</p>
 </li>
@@ -247,12 +247,12 @@
 <p>当然可以实现，</p>
 <p>首先注释掉<code>smart_menu</code>中的<code>aboutme</code>。</p>
 <p>然后在配置文件顶部<code>menu</code>中添加<code>关于我: /about/</code>。这是刷新UI后点击关于我，打开新的页面如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/关于我.png" alt="关于我"></p>
+<p><img src="/2017/07/14/hexo更换主题及配置/关于我.png" alt="关于我"></p>
 <p>​</p>
 </li>
 <li><p>点击所有文章提示模块缺失</p>
 <p>问题如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/模块缺失.png" alt="模块缺失"></p>
+<p><img src="/2017/07/14/hexo更换主题及配置/模块缺失.png" alt="模块缺失"></p>
 <p>首先确保node版本在6.2以上，我的是6.10.2仍然出现这个问题。</p>
 <p>然后在博客根目录下执行<code>npm i hexo-generator-content --save</code></p>
 <p>最后在根目录中的<code>_config.yml</code>里添加如下：</p>
