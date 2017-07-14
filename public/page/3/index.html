@@ -93,6 +93,10 @@
 		        
 			</div>
 		</nav>
+		<!-- 添加网易云音乐插件-->
+		<nav class="header_music">
+			<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=250 height=86 src="//music.163.com/outchain/player?type=2&id=114442&auto=0&height=66"></iframe>
+		</nav>
 	</header>		
 </div>
 
@@ -169,6 +173,115 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-算法排序之交换排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/03/算法排序之交换排序/">算法排序之交换排序</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/03/算法排序之交换排序/" class="archive-article-date">
+  	<time datetime="2017-05-03T13:04:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过交换排序，使得数组最终按非递减顺序排列。</p>
+<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
+<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
+<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
+<li><p>说明</p>
+<p>希望数组按非递减顺序排列，我们可以得到两点消息：1、数组中可能会有重复的元素，所以才说是非递减。2、排序后第一个元素是最小值 ，最后一个元素是最大值。</p>
+</li>
+<li><p>阐述实现</p>
+<p>第一轮，第一个元素分别与后面的每个元素比较，如果大于后面的元素则进行交换，把较小值交换到第一个元素位置，本轮结束后的第一个元素就是数组中最小值。</p>
+<p>第二轮，由于第一轮的第一个元素已经求出了最小值，所以第二轮从第二个元素开始，与后面的每个元素分别比较，如果大于后面的元素则进行交换，把较小值交换到第二个元素位置，本轮结束后的第二个元素就是数组中倒数第二小的值。</p>
+<p>以此类推，进行n-1轮比较，n为数组长度。之所以是n-1轮而不是n轮，是因为第i轮的i个元素要和后面的元素进行比较，如果是n轮，它本身就是最后的元素，不需要比较了。</p>
+</li>
+<li><p>阐述转换通用代码</p>
+<p>交换方法提取：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">void swap(int[] arr, int i,int j)&#123;</div><div class="line">  int tmp = arr[i];</div><div class="line">  arr[i] = arr[j];</div><div class="line">  arr[j] = tmp ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=0；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第二轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=1；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>每轮遍历出一个当前未排序中最小值，以此类推，遍历n-1轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for(int i=0;i&lt;n-1;i++)&#123;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void swapSort(int[] arr) &#123;</div><div class="line">	int length = arr.length;</div><div class="line">	for (int i = 0; i &lt; length-1 ; i++) &#123;</div><div class="line">		for (int j = i + 1; j &lt; length; j++) &#123;</div><div class="line">			if (arr[i] &gt;  arr[j]) &#123;</div><div class="line">				int tmp = arr[i];</div><div class="line">				arr[i] = arr[j];</div><div class="line">				arr[j] = tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/03/算法排序之交换排序/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-Java字符串压缩去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -1203,190 +1316,6 @@ public static int w(String tag, String msg) {
 
 
   
-    <article id="post-30分钟搭建自己的网站" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/23/30分钟搭建自己的网站/">Hexo+GitHub 30分钟拥有属于自己的网站</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/23/30分钟搭建自己的网站/" class="archive-article-date">
-  	<time datetime="2017-04-23T04:57:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月23日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
-<p>很多ITer都想拥有一个个人网站，记录自己工作经验和生活。哪怕已经有了简书这样好的一个平台，但是那种情节并没有就此打消。下面给大家分享下我个人网站创建流程及中途遇到的坑，希望对那些想建站却又嫌麻烦的朋友有所帮助。</p>
-</blockquote>
-<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在开始前要做好系列准备工作，如环境搭建、GitHub账号注册等。下面分别来看下要做哪些：</p>
-<h2 id="GitHub官网"><a href="#GitHub官网" class="headerlink" title="GitHub官网"></a>GitHub官网</h2><ul>
-<li><p>账号注册<br>  如果你还没有GitHub账号，请前往<a href="https://github.com/" target="_blank" rel="external">官网注册</a>。如果已经注册过，请登录</p>
-</li>
-<li><p>创建仓库<br>  登录后，点击左上角+号创建仓库：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-076ccee5f6f8713c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index.png"><br>在新的创建页面，写上   yourname.github.io ，然后下方选框勾上(我当时没有勾后来本地文件向git提交时出了点小问题)。yourname最好就是你的GitHub的名字，</p>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-68a0ed4e1dd8fc95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index1.png"></p>
-<h2 id="Git客户端安装"><a href="#Git客户端安装" class="headerlink" title="Git客户端安装"></a>Git客户端安装</h2><ul>
-<li>安装<br>  Git可以直接从<a href="https://git-scm.com/downloads" target="_blank" rel="external">官网下载</a> 系统版本自行选择。<br>Git安装基本也可以认为一路next点过来，如果你的 on the Desktop没有勾选的话，为了方便可以勾选上</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-1b1909354d7db0bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index3.png"></p>
-<ul>
-<li>验证<br>  同样为了查看是否正确安装，需要从命令行查看能否正确显示版本信息：  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git --version</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>如果显示了版本信息，则说明正确安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git version 2.12.2.windows.2</div></pre></td></tr></table></figure></p>
-<ul>
-<li><p>配置git</p>
-<ul>
-<li><p>配置Git的user name和email：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global user.name &quot;你的名字&quot;</div><div class="line">git config --global user.email &quot;你的git使用的邮箱&quot;</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成密钥：<br>  使用ssh-keygen -t rsa -C 你的git使用的邮箱 命令生成密钥，输入命令后连续点击好像三四次回车就行，出现的一些设置提示不用管，全部默认就行。执行完成后会生成密钥文件如图：</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6a752a526843a255.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index4.png"></p>
-<ul>
-<li><p>密钥和GitHub关联<br>  编辑器打开id_rsa.pub复制所有内容。<br>  打开GitHub Setting如图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-fbd7fecb18c1669f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index5.png"><br>找到SSH key，点击new SSH key，把内容粘贴到key文本框中，title随意起，保存，如下图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-091de6d5aa8682a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index6.png"></p>
-</li>
-</ul>
-<h2 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h2><ul>
-<li>安装<br>  我笔记本是win系统，所以关于Node.js下载：<br><a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi" target="_blank" rel="external">32位下载</a><br><a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi" target="_blank" rel="external">64位下载</a><br>如果是其他系统，需要自行去官网下载。<br>关于安装没有什么注意的，反正我是一路next，如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c67fd55dd0a8089a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index7.png"></p>
-<ul>
-<li><p>验证<br>  安装完成后，可以像JDK一样，使用命令行验证是否正确安装，在cmd命令窗口执行以下：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node -v</div><div class="line">npm -v</div></pre></td></tr></table></figure>
-<p>  如果正确显示了当前版本号，则说明安装成功：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">v4.2.3</div><div class="line">2.14.7</div></pre></td></tr></table></figure>
-<p>  否则，请根据具体异常信息搜索下。</p>
-</li>
-</ul>
-<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><ul>
-<li><p>安装<br>  在合适地方创建一个文件夹并命名，例如我在 E盘 下创建了hexo文件夹：<br>  通过命令行进入该文件夹目录下：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">C:\Users\Jenson&gt;E:</div><div class="line">E:\&gt;cd hexo</div><div class="line">E:\hexo&gt;</div></pre></td></tr></table></figure>
-<p>  执行 npm命令 安装hexo：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure>
-<p>  期间cmd窗口会自动刷出一些信息，可能会有warn不过不要紧。待命令执行完毕，继续执行</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo --save</div></pre></td></tr></table></figure>
-<p>  这时又会有信息刷屏，信息滚动完毕，通过</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo -v</div></pre></td></tr></table></figure>
-<p>  命令验证是否安装成功。<br>  如果出现了下面字样，说明安装成功了：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-89811acc016bd532.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index12.png"></p>
-</li>
-<li><p>初体验</p>
-<ul>
-<li><p>窗口中继续执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init</div></pre></td></tr></table></figure>
-<p>初始化</p>
-</li>
-<li><p>执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install</div></pre></td></tr></table></figure>
-<p>自动安装所需组件，直到完成</p>
-</li>
-<li><p>执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
-</li>
-<li><p>执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s</div></pre></td></tr></table></figure>
-<p>启动本地服务，在浏览器地址栏输入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:4000/</div></pre></td></tr></table></figure>
-<p>看能否打开本地部署的网站，如果成功打开，恭喜你本地部署完成。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="本地hexo关联到GitHub"><a href="#本地hexo关联到GitHub" class="headerlink" title="本地hexo关联到GitHub"></a>本地hexo关联到GitHub</h1><p>本地网站已经可以打开，接下来要把hexo部署到GitHub上，让别人也能访问。<br>在hexo目录下找到_config.yml文件，按如下格式修改成你的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repo: https://github.com/Jensonss/Jensonss.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
-<p>修改完成后，执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo d -g</div></pre></td></tr></table></figure></p>
-<p>生成部署，这样就会根据刚才的GitHub地址commit到GitHub仓库，首次的话会弹窗让你输入你的GitHub登录的用户名和密码。登录成功后就会自动commit了。<br>此时通过 <code>xxx.github.io</code> 应该是可以访问你的网站了。</p>
-<h1 id="个性域名绑定"><a href="#个性域名绑定" class="headerlink" title="个性域名绑定"></a>个性域名绑定</h1><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>我的域名是在万网购买的，不过进入网站才发现万网成了阿里云的二级域名，不知道什么时候被阿里云收购了。购买通道<a href="https://wanwang.aliyun.com/" target="_blank" rel="external">猛戳</a>,用淘宝账号直接登录，由于是个人使用所以我选了 .me 类型的，而且13元/首年价格比较便宜，以后续费价格好像是89元/年。</p>
-<p>付款时会让选择持有者是个人还是企业，选择个人，然后创建一个个人使用的信息模板，可能由于我的是.me域名，所以没有进行身份证验证也能使用。</p>
-<h2 id="域名DNS解析"><a href="#域名DNS解析" class="headerlink" title="域名DNS解析"></a>域名DNS解析</h2><p>购买后的域名不能直接使用，因为现在只是把域名颁发给你，但是还没有和IP地址绑定，还需要进行DNS解析。<br>在你购买后，可以直接点击域名进入域名控制台，页面长这样：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-d32c7d57b43b7559.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index8.png"></p>
-<p>点击左侧的菜单-云解析DNS，然后再点击你的域名：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bbca539b61e74602.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index9.png"></p>
-<p>进入了新手引导设置：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-97f979d9b478abb8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index10.png"></p>
-<p>如果点击设置网站解析，进入的页面只能输入一个IP地址，由于GitHub有2个IP地址要绑定，所以我直接选择了高级设置，点击 添加解析，添加如下三条记录，其中xxx.github.io  ，xxx为你得GitHub配置的名称：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-15f930f4842f9ba2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index11.png"></p>
-<p>注意：CNAME 必须大写<br>这样过几分钟域名就会生效了，</p>
-<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>上一步DNS解析用到了CNAME ，现在在hexo/source目录下创建一个不带后缀的文件，名为CNAME，内容只填写你购买的域名：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-617ebc06eda88723.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>然后执行<code>hexo d -g</code>部署到GitHub上。这样就能通过你的新域名访问你的网站了。</p>
-<p>如果只是把hexo部署到GitHub上，半个小时是足够的，但是入果从找网站买域名、DNS解析、绑定。前前后后大概花了近1个小时。可能因为我有强迫症的缘故，填写一些信息时总是要想好久。</p>
-<p>话不多说，看看完成后的网站吧：<a href="www.jensondev.me">我的站点</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/23/30分钟搭建自己的网站/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1505,11 +1434,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1517,19 +1446,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
