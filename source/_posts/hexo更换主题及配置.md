@@ -33,7 +33,7 @@ categories: 网络
 
   打开博客根目录下的`_config.yml`文件，找到`theme: next`栏目把next改为`yilia`后保存。如下：
 
-  ![换主题](/Users/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/换主题.png)
+  ![换主题](hexo更换主题及配置/换主题.png)
 
   ​
 
@@ -60,7 +60,7 @@ categories: 网络
 
   其中tags和categories都是可以在menu中使用的，比如我想添加Android菜单，只要设置`Android: /tags/Android`即可，前提是我之前的文章中已经存在tags为Android的标签了。当然如果设置categories也可以的，只要之前有设置过这个类型即可，比如`Java: /categories/Java`。我的配置如下：
 
-  ![menu配置](/Users/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/menu配置.png)
+  ![menu配置](hexo更换主题及配置/menu配置.png)
 
   这样在点击Android菜单后，右侧都是Android类型的文章列表。
 
@@ -120,7 +120,7 @@ categories: 网络
 
   显示效果如图：
 
-  ![打赏效果图](/Users/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/打赏效果图.png)
+  ![打赏效果图](hexo更换主题及配置/打赏效果图.png)
 
   ​
 
@@ -136,7 +136,7 @@ categories: 网络
 
   然后在配置文件顶部`menu`中添加`关于我: /about/`。这是刷新UI后点击关于我，打开新的页面如下：
 
-  ![关于我](/Users/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/关于我.png)
+  ![关于我](hexo更换主题及配置/关于我.png)
 
   ​
 
@@ -144,7 +144,7 @@ categories: 网络
 
   问题如下：
 
-  ![模块缺失](/Users/jenson/Downloads/hexo/source/_posts/hexo更换主题及配置/模块缺失.png)
+  ![模块缺失](hexo更换主题及配置/模块缺失.png)
 
   首先确保node版本在6.2以上，我的是6.10.2仍然出现这个问题。
 
