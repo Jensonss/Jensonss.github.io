@@ -63,6 +63,8 @@
 	        
 				<li><a href="/tags/Python">Python</a></li>
 	        
+				<li><a href="/tags/Java">Java</a></li>
+	        
 				<li><a href="/about/">关于我</a></li>
 	        
 			</ul>
@@ -87,7 +89,7 @@
 		        
 					<a class="mail" target="_blank" href="mailto:songjlforever@foxmail.com" title="mail"><i class="icon-mail"></i></a>
 		        
-					<a class="google" target="_blank" href="/www.google.com" title="google"><i class="icon-google"></i></a>
+					<a class="google" target="_blank" href="https://www.google.com" title="google"><i class="icon-google"></i></a>
 		        
 			</div>
 		</nav>
@@ -123,6 +125,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -132,7 +136,7 @@
 			        
 						<a class="mail" target="_blank" href="mailto:songjlforever@foxmail.com" title="mail"><i class="icon-mail"></i></a>
 			        
-						<a class="google" target="_blank" href="/www.google.com" title="google"><i class="icon-google"></i></a>
+						<a class="google" target="_blank" href="https://www.google.com" title="google"><i class="icon-google"></i></a>
 			        
 				</div>
 			</nav>
@@ -141,13 +145,15 @@
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 25%"><a href="/">主页</a></li>
+					<li style="width: 20%"><a href="/">主页</a></li>
 		        
-					<li style="width: 25%"><a href="/tags/Android">Android</a></li>
+					<li style="width: 20%"><a href="/tags/Android">Android</a></li>
 		        
-					<li style="width: 25%"><a href="/tags/Python">Python</a></li>
+					<li style="width: 20%"><a href="/tags/Python">Python</a></li>
 		        
-					<li style="width: 25%"><a href="/about/">关于我</a></li>
+					<li style="width: 20%"><a href="/tags/Java">Java</a></li>
+		        
+					<li style="width: 20%"><a href="/about/">关于我</a></li>
 		        
 				</ul>
 			</nav>
@@ -163,6 +169,105 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-Java字符串压缩去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/03/Java字符串压缩去重/">Java字符串压缩去重</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/03/Java字符串压缩去重/" class="archive-article-date">
+  	<time datetime="2017-05-03T09:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>去一家公司面试，开始就一道笔试题，做对了就继续，做不对就不用往下面了。内容是读取文件内容并压缩内容去重，压缩去重意思是如果内容为ABBCCCCAA压缩后字符串显示为A1B2C3A2。以此类推。其实这道题不难，但是我脑子转悠慢，读取文件和遍历字符做出来了，但是其余的没有做出了，或者说大概思路对了，但是卡在某一个点。总之有点废物就是了。。</p>
+<h1 id="我的做法"><a href="#我的做法" class="headerlink" title="我的做法"></a>我的做法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public static String compress(String str)&#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	//我这里是从0开始的</div><div class="line">	int count = 0;</div><div class="line">	//而这也是初始为0，这样的设置导致下面判断时候一直</div><div class="line">	//无所适从，对于何时该给count++，</div><div class="line">	//何时该给mystr.append有点混乱</div><div class="line">	char last = 0;</div><div class="line">	int length = str.length();</div><div class="line">	for(int i=0;i&lt;length;i++)&#123;</div><div class="line">		char c = str.charAt(i);</div><div class="line">		if(last!=c)&#123;</div><div class="line">			last = c;</div><div class="line">			count++;</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">		&#125;else&#123;</div><div class="line">			count++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="正确地做法"><a href="#正确地做法" class="headerlink" title="正确地做法"></a>正确地做法</h1><ul>
+<li><p>直接使用string做法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public String compressBad (String str)  </div><div class="line">&#123;  </div><div class="line">    String mystr = &quot; &quot;;  </div><div class="line">    int count = 1;  </div><div class="line">    char last = str.charAt(0);  </div><div class="line">    for (int i = 1; i &lt; str.length(); i++)  </div><div class="line">    &#123;  </div><div class="line">        if (last == str.charAt(i))  </div><div class="line">        &#123;  </div><div class="line">            count++;  </div><div class="line">        &#125;  </div><div class="line">        else  </div><div class="line">        &#123;  </div><div class="line">            mystr += last + count;  </div><div class="line">            last = str.charAt(i);  </div><div class="line">            count = 1;                </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    return mystr += last + count;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<ul>
+<li><p>使用StringBuffer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public static  String compressBetter(String str) &#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	int count = 1;</div><div class="line">	//取出第一个字符作为比较字符</div><div class="line">	char last = str.charAt(0);</div><div class="line">	for (int i = 1; i &lt; str.length(); i++) &#123;</div><div class="line">		//如果当前字符和之前的字符相同，说明是重复的，</div><div class="line">		//直接在数量值+1；</div><div class="line">		if (last == str.charAt(i)) &#123;</div><div class="line">			count++;</div><div class="line">		&#125; else &#123;</div><div class="line">			//如果不相同，说明开始了一个新的字符，</div><div class="line">			//这时要做的只有两件事：</div><div class="line">			//1、结束上格字符计数并添加字符串，</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">			//2、2、开始新的字符计数</div><div class="line">			last = str.charAt(i);</div><div class="line">			count = 1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	//最后一个字符计数并显示</div><div class="line">	mystr.append(last);</div><div class="line">	mystr.append(count);</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>作为IT从业者，大部分时间都在写业务逻辑，很多基本功已经近乎荒废了，这是非常不可取的。眼光放长远些，我们的技术不应该局限于某一种语言，而应该把重心放在跨语言的那些通用技术。比如：操作系统、算法和数据结构、网络及设计模式重构思想等，这些东西在任何语言中都会用到而且也会是重点。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/03/Java字符串压缩去重/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-hexo博客换电脑后怎么办" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -1282,111 +1387,9 @@ public static int w(String tag, String msg) {
 
 
   
-    <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">Python入门系列(1):如何使用Sublime text开发Python</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
-<h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
-<li>找到Python3的安装路径<br>终端中输入命令</li>
-</ul>
-<figure class="highlight plain"><figcaption><span>-a python3 ```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到结果</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.io/upload_images/1796052-01e91620f87d697b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">复制路径```/Library/Frameworks/Python.framework/Versions/3.5/bin/python3</div></pre></td></tr></table></figure>
-<ul>
-<li>配置Sublime<br>打开Sublime-&gt;Tools-&gt;build system-&gt;new build system<br>如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.41.06.png"></p>
-<p>点击new build system 后的窗口如下图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
-<p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
-<p>print(“hello python!”)<br>```</p>
-<p>编写完代码保存，command+B执行编译</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
-<p>本节完成。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 
@@ -1514,11 +1517,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1527,10 +1534,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
