@@ -1,8 +1,8 @@
 ---
 title: 为什么Android中很多int常量使用十六进制表示
 date: 2017-07-19 10:12:21
-tags: Android
-category: Android
+tags: [Android,Java]
+category: [Android,Java]
 ---
 
 # 0x00 前言

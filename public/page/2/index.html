@@ -174,6 +174,226 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python入门系列-3-元组、列表和字典" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">Python入门系列(3):元组、列表和字典</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/26/Python入门系列-3-元组、列表和字典/" class="archive-article-date">
+  	<time datetime="2017-06-26T11:00:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。</p>
+<h1 id="0x01-列表"><a href="#0x01-列表" class="headerlink" title="0x01 列表"></a>0x01 列表</h1><h2 id="什么是列表？如何表示列表？"><a href="#什么是列表？如何表示列表？" class="headerlink" title="什么是列表？如何表示列表？"></a>什么是列表？如何表示列表？</h2><p>​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’, ‘dog’, ‘monkey’]</p>
+<h2 id="访问列表"><a href="#访问列表" class="headerlink" title="访问列表"></a>访问列表</h2><p>​    列表的访问通过索引下标来访问，索引和其他大多数语言一样从0开始。</p>
+<p>也就是说访问第一个元素为：animal[0]。而和其他语言不一样的是Python中索引可以为负值，如：animal[-1]实际为最后一个元素，以此类推。</p>
+<h2 id="列表增加元素"><a href="#列表增加元素" class="headerlink" title="列表增加元素"></a>列表增加元素</h2><p>​    元素的添加分为两种，列表末尾追加和任意位置添加</p>
+<ul>
+<li><p>末尾追加</p>
+<p>使用方法append，animal.append(’fox‘)</p>
+</li>
+<li><p>任意位置添加</p>
+<p>使用方法insert，animal.insert(1,’fox’)。第一个参数为索引值</p>
+</li>
+</ul>
+<h2 id="列表删除元素"><a href="#列表删除元素" class="headerlink" title="列表删除元素"></a>列表删除元素</h2><p>元素删除也可以通过四种方式实现：</p>
+<ul>
+<li><p>使用del</p>
+<p>如果知道元素所处列表位置，则使用del  animal[ i ]</p>
+</li>
+<li><p>使用pop</p>
+<p>如果只需删除了列表末尾元素，则直接使用animal.pop方法。类似出栈</p>
+</li>
+<li><p>使用pop</p>
+<p>如果要删除任意位置元素，使用animal.pop（i)，参数为索引值</p>
+</li>
+<li><p>使用remove</p>
+<p>如果知道元素值而不知道位置，则使用animal.remove（value），参数为元素值</p>
+</li>
+</ul>
+<h2 id="列表修改元素"><a href="#列表修改元素" class="headerlink" title="列表修改元素"></a>列表修改元素</h2><p>​    修改列表元素的语法与访问列表元素的语法类似，如果要进行元素修改只要拿到元素后对其进行从新赋值即可：animal[1] = ‘bird’。</p>
+<h2 id="列表元素遍历"><a href="#列表元素遍历" class="headerlink" title="列表元素遍历"></a>列表元素遍历</h2><p>列表遍历使用循环即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ani <span class="keyword">in</span> animal:</div><div class="line">	print(ani)</div></pre></td></tr></table></figure>
+<h1 id="0x02-元组"><a href="#0x02-元组" class="headerlink" title="0x02 元组"></a>0x02 元组</h1><p>元组使用小括号，列表使用方括号。<br>元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可。</p>
+<ul>
+<li>Python 的元组与列表类似，不同之处在于元组的元素不能修改。</li>
+</ul>
+<ul>
+<li><p>元组中只包含一个元素时，需要在元素后面添加逗号</p>
+<p>​    tup1 = (10,)</p>
+</li>
+<li><p>元组中的元素值是不允许删除的，但我们可以使用del语句来删除整个元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>,<span class="string">'dm'</span>)</div><div class="line">print(cats)</div><div class="line"><span class="keyword">del</span> cats</div><div class="line">print(cats)<span class="comment">#打印异常</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>元组中的元素值是不允许修改的，但我们可以对元组进行连接组合</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>, <span class="string">'dm'</span>)</div><div class="line">cat1 = (<span class="string">'mm'</span>,)</div><div class="line">allCat = cats + cat1</div><div class="line">print(allCat)<span class="comment">#('xm', 'dm', 'mm')</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x03-字典"><a href="#0x03-字典" class="headerlink" title="0x03 字典"></a>0x03 字典</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-算法之朴素模式匹配" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/25/算法之朴素模式匹配/">算法之朴素模式匹配</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/25/算法之朴素模式匹配/" class="archive-article-date">
+  	<time datetime="2017-05-25T07:49:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月25日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>不论英文还是中文，在看文章时经常会遇到查找某个单词或字组的时候，把一篇文章看作是一个大的字符串，要查找的内容作为子串，这种在大串中查找子串的操作叫做串的模式匹配。</p>
+<p>我们知道了这种行为叫串的模式匹配，但我们不清楚的是到底如何匹配，具体的操作是什么？</p>
+<h1 id="0x01-我如何操作"><a href="#0x01-我如何操作" class="headerlink" title="0x01 我如何操作"></a>0x01 我如何操作</h1><p>在我看来要从大串中寻找子串，最直接的方法就是从大串起始位置开始，挨个字符比对，如果存在子串总会找出来。这种简单直接的方法称为 <strong>朴素的模式匹配算法</strong></p>
+<h1 id="0x02-代码实现"><a href="#0x02-代码实现" class="headerlink" title="0x02 代码实现"></a>0x02 代码实现</h1><p>如果借用字符串截取操作，直接实现子串的查找就比较方便：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public static int index(String s, String t, int pos) &#123;</div><div class="line">	int m = s.length();</div><div class="line">	int n = t.length();</div><div class="line">	while (pos &lt;= (m - n + 1)) &#123;</div><div class="line">		String sub = s.substring(pos, n);</div><div class="line">		//直接在对比位置截取和子串相同长度的一个串来和子串对比</div><div class="line">		if (t.equals(sub)) &#123;</div><div class="line">			return pos;</div><div class="line">		&#125; else &#123;</div><div class="line">			pos++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/25/算法之朴素模式匹配/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-两个栈实现队列功能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1127,176 +1347,6 @@
 
 
   
-    <article id="post-详解设计模式之建造者模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/10/详解设计模式之建造者模式/">详解设计模式之建造者模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/10/详解设计模式之建造者模式/" class="archive-article-date">
-  	<time datetime="2017-05-10T04:28:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/10/详解设计模式之建造者模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android网络框架执行流程分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/10/Android网络框架执行流程分析/">Android网络框架okhttp执行流程分析</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/10/Android网络框架执行流程分析/" class="archive-article-date">
-  	<time datetime="2017-05-09T16:58:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。</p>
-<h1 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h1><p><img src="/2017/05/10/Android网络框架执行流程分析/流程.png" alt="流程"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/10/Android网络框架执行流程分析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1415,15 +1465,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1435,15 +1481,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
