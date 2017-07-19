@@ -6,17 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Java | Jenson</title>
+  <title>为什么Android中很多int常量使用十六进制表示 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录工作、生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jenson">
-<meta property="og:url" content="http://yoursite.com/tags/Java/index.html">
+  <meta name="description" content="0x00 前言在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？ 1234567public static final int FLAG_DEBUG_TRIAGED_MISSING = 0x00000100;public static final int FL">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么Android中很多int常量使用十六进制表示">
+<meta property="og:url" content="http://yoursite.com/2017/07/19/为什么Android中很多int常量使用十六进制表示/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="记录工作、生活">
+<meta property="og:description" content="0x00 前言在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？ 1234567public static final int FLAG_DEBUG_TRIAGED_MISSING = 0x00000100;public static final int FL">
+<meta property="og:updated_time" content="2017-07-19T05:09:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jenson">
-<meta name="twitter:description" content="记录工作、生活">
+<meta name="twitter:title" content="为什么Android中很多int常量使用十六进制表示">
+<meta name="twitter:description" content="0x00 前言在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？ 1234567public static final int FLAG_DEBUG_TRIAGED_MISSING = 0x00000100;public static final int FL">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -172,120 +174,228 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-为什么Android中很多int常量使用十六进制表示" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/06/30/Java知识点/" class="archive-article-date">
-  	<time datetime="2017-06-30T10:51:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月30日</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/06/30/Java知识点/">Java知识点</a>
+    <h1 class="article-title" itemprop="name">
+      为什么Android中很多int常量使用十六进制表示
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/" class="archive-article-date">
+  	<time datetime="2017-07-19T02:12:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_DEBUG_TRIAGED_MISSING = <span class="number">0x00000100</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_IGNORE_EPHEMERAL = <span class="number">0x00000200</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NO_HISTORY = <span class="number">0x40000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NEW_TASK = <span class="number">0x10000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_MULTIPLE_TASK = <span class="number">0x08000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_CLEAR_TASK = <span class="number">0X00008000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_TASK_ON_HOME = <span class="number">0X00004000</span>;</div></pre></td></tr></table></figure>
+<p>猜测可能的原因：</p>
+<p>①为了美观</p>
+<p>②为了方便位运算</p>
+<p>③关于①我是瞎说的</p>
+<p>既然多采用十六进制，那就先简单看看什么是十六进制</p>
+<h1 id="0x01-十六进制简单介绍"><a href="#0x01-十六进制简单介绍" class="headerlink" title="0x01 十六进制简单介绍"></a>0x01 十六进制简单介绍</h1><p>以0x或0X开头，使用数字0~9及字符A~F表示16个可能的值，这种进制方式一般称为十六进制。</p>
+<p>一个int占4个字节，32位。</p>
+<p>十六进制中0xF最大，二进制表示：1111，用4位即可表示出来，所以在用十六进制表示int时，通常0x后面跟8位数字/字符，这样就可以表示满一个int值。也就是前言中所看到的。</p>
+<h1 id="0x02-发现规律"><a href="#0x02-发现规律" class="headerlink" title="0x02 发现规律"></a>0x02 发现规律</h1><p>通过前言中的代码可以发现基本上频繁出现的只有1，2，4，8几个数字而其他位置都是0占位。为什么会出现这种情况呢？</p>
+<p>首先把上面的十六进制转换成二进制看一下：</p>
+<p><code>0x00000100</code>转换二进制<code>0001 0000 0000</code></p>
+<p><code>0x00000200</code>转换二进制<code>0010 0000 0000</code> </p>
+<p><code>0X00004000</code>转换二进制<code>0100 0000 0000 0000</code></p>
+<p><code>0X00008000</code>转换二进制<code>1000 0000 0000</code></p>
+<p>转换后可以发现，1，2，4，8这几个值很特殊，在二进制中表示这几个数时都只要某一位为1，其他位用0占位即可表示。</p>
+<p>换句话说，二进制的4位表示十六进制中的一个数字，而这4位中若只有其中一位为1的话，那么可能的值情况为1=2º，2=2¹，4=2²，8=2³。</p>
+<p>这样做有什么好处呢？</p>
+<h1 id="0x03-这样做的好处"><a href="#0x03-这样做的好处" class="headerlink" title="0x03 这样做的好处"></a>0x03 这样做的好处</h1><ul>
+<li><p>拿位移来说因为只有一个数字带值，其他都是0占位，位移时大脑中快速把十六进制转为二进制然后补0位即可。</p>
+<p>拿0x200来说，换算二进制我只要把2用二进制0010在大脑中展示出来，然后后面跟8个0就换算完成。如果0x200&gt;&gt;1,右移1位，相当于1后面的9个0被砍掉一个，左边高位补0。</p>
+<p>二进制表示由<code>0010 0000 0000</code>变成了<code>0001 0000 000</code>。值由512变成了256，可见右移1位相当于除以2。前面十六进制和二进制转换是在大脑中完成，转换到十进制我是笔算的，可能这是采用十六进制表示int原因之一吧。</p>
+<p>同样左移思路也是如此。</p>
+</li>
+<li><p>位与&amp;/位或|</p>
+<p>位与/位或是对参与运算的数的二进制进行位与/位或。</p>
+<p>位与&amp;：两数二进制对应位均为1时结果才为1，其余为0</p>
+<p>位或|：两数二进制对应位有一个为1时，结果位就为1</p>
+<p>在源码和框架中，很多时候需要存储一些状态组合，比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">addFlags</span><span class="params">(<span class="keyword">int</span> flags)</span> </span>&#123;</div><div class="line">     mFlags |= flags;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>最后在一些地方会根据状态组合的不同值来做出不同的响应。这时使用1，2，4，8这种格式的十六进制就很方便，因为不同的状态值只是在二进制的不同位上用1标记而已。这样最后可以根据mFlags的值二进制有多少位为1，基本就能判断有多少种状态。当然这里说的是位或。</p>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢您的支持!<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/image/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/image/weixin.png">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/07/19/为什么Android中很多int常量使用十六进制表示/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/03/Java字符串压缩去重/" class="archive-article-date">
-  	<time datetime="2017-05-03T09:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2017/07/17/关于Intent那些事/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          关于Intent那些事
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/19/为什么相对布局比线性布局性能低/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">为什么相对布局比线性布局性能低</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/03/Java字符串压缩去重/">Java字符串压缩去重</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -308,9 +418,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
