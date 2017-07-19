@@ -174,6 +174,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Django创建数据表时syncdb提示Unknown-command：‘syncdb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">Django创建数据表时syncdb提示Unknown command：‘syncdb&#39;</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/" class="archive-article-date">
+  	<time datetime="2017-06-27T08:32:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月27日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>异常信息如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdb</div><div class="line">Unknown command: &apos;syncdb&apos;</div><div class="line">Type &apos;manage.py help&apos; for usage.</div></pre></td></tr></table></figure>
+<p>主要是因为使用的版本太新，如果你安装的Django Version &gt;= 1.9就会出现这个问题</p>
+<p>解决方法就是把<code>python3 ./manage.py syncdb</code></p>
+<p>替换成<code>python3 ./manage.py migrate</code></p>
+<p>之后就会初始化数据表成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py migrate</div><div class="line">Operations to perform:</div><div class="line">  Apply all migrations: admin, auth, contenttypes, sessions</div><div class="line">Running migrations:</div><div class="line">  Applying contenttypes.0001_initial... OK</div><div class="line">  Applying auth.0001_initial... OK</div><div class="line">  Applying admin.0001_initial... OK</div><div class="line">  Applying admin.0002_logentry_remove_auto_add... OK</div><div class="line">  Applying contenttypes.0002_remove_content_type_name... OK</div><div class="line">  Applying auth.0002_alter_permission_name_max_length... OK</div><div class="line">  Applying auth.0003_alter_user_email_max_length... OK</div><div class="line">  Applying auth.0004_alter_user_username_opts... OK</div><div class="line">  Applying auth.0005_alter_user_last_login_null... OK</div><div class="line">  Applying auth.0006_require_contenttypes_0002... OK</div><div class="line">  Applying auth.0007_alter_validators_add_error_messages... OK</div><div class="line">  Applying auth.0008_alter_user_username_max_length... OK</div><div class="line">  Applying sessions.0001_initial... OK</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python入门系列-3-元组、列表和字典" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1232,121 +1323,6 @@
 
 
   
-    <article id="post-详解设计模式之责任链模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/10/详解设计模式之责任链模式/">详解设计模式之责任链模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/10/详解设计模式之责任链模式/" class="archive-article-date">
-  	<time datetime="2017-05-10T04:36:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。</p>
-<h1 id="面试流程分析"><a href="#面试流程分析" class="headerlink" title="面试流程分析"></a>面试流程分析</h1><p>作为技术人员离职再就业少不了要面试的，那么我们就拿面试流程来细说。假设面试流程分为三步：组长面试，CTO面试，HR终面，一共三面。</p>
-<h2 id="不考虑其他任何方面的优化，一个人的面试如何实现？"><a href="#不考虑其他任何方面的优化，一个人的面试如何实现？" class="headerlink" title="不考虑其他任何方面的优化，一个人的面试如何实现？"></a>不考虑其他任何方面的优化，一个人的面试如何实现？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//面试类</div><div class="line">static class Viewer &#123;</div><div class="line">	public void interview(int level) &#123;</div><div class="line"></div><div class="line">		if (0 == level) &#123;// 组长面试</div><div class="line">			// TODO</div><div class="line">		&#125; else if (1 == level) &#123;// CTO面试</div><div class="line">			// TODO</div><div class="line">		&#125; else if (2 == level) &#123;// HR终面</div><div class="line">			// TODO</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//客户端</div><div class="line">public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">	Viewer viewer = new Viewer();</div><div class="line">	viewer.interview(0);</div><div class="line">	viewer.interview(1);</div><div class="line">	viewer.interview(2);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从上面实现方式可以看出，面试方法，如果要面试三次，那么客户端要调用三次，面试方法interview中对level判断，不同级别有不同人面试，如果以后增加四面，那么就要修改interview方法。</p>
-<p>另外每次的面试 <code>viewer.interview</code> 都在客户端调用，但是按照正常流程组长面试完，如果觉得可以，应该流程传递到CTO哪里了，CTO谈完了觉得技术良好，最后交给HR谈待遇，流程抽象提取后是这样：</p>
-<p><img src="/2017/05/10/详解设计模式之责任链模式/屏幕快照 2017-05-10 下午4.21.27.png" alt="屏幕快照 2017-05-10 下午4.21.27"></p>
-<p>这不就是开头说的“链”吗？</p>
-<h2 id="下面看看用链如何实现面试的："><a href="#下面看看用链如何实现面试的：" class="headerlink" title="下面看看用链如何实现面试的："></a>下面看看用链如何实现面试的：</h2><p>先定义一个链接口来控制面试流程：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public interface Chain &#123;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 面试方法</div><div class="line">	 * </div><div class="line">	 * @param level</div><div class="line">	 */</div><div class="line">	void interview();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 是否通过</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	boolean isCross();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 下一个面试官</div><div class="line">	 * </div><div class="line">	 * @param chain</div><div class="line">	 */</div><div class="line">	void next(Chain chain);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后定义组长Grouper、CTO、HR三个面试官类实现Chain接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line">static class Grouper implements Chain &#123;</div><div class="line">	private Chain next = null;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void interview() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">		if (isCross() &amp;&amp; next != null) &#123;</div><div class="line">			System.out.println(&quot;组长面试通过&quot;);</div><div class="line">			next.interview();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean isCross() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		return true;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void next(Chain chain) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		this.next = chain;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">static class CTO implements Chain &#123;</div><div class="line">	private Chain next = null;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void interview() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		if (isCross() &amp;&amp; next != null) &#123;</div><div class="line">			System.out.println(&quot;CTO面试通过&quot;);</div><div class="line">			next.interview();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean isCross() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		return true;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void next(Chain chain) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		this.next = chain;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">static class HR implements Chain &#123;</div><div class="line">	private Chain next = null;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void interview() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;HR面试通过&quot;);</div><div class="line">		if (isCross() &amp;&amp; next != null) &#123;</div><div class="line">			next.interview();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean isCross() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		return true;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void next(Chain chain) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后看看客户端调用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) &#123;</div><div class="line">	Grouper grouper = new Grouper();</div><div class="line">	CTO cto = new CTO();</div><div class="line">	HR hr = new HR();</div><div class="line">	grouper.next(cto);</div><div class="line">	cto.next(hr);</div><div class="line">	grouper.interview();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过<code>grouper.next(cto);</code>和<code>cto.next(hr);</code> 设置完链式关系，最后只要通过<code>grouper.interview();</code> 调用一次面试就可以了。因为grouper最为链首，其中存储了下一个链元素next。只要条件达成（本次面试通过），则自动执行下一个任务，这就是任务链的好处。</p>
-<p>可能还有一个疑问：<code>grouper.next(cto);</code> 等流程还是在客户端设置的，这无疑要增加了客户端对底层这些类的认知度。</p>
-<p>其实完全可以把这些细节隐藏在底层的。比如我们把流程在Grouper构造方法中设置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Grouper() &#123;</div><div class="line">	CTO cto = new CTO();</div><div class="line">	HR hr = new HR();</div><div class="line">	next(cto);</div><div class="line">	cto.next(hr);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这时客户端是如此的简洁：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) &#123;</div><div class="line">	Grouper grouper = new Grouper();</div><div class="line">	grouper.interview();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其实上面的一般方法还有其他的实现方法，但是无疑常见的实现要么耦合性较强，要么需要客户端对底层认知度高。</p>
-<p>说了半天，现在来步入主题看看到底什么是责任链</p>
-<h1 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h1><ul>
-<li><p>模式出现意图</p>
-<p>让多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象串成一条链，并沿着链传递请求，直到有一个对象处理它或者处理完毕为止。</p>
-</li>
-</ul>
-<ul>
-<li>责任链uml图</li>
-</ul>
-<p><img src="/2017/05/10/详解设计模式之责任链模式/屏幕快照 2017-05-10 下午5.17.19.png" alt="屏幕快照 2017-05-10 下午5.17.19"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/10/详解设计模式之责任链模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1465,11 +1441,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1477,11 +1453,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
