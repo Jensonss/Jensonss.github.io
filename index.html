@@ -217,6 +217,10 @@
 <p>第二个for循环中<code>measureChild</code>实现如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">                params.mRight, params.width,</div><div class="line">                params.leftMargin, params.rightMargin,</div><div class="line">                mPaddingLeft, mPaddingRight,</div><div class="line">                myWidth);</div><div class="line">        <span class="keyword">int</span> childHeightMeasureSpec = getChildMeasureSpec(params.mTop,</div><div class="line">                params.mBottom, params.height,</div><div class="line">                params.topMargin, params.bottomMargin,</div><div class="line">                mPaddingTop, mPaddingBottom,</div><div class="line">                myHeight);</div><div class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
 <p>两个for循环中都执行了<code>child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</code>这意味着子View测量执行了两遍。</p>
+<p>为什么RelativeLayout要测量两遍？</p>
+<blockquote>
+<p>因为RelativeLayout并不像LinearLayout那样有着方向单一性。RelativeLayout的灵活性就在于允许纵横双向的，这样view直接不仅横向依赖，还有纵向依赖，每个方向都要测量一遍。导致性能略差。</p>
+</blockquote>
 
       
 
