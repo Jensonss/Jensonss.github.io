@@ -174,6 +174,119 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Android进程和线程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/Android进程和线程/">Android进程和线程</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/27/Android进程和线程/" class="archive-article-date">
+  	<time datetime="2017-04-27T12:36:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 <code>android:process</code>，可以使原本一个应用中的组件运行在多个进程中。</p>
+<blockquote>
+<p>如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareUID方式和它共享一个进程。</p>
+</blockquote>
+<h1 id="进程优先级分类"><a href="#进程优先级分类" class="headerlink" title="进程优先级分类"></a>进程优先级分类</h1><p>根据进程的优先级可以分为五级，</p>
+<ul>
+<li><p>前台进程</p>
+<p>用户当前操作所必需的进程。如果一个进程满足以下任一条件，即视为前台进程：<br>​    托管用户正在交互的 Activity（已调用 Activity 的 onResume() 方法）<br>​    托管某个 Service，后者绑定到用户正在交互的 Activity<br>​    托管正在“前台”运行的 Service（服务已调用 startForeground()）<br>​    托管正执行一个生命周期回调的 Service（onCreate()、onStart() 或 onDestroy()）<br>​    托管正执行其 onReceive() 方法的 BroadcastReceiver<br>通常，在任意给定时间前台进程都为数不多。只有在内存不足以支持它们同时继续运行这一万不得已的情况下，系统才会终止它们。 此时，设备往往已达到内存分页状态，因此需要终止一些前台进程来确保用户界面正常响应。</p>
+</li>
+<li><p>可见进程</p>
+<p>没有任何前台组件、但仍会影响用户在屏幕上所见内容的进程。 如果一个进程满足以下任一条件，即视为可见进程：<br>​    托管不在前台、但仍对用户可见的 Activity（已调用其 onPause() 方法）。例如，如果前台 Activity 启动了一个对话框，允许在其后显示上一 Activity，则有可能会发生这种情况。<br>​    托管绑定到可见（或前台）Activity 的 Service。<br>可见进程被视为是极其重要的进程，除非为了维持所有前台进程同时运行而必须终止，否则系统不会终止这些进程。</p>
+</li>
+<li><p>服务进程</p>
+<p>正在运行已使用 startService() 方法启动的服务且不属于上述两个更高类别进程的进程。尽管服务进程与用户所见内容没有直接关联，但是它们通常在执行一些用户关心的操作（例如，在后台播放音乐或从网络下载数据）。因此，除非内存不足以维持所有前台进程和可见进程同时运行，否则系统会让服务进程保持运行状态。</p>
+</li>
+<li><p>后台进程</p>
+<p>包含目前对用户不可见的 Activity 的进程（已调用 Activity 的 onStop() 方法）。这些进程对用户体验没有直接影响，系统可能随时终止它们，以回收内存供前台进程、可见进程或服务进程使用。 通常会有很多后台进程在运行，因此它们会保存在 LRU （最近最少使用）列表中，以确保包含用户最近查看的 Activity 的进程最后一个被终止。如果某个 Activity 正确实现了生命周期方法，并保存了其当前状态，则终止其进程不会对用户体验产生明显影响，因为当用户导航回该 Activity 时，Activity 会恢复其所有可见状态。 有关保存和恢复状态的信息，请参阅 Activity文档。</p>
+</li>
+<li><p>空进程</p>
+<p>不含任何活动应用组件的进程。保留这种进程的的唯一目的是用作缓存，以缩短下次在其中运行组件所需的启动时间。 为使总体系统资源在进程缓存和底层内核缓存之间保持平衡，系统往往会终止这些进程。</p>
+</li>
+</ul>
+<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>线程可以看作是一个轻量级的进程，在Android中启动应用时系统会为APP创建一个UI线程，Android UI是非线程安全的。</p>
+<p>在Android开发中注意两点：</p>
+<p>①不能在UI线程以外的其他线程操作UI，否则异常。</p>
+<p>②不能阻塞UI线程，否则ANR。</p>
+<p>当然在某些特殊条件下，非UI线程操作 UI没有报错，参考我的[<a href="http://www.jensondev.me/2017/04/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%88%B7%E6%96%B0UI%E6%B2%A1%E6%8A%A5%E9%94%99/" target="_blank" rel="external">为什么我在工作线程刷新UI没报错？</a>] 。</p>
+<p>Android 提供了几种途径来从其他线程访问 UI 线程。 以下列出了几种有用的方法：</p>
+<p>Activity.runOnUiThread(Runnable)<br>View.post(Runnable)<br>View.postDelayed(Runnable, long)</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/27/Android进程和线程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android内存分析工具之MAT详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1088,19 +1201,19 @@ public static int w(String tag, String msg) {
 
 
   
-    <article id="post-Python入门系列(2) 字符串、变量和简单数据类型的上手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-pycharm黄线问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">Python入门系列(2):字符串、变量和简单数据类型的上手</a>
+      <a class="article-title" href="/2017/04/22/pycharm黄线问题/">pycharm黄线问题</a>
     </h1>
   
 
         
-        <a href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" class="archive-article-date">
+        <a href="/2017/04/22/pycharm黄线问题/" class="archive-article-date">
   	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
 </a>
         
@@ -1108,55 +1221,8 @@ public static int w(String tag, String msg) {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>java在声明变量时都要先指定数据类型 比如 int a=3 ; Stringt name = “jenson”;<br>但是在python中可以直接使用变量<br>python中的注释使用”#”</p>
-<h1 id="字符串的使用"><a href="#字符串的使用" class="headerlink" title="字符串的使用"></a>字符串的使用</h1><ul>
-<li>直接声明变量</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;jenson&quot;)</div><div class="line">name =&quot;jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
-<p>打印如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jenson</div><div class="line">jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<ul>
-<li>字符串拼接直接使用+号</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(&quot;hello jenson&quot;)</div><div class="line">name = &quot;hello&quot;+ &quot; jenson&quot;</div><div class="line">print(name)</div></pre></td></tr></table></figure>
-<p>打印结果一样一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">hello jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<ul>
-<li>去除字符串的空白</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">name = &quot;   jenson   &quot;</div><div class="line">print(name.lstrip())</div><div class="line">print(name.rstrip())</div><div class="line">print(name.strip())</div></pre></td></tr></table></figure>
-<p>结果如下</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c10ea4a7be3c8130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.01.19.png"></p>
-<p>这里去除的空白分别是左边、右边和两边的空白，并不能去除中间空白</p>
-<ul>
-<li>字符串的大小写</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">say = &quot;hello jenson&quot;</div><div class="line">print(say)</div><div class="line">print(say.upper())</div><div class="line">print(say.lower())</div><div class="line">print(say.title())</div></pre></td></tr></table></figure>
-<p>结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hello jenson</div><div class="line">HELLO JENSON</div><div class="line">hello jenson</div><div class="line">Hello Jenson</div><div class="line">[Finished in 0.0s]</div></pre></td></tr></table></figure>
-<p>可见三个函数的作用分别是使字符串大写、小写、单词首字母大写。</p>
-<ul>
-<li>基本类型和运算</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print(3+5)</div><div class="line">print(10-2)</div><div class="line">print(2*4)</div><div class="line">print(16/2)</div><div class="line">print(2+3*4)</div><div class="line">print(2**3)</div></pre></td></tr></table></figure>
-<p>输出如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">8</div><div class="line">8</div><div class="line">8</div><div class="line">8.0</div><div class="line">14</div><div class="line">8</div><div class="line">[Finished in 0.2s]</div></pre></td></tr></table></figure>
-<p>可以看出python对四则运算支持优先级，注意一下<em>这里的幂用2个乘号表示</em></p>
-<ul>
-<li>基本类型转为字符串<br>基本类型和字符串混合使用时注意把基本类型先转换为字符串，使用str(基本类型值)，否则会引发异常。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">age = 25;</div><div class="line">print(str(age))</div><div class="line">say = &quot;I&apos;am &quot;+age </div><div class="line">print(say)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">25</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jenson/Desktop/python_work/str_text.py&quot;, line 15, in &lt;module&gt;</div><div class="line">    say = &quot;I&apos;am &quot;+age </div><div class="line">TypeError: Can&apos;t convert &apos;int&apos; object to str implicitly</div><div class="line">[Finished in 0.0s with exit code 1]</div><div class="line">[cmd: [&apos;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&apos;, &apos;-u&apos;, &apos;/Users/jenson/Desktop/python_work/str_text.py&apos;]]</div><div class="line">[dir: /Users/jenson/Desktop/python_work]</div><div class="line">[path: /usr/bin:/bin:/usr/sbin:/sbin]</div></pre></td></tr></table></figure>
-<p>第一个print已经打印，第二个却报了异常，因为没有转换。</p>
-<ul>
-<li>python2和python3整数除法比较</li>
-</ul>
-<p>在python2下做除法运算3/2，得到结果是1 ，并不是1.5</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92eac21fee40ffd9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.34.19.png"></p>
-<p>而在python3下是正常的</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4b8c5bd6f9354a2e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午10.35.27.png"></p>
-<p>这是因为python2中计算整数结果时不是采取四舍五入，而是将整数部分直接删除，所以在python2中如果要避免这种情况，要确保至少有一个操作数为浮点数，这样得到的结果也为浮点数</p>
-<p>完毕。</p>
+        <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
+<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
 
       
 
@@ -1191,134 +1257,7 @@ public static int w(String tag, String msg) {
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx下如何使用SublimeText阅读Android系统源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">osx下如何使用SublimeText阅读Android系统源码</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<ul>
-<li><p>安装CTags</p>
-<ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
-<ul>
-<li>3.创建索引</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/22/pycharm黄线问题/">展开全文 >></a>
         </p>
       
 
@@ -1564,11 +1503,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1589,6 +1528,14 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">excel</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
               </li>
             
             <div class="clearfix"></div>
