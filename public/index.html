@@ -174,6 +174,455 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java-wait，notify和notifyAll使用分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">Java wait，notify和notifyAll使用分析</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/Java-wait，notify和notifyAll使用分析/" class="archive-article-date">
+  	<time datetime="2017-07-21T05:00:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">浅谈Android性能优化系列(1)之安装包大小优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/" class="archive-article-date">
+  	<time datetime="2017-07-21T03:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！</p>
+<p>这样来说吧，优化有多方面好处的：</p>
+<p>①节省用户流量</p>
+<p>②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少</p>
+<p>③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。</p>
+<p>所以，安装包优化还是有必要的。</p>
+<h1 id="0x01-安装包构成"><a href="#0x01-安装包构成" class="headerlink" title="0x01 安装包构成"></a>0x01 安装包构成</h1><p>要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png" alt="安装包构成"></p>
+<p>目录中com和org两个文件夹是第三方包信息，不用管着两个。</p>
+<ul>
+<li>assets可以存放资源和配置等各种文件，但是这里的资源文件不会像res中那样生成ID，而是通过AssetManager获取</li>
+<li>dex是Java文件编程成class文件后又经过虚拟机优化压缩形成的</li>
+<li>lib中存放native类库，根据不同CPU架构有四种类型：armeabi，armeabi-v7a，x86，mips。</li>
+<li>META-INF保存了app签名信息</li>
+<li>res中存放了资源文件</li>
+<li>resources.arsc 记录资源文件和资源ID映射。可以根据ID查找资源</li>
+<li>AndroidManifest.xml是app配置文件注册四大组件，声明权限等。</li>
+</ul>
+<p>知道了各个部分作用就大概知道了该从哪方面入手了：代码和资源，因为包中这两个部分占了很大一部分。</p>
+<h1 id="0x02-代码优化"><a href="#0x02-代码优化" class="headerlink" title="0x02 代码优化"></a>0x02 代码优化</h1><p>代码优化其实包含了Java代码和Native代码，但是因为Native代码涉及了C和C++，这里不做阐述，但是说下lib库还是有必要的</p>
+<h2 id="lib库"><a href="#lib库" class="headerlink" title="lib库"></a>lib库</h2><p>根据cpu架构lib中分为四种类型，但是目前大部分移动设备都是基于arm和arm-v7a的。x86和mips较少。而且据说x86兼容arm指令集，所以适配库优先考虑arm和arm-v7a两种即可。</p>
+<h2 id="Java代码优化：使用ProGuard代码混淆"><a href="#Java代码优化：使用ProGuard代码混淆" class="headerlink" title="Java代码优化：使用ProGuard代码混淆"></a>Java代码优化：使用ProGuard代码混淆</h2><p>ProGuard具有压缩(移除无效类、方法、属性)、优化、混淆功能。</p>
+<ul>
+<li><p>开启混淆</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">    release &#123;</div><div class="line">        minifyEnabled <span class="literal">true</span><span class="comment">//开启混淆</span></div><div class="line">        proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span> <span class="comment">//混淆文件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>压缩</p>
+<p>压缩功能是默认开启的，如果对某个或某些文件不想压缩可以使用：</p>
+<p><code>-dontshrink class * extends android.app.Activity</code>。</p>
+</li>
+<li><p>优化</p>
+<p>优化optimization默认开启，如果不开启可以使用：</p>
+<p><code>-dontoptimize</code>。一些相对复杂的方法时，压缩后可能会抛出errors，这时可以不压缩。</p>
+</li>
+<li><p>混淆</p>
+<p>混淆也是默认开启,如果对某些文件不想混淆可以使用：</p>
+<p><code>-dontobfuscate</code>。</p>
+</li>
+<li><p>保留</p>
+<p>如果想保留某些类、成员等不被混淆可以使用：</p>
+<p><code>-kepp</code>。</p>
+<p>​</p>
+<p>关于proguard更多使用方法可参考：</p>
+<p><a href="http://hanhailong.com/2015/12/28/Android%E8%BF%9B%E9%98%B6%E4%B9%8BProGuard%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/" target="_blank" rel="external">Android进阶之ProGuard代码混淆</a></p>
+<p><a href="https://my.oschina.net/u/659658/blog/71976" target="_blank" rel="external">Jean同学的Proguard私房物语</a></p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x03-资源优化"><a href="#0x03-资源优化" class="headerlink" title="0x03 资源优化"></a>0x03 资源优化</h1><p>这里的资源优化主要是Res资源。</p>
+<h2 id="删除无用资源"><a href="#删除无用资源" class="headerlink" title="删除无用资源"></a>删除无用资源</h2><p>因为需求变更，版本更新等因素，很多研发只是一味的把新的资源文件让res下面扔，却没哟及时的把不用的文件给清理掉，长此以往导致res越来越臃肿。</p>
+<p>res资源的定时清理是很有必要的，但是资源那么多如何快速清理呢？</p>
+<p>Android提供了非常好用的工具Lint快速检测res中未使用的资源并给出提示。</p>
+<p>运行Analyze—&gt;Run Inspection By Name ，弹窗输入：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint.png" alt="lint"></p>
+<p>执行结果如下：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png" alt="lint_result"></p>
+<p>其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。</p>
+<h2 id="资源图片最少化"><a href="#资源图片最少化" class="headerlink" title="资源图片最少化"></a>资源图片最少化</h2><p>这里最少化有2个参考原则：</p>
+<p>①简单的图片shape画</p>
+<p>②多状态的图片filter画</p>
+<p>下面分别说说这两个原则都是什么意思</p>
+<ul>
+<li><p>简单的图片shape画</p>
+<p>这里的简单是图形简单，颜色简单，比如矩形、圆角等纯色能用shape方便绘制出来的。</p>
+</li>
+<li><p>多状态的图片filter画</p>
+<p>这里的filter是colorFilter。</p>
+<p>比如一些按钮都有默认背景色和选中背景色。这时设计一般会提供两套图片，如果使用colorFilter，我们只要一套就可以了。</p>
+</li>
+</ul>
+<h2 id="图片再压缩"><a href="#图片再压缩" class="headerlink" title="图片再压缩"></a>图片再压缩</h2><p>在app打包时，aapt会对图片进行压缩处理，但是这种压缩比较有限。因此我们可以再拿到设计给的图片后，使用一些工具进行二次压缩，比如Zopfli，这时谷歌开源项目。再比如PNGoo。</p>
+<h1 id="0x04-其他优化"><a href="#0x04-其他优化" class="headerlink" title="0x04 其他优化"></a>0x04 其他优化</h1><ul>
+<li><p>使用webp代替png</p>
+<p>webp从4.0开始支持，但是这时不支持透明度。较好地支持从4.2.2开始。</p>
+</li>
+<li><p>精简第三方库</p>
+<p>很多时候可能只需要第三方库的一部分功能，这时可以根据公司业务需求进行精简，这样会有个问题就是后期的库版本更新会是个问题。</p>
+</li>
+<li><p>插件化</p>
+<p>把一些使用率不高的业务模块再需要的时候从服务器下载，动态加载。</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Android， 性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android，性能优化/" class="article-tag-list-link color4">Android， 性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-用Python提取excel中有用数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/用Python提取excel中有用数据/">用Python提取excel中有用数据</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/用Python提取excel中有用数据/" class="archive-article-date">
+  	<time datetime="2017-07-21T02:06:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。</p>
+<h1 id="0x01-第三方模块引入"><a href="#0x01-第三方模块引入" class="headerlink" title="0x01 第三方模块引入"></a>0x01 第三方模块引入</h1><p>在Python中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel</span></div><div class="line"><span class="comment"># 针对 03版excel（xls结尾的），我们可以使用xlrd读，xlwt包来写</span></div><div class="line"><span class="comment"># 针对 doc文档，我们可以使用docx操作</span></div></pre></td></tr></table></figure>
+<p>知道需要哪些模块了，接下来就是安装所需模块。</p>
+<p>网上很多都是先下载包，解压后本地执行<code>python setup.py install</code>。这显得很麻烦，我直接使用pip命令进行安装了。终端执行<code>pip install xlrd</code>，同样使用该方式安装其他所需库即可。</p>
+<blockquote>
+<p>无须下载，简单快捷。</p>
+</blockquote>
+<h1 id="0x02-开始编程"><a href="#0x02-开始编程" class="headerlink" title="0x02 开始编程"></a>0x02 开始编程</h1><h2 id="创建项目并把excel拷贝到项目根目录"><a href="#创建项目并把excel拷贝到项目根目录" class="headerlink" title="创建项目并把excel拷贝到项目根目录"></a>创建项目并把excel拷贝到项目根目录</h2><p><img src="/2017/07/21/用Python提取excel中有用数据/创建项目.png" alt="创建项目"></p>
+<h2 id="导入刚才安装的模块"><a href="#导入刚才安装的模块" class="headerlink" title="导入刚才安装的模块"></a>导入刚才安装的模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> xlrd</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> docx</div></pre></td></tr></table></figure>
+<p><code>threading</code>是Python自带的线程模块</p>
+<h2 id="读取excel"><a href="#读取excel" class="headerlink" title="读取excel"></a>读取excel</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_xls</span><span class="params">(path, find=<span class="string">''</span>, row=<span class="number">-1</span>, col=<span class="number">-1</span>)</span>:</span></div><div class="line">    <span class="string">"""接收xls文件并读取指定内容返回</span></div><div class="line">    *path* 接收xls路径</div><div class="line">    *find* 要查找的内容，为列表格式</div><div class="line">    *row* 行数，-1说明没有指定，查找所有行</div><div class="line">    *col* 列数，-1说明没有指定，查找所有列</div><div class="line">    """</div><div class="line">    xls = xlrd.open_workbook(path)</div><div class="line">    names = xls.sheet_names()</div><div class="line">    print(names)</div><div class="line">    sheet = xls.sheet_by_name(names[<span class="number">0</span>])</div><div class="line">    row = int(row)</div><div class="line">    col = int(col)</div><div class="line">    python_books = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, sheet.nrows):</div><div class="line">        <span class="keyword">if</span> <span class="number">-1</span> != row:  <span class="comment"># 指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    <span class="keyword">for</span> j <span class="keyword">in</span> sheet.ncols:</div><div class="line">                        <span class="keyword">if</span> j == col:</div><div class="line">                            text = sheet.cell_value(i, j)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    text = sheet.row_values(i)</div><div class="line">        <span class="keyword">else</span>:  <span class="comment"># 没指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                text = sheet.cell_value(i, col)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                text = sheet.cell_value(i, <span class="number">4</span>)</div><div class="line">        <span class="keyword">if</span> find != <span class="string">""</span>:</div><div class="line">            <span class="keyword">for</span> content <span class="keyword">in</span> find:</div><div class="line">                <span class="keyword">if</span> content <span class="keyword">in</span> text:</div><div class="line">                    print(text + <span class="string">'\n'</span>)</div><div class="line">                    python_books.append(text)</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(text + <span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> python_books</div></pre></td></tr></table></figure>
+<p>虽然只是个简单的数据提取，但是为了提高程序灵活性，文件路径、行列及搜索值仍然通过传参方式。</p>
+<p><code>read_xls</code>实现了读取excel中指定的相关内容到列表，下面要实现存储内容到doc文档。</p>
+<h2 id="保存内容到doc文档"><a href="#保存内容到doc文档" class="headerlink" title="保存内容到doc文档"></a>保存内容到doc文档</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_doc</span><span class="params">(name, contents, create_new=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    *param name* doc文档名称</div><div class="line">    *param contents* 文档内容，为列表格式</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc = docx.Document()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc = docx.Document(name)</div><div class="line">    <span class="keyword">for</span> pb <span class="keyword">in</span> contents:</div><div class="line">        doc.add_paragraph(pb)</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc.save(name + <span class="string">'.docx'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc.save(name)</div></pre></td></tr></table></figure>
+<p>该方法实现的是，如果create_new为true则直接创建一个doc文档存储内容，并将文档命名为name。如果为false则直接打开一个名称为name的文档进行存储。</p>
+<p>因为这些都是IO操作，应该在工作线程执行。但是这是两个独立的方法，所以还需进行一次包装。</p>
+<h2 id="2个方法封装"><a href="#2个方法封装" class="headerlink" title="2个方法封装"></a>2个方法封装</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(path, find, row, col)</span>:</span></div><div class="line">    <span class="string">"""包装类，封装读取xls文件方法和保存到doc文档方法</span></div><div class="line">    *param path*</div><div class="line">    *param find*</div><div class="line">    *param row*</div><div class="line">    *param col*</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    python_books = read_xls(path, find, row, col)</div><div class="line">    save_doc(name=path, contents=python_books, create_new=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<h2 id="开启2个工作线程读取并存储内容"><a href="#开启2个工作线程读取并存储内容" class="headerlink" title="开启2个工作线程读取并存储内容"></a>开启2个工作线程读取并存储内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">find = [<span class="string">'python'</span>, <span class="string">'PYTHON'</span>, <span class="string">'Python'</span>]</div><div class="line">thread1 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook1.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread1.start()</div><div class="line"></div><div class="line">thread2 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook2.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread2.start()</div></pre></td></tr></table></figure>
+<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>执行后会在项目根目录生成2个对应的doc文档：</p>
+<p><img src="/2017/07/21/用Python提取excel中有用数据/项目结果.png" alt="项目结果"></p>
+<p>打开doc文档看看具体内容吧：</p>
+<p><img src="/2017/07/21/用Python提取excel中有用数据/doc文档内容.png" alt="doc文档内容"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">excel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">xlrd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/excel/" class="article-tag-list-link color1">excel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/xlrd/" class="article-tag-list-link color5">xlrd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/用Python提取excel中有用数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">浅谈Android性能优化系列(0)之为什么需要性能优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/" class="archive-article-date">
+  	<time datetime="2017-07-19T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
+<p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
+<p>为什么性能优化是我们绕不开的话题呢？</p>
+<h1 id="0x01-为什么需要性能优化"><a href="#0x01-为什么需要性能优化" class="headerlink" title="0x01 为什么需要性能优化"></a>0x01 为什么需要性能优化</h1><p>关于为什么需要性能优化这个问题，我想很多人都会即时作答：“为用户提供更好的体验”。</p>
+<p>既然说到为用户提供更好体验，设想一下，假如用户并不在意所谓的体验，只要功能完成就行了。那么这时公司还会考虑做性能优化吗？</p>
+<p>我想大多数公司都不会去做”这样一件无意义的事“了。公司是以盈利为目的，怎么会在用户不care的点上花费大量人力物力财力呢？</p>
+<p>然而现实恰恰相反的，随着科技发展，用户对产品体验要求越来越高，加上当前产品同质化严重，特色功能只能吸引用户，而良好的用户体验才是留住用户的关键。</p>
+<h1 id="0x02-从哪些方面入手性能优化"><a href="#0x02-从哪些方面入手性能优化" class="headerlink" title="0x02 从哪些方面入手性能优化"></a>0x02 从哪些方面入手性能优化</h1><p>只说性能优化太过笼统，为了提供良好用户体验，应该从哪些方面着手呢？</p>
+<p>换句话说，在产品体验上，用户会通过感知哪些方面来评价产品好坏？这样一说答案就很明显了，就是平常我们自己使用程序都会唠叨的那几个方面：点几下就崩溃、玩一会就没电、没多久流量就超了、打开页面很卡、安装包太大、占了300兆内存~</p>
+<blockquote>
+<p>把上面几个方面归纳下就是：程序稳定性优化、耗电检测优化、网络优化、UI渲染优化、安装包优化和内存优化 6个方面。</p>
+</blockquote>
+<h1 id="0x03-结束语"><a href="#0x03-结束语" class="headerlink" title="0x03 结束语"></a>0x03 结束语</h1><p>这是本系列开篇，从为什么要性能优化发散到优化入手的6各方面，为后续章节做铺垫。</p>
+<p>目前预计未来会写6篇关于具体方面优化和6篇相关方面工具使用，共计12篇。希望通过这12篇让自己当然希望也能帮助别人对Android整体性能优化有个了解，最终形成自己的知识脉络。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-为什么相对布局比线性布局性能低" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -922,366 +1371,9 @@
 
 
   
-    <article id="post-hexo文章tags添加多标签" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/hexo文章tags添加多标签/">hexo文章tags添加多标签</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/hexo文章tags添加多标签/" class="archive-article-date">
-  	<time datetime="2017-07-01T05:52:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>hexo博客在给文章添加标签tags时，如果只添加一个，冒号后面空格跟上标签名称即可，</p>
-<p>但是如果想要添加多个标签，需要使用[tag1,tag2]格式来表示，</p>
-<p>categories也同理。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/hexo文章tags添加多标签/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Mac终端光标变成粗体" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/Mac终端光标变成粗体/">Mac终端光标变成粗体</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/Mac终端光标变成粗体/" class="archive-article-date">
-  	<time datetime="2017-07-01T05:46:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>打开终端偏好设置，勾选 竖条，闪动光标</p>
-<p><img src="/2017/07/01/Mac终端光标变成粗体/设置光标.png" alt="设置光标"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/Mac终端光标变成粗体/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/30/Java知识点/">Java知识点</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/30/Java知识点/" class="archive-article-date">
-  	<time datetime="2017-06-30T10:51:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月30日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>1、==对基本数据类型来说比较的是值是否相等，但对于引用类型来说，其和equals医院，比较的都是对象地址，前提是equals没有被重写。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s1 == s3);<span class="comment">//false</span></div><div class="line">System.out.println(s2 == s3);<span class="comment">//true</span></div></pre></td></tr></table></figure>
-<p>根据Java编译时优化方案，s2中加号的三个值都为固定常量，所以s2在编译时也被认为是常量，即编译期就确定了s2的值，并且和s3一样，所以打印true</p>
-<p>在s1中，a和b的值是常量，但是c属于局部变量，而且也没有谁指定c这个值是不可变的。既然是可变量，导致s1也被编译期认为是不确定值，</p>
-<p>接下来s0，a和b不用说了都是常量，而c1虽然和c一样也是局部变量，但是c1有finla修饰，明确告诉编译器明面上我是一个局部变量，但是同时我的值是不可变的，final修饰了，现在不变，将来也不会改变，所以编译器在编译期确定了s0 的值。所以把s0也作为常量和s3一样，都在常量池</p>
-<p><strong><em>编译器优化要在编译期能确定的值得情况下进行，而能确定值的只能是在常量池中的内容。</em></strong></p>
-<p>2、string.intern()，当字符串调用这个方法时，都会拿着当前字符串的值去常量池中找，如果找到则返回常量池这个常量地址，否则在常量池创建一个常量并把字符串填进去，然后返回创建的地址。当然这是在JDK1.6情况下，在1.7及以后会有不同</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);</div><div class="line">System.out.println(s1.intern() == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s2 == s3);</div></pre></td></tr></table></figure>
-<p><strong><em>由于intern()需要去常量池中做字符串比较，而常量池又很可能有多个常量，所以一般来说intern()效率并不高</em></strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/30/Java知识点/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Django创建数据表时syncdb提示Unknown-command：‘syncdb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">Django创建数据表时syncdb提示Unknown command：‘syncdb&#39;</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/" class="archive-article-date">
-  	<time datetime="2017-06-27T08:32:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月27日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>异常信息如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdb</div><div class="line">Unknown command: &apos;syncdb&apos;</div><div class="line">Type &apos;manage.py help&apos; for usage.</div></pre></td></tr></table></figure>
-<p>主要是因为使用的版本太新，如果你安装的Django Version &gt;= 1.9就会出现这个问题</p>
-<p>解决方法就是把<code>python3 ./manage.py syncdb</code></p>
-<p>替换成<code>python3 ./manage.py migrate</code></p>
-<p>之后就会初始化数据表成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py migrate</div><div class="line">Operations to perform:</div><div class="line">  Apply all migrations: admin, auth, contenttypes, sessions</div><div class="line">Running migrations:</div><div class="line">  Applying contenttypes.0001_initial... OK</div><div class="line">  Applying auth.0001_initial... OK</div><div class="line">  Applying admin.0001_initial... OK</div><div class="line">  Applying admin.0002_logentry_remove_auto_add... OK</div><div class="line">  Applying contenttypes.0002_remove_content_type_name... OK</div><div class="line">  Applying auth.0002_alter_permission_name_max_length... OK</div><div class="line">  Applying auth.0003_alter_user_email_max_length... OK</div><div class="line">  Applying auth.0004_alter_user_username_opts... OK</div><div class="line">  Applying auth.0005_alter_user_last_login_null... OK</div><div class="line">  Applying auth.0006_require_contenttypes_0002... OK</div><div class="line">  Applying auth.0007_alter_validators_add_error_messages... OK</div><div class="line">  Applying auth.0008_alter_user_username_max_length... OK</div><div class="line">  Applying sessions.0001_initial... OK</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1397,11 +1489,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1409,19 +1501,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1430,6 +1522,18 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Android， 性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">excel</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
               </li>
              
               <li class="article-tag-list-item">
