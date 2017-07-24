@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-04-22T12:23:06.000Z">
+<meta property="og:updated_time" content="2017-07-24T06:20:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android性能优化之内存优化">
 <meta name="twitter:description" content="上一章讲了Android性能优化之耗电优化 ，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。   养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。 如何保证已使用内存顺利被回收？ Java对象生命周">
@@ -445,9 +445,18 @@ return &quot;&quot;;
   
 <nav id="article-nav">
   
+    <a href="/2017/04/21/Android性能优化之耗电优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Android性能优化之耗电优化
+        
+      </div>
+    </a>
   
-    <a href="/2017/04/21/Android性能优化之耗电优化/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Android性能优化之耗电优化</div>
+  
+    <a href="/2017/04/21/Android源码下载/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android源码下载</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -600,19 +609,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -624,11 +633,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Android， 性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -637,18 +658,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
             
             <div class="clearfix"></div>
