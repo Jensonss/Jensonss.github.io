@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>垃圾回收机制~关于GC | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言0x01 如何确定哪些是垃圾0x02 如何回收垃圾0x03 谁来回收垃圾">
+  <meta name="description" content="0x00 前言很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。 虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。 说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就">
 <meta name="keywords" content="Java,GC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="垃圾回收机制~关于GC">
 <meta property="og:url" content="http://yoursite.com/2017/07/26/垃圾回收机制-关于GC/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00 前言0x01 如何确定哪些是垃圾0x02 如何回收垃圾0x03 谁来回收垃圾">
-<meta property="og:updated_time" content="2017-07-26T12:37:57.000Z">
+<meta property="og:description" content="0x00 前言很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。 虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。 说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就">
+<meta property="og:updated_time" content="2017-07-26T17:36:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="垃圾回收机制~关于GC">
-<meta name="twitter:description" content="0x00 前言0x01 如何确定哪些是垃圾0x02 如何回收垃圾0x03 谁来回收垃圾">
+<meta name="twitter:description" content="0x00 前言很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。 虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。 说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -194,7 +194,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><h1 id="0x01-如何确定哪些是垃圾"><a href="#0x01-如何确定哪些是垃圾" class="headerlink" title="0x01 如何确定哪些是垃圾"></a>0x01 如何确定哪些是垃圾</h1><h1 id="0x02-如何回收垃圾"><a href="#0x02-如何回收垃圾" class="headerlink" title="0x02 如何回收垃圾"></a>0x02 如何回收垃圾</h1><h1 id="0x03-谁来回收垃圾"><a href="#0x03-谁来回收垃圾" class="headerlink" title="0x03 谁来回收垃圾"></a>0x03 谁来回收垃圾</h1>
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。</p>
+<p>虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。</p>
+<p>说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就是标记-清除算法。</p>
+<p>如果是一门语言可以从基础语法学起，但是GC该如何学习呢？</p>
+<p><strong>其实问答形式就是最好的学习方式</strong></p>
+<h1 id="0x01-什么是GC"><a href="#0x01-什么是GC" class="headerlink" title="0x01 什么是GC"></a>0x01 什么是GC</h1><p>GC(垃圾回收)，通过查找无效对象释放空间达到自动管理内存的目的。</p>
+<h1 id="0x02-如何确定垃圾"><a href="#0x02-如何确定垃圾" class="headerlink" title="0x02 如何确定垃圾"></a>0x02 如何确定垃圾</h1><p>要查找垃圾对象，首先要知道什么样对象才算是垃圾对象才好对症下药。</p>
+<p><strong>在内存中，不再被引用的对象就称为垃圾对象</strong></p>
+<p>现在的问题又转到如何确定一个对象是否被引用？</p>
+<p>首先想到一种方法是给每个对象都添加一个计数器功能，这个计数器用例记录引用自己的指针数量，每多一个引用数量计数器就增加1，每减少一个引用数量计数器就减少1，如果计数器为0，说明没有其他对象引用当前对象，那么这个对象就是垃圾对象，可以被回收。这种方式叫做<strong>引用计数法</strong></p>
+<p>引用计数法虽然容易理解，但是因为缺点也很明显，所以不得不另寻它法。这时<strong>可达性分析法</strong>就登场了。</p>
+<p><strong>可达性分析法</strong>也可以称为<strong>跟踪收集器法</strong>，找一个对象作为GC的根节点(Root)，通过对对象的连续引用形成一条引用链，如果一个对象能够通过直接或间接的到达Root称为对象可达，否则称为对象不可达。对于不可达对象就可以判定为垃圾对象。</p>
+<h1 id="0x03-如何回收垃圾"><a href="#0x03-如何回收垃圾" class="headerlink" title="0x03 如何回收垃圾"></a>0x03 如何回收垃圾</h1><p>上一节知道了哪些对象是垃圾，现在该讨论有哪些方式能回收垃圾了。</p>
+<p>常用的GC算法有<strong>标记-清除算法</strong>、<strong>标记-整理算法</strong>、<strong>复制算法</strong>、<strong>分代GC</strong>、<strong>G1 GC</strong>。</p>
+<h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><h2 id="分代GC"><a href="#分代GC" class="headerlink" title="分代GC"></a>分代GC</h2><h2 id="G1-GC"><a href="#G1-GC" class="headerlink" title="G1 GC"></a>G1 GC</h2><h1 id="0x04-谁来回收垃圾"><a href="#0x04-谁来回收垃圾" class="headerlink" title="0x04 谁来回收垃圾"></a>0x04 谁来回收垃圾</h1><p>知道了哪些对象是垃圾，也知道了用哪些算法来回收垃圾，然后呢？直接满地调用算法回收垃圾吗？</p>
+<p>当然不是！GC要分时机且统一来回收垃圾，这里是由垃圾收集器来来根据时机统一回收垃圾对象。</p>
+<p>由于各方面需求原因，垃圾收集器也是有多种的。</p>
+
       
 
       
