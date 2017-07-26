@@ -174,6 +174,132 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-为什么Android中很多int常量使用十六进制表示" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/">为什么Android中很多int常量使用十六进制表示</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/" class="archive-article-date">
+  	<time datetime="2017-07-19T02:12:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_DEBUG_TRIAGED_MISSING = <span class="number">0x00000100</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_IGNORE_EPHEMERAL = <span class="number">0x00000200</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NO_HISTORY = <span class="number">0x40000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NEW_TASK = <span class="number">0x10000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_MULTIPLE_TASK = <span class="number">0x08000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_CLEAR_TASK = <span class="number">0X00008000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_TASK_ON_HOME = <span class="number">0X00004000</span>;</div></pre></td></tr></table></figure>
+<p>猜测可能的原因：</p>
+<p>①为了美观</p>
+<p>②为了方便位运算</p>
+<p>③关于①我是瞎说的</p>
+<p>既然多采用十六进制，那就先简单看看什么是十六进制</p>
+<h1 id="0x01-十六进制简单介绍"><a href="#0x01-十六进制简单介绍" class="headerlink" title="0x01 十六进制简单介绍"></a>0x01 十六进制简单介绍</h1><p>以0x或0X开头，使用数字0~9及字符A~F表示16个可能的值，这种进制方式一般称为十六进制。</p>
+<p>一个int占4个字节，32位。</p>
+<p>十六进制中0xF最大，二进制表示：1111，用4位即可表示出来，所以在用十六进制表示int时，通常0x后面跟8位数字/字符，这样就可以表示满一个int值。也就是前言中所看到的。</p>
+<h1 id="0x02-发现规律"><a href="#0x02-发现规律" class="headerlink" title="0x02 发现规律"></a>0x02 发现规律</h1><p>通过前言中的代码可以发现基本上频繁出现的只有1，2，4，8几个数字而其他位置都是0占位。为什么会出现这种情况呢？</p>
+<p>首先把上面的十六进制转换成二进制看一下：</p>
+<p><code>0x00000100</code>转换二进制<code>0001 0000 0000</code></p>
+<p><code>0x00000200</code>转换二进制<code>0010 0000 0000</code> </p>
+<p><code>0X00004000</code>转换二进制<code>0100 0000 0000 0000</code></p>
+<p><code>0X00008000</code>转换二进制<code>1000 0000 0000</code></p>
+<p>转换后可以发现，1，2，4，8这几个值很特殊，在二进制中表示这几个数时都只要某一位为1，其他位用0占位即可表示。</p>
+<p>换句话说，二进制的4位表示十六进制中的一个数字，而这4位中若只有其中一位为1的话，那么可能的值情况为1=2º，2=2¹，4=2²，8=2³。</p>
+<p>这样做有什么好处呢？</p>
+<h1 id="0x03-这样做的好处"><a href="#0x03-这样做的好处" class="headerlink" title="0x03 这样做的好处"></a>0x03 这样做的好处</h1><ul>
+<li><p>拿位移来说因为只有一个数字带值，其他都是0占位，位移时大脑中快速把十六进制转为二进制然后补0位即可。</p>
+<p>拿0x200来说，换算二进制我只要把2用二进制0010在大脑中展示出来，然后后面跟8个0就换算完成。如果0x200&gt;&gt;1,右移1位，相当于1后面的9个0被砍掉一个，左边高位补0。</p>
+<p>二进制表示由<code>0010 0000 0000</code>变成了<code>0001 0000 000</code>。值由512变成了256，可见右移1位相当于除以2。前面十六进制和二进制转换是在大脑中完成，转换到十进制我是笔算的，可能这是采用十六进制表示int原因之一吧。</p>
+<p>同样左移思路也是如此。</p>
+</li>
+<li><p>位与&amp;/位或|</p>
+<p>位与/位或是对参与运算的数的二进制进行位与/位或。</p>
+<p>位与&amp;：两数二进制对应位均为1时结果才为1，其余为0</p>
+<p>位或|：两数二进制对应位有一个为1时，结果位就为1</p>
+<p>在源码和框架中，很多时候需要存储一些状态组合，比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">addFlags</span><span class="params">(<span class="keyword">int</span> flags)</span> </span>&#123;</div><div class="line">     mFlags |= flags;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>最后在一些地方会根据状态组合的不同值来做出不同的响应。这时使用1，2，4，8这种格式的十六进制就很方便，因为不同的状态值只是在二进制的不同位上用1标记而已。这样最后可以根据mFlags的值二进制有多少位为1，基本就能判断有多少种状态。当然这里说的是位或。</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-关于Intent那些事" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1173,95 +1299,6 @@
 
 
   
-    <article id="post-算法之朴素模式匹配" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/25/算法之朴素模式匹配/">算法之朴素模式匹配</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/25/算法之朴素模式匹配/" class="archive-article-date">
-  	<time datetime="2017-05-25T07:49:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月25日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>不论英文还是中文，在看文章时经常会遇到查找某个单词或字组的时候，把一篇文章看作是一个大的字符串，要查找的内容作为子串，这种在大串中查找子串的操作叫做串的模式匹配。</p>
-<p>我们知道了这种行为叫串的模式匹配，但我们不清楚的是到底如何匹配，具体的操作是什么？</p>
-<h1 id="0x01-我如何操作"><a href="#0x01-我如何操作" class="headerlink" title="0x01 我如何操作"></a>0x01 我如何操作</h1><p>在我看来要从大串中寻找子串，最直接的方法就是从大串起始位置开始，挨个字符比对，如果存在子串总会找出来。这种简单直接的方法称为 <strong>朴素的模式匹配算法</strong></p>
-<h1 id="0x02-代码实现"><a href="#0x02-代码实现" class="headerlink" title="0x02 代码实现"></a>0x02 代码实现</h1><p>如果借用字符串截取操作，直接实现子串的查找就比较方便：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public static int index(String s, String t, int pos) &#123;</div><div class="line">	int m = s.length();</div><div class="line">	int n = t.length();</div><div class="line">	while (pos &lt;= (m - n + 1)) &#123;</div><div class="line">		String sub = s.substring(pos, n);</div><div class="line">		//直接在对比位置截取和子串相同长度的一个串来和子串对比</div><div class="line">		if (t.equals(sub)) &#123;</div><div class="line">			return pos;</div><div class="line">		&#125; else &#123;</div><div class="line">			pos++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/25/算法之朴素模式匹配/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1388,10 +1425,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -1400,15 +1433,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1417,6 +1454,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GC</a>
               </li>
              
               <li class="article-tag-list-item">
