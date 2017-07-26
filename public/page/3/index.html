@@ -174,6 +174,314 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-设计一个有获取元素最小值getMin的栈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/">设计一个有获取元素最小值getMin的栈</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/17/设计一个有获取元素最小值getMin的栈/" class="archive-article-date">
+  	<time datetime="2017-05-17T08:24:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月17日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>栈可以看成一个瓶子，只有一个口，另一端被封底。这样数据进出都只能从一个口经过。这样就导致的一个直接结果就是数据FILO问题。要找到栈中最小数据，单靠一个栈不能完成，需要外部提供辅助。</p>
+<h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>一个存好数据的栈，要从里面找到最小数值，不可避免的要把数据出栈，然后进行对比。这时有个问题就来了，找到最小数值后，其他数据还有用吗？换句话说，其他数据还要不要了？如果不要的话，比较完成后不用再次存储，如果要德话，比较期间还要注意数据的保存。这里注意要分这两种情况来考虑。</p>
+<h1 id="0x02-不要其他数据的实现"><a href="#0x02-不要其他数据的实现" class="headerlink" title="0x02 不要其他数据的实现"></a>0x02 不要其他数据的实现</h1><p>既然不需要其他数据，那就直接把数据弹出栈就好了，每次弹栈时对比临时值，如果当前弹栈数据比临时值大则直接弹栈，否则就把值赋给临时值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里代码只实现了getStackMin方法，栈的其他方法就直接定义一个方法后直接调用Stack方法即可。</p>
+<h1 id="0x03-需要其他数据的实现"><a href="#0x03-需要其他数据的实现" class="headerlink" title="0x03 需要其他数据的实现"></a>0x03 需要其他数据的实现</h1><p>如果要保留栈的数据，那最直接的想法是在弹栈比较期间，把弹出栈的数据顺路给入道一个新的栈中，这里相比上面，需要多一个栈即可实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; backUp = new Stack&lt;&gt;();//备份栈</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">			backUp.push(current);//弹出栈时进入备份栈</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-算法排序之快速排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/16/算法排序之快速排序/">算法排序之快速排序</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/16/算法排序之快速排序/" class="archive-article-date">
+  	<time datetime="2017-05-16T10:21:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月16日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过快速排序，使得数组最终按非递减顺序排列。</p>
+<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
+<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
+<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><p>快排是根据分治思想，</p>
+<p>①选取一个基数，</p>
+<p>②将无序数组分为大小两个数组，其中一个数组值全都比基数小，另一个数组值全都比基数大。</p>
+<p>③然后将这两个数组分别再次分组，递归重复①②的步骤直到每个拆分后的数组不可再分割为止。也就是说最后每个元素单独为一个数组为止。</p>
+<p>④最后得出数组就是排序好的。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">public static int partition3(int[] arr, int low, int high) &#123;</div><div class="line">	int i, j;</div><div class="line">	i = low;</div><div class="line">	int base = arr[i];</div><div class="line">	for (j = i + 1; j &lt;= high; j++) &#123;</div><div class="line">		if (arr[j] &lt; base) &#123;</div><div class="line">			i++;</div><div class="line">			swap(arr, i, j);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	swap(arr, low, i);</div><div class="line">	return i;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line">*交换数组中两个值</div><div class="line">**/</div><div class="line">public static void swap(int[] arr, int i, int j) &#123;</div><div class="line">	if (i != j) &#123;</div><div class="line">		int tmp = arr[i];</div><div class="line">		arr[i] = arr[j];</div><div class="line">		arr[j] = tmp;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line">*right为数组最大下标而不是数组长度</div><div class="line">**/</div><div class="line">public static void quickSort(int[] arr, int left, int right) &#123;</div><div class="line">	if (left &lt; right) &#123;</div><div class="line">		int piv = partition3(arr, left, right);</div><div class="line">		quickSort(arr, left, piv - 1);</div><div class="line">		quickSort(arr, piv + 1, right);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/16/算法排序之快速排序/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-数学归纳法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/16/数学归纳法/">数学归纳法</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/16/数学归纳法/" class="archive-article-date">
+  	<time datetime="2017-05-16T06:08:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月16日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="什么是数学归纳法"><a href="#什么是数学归纳法" class="headerlink" title="什么是数学归纳法"></a>什么是数学归纳法</h1><p>数学归纳法就是证明一个命题在自然数范围内成立</p>
+<p>这里命题也可以当成是断言。</p>
+<p>比如断言自然数n，nx2为偶数。</p>
+<h1 id="求储蓄罐里的钱"><a href="#求储蓄罐里的钱" class="headerlink" title="求储蓄罐里的钱"></a>求储蓄罐里的钱</h1><p>有一个空储蓄罐，</p>
+<p>第一天，往里面存1元钱；</p>
+<p>第二天，往里面存2元钱；</p>
+<p>第三天，往里面存3元钱；</p>
+<p>第四天，往里面存4元钱；</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>每天都存钱，第一百天时储蓄罐里一共有多少钱？</p>
+<p>这个问题如何求解呢？其实最直接的方法就是从1开始加，一直加到100，但是这种暴力求解效率极差。</p>
+<p> 德国9岁孩子高斯也遇到了同样问题，但是他却马上得出了答案。</p>
+<p>他是这么考虑的：</p>
+<p>1+2+3…+100顺序计算结果和100+99+98…+1这样的逆序结果是一样的。</p>
+<p>这样的话，顺序的1+逆序的100，顺序的2+逆序的99，顺序的3+逆序的98，这样最后结果是100个101相加 = 100x101 = 10100 。因为逆序和顺序相等，所以这个和是2倍的顺序，所以顺序的和为10100/2 =5050。最终得出1加到100的和为5050。</p>
+<p>高斯据此得出以下公式：</p>
+<p>1+2+3…+100 = （100+1）x100/2；</p>
+<p>当然上面只是求1到100的和，那如果要求1到1000，到10000呢，公式是不是仍然成立？</p>
+<p>高斯断言：对于任意自然数n：1+2+3…+n = （n+1)xn/2都成立；</p>
+<p>接下来要证明高斯的断言是否成立。</p>
+<h1 id="数学归纳法证明"><a href="#数学归纳法证明" class="headerlink" title="数学归纳法证明"></a>数学归纳法证明</h1><p>最简单的数学归纳法是证明当n等于任意一个自然数时断言成立，证明包括两步：</p>
+<p>1.证明n=1时，断言p(1)成立</p>
+<p>2.证明n=k为任何自然数时，若p(k)成立，则p(k+1)也成立。</p>
+<p>由此，关于高斯公式的证明如下：</p>
+<p>1.当n=1时， 1 = （1+1）x1/2 = 1，高斯公式成立；</p>
+<p>2.当n=k时，1+2+…+k = (k+1)xk/2 成立;</p>
+<p>3.当n=k+1时，证明1+2+…+k+(k+1) = ((k+1)+1)x(k+1)/2成立；</p>
+<p>因为2成立，所以3中公式代入后：</p>
+<p> (k+1)xk/2+（k+1） = ((k+1)+1)x(k+1)/2</p>
+<p>（k+1）x（k+2）/2 =  （k+1）x（k+2）/2 </p>
+<p>左右两边相等，</p>
+<p>得出结论：对于自然数n，断言p(n)都成立。</p>
+<h1 id="为什么数学归纳法只证明两步就成立了"><a href="#为什么数学归纳法只证明两步就成立了" class="headerlink" title="为什么数学归纳法只证明两步就成立了"></a>为什么数学归纳法只证明两步就成立了</h1><p>1.证明断言p(1)成立，也就是n=1成立；</p>
+<p>2.通过p(m)成立推导出p(m+1)也成立。</p>
+<p>3.根据上面结论，p(1+1)也就是p(2)成立；</p>
+<p>4.p(2+1)也就是p(3)成立；</p>
+<p>5.p(3+1)也就是p(4)成立；</p>
+<p>6.循环推导，最终推导出值为n时p(n)成立。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">程序员的数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/程序员的数学/" class="article-tag-list-link color2">程序员的数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/16/数学归纳法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-为什么每一个IT人员应该有一把人体工学电脑椅" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -999,364 +1307,6 @@
 
 
   
-    <article id="post-Android性能优化之UI优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/04/Android性能优化之UI优化/">Android性能优化之UI优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/04/Android性能优化之UI优化/" class="archive-article-date">
-  	<time datetime="2017-05-04T04:00:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月04日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="为什么要进行UI优化"><a href="#为什么要进行UI优化" class="headerlink" title="为什么要进行UI优化"></a>为什么要进行UI优化</h1><p>UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。</p>
-<h1 id="优化到什么程度"><a href="#优化到什么程度" class="headerlink" title="优化到什么程度"></a>优化到什么程度</h1><p>如今屏幕刷新频率大都是60FPS，就是说每帧绘制只要16ms，即保证你的UI页面在16ms内绘制渲染完成，就会让用户感觉到体验是流畅的，所以我们需要做的就是确保我们的APP页面渲染小于16ms。</p>
-<h1 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h1><h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><ul>
-<li><p>减少xml布局层级</p>
-<ul>
-<li><p>Merge的使用</p>
-<p>Merge是合并的意思，使用Merge合并子元素和父View，而Merge本身可以被忽略。使用Merge的场合：</p>
-<p>xml布局中，根元素是FrameLayout时；</p>
-<p>自定义View中，父元素尽量是FrameLayout或者LinearLayout；</p>
-<blockquote>
-<p>Merge不能乱用：</p>
-<p>Merge只能用在xml布局根元素；</p>
-<p>使用Merge加载一个布局时，必须制定一个ViewGroup作为其父元素，并且设置attachToRoot参数为True（inflate(int,ViewGroup,boolean)）；</p>
-<p>不能在ViewStub中使用Merge标签，原因就是ViewStub的inflate方法中没有attachToRoot的设置</p>
-</blockquote>
-</li>
-<li><p>合理使用RelativeLayout和LinearLayout</p>
-<p>RelativeLayout一定程度上可以减少布局层级，但是其对子View测量次数多于LinearLayout。所以综合考虑：如果层级较多情况下，使用RelativeLayout能减少层级的话，优先使用RelativeLayout以便保持界面扁平化；如果层级相同的情况下优先使用LinearLayout，这样能减少子View多次测量。</p>
-</li>
-</ul>
-</li>
-<li><p>ViewStub提高加载速度</p>
-<p>ViewStub默认不可见不占位置，</p>
-<p>如果在特定情况下才显示某些布局，可以使用ViewStub。</p>
-<p>显示ViewStub有两种方法：ViewStub.inflate()和ViewStub.setVisibility(View.Visible)；</p>
-<blockquote>
-<p>使用ViewStub注意：</p>
-<p>Viewstub只能加载一次，之后该对象引用会被置空；</p>
-<p>Viewstub只能用来加载一个布局文件，而不是某个View</p>
-<p>Viewstub中不能嵌套Merge</p>
-</blockquote>
-</li>
-<li><p>include实现view复用</p>
-<p>对于在多个页面都会使用的公共布局诸如Title栏或导航栏，提取出来通过使用inlucde引入，这样只需要维护一份代码即可。</p>
-</li>
-</ul>
-<h2 id="避免过度绘制"><a href="#避免过度绘制" class="headerlink" title="避免过度绘制"></a>避免过度绘制</h2><ul>
-<li><p>什么是过度绘制</p>
-<p>过度绘制是说屏幕上某一像素在同一帧时间内被绘制多次。在UI布局中如果不可见的部分UI也在进行绘制，这会导致浪费多余的CPU和GPU资源。</p>
-</li>
-<li><p>引起过度绘制原因</p>
-<p>xml布局中控件重叠且都设置了背景或图片</p>
-<p>自定义View，onDraw方法中同一区域绘制了多次</p>
-</li>
-<li><p>如何避免过度绘制</p>
-<ul>
-<li><p>布局优化</p>
-<p>移除xml中非必须背景，或根据条件设置</p>
-<p>移除window默认背景</p>
-<p>按需设置占位背景图</p>
-</li>
-<li><p>自定义View优化</p>
-<p>在自定义 V i e w中可以通过 c a n v a s . c l i p R e c t （ ）来帮助系统识别那些可见的区域 。这个方法可以指定一块矩形区域 ，只有在这个区域内才会被绘制 ，其他的区域会被忽视 。 c a n v a s . c l i p R e c t （ ）可以很好地帮助那些有多组重叠组件的自定义 V i e w来控制显示的区域 。 c l i p R e c t方法还可以帮助节约 C P U与 G P U资源 ，在 c l i p R e c t区域之外的绘制指令都不会被执行 ，那些部分内容在矩形区域内的组件 ，仍然会得到绘制 ，并且可以使用 c a n v a s . q u i c k r e j e c t （ ）来判断是否没和某个矩形相交 ，从而跳过那些非矩形区域内的绘制操作 。</p>
-</li>
-</ul>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/04/Android性能优化之UI优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-算法查找之二分查找" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/03/算法查找之二分查找/">算法查找之二分查找</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/03/算法查找之二分查找/" class="archive-article-date">
-  	<time datetime="2017-05-03T14:52:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>查看24是否在数组{ 8，14，24，28，30，31，32 }中，</p>
-<p>如果在数组中则返回数组元素下标，否则返回-1 。</p>
-<p>数组下标从0开始，查找24时最终返回下标2。</p>
-<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
-<li><p>说明</p>
-<p>二分法前提是数组是有序的；</p>
-<p>要查找的数我们称为关键值</p>
-</li>
-<li><p>阐述实现</p>
-<p>在一个有序数组中二分查找一个数，数组长度为n。</p>
-<p>1、设置左右下标变量：left，right，初始时left为0，right为n-1。</p>
-<p>2、求出中间下标，得到中间数</p>
-<p>3、如果中间数等于关键值则直接返回下标，</p>
-<p>​    如果中间数大于关键值则 right为中间下标-1</p>
-<p>​    如果中间数小于关键值则 left为中间下标+1</p>
-<p>4、如果未结束，则重复步骤2和3，重复的前提是不管left和right的值            如何改变，都要保证left&lt;right。</p>
-</li>
-<li><p>阐述转换通用代码</p>
-<p>步骤1：<code>int left=0,right =n-1;</code></p>
-<p>步骤4中说重复2和3步，说明这是一个循环，循环条件是left&lt;right，</p>
-<p>所以使用<code>while(left&lt;right)</code></p>
-</li>
-</ul>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public static int binarySearch(int[] arr, int key) &#123;</div><div class="line">	int left = 0, right = arr.length - 1;</div><div class="line">	while (left &lt; right) &#123;</div><div class="line">		int mid = (left + right) &gt;&gt; 1;</div><div class="line">		if (arr[mid] == key) &#123;</div><div class="line">			return mid;</div><div class="line">		&#125; else if (arr[mid] &gt; key) &#123;</div><div class="line">			right = mid - 1;</div><div class="line">		&#125; else &#123;</div><div class="line">			left = mid + 1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return -1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/03/算法查找之二分查找/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-算法排序之交换排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/03/算法排序之交换排序/">算法排序之交换排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/03/算法排序之交换排序/" class="archive-article-date">
-  	<time datetime="2017-05-03T13:04:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过交换排序，使得数组最终按非递减顺序排列。</p>
-<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
-<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
-<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
-<li><p>说明</p>
-<p>希望数组按非递减顺序排列，我们可以得到两点消息：1、数组中可能会有重复的元素，所以才说是非递减。2、排序后第一个元素是最小值 ，最后一个元素是最大值。</p>
-</li>
-<li><p>阐述实现</p>
-<p>第一轮，第一个元素分别与后面的每个元素比较，如果大于后面的元素则进行交换，把较小值交换到第一个元素位置，本轮结束后的第一个元素就是数组中最小值。</p>
-<p>第二轮，由于第一轮的第一个元素已经求出了最小值，所以第二轮从第二个元素开始，与后面的每个元素分别比较，如果大于后面的元素则进行交换，把较小值交换到第二个元素位置，本轮结束后的第二个元素就是数组中倒数第二小的值。</p>
-<p>以此类推，进行n-1轮比较，n为数组长度。之所以是n-1轮而不是n轮，是因为第i轮的i个元素要和后面的元素进行比较，如果是n轮，它本身就是最后的元素，不需要比较了。</p>
-</li>
-<li><p>阐述转换通用代码</p>
-<p>交换方法提取：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">void swap(int[] arr, int i,int j)&#123;</div><div class="line">  int tmp = arr[i];</div><div class="line">  arr[i] = arr[j];</div><div class="line">  arr[j] = tmp ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第一轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=0；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第二轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=1；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>每轮遍历出一个当前未排序中最小值，以此类推，遍历n-1轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for(int i=0;i&lt;n-1;i++)&#123;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void swapSort(int[] arr) &#123;</div><div class="line">	int length = arr.length;</div><div class="line">	for (int i = 0; i &lt; length-1 ; i++) &#123;</div><div class="line">		for (int j = i + 1; j &lt; length; j++) &#123;</div><div class="line">			if (arr[i] &gt;  arr[j]) &#123;</div><div class="line">				int tmp = arr[i];</div><div class="line">				arr[i] = arr[j];</div><div class="line">				arr[j] = tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/03/算法排序之交换排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1471,15 +1421,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1491,15 +1441,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1511,7 +1465,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Android， 性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1520,18 +1482,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
             
             <div class="clearfix"></div>
