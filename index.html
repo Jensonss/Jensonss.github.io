@@ -174,6 +174,126 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-求解1到n中1的个数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/28/求解1到n中1的个数/">求解1到n中1的个数</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/28/求解1到n中1的个数/" class="archive-article-date">
+  	<time datetime="2017-07-27T16:11:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月28日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>注意一点的是不管有几位数，每位都要检查是否为1.</p>
+<h1 id="0x01-暴力实现"><a href="#0x01-暴力实现" class="headerlink" title="0x01 暴力实现"></a>0x01 暴力实现</h1><p>最简单暴力的方法就是直接遍历判断：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 暴力求解1-n中有多少个1</div><div class="line"> * </div><div class="line"> * <span class="doctag">@param</span> value</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOne</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= value; i++) &#123;</div><div class="line">		<span class="keyword">int</span> val = i;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			result += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印<code>System.out.println(getOne(11));</code>结果为4。正确</p>
+<h1 id="0x02-递归实现"><a href="#0x02-递归实现" class="headerlink" title="0x02 递归实现"></a>0x02 递归实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOnes</span><span class="params">(<span class="keyword">int</span> value, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (value == <span class="number">1</span>) &#123;</div><div class="line">		<span class="keyword">return</span> ++count;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// 计算当前数不为1时，所有位包含1的个数。</span></div><div class="line">		<span class="keyword">int</span> val = value;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			count += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> getOnes(--value, count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="0x003-其他思想"><a href="#0x003-其他思想" class="headerlink" title="0x003 其他思想"></a>0x003 其他思想</h1><p>本段内容来自<a href="http://www.jianshu.com/p/ce709a24bd22" target="_blank" rel="external">简书</a>：</p>
+<ol>
+<li>此位大于1，这一位上1的个数有 ([n / 10 ^ (b + 1) ] + 1) * 10^b</li>
+<li>此位等于0，为 ([n / 10^(b+1) ] ) * 10^b</li>
+<li>此位等于1，在0的基础上加上n mod 10^b + 1</li>
+</ol>
+<p>举个例子，我们来分析 N=30143 的情况：</p>
+<ol>
+<li>由于3&gt;1,则个位上出现1的次数为(3014+1)*1</li>
+<li>由于4&gt;1,则十位上出现1的次数为(301+1)*10</li>
+<li>由于1=1，则百位上出现1次数为30*100+(43+1)</li>
+<li>由于千位为0，则千位上出现1次数为3*1000</li>
+</ol>
+<p>仔细观察，不难明白其中的道理。以百位为例：100到199共有100个1，而除以100以后位30，所以共有30个100到199，这就构成了300 <em> 100。最后，当对于千位和万位为0的情况，还有100到143这44个数，所以总共为30</em>100 + 43 + 1。同样，不难理解，对于十位，有10到19共10个1，共有301个百位以上不为0的情况，最后加上百位以上都是0的情况，则为 （301+1）* 10。</p>
+<p>至于代码按规律如何实现，暂时没有思考</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/28/求解1到n中1的个数/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-反转字符串" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1399,104 +1519,6 @@
 
 
   
-    <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">浅谈Android性能优化系列(0)之为什么需要性能优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/" class="archive-article-date">
-  	<time datetime="2017-07-19T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
-<p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
-<p>为什么性能优化是我们绕不开的话题呢？</p>
-<h1 id="0x01-为什么需要性能优化"><a href="#0x01-为什么需要性能优化" class="headerlink" title="0x01 为什么需要性能优化"></a>0x01 为什么需要性能优化</h1><p>关于为什么需要性能优化这个问题，我想很多人都会即时作答：“为用户提供更好的体验”。</p>
-<p>既然说到为用户提供更好体验，设想一下，假如用户并不在意所谓的体验，只要功能完成就行了。那么这时公司还会考虑做性能优化吗？</p>
-<p>我想大多数公司都不会去做”这样一件无意义的事“了。公司是以盈利为目的，怎么会在用户不care的点上花费大量人力物力财力呢？</p>
-<p>然而现实恰恰相反的，随着科技发展，用户对产品体验要求越来越高，加上当前产品同质化严重，特色功能只能吸引用户，而良好的用户体验才是留住用户的关键。</p>
-<h1 id="0x02-从哪些方面入手性能优化"><a href="#0x02-从哪些方面入手性能优化" class="headerlink" title="0x02 从哪些方面入手性能优化"></a>0x02 从哪些方面入手性能优化</h1><p>只说性能优化太过笼统，为了提供良好用户体验，应该从哪些方面着手呢？</p>
-<p>换句话说，在产品体验上，用户会通过感知哪些方面来评价产品好坏？这样一说答案就很明显了，就是平常我们自己使用程序都会唠叨的那几个方面：点几下就崩溃、玩一会就没电、没多久流量就超了、打开页面很卡、安装包太大、占了300兆内存~</p>
-<blockquote>
-<p>把上面几个方面归纳下就是：程序稳定性优化、耗电检测优化、网络优化、UI渲染优化、安装包优化和内存优化 6个方面。</p>
-</blockquote>
-<h1 id="0x03-结束语"><a href="#0x03-结束语" class="headerlink" title="0x03 结束语"></a>0x03 结束语</h1><p>这是本系列开篇，从为什么要性能优化发散到优化入手的6各方面，为后续章节做铺垫。</p>
-<p>目前预计未来会写6篇关于具体方面优化和6篇相关方面工具使用，共计12篇。希望通过这12篇让自己当然希望也能帮助别人对Android整体性能优化有个了解，最终形成自己的知识脉络。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1623,15 +1645,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1647,11 +1669,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1660,14 +1682,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1680,6 +1694,14 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
             
             <div class="clearfix"></div>
