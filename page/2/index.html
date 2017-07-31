@@ -174,6 +174,180 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">浅谈Android性能优化系列(1)之安装包大小优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/" class="archive-article-date">
+  	<time datetime="2017-07-21T03:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！</p>
+<p>这样来说吧，优化有多方面好处的：</p>
+<p>①节省用户流量</p>
+<p>②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少</p>
+<p>③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。</p>
+<p>所以，安装包优化还是有必要的。</p>
+<h1 id="0x01-安装包构成"><a href="#0x01-安装包构成" class="headerlink" title="0x01 安装包构成"></a>0x01 安装包构成</h1><p>要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png" alt="安装包构成"></p>
+<p>目录中com和org两个文件夹是第三方包信息，不用管着两个。</p>
+<ul>
+<li>assets可以存放资源和配置等各种文件，但是这里的资源文件不会像res中那样生成ID，而是通过AssetManager获取</li>
+<li>dex是Java文件编程成class文件后又经过虚拟机优化压缩形成的</li>
+<li>lib中存放native类库，根据不同CPU架构有四种类型：armeabi，armeabi-v7a，x86，mips。</li>
+<li>META-INF保存了app签名信息</li>
+<li>res中存放了资源文件</li>
+<li>resources.arsc 记录资源文件和资源ID映射。可以根据ID查找资源</li>
+<li>AndroidManifest.xml是app配置文件注册四大组件，声明权限等。</li>
+</ul>
+<p>知道了各个部分作用就大概知道了该从哪方面入手了：代码和资源，因为包中这两个部分占了很大一部分。</p>
+<h1 id="0x02-代码优化"><a href="#0x02-代码优化" class="headerlink" title="0x02 代码优化"></a>0x02 代码优化</h1><p>代码优化其实包含了Java代码和Native代码，但是因为Native代码涉及了C和C++，这里不做阐述，但是说下lib库还是有必要的</p>
+<h2 id="lib库"><a href="#lib库" class="headerlink" title="lib库"></a>lib库</h2><p>根据cpu架构lib中分为四种类型，但是目前大部分移动设备都是基于arm和arm-v7a的。x86和mips较少。而且据说x86兼容arm指令集，所以适配库优先考虑arm和arm-v7a两种即可。</p>
+<h2 id="Java代码优化：使用ProGuard代码混淆"><a href="#Java代码优化：使用ProGuard代码混淆" class="headerlink" title="Java代码优化：使用ProGuard代码混淆"></a>Java代码优化：使用ProGuard代码混淆</h2><p>ProGuard具有压缩(移除无效类、方法、属性)、优化、混淆功能。</p>
+<ul>
+<li><p>开启混淆</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">    release &#123;</div><div class="line">        minifyEnabled <span class="literal">true</span><span class="comment">//开启混淆</span></div><div class="line">        proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span> <span class="comment">//混淆文件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>压缩</p>
+<p>压缩功能是默认开启的，如果对某个或某些文件不想压缩可以使用：</p>
+<p><code>-dontshrink class * extends android.app.Activity</code>。</p>
+</li>
+<li><p>优化</p>
+<p>优化optimization默认开启，如果不开启可以使用：</p>
+<p><code>-dontoptimize</code>。一些相对复杂的方法时，压缩后可能会抛出errors，这时可以不压缩。</p>
+</li>
+<li><p>混淆</p>
+<p>混淆也是默认开启,如果对某些文件不想混淆可以使用：</p>
+<p><code>-dontobfuscate</code>。</p>
+</li>
+<li><p>保留</p>
+<p>如果想保留某些类、成员等不被混淆可以使用：</p>
+<p><code>-kepp</code>。</p>
+<p>​</p>
+<p>关于proguard更多使用方法可参考：</p>
+<p><a href="http://hanhailong.com/2015/12/28/Android%E8%BF%9B%E9%98%B6%E4%B9%8BProGuard%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/" target="_blank" rel="external">Android进阶之ProGuard代码混淆</a></p>
+<p><a href="https://my.oschina.net/u/659658/blog/71976" target="_blank" rel="external">Jean同学的Proguard私房物语</a></p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x03-资源优化"><a href="#0x03-资源优化" class="headerlink" title="0x03 资源优化"></a>0x03 资源优化</h1><p>这里的资源优化主要是Res资源。</p>
+<h2 id="删除无用资源"><a href="#删除无用资源" class="headerlink" title="删除无用资源"></a>删除无用资源</h2><p>因为需求变更，版本更新等因素，很多研发只是一味的把新的资源文件让res下面扔，却没哟及时的把不用的文件给清理掉，长此以往导致res越来越臃肿。</p>
+<p>res资源的定时清理是很有必要的，但是资源那么多如何快速清理呢？</p>
+<p>Android提供了非常好用的工具Lint快速检测res中未使用的资源并给出提示。</p>
+<p>运行Analyze—&gt;Run Inspection By Name ，弹窗输入：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint.png" alt="lint"></p>
+<p>执行结果如下：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png" alt="lint_result"></p>
+<p>其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。</p>
+<h2 id="资源图片最少化"><a href="#资源图片最少化" class="headerlink" title="资源图片最少化"></a>资源图片最少化</h2><p>这里最少化有2个参考原则：</p>
+<p>①简单的图片shape画</p>
+<p>②多状态的图片filter画</p>
+<p>下面分别说说这两个原则都是什么意思</p>
+<ul>
+<li><p>简单的图片shape画</p>
+<p>这里的简单是图形简单，颜色简单，比如矩形、圆角等纯色能用shape方便绘制出来的。</p>
+</li>
+<li><p>多状态的图片filter画</p>
+<p>这里的filter是colorFilter。</p>
+<p>比如一些按钮都有默认背景色和选中背景色。这时设计一般会提供两套图片，如果使用colorFilter，我们只要一套就可以了。</p>
+</li>
+</ul>
+<h2 id="图片再压缩"><a href="#图片再压缩" class="headerlink" title="图片再压缩"></a>图片再压缩</h2><p>在app打包时，aapt会对图片进行压缩处理，但是这种压缩比较有限。因此我们可以再拿到设计给的图片后，使用一些工具进行二次压缩，比如Zopfli，这时谷歌开源项目。再比如PNGoo。</p>
+<h1 id="0x04-其他优化"><a href="#0x04-其他优化" class="headerlink" title="0x04 其他优化"></a>0x04 其他优化</h1><ul>
+<li><p>使用webp代替png</p>
+<p>webp从4.0开始支持，但是这时不支持透明度。较好地支持从4.2.2开始。</p>
+</li>
+<li><p>精简第三方库</p>
+<p>很多时候可能只需要第三方库的一部分功能，这时可以根据公司业务需求进行精简，这样会有个问题就是后期的库版本更新会是个问题。</p>
+</li>
+<li><p>插件化</p>
+<p>把一些使用率不高的业务模块再需要的时候从服务器下载，动态加载。</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/性能优化/" class="article-tag-list-link color5">性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-用Python提取excel中有用数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1230,92 +1404,6 @@
 
 
   
-    <article id="post-Mac终端光标变成粗体" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/Mac终端光标变成粗体/">Mac终端光标变成粗体</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/Mac终端光标变成粗体/" class="archive-article-date">
-  	<time datetime="2017-07-01T05:46:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>打开终端偏好设置，勾选 竖条，闪动光标</p>
-<p><img src="/2017/07/01/Mac终端光标变成粗体/设置光标.png" alt="设置光标"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/Mac终端光标变成粗体/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1462,15 +1550,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1482,10 +1566,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
@@ -1494,11 +1574,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">excel</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
             
             <div class="clearfix"></div>
