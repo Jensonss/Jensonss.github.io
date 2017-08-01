@@ -194,7 +194,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>其实对某些网站有针对性的爬取需要的内容并不是很难，只要缕清自己的需求。从0到需求实现须要哪些步骤给列出来，然后各个实现最后组合在一起就基本完成了一个简单的爬虫。</p>
+<h1 id="整体流程分析"><a href="#整体流程分析" class="headerlink" title="整体流程分析"></a>整体流程分析</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%88%AC%E8%99%AB%E6%B5%81%E7%A8%8B.png" alt="爬虫整体流程"></p>
+<p>如图，我们爬取数据最终都是要展示出来看的，所以基本的一个自己的小型爬虫流程可以分为数据采集、数据存储、数据清洗、数据展示四大流程。</p>
+<p><strong>兵法云:”分而治之，各个击破”</strong>，下面把四个步骤涉及到得知识分别说一下。</p>
+<h1 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h1><p>爬虫爬取过程就是采集过程，既然要爬取别人的网站数据，首先要处理网络请求这就是离不开网络库，通常使用<code>urllib</code>就可以。</p>
+<p>爬到的页面都是html源码形式的，习惯称为DOM树，要通过DOM树获取需要的信息，需要使用解析库，这里推荐<code>BeautifulSoup4</code>。</p>
+<p>因为要找到内容的规律才能进行顺利爬取，期间免不了涉及到正则表达式。所以这也是必须要掌握的。</p>
+<p>这样基本能完成简单的爬取了。</p>
+<blockquote>
+<p>如果涉及到透过表单和登陆窗口后面的爬取或者爬取内容和实际显示不一样，这些涉及深入爬取暂时不做讨论。</p>
+</blockquote>
+<h1 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h1><p>爬取到得数据总在内存中存放是个问题。所以爬取后的内容需要及时进行存储以防丢失。</p>
+<p>存储一般分为文件存储和数据库存储，Android中也是如此。</p>
+<p>而数据处理的文件存储一般式CVS格式，so使用<code>cvs</code>库可以方便进行数据读写，</p>
+<p>数据库存储可以自由选择所熟悉的数据库类型。</p>
+<p>很多时候个人爬虫到这步基本已经完成了。后面两步主要在数据分析时才会用到</p>
+<h1 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h1><p>如果爬取到得数据本身就是很符合规范的话那就省心了，否则需要对采集的数据进行清洗。</p>
+<p>由于错误的标点符号、大小写字母不一致、断行和拼写错误等问题，零乱的数据是网络中的大问题。而数据清洗就是清除这些问题，让数据标准化。</p>
+<h1 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h1><p>数据展示即数据可视化，可以使用<code>matplotlib</code>库生成各种统计图</p>
+
       
 
       
@@ -202,7 +221,29 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
         <p class="article-more-link">
