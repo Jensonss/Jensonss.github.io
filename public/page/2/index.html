@@ -174,6 +174,130 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java-wait，notify和notifyAll使用分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">Java wait，notify和notifyAll使用分析</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/Java-wait，notify和notifyAll使用分析/" class="archive-article-date">
+  	<time datetime="2017-07-21T05:00:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>提起多线程想当然的就会想到<code>synchronized</code> 。但是<code>synchronized</code>只能用于线程同步，如果是线程交替执行(生产者/消费者)，<code>synchronized</code>也无能为力了。这时wait，notify和notifyAll派上用场了。</p>
+<h1 id="0x01-它们只是Object里的方法"><a href="#0x01-它们只是Object里的方法" class="headerlink" title="0x01 它们只是Object里的方法"></a>0x01 它们只是Object里的方法</h1><p>点开源码发现这三个方法只是object里面的方法，和多线程有神马关系呢？我相信不止我一个人曾经有过这个疑问。</p>
+<p>不只是object里的方法，而且还都是native方法。这是Java有意为之。因为Java设计之初就是要每个对象都有一个监控锁(Monitor)。而wait，notify和notifyAll三个方法也必须要在当前线程已经持有监控锁状态下才能执行，否则就会报<code>java.lang.IllegalMonitorStateException</code>。</p>
+<h1 id="0x02-怎么知道线程是否持有状态锁"><a href="#0x02-怎么知道线程是否持有状态锁" class="headerlink" title="0x02 怎么知道线程是否持有状态锁"></a>0x02 怎么知道线程是否持有状态锁</h1><p>线程同步原理就是利用了锁的互斥，所以在<code>synchronized</code>代码块内能确定是持有锁的。也就是说wait，notify和notifyAll方法需要在<code>synchronized</code>代码块内使用。</p>
+<p>具体来说有三种方式：</p>
+<ul>
+<li><p>同步对象方法持有锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sync_1</span><span class="params">()</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>同步静态方法持有锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sync_2</span><span class="params">()</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>同步代码块持有锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">sync_3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span>(lock)&#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="0x03-三个方法都有什么用"><a href="#0x03-三个方法都有什么用" class="headerlink" title="0x03 三个方法都有什么用"></a>0x03 三个方法都有什么用</h1><ul>
+<li><p>wait后会让当前线程处于阻塞状态</p>
+<p>能调用wait是因为当前线程持有Monitor，但是调用wait后，当前线程会释放锁，给予其他线程执行的机会。</p>
+</li>
+<li><p>notify会唤醒一个因为该对象阻塞的线程</p>
+<p>同样notify能正常调用是因为当前线程持有锁，当notify执行后会唤醒其他阻塞线程，但是那些阻塞线程并不会立即执行，因为Monitor被notify线程持有。被唤醒的线程要等<code>synchronized</code>代码块执行完毕释放Monitor后才能执行。</p>
+</li>
+<li><p>notifyAll会唤醒所有因为该对象阻塞的线程</p>
+<p>同notify。</p>
+</li>
+</ul>
+<h1 id="0x04-使用示例"><a href="#0x04-使用示例" class="headerlink" title="0x04 使用示例"></a>0x04 使用示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"start-t1"</span>);</div><div class="line">			<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					System.out.println(<span class="string">"t1等待唤醒"</span>);</div><div class="line">					lock.wait();</div><div class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				System.out.println(<span class="string">"t1被唤醒持有锁"</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line"></div><div class="line">	Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"start-t2"</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">3000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e1) &#123;</div><div class="line">				e1.printStackTrace();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">				lock.notify();<span class="comment">// 唤醒</span></div><div class="line">				System.out.println(<span class="string">"t2持有锁，唤醒t1"</span>);</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					Thread.currentThread().sleep(<span class="number">3000</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				System.out.println(<span class="string">"t2休眠3s"</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	t1.start();</div><div class="line">	t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<p>start-t2<br>start-t1<br>t1等待唤醒<br>t2持有锁，唤醒t1<br>t2休眠3s<br>t1被唤醒持有锁</p>
+<p>在t2中调用notify唤醒t1后，t2又休眠了3s钟，期间t1仍然没有执行，可见确实如上所说，唤醒的线程要在notify线程释放Monitor后才能执行。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/多线程/" class="article-tag-list-link color4">多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1317,96 +1441,9 @@
 
 
   
-    <article id="post-hexo文章tags添加多标签" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/hexo文章tags添加多标签/">hexo文章tags添加多标签</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/hexo文章tags添加多标签/" class="archive-article-date">
-  	<time datetime="2017-07-01T05:52:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>hexo博客在给文章添加标签tags时，如果只添加一个，冒号后面空格跟上标签名称即可，</p>
-<p>但是如果想要添加多个标签，需要使用[tag1,tag2]格式来表示，</p>
-<p>categories也同理。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/hexo文章tags添加多标签/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -1546,15 +1583,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1583,10 +1624,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
             
             <div class="clearfix"></div>
