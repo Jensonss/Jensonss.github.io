@@ -174,6 +174,130 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-数学归纳法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/16/数学归纳法/">数学归纳法</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/16/数学归纳法/" class="archive-article-date">
+  	<time datetime="2017-05-16T06:08:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月16日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="什么是数学归纳法"><a href="#什么是数学归纳法" class="headerlink" title="什么是数学归纳法"></a>什么是数学归纳法</h1><p>数学归纳法就是证明一个命题在自然数范围内成立</p>
+<p>这里命题也可以当成是断言。</p>
+<p>比如断言自然数n，nx2为偶数。</p>
+<h1 id="求储蓄罐里的钱"><a href="#求储蓄罐里的钱" class="headerlink" title="求储蓄罐里的钱"></a>求储蓄罐里的钱</h1><p>有一个空储蓄罐，</p>
+<p>第一天，往里面存1元钱；</p>
+<p>第二天，往里面存2元钱；</p>
+<p>第三天，往里面存3元钱；</p>
+<p>第四天，往里面存4元钱；</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>每天都存钱，第一百天时储蓄罐里一共有多少钱？</p>
+<p>这个问题如何求解呢？其实最直接的方法就是从1开始加，一直加到100，但是这种暴力求解效率极差。</p>
+<p> 德国9岁孩子高斯也遇到了同样问题，但是他却马上得出了答案。</p>
+<p>他是这么考虑的：</p>
+<p>1+2+3…+100顺序计算结果和100+99+98…+1这样的逆序结果是一样的。</p>
+<p>这样的话，顺序的1+逆序的100，顺序的2+逆序的99，顺序的3+逆序的98，这样最后结果是100个101相加 = 100x101 = 10100 。因为逆序和顺序相等，所以这个和是2倍的顺序，所以顺序的和为10100/2 =5050。最终得出1加到100的和为5050。</p>
+<p>高斯据此得出以下公式：</p>
+<p>1+2+3…+100 = （100+1）x100/2；</p>
+<p>当然上面只是求1到100的和，那如果要求1到1000，到10000呢，公式是不是仍然成立？</p>
+<p>高斯断言：对于任意自然数n：1+2+3…+n = （n+1)xn/2都成立；</p>
+<p>接下来要证明高斯的断言是否成立。</p>
+<h1 id="数学归纳法证明"><a href="#数学归纳法证明" class="headerlink" title="数学归纳法证明"></a>数学归纳法证明</h1><p>最简单的数学归纳法是证明当n等于任意一个自然数时断言成立，证明包括两步：</p>
+<p>1.证明n=1时，断言p(1)成立</p>
+<p>2.证明n=k为任何自然数时，若p(k)成立，则p(k+1)也成立。</p>
+<p>由此，关于高斯公式的证明如下：</p>
+<p>1.当n=1时， 1 = （1+1）x1/2 = 1，高斯公式成立；</p>
+<p>2.当n=k时，1+2+…+k = (k+1)xk/2 成立;</p>
+<p>3.当n=k+1时，证明1+2+…+k+(k+1) = ((k+1)+1)x(k+1)/2成立；</p>
+<p>因为2成立，所以3中公式代入后：</p>
+<p> (k+1)xk/2+（k+1） = ((k+1)+1)x(k+1)/2</p>
+<p>（k+1）x（k+2）/2 =  （k+1）x（k+2）/2 </p>
+<p>左右两边相等，</p>
+<p>得出结论：对于自然数n，断言p(n)都成立。</p>
+<h1 id="为什么数学归纳法只证明两步就成立了"><a href="#为什么数学归纳法只证明两步就成立了" class="headerlink" title="为什么数学归纳法只证明两步就成立了"></a>为什么数学归纳法只证明两步就成立了</h1><p>1.证明断言p(1)成立，也就是n=1成立；</p>
+<p>2.通过p(m)成立推导出p(m+1)也成立。</p>
+<p>3.根据上面结论，p(1+1)也就是p(2)成立；</p>
+<p>4.p(2+1)也就是p(3)成立；</p>
+<p>5.p(3+1)也就是p(4)成立；</p>
+<p>6.循环推导，最终推导出值为n时p(n)成立。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">程序员的数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/程序员的数学/" class="article-tag-list-link color2">程序员的数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/16/数学归纳法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-为什么每一个IT人员应该有一把人体工学电脑椅" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1248,115 +1372,6 @@
 
 
   
-    <article id="post-算法排序之交换排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/03/算法排序之交换排序/">算法排序之交换排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/03/算法排序之交换排序/" class="archive-article-date">
-  	<time datetime="2017-05-03T13:04:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过交换排序，使得数组最终按非递减顺序排列。</p>
-<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
-<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
-<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
-<li><p>说明</p>
-<p>希望数组按非递减顺序排列，我们可以得到两点消息：1、数组中可能会有重复的元素，所以才说是非递减。2、排序后第一个元素是最小值 ，最后一个元素是最大值。</p>
-</li>
-<li><p>阐述实现</p>
-<p>第一轮，第一个元素分别与后面的每个元素比较，如果大于后面的元素则进行交换，把较小值交换到第一个元素位置，本轮结束后的第一个元素就是数组中最小值。</p>
-<p>第二轮，由于第一轮的第一个元素已经求出了最小值，所以第二轮从第二个元素开始，与后面的每个元素分别比较，如果大于后面的元素则进行交换，把较小值交换到第二个元素位置，本轮结束后的第二个元素就是数组中倒数第二小的值。</p>
-<p>以此类推，进行n-1轮比较，n为数组长度。之所以是n-1轮而不是n轮，是因为第i轮的i个元素要和后面的元素进行比较，如果是n轮，它本身就是最后的元素，不需要比较了。</p>
-</li>
-<li><p>阐述转换通用代码</p>
-<p>交换方法提取：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">void swap(int[] arr, int i,int j)&#123;</div><div class="line">  int tmp = arr[i];</div><div class="line">  arr[i] = arr[j];</div><div class="line">  arr[j] = tmp ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第一轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=0；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第二轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=1；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>每轮遍历出一个当前未排序中最小值，以此类推，遍历n-1轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for(int i=0;i&lt;n-1;i++)&#123;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void swapSort(int[] arr) &#123;</div><div class="line">	int length = arr.length;</div><div class="line">	for (int i = 0; i &lt; length-1 ; i++) &#123;</div><div class="line">		for (int j = i + 1; j &lt; length; j++) &#123;</div><div class="line">			if (arr[i] &gt;  arr[j]) &#123;</div><div class="line">				int tmp = arr[i];</div><div class="line">				arr[i] = arr[j];</div><div class="line">				arr[j] = tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/03/算法排序之交换排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -1471,19 +1486,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1492,6 +1503,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1531,15 +1546,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">excel</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
             
             <div class="clearfix"></div>
