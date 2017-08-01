@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Android屏幕适配 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录工作、生活">
+  <meta name="description" content="前言由于Android手机尺寸、分辨率碎片化严重，在Android应用开发中屏幕适配需求也变得越来越重要。 概念理解屏幕尺寸指屏幕对角线的长度，以英寸为单位，1英寸=2.54厘米。屏幕分辨率指在横纵向上的像素点数，单位是px，1px=1像素点，一般是纵向像素x横向像素，如1280×720。屏幕像素密度是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写，像素密度和屏幕尺寸和屏">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android屏幕适配">
-<meta property="og:url" content="http://yoursite.com/2017/07/26/Android屏幕适配/index.html">
+<meta property="og:url" content="http://yoursite.com/2017/08/01/Android屏幕适配/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="记录工作、生活">
-<meta property="og:updated_time" content="2017-07-26T05:26:43.000Z">
+<meta property="og:description" content="前言由于Android手机尺寸、分辨率碎片化严重，在Android应用开发中屏幕适配需求也变得越来越重要。 概念理解屏幕尺寸指屏幕对角线的长度，以英寸为单位，1英寸=2.54厘米。屏幕分辨率指在横纵向上的像素点数，单位是px，1px=1像素点，一般是纵向像素x横向像素，如1280×720。屏幕像素密度是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写，像素密度和屏幕尺寸和屏">
+<meta property="og:updated_time" content="2017-08-01T08:14:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android屏幕适配">
-<meta name="twitter:description" content="记录工作、生活">
+<meta name="twitter:description" content="前言由于Android手机尺寸、分辨率碎片化严重，在Android应用开发中屏幕适配需求也变得越来越重要。 概念理解屏幕尺寸指屏幕对角线的长度，以英寸为单位，1英寸=2.54厘米。屏幕分辨率指在横纵向上的像素点数，单位是px，1px=1像素点，一般是纵向像素x横向像素，如1280×720。屏幕像素密度是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写，像素密度和屏幕尺寸和屏">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -186,15 +186,111 @@
   
 
         
-        <a href="/2017/07/26/Android屏幕适配/" class="archive-article-date">
-  	<time datetime="2017-07-26T05:23:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+        <a href="/2017/08/01/Android屏幕适配/" class="archive-article-date">
+  	<time datetime="2017-08-01T05:23:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于Android手机尺寸、分辨率碎片化严重，在Android应用开发中屏幕适配需求也变得越来越重要。</p>
+<h1 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h1><p><strong>屏幕尺寸</strong>指屏幕对角线的长度，以英寸为单位，1英寸=2.54厘米。<br><strong>屏幕分辨率</strong>指在横纵向上的像素点数，单位是px，1px=1像素点，一般是纵向像素x横向像素，如1280×720。<br><strong>屏幕像素密度</strong>是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写，像素密度和屏幕尺寸和屏幕分辨率有关，像素密度也叫dpi。</p>
+<p><strong>dp，也是dip：</strong>Density Independent Pixels的缩写。以<strong>160dpi</strong>为基准，1dp=1px，密度无关像素<br><strong>dpi：</strong>屏幕像素密度的单位，“dot per inch”的缩写</p>
+<p><strong>px：</strong>像素，物理上的绝对单位</p>
+<p><strong>sp：</strong>Scale-Independent Pixels的缩写，可以根据系统自动进行缩放。通常可以使用12sp，14sp，18sp，22sp，为了避免精度失真一般不使用奇数和小数。</p>
+<p>不同密度区分：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>密度范围</th>
+<th>图片大小</th>
+<th>比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mdpi</td>
+<td>120dp~160dp</td>
+<td>48×48px</td>
+<td>2</td>
+</tr>
+<tr>
+<td>hdpi</td>
+<td>160dp~240dp</td>
+<td>72×72px</td>
+<td>3</td>
+</tr>
+<tr>
+<td>xhdpi</td>
+<td>240dp~320dp</td>
+<td>96×96px</td>
+<td>4</td>
+</tr>
+<tr>
+<td>xxhdpi</td>
+<td>320dp~480dp</td>
+<td>144×144px</td>
+<td>6</td>
+</tr>
+<tr>
+<td>xxxhdpi</td>
+<td>480dp~640dp</td>
+<td>192×192px</td>
+<td>8</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p><strong>如果只想出一套图片优先出xxhdpi，这样在低于这个密度下的系统会压缩图片进行显示，不至于会模糊，同时由于xxxhdpi还没有流行起来，用户数量少。</strong></p>
+<h1 id="适配方法"><a href="#适配方法" class="headerlink" title="适配方法"></a>适配方法</h1><h2 id="适配尺寸"><a href="#适配尺寸" class="headerlink" title="适配尺寸"></a>适配尺寸</h2><ul>
+<li><p>优先使用wrap_content，matc_parent，weight</p>
+</li>
+<li><p>使用相对布局，禁止使用绝对布局</p>
+</li>
+<li><p>使用限定符</p>
+<ul>
+<li><p>尺寸限定符，如layout-large</p>
+<p>3.2系统以前有用，</p>
+<p>3.2版本后又退出了最小宽度限定符如layout-sw600dp</p>
+<p>sw=small width 最小宽度。</p>
+<p>如果要维护全系统版本，需要维护的布局太多，应该抽取共同布局</p>
+<p>创建<code>res/layout/main.xml</code>布局文件。</p>
+<p>默认布局<code>res/values/layout.xml</code>。内容为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>创建<code>res/layout/main_twopanels.xml</code>布局文件。</p>
+<p>给3.2之前版本创建<code>res/values-large/layout.xml</code>文件，内容为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main_twopanels</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>给3.2之后的版本创建<code>res/values-sw600dp/layout.xml</code>文件，内容为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main_twopanels</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>屏幕方向限定符：-land，-port</p>
+</li>
+</ul>
+</li>
+<li><p>使用点九位图</p>
+<p>左上控制拉伸区域，右下控制间隔区域</p>
+</li>
+</ul>
+<h2 id="适配密度"><a href="#适配密度" class="headerlink" title="适配密度"></a>适配密度</h2><ul>
+<li><p>使用非密度制约像素  如dp，sp</p>
+<p>​</p>
+</li>
+<li><p>多种位图</p>
+<p><strong>如果只提供一种高分辨率图，将其放在对应的密度drawable下没有问题。但是如果将其放入低于当前密度的drawable下，会造成图片按比例放大，导致内存倍数增加</strong></p>
+<p>比如把一个1920x1080的xxhdpi的图片放在mdpi下，内存占用会增加9倍。</p>
+<p>按照图片比例的2：3：4：6：8计算出来。</p>
+<p>​</p>
+</li>
+</ul>
+
       
 
       
@@ -305,7 +401,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/07/26/Android屏幕适配/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/08/01/Android屏幕适配/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -319,20 +415,15 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/07/26/Android各版本新功能及区别/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/08/01/Python爬虫应该掌握哪些知识/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Android各版本新功能及区别
+          Python爬虫应该掌握哪些知识
         
       </div>
     </a>
   
-  
-    <a href="/2017/07/26/Python自动化之hexo自动发布和提交源码/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Python自动化之hexo自动发布和提交源码</div>
-      <i class="icon-circle-right"></i>
-    </a>
   
 </nav>
 
