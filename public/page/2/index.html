@@ -174,6 +174,367 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-求解1到n中1的个数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/28/求解1到n中1的个数/">求解1到n中1的个数</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/28/求解1到n中1的个数/" class="archive-article-date">
+  	<time datetime="2017-07-27T16:11:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月28日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>注意一点的是不管有几位数，每位都要检查是否为1.</p>
+<h1 id="0x01-暴力实现"><a href="#0x01-暴力实现" class="headerlink" title="0x01 暴力实现"></a>0x01 暴力实现</h1><p>最简单暴力的方法就是直接遍历判断：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 暴力求解1-n中有多少个1</div><div class="line"> * </div><div class="line"> * <span class="doctag">@param</span> value</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOne</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= value; i++) &#123;</div><div class="line">		<span class="keyword">int</span> val = i;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			result += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印<code>System.out.println(getOne(11));</code>结果为4。正确</p>
+<h1 id="0x02-递归实现"><a href="#0x02-递归实现" class="headerlink" title="0x02 递归实现"></a>0x02 递归实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOnes</span><span class="params">(<span class="keyword">int</span> value, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (value == <span class="number">1</span>) &#123;</div><div class="line">		<span class="keyword">return</span> ++count;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// 计算当前数不为1时，所有位包含1的个数。</span></div><div class="line">		<span class="keyword">int</span> val = value;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			count += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> getOnes(--value, count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="0x003-其他思想"><a href="#0x003-其他思想" class="headerlink" title="0x003 其他思想"></a>0x003 其他思想</h1><p>本段内容来自<a href="http://www.jianshu.com/p/ce709a24bd22" target="_blank" rel="external">简书</a>：</p>
+<ol>
+<li>此位大于1，这一位上1的个数有 ([n / 10 ^ (b + 1) ] + 1) * 10^b</li>
+<li>此位等于0，为 ([n / 10^(b+1) ] ) * 10^b</li>
+<li>此位等于1，在0的基础上加上n mod 10^b + 1</li>
+</ol>
+<p>举个例子，我们来分析 N=30143 的情况：</p>
+<ol>
+<li>由于3&gt;1,则个位上出现1的次数为(3014+1)*1</li>
+<li>由于4&gt;1,则十位上出现1的次数为(301+1)*10</li>
+<li>由于1=1，则百位上出现1次数为30*100+(43+1)</li>
+<li>由于千位为0，则千位上出现1次数为3*1000</li>
+</ol>
+<p>仔细观察，不难明白其中的道理。以百位为例：100到199共有100个1，而除以100以后位30，所以共有30个100到199，这就构成了300 <em> 100。最后，当对于千位和万位为0的情况，还有100到143这44个数，所以总共为30</em>100 + 43 + 1。同样，不难理解，对于十位，有10到19共10个1，共有301个百位以上不为0的情况，最后加上百位以上都是0的情况，则为 （301+1）* 10。</p>
+<p>至于代码按规律如何实现，暂时没有思考</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/28/求解1到n中1的个数/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-反转字符串" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/27/反转字符串/">反转字符串</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/27/反转字符串/" class="archive-article-date">
+  	<time datetime="2017-07-27T05:28:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月27日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>比如abc，反转后cba</p>
+<h1 id="0x01-实现"><a href="#0x01-实现" class="headerlink" title="0x01 实现"></a>0x01 实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">reverseStr</span><span class="params">(String str)</span> </span>&#123;</div><div class="line">	StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = str.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">		sb.append(str.charAt(i));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> sb.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面这种是遍历所有字符串长度，复杂度为O(n)。</p>
+<p>应该还有更好的方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">reverse</span><span class="params">(String str)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> len = str.length();</div><div class="line">	<span class="keyword">int</span> max = len - <span class="number">1</span>;</div><div class="line">	<span class="keyword">char</span>[] chars = str.toCharArray();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; (len &gt;&gt; <span class="number">1</span>); i++) &#123;</div><div class="line">		<span class="keyword">char</span> pre = str.charAt(i);</div><div class="line">		<span class="keyword">char</span> last = str.charAt(max);</div><div class="line">		chars[i] = last;</div><div class="line">		chars[max] = pre;</div><div class="line">		max--;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> String.valueOf(chars);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/27/反转字符串/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-垃圾回收机制-关于GC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/垃圾回收机制-关于GC/">垃圾回收机制~关于GC</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/垃圾回收机制-关于GC/" class="archive-article-date">
+  	<time datetime="2017-07-26T12:25:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。</p>
+<p>虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。</p>
+<p>说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就是标记-清除算法。</p>
+<p>如果是一门语言可以从基础语法学起，但是GC该如何学习呢？</p>
+<p><strong>其实问答形式就是最好的学习方式</strong></p>
+<h1 id="0x01-什么是GC"><a href="#0x01-什么是GC" class="headerlink" title="0x01 什么是GC"></a>0x01 什么是GC</h1><p>GC(垃圾回收)，通过查找无效对象释放空间达到自动管理内存的目的。</p>
+<h1 id="0x02-如何确定垃圾"><a href="#0x02-如何确定垃圾" class="headerlink" title="0x02 如何确定垃圾"></a>0x02 如何确定垃圾</h1><p>要查找垃圾对象，首先要知道什么样对象才算是垃圾对象才好对症下药。</p>
+<p><strong>在内存中，不再被引用的对象就称为垃圾对象</strong></p>
+<p>现在的问题又转到如何确定一个对象是否被引用？</p>
+<p>首先想到一种方法是给每个对象都添加一个计数器功能，这个计数器用例记录引用自己的指针数量，每多一个引用数量计数器就增加1，每减少一个引用数量计数器就减少1，如果计数器为0，说明没有其他对象引用当前对象，那么这个对象就是垃圾对象，可以被回收。这种方式叫做<strong>引用计数法</strong></p>
+<p>引用计数法虽然容易理解，但是因为缺点也很明显，所以不得不另寻它法。这时<strong>可达性分析法</strong>就登场了。</p>
+<p><strong>可达性分析法</strong>也可以称为<strong>跟踪收集器法</strong>，找一个对象作为GC的根节点(Root)，通过对对象的连续引用形成一条引用链，如果一个对象能够通过直接或间接的到达Root称为对象可达，否则称为对象不可达。对于不可达对象就可以判定为垃圾对象。</p>
+<h1 id="0x03-如何回收垃圾"><a href="#0x03-如何回收垃圾" class="headerlink" title="0x03 如何回收垃圾"></a>0x03 如何回收垃圾</h1><p>上一节知道了哪些对象是垃圾，现在该讨论有哪些方式能回收垃圾了。</p>
+<p>常用的GC算法有<strong>标记-清除算法</strong>、<strong>标记-整理算法</strong>、<strong>复制算法</strong>、<strong>分代GC</strong>、<strong>G1 GC</strong>。</p>
+<h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p><strong>标记-清除算法(Mark-Weep)</strong>看名字就知道分为标记和清除两个阶段。</p>
+<p><strong>注意一点这里的标记是指标记活着的对象，而非死对象。</strong></p>
+<p><strong>标记阶段</strong>从Root开始首先标记Root能直接访问的对象，然后递归通过指针能访问到得对象，同时把这些对象做标记。</p>
+<p><strong>清除阶段</strong>遍历堆内存，把未被标记的对象清除以达到垃圾回收目的。</p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4.png" alt="标记清除"></p>
+<p>图中问题很明显：回收后会产生大量的内存碎片，不利于对内存连续要求的数据结构的使用，譬如数组。</p>
+<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p><strong>标记-整理算法也叫标记-压缩</strong>，这里的标记阶段和上面的标记-清除的标记阶段完全一样，不同的是整理阶段是对清除阶段的改进。</p>
+<p>整理阶段简单来说就是把活着的对象移动到一端，然后从边界处清除另一端所有空间。</p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86.png" alt="标记整理"></p>
+<p>优点是有效利用堆，但又不会产生内存碎片。</p>
+<p>缺点是浪费时间，整理阶段要搜索三次堆内存，而标记-清除算法的清除阶段只搜索一次堆内存。</p>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p><strong>复制算法</strong>是把堆内存分为两块空间标识为from和to。当from空间被占满时，GC把活着的对象复制到to空间，复制完成后把from和to标识互换，GC结束。为了保证from空间对象都能复制到to空间，须要保证from和to空间大小一致。</p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95.png" alt="复制算法"></p>
+<p>复制算法吞吐量优秀，分配内存速度快，没有碎片，但是堆内存利用率低下</p>
+<h2 id="分代GC"><a href="#分代GC" class="headerlink" title="分代GC"></a>分代GC</h2><p>根据日常研发总结出一个经验“大部分对象在生成后不久就变成垃圾，很少能活的久”。据此经验，分代GC引入了“年龄”的概念。经历过一次GC后活下来的对象年龄+1。</p>
+<p><strong>分代GC</strong>把内存分为新生代和老年代，针对不同的年代使用不同的GC算法。刚生产的对象称为新生代对象，活到一定年龄的称为老年代对象。</p>
+<p>我们把对新对象执行的GC称为<strong>新生代GC(minor GC)</strong>， 把老年代对象执行的GC称为<strong>老年代GC(major GC)</strong>。</p>
+<p><strong>分代GC属于综合性GC，对上面GC算法的综合使用。</strong></p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6.png" alt="分代GC"></p>
+<p>如图所示：<strong>新生代空间包括Eden，S0和S1三个区，老年代空间是Old区</strong></p>
+<p>其中新生代每次回收只有少数对象存活，可以使用复制算法，而老年代对象存活率高也没用额外空间，可以使用标记-整理和标记清除算法。</p>
+<p>刚开始时，Eden用来存放刚创建的对象，S0和S1为空，如果发生GC，Eden区幸存对象转移到S0区，如果S0区已有数据前提下再次进行GC时，会把Eden和S0区存活对象转移到S1区，同时清空Eden和S0，然后交换S0和S1标识。经过一定次数的GC仍然存活的对象转移到老年代。</p>
+<h2 id="G1-GC"><a href="#G1-GC" class="headerlink" title="G1 GC"></a>G1 GC</h2><h1 id="0x04-谁来回收垃圾"><a href="#0x04-谁来回收垃圾" class="headerlink" title="0x04 谁来回收垃圾"></a>0x04 谁来回收垃圾</h1><p>知道了哪些对象是垃圾，也知道了用哪些算法来回收垃圾，然后呢？直接满地调用算法回收垃圾吗？</p>
+<p>当然不是！GC要分时机且统一来回收垃圾，这里是由垃圾收集器来来根据时机统一回收垃圾对象。</p>
+<p>由于各方面需求原因，垃圾收集器也是有多种的。</p>
+<p>未完待续…….</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/GC/" class="article-tag-list-link color3">GC</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/垃圾回收机制-关于GC/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python自动化之hexo自动发布和提交源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1172,395 +1533,6 @@
 
 
   
-    <article id="post-为什么相对布局比线性布局性能低" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/为什么相对布局比线性布局性能低/">为什么相对布局比线性布局性能低</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/为什么相对布局比线性布局性能低/" class="archive-article-date">
-  	<time datetime="2017-07-19T02:53:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。</p>
-<p>经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。</p>
-<h1 id="0x01-View绘制流程简述"><a href="#0x01-View绘制流程简述" class="headerlink" title="0x01 View绘制流程简述"></a>0x01 View绘制流程简述</h1><p>看过源码的应该知道，View的绘制是从<code>ViewRootImpl.performTraversals()</code>方法开始的。</p>
-<p>先后经历<code>performMeasure</code>、<code>performLayout</code>和<code>performDraw</code>三个阶段，就是常说的测量、布局和绘制。</p>
-<ul>
-<li>performMeasure会调用根View的measure，进而调用onMeasure方法</li>
-<li>performLayout调用根View的layout，进而调用onLayout方法</li>
-<li>performDraw调用根View的draw，进而调用onDraw方法</li>
-</ul>
-<p>鉴于两个都是ViewGroup，所以可以忽略onDraw</p>
-<p>有对比才有伤害，要比较这两个布局性能，要先看看这两个布局分别在onMeasure，onLayout都做了什么。</p>
-<h1 id="0x02-LinearLayout分析"><a href="#0x02-LinearLayout分析" class="headerlink" title="0x02 LinearLayout分析"></a>0x02 LinearLayout分析</h1><p>LinearLayout的onMeasure方法内容很简单，就是判断方向然后分别调用:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (mOrientation == VERTICAL) &#123;</div><div class="line">         measureVertical(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         measureHorizontal(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>那就随便看看<code>measureVertical</code>方法里面干了些什么：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See how tall everyone is. Also remember max width.</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">    <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</div><div class="line">        mTotalLength += measureNullChild(i);</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child.getVisibility() == View.GONE) &#123;</div><div class="line">       i += getChildrenSkipCount(child, i);</div><div class="line">       <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (hasDividerBeforeChildAt(i)) &#123;</div><div class="line">        mTotalLength += mDividerHeight;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">    totalWeight += lp.weight;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY &amp;&amp; lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// Optimization: don't bother measuring children who are going to use</span></div><div class="line">        <span class="comment">// leftover space. These views will get measured again down below if</span></div><div class="line">        <span class="comment">// there is any leftover space.</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + lp.topMargin + lp.bottomMargin);</div><div class="line">        skippedMeasure = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">int</span> oldHeight = Integer.MIN_VALUE;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// heightMode is either UNSPECIFIED or AT_MOST, and this</span></div><div class="line">            <span class="comment">// child wanted to stretch to fill available space.</span></div><div class="line">            <span class="comment">// Translate that to WRAP_CONTENT so that it does not end up</span></div><div class="line">            <span class="comment">// with a height of 0</span></div><div class="line">            oldHeight = <span class="number">0</span>;</div><div class="line">            lp.height = LayoutParams.WRAP_CONTENT;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Determine how big this child would like to be. If this or</span></div><div class="line">        <span class="comment">// previous children have given a weight, then we allow it to</span></div><div class="line">        <span class="comment">// use all available space (and we will shrink things later</span></div><div class="line">        <span class="comment">// if needed).</span></div><div class="line">        measureChildBeforeLayout(</div><div class="line">               child, i, widthMeasureSpec, <span class="number">0</span>, heightMeasureSpec,</div><div class="line">               totalWeight == <span class="number">0</span> ? mTotalLength : <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldHeight != Integer.MIN_VALUE) &#123;</div><div class="line">           lp.height = oldHeight;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> childHeight = child.getMeasuredHeight();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + childHeight + lp.topMargin +</div><div class="line">               lp.bottomMargin + getNextLocationOffset(child));</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (useLargestChild) &#123;</div><div class="line">            largestChildHeight = Math.max(childHeight, largestChildHeight);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * If applicable, compute the additional offset to the child's baseline</div><div class="line">     * we'll need later when asked &#123;<span class="doctag">@link</span> #getBaseline&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> ((baselineChildIndex &gt;= <span class="number">0</span>) &amp;&amp; (baselineChildIndex == i + <span class="number">1</span>)) &#123;</div><div class="line">       mBaselineChildTop = mTotalLength;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// if we are trying to use a child index for our baseline, the above</span></div><div class="line">    <span class="comment">// book keeping only works if there are no children above it with</span></div><div class="line">    <span class="comment">// weight.  fail fast to aid the developer.</span></div><div class="line">    <span class="keyword">if</span> (i &lt; baselineChildIndex &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"A child of LinearLayout with index "</span></div><div class="line">                + <span class="string">"less than mBaselineAlignedChildIndex has weight &gt; 0, which "</span></div><div class="line">                + <span class="string">"won't work.  Either remove the weight, or don't set "</span></div><div class="line">                + <span class="string">"mBaselineAlignedChildIndex."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> matchWidthLocally = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">if</span> (widthMode != MeasureSpec.EXACTLY &amp;&amp; lp.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">        <span class="comment">// The width of the linear layout will scale, and at least one</span></div><div class="line">        <span class="comment">// child said it wanted to match our width. Set a flag</span></div><div class="line">        <span class="comment">// indicating that we need to remeasure at least that view when</span></div><div class="line">        <span class="comment">// we know our width.</span></div><div class="line">        matchWidth = <span class="keyword">true</span>;</div><div class="line">        matchWidthLocally = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> margin = lp.leftMargin + lp.rightMargin;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> measuredWidth = child.getMeasuredWidth() + margin;</div><div class="line">    maxWidth = Math.max(maxWidth, measuredWidth);</div><div class="line">    childState = combineMeasuredStates(childState, child.getMeasuredState());</div><div class="line"></div><div class="line">    allFillParent = allFillParent &amp;&amp; lp.width == LayoutParams.MATCH_PARENT;</div><div class="line">    <span class="keyword">if</span> (lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * Widths of weighted Views are bogus if we end up</div><div class="line">         * remeasuring, so keep them separate.</div><div class="line">         */</div><div class="line">        weightedMaxWidth = Math.max(weightedMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alternativeMaxWidth = Math.max(alternativeMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    i += getChildrenSkipCount(child, i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个方法主要是for循环中通过<code>measureChildBeforeLayout</code>测量子View高度，把每次测量的高度都累加到<code>mTotalLength</code>。</p>
-<h1 id="0x03-RelativeLayout分析"><a href="#0x03-RelativeLayout分析" class="headerlink" title="0x03 RelativeLayout分析"></a>0x03 RelativeLayout分析</h1><p>看看RelativeLayout的onMeasure方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">View[] views = mSortedHorizontalChildren;</div><div class="line"> <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">         applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">         measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">             offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> views = mSortedVerticalChildren;</div><div class="line"> count = views.length;</div><div class="line"> <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         </div><div class="line">         applyVerticalSizeRules(params, myHeight);</div><div class="line">         measureChild(child, params, myWidth, myHeight);</div><div class="line">         <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">             offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">             <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, params.mRight);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">             <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                 height = Math.max(height, params.mBottom);</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">             left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">             top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">             right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">             bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>第一个for循环中<code>measureChildHorizontal</code>方法实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">           params.mRight, params.width,</div><div class="line">           params.leftMargin, params.rightMargin,</div><div class="line">           mPaddingLeft, mPaddingRight,</div><div class="line">           myWidth);</div><div class="line">   <span class="keyword">int</span> maxHeight = myHeight;</div><div class="line">   <span class="keyword">if</span> (mMeasureVerticalWithPaddingMargin) &#123;</div><div class="line">       maxHeight = Math.max(<span class="number">0</span>, myHeight - mPaddingTop - mPaddingBottom -</div><div class="line">               params.topMargin - params.bottomMargin);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">int</span> childHeightMeasureSpec;</div><div class="line">   <span class="keyword">if</span> (myHeight &lt; <span class="number">0</span> &amp;&amp; !mAllowBrokenMeasureSpecs) &#123;</div><div class="line">       <span class="keyword">if</span> (params.height &gt;= <span class="number">0</span>) &#123;</div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(</div><div class="line">                   params.height, MeasureSpec.EXACTLY);</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="comment">// Negative values in a mySize/myWidth/myWidth value in RelativeLayout measurement</span></div><div class="line">           <span class="comment">// is code for, "we got an unspecified mode in the RelativeLayout's measurespec."</span></div><div class="line">           <span class="comment">// Carry it forward.</span></div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">0</span>, MeasureSpec.UNSPECIFIED);</div><div class="line">       &#125;</div><div class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span> (params.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY);</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);</div><div class="line">   &#125;</div><div class="line">   child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
-<p>第二个for循环中<code>measureChild</code>实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">                params.mRight, params.width,</div><div class="line">                params.leftMargin, params.rightMargin,</div><div class="line">                mPaddingLeft, mPaddingRight,</div><div class="line">                myWidth);</div><div class="line">        <span class="keyword">int</span> childHeightMeasureSpec = getChildMeasureSpec(params.mTop,</div><div class="line">                params.mBottom, params.height,</div><div class="line">                params.topMargin, params.bottomMargin,</div><div class="line">                mPaddingTop, mPaddingBottom,</div><div class="line">                myHeight);</div><div class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
-<p>两个for循环中都执行了<code>child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</code>这意味着子View测量执行了两遍。</p>
-<p>为什么RelativeLayout要测量两遍？</p>
-<blockquote>
-<p>因为RelativeLayout并不像LinearLayout那样有着方向单一性。RelativeLayout的灵活性就在于允许纵横双向的，这样view直接不仅横向依赖，还有纵向依赖，每个方向都要测量一遍。导致性能略差。</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/为什么相对布局比线性布局性能低/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-为什么Android中很多int常量使用十六进制表示" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/">为什么Android中很多int常量使用十六进制表示</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/" class="archive-article-date">
-  	<time datetime="2017-07-19T02:12:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_DEBUG_TRIAGED_MISSING = <span class="number">0x00000100</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_IGNORE_EPHEMERAL = <span class="number">0x00000200</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NO_HISTORY = <span class="number">0x40000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NEW_TASK = <span class="number">0x10000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_MULTIPLE_TASK = <span class="number">0x08000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_CLEAR_TASK = <span class="number">0X00008000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_TASK_ON_HOME = <span class="number">0X00004000</span>;</div></pre></td></tr></table></figure>
-<p>猜测可能的原因：</p>
-<p>①为了美观</p>
-<p>②为了方便位运算</p>
-<p>③关于①我是瞎说的</p>
-<p>既然多采用十六进制，那就先简单看看什么是十六进制</p>
-<h1 id="0x01-十六进制简单介绍"><a href="#0x01-十六进制简单介绍" class="headerlink" title="0x01 十六进制简单介绍"></a>0x01 十六进制简单介绍</h1><p>以0x或0X开头，使用数字0~9及字符A~F表示16个可能的值，这种进制方式一般称为十六进制。</p>
-<p>一个int占4个字节，32位。</p>
-<p>十六进制中0xF最大，二进制表示：1111，用4位即可表示出来，所以在用十六进制表示int时，通常0x后面跟8位数字/字符，这样就可以表示满一个int值。也就是前言中所看到的。</p>
-<h1 id="0x02-发现规律"><a href="#0x02-发现规律" class="headerlink" title="0x02 发现规律"></a>0x02 发现规律</h1><p>通过前言中的代码可以发现基本上频繁出现的只有1，2，4，8几个数字而其他位置都是0占位。为什么会出现这种情况呢？</p>
-<p>首先把上面的十六进制转换成二进制看一下：</p>
-<p><code>0x00000100</code>转换二进制<code>0001 0000 0000</code></p>
-<p><code>0x00000200</code>转换二进制<code>0010 0000 0000</code> </p>
-<p><code>0X00004000</code>转换二进制<code>0100 0000 0000 0000</code></p>
-<p><code>0X00008000</code>转换二进制<code>1000 0000 0000</code></p>
-<p>转换后可以发现，1，2，4，8这几个值很特殊，在二进制中表示这几个数时都只要某一位为1，其他位用0占位即可表示。</p>
-<p>换句话说，二进制的4位表示十六进制中的一个数字，而这4位中若只有其中一位为1的话，那么可能的值情况为1=2º，2=2¹，4=2²，8=2³。</p>
-<p>这样做有什么好处呢？</p>
-<h1 id="0x03-这样做的好处"><a href="#0x03-这样做的好处" class="headerlink" title="0x03 这样做的好处"></a>0x03 这样做的好处</h1><ul>
-<li><p>拿位移来说因为只有一个数字带值，其他都是0占位，位移时大脑中快速把十六进制转为二进制然后补0位即可。</p>
-<p>拿0x200来说，换算二进制我只要把2用二进制0010在大脑中展示出来，然后后面跟8个0就换算完成。如果0x200&gt;&gt;1,右移1位，相当于1后面的9个0被砍掉一个，左边高位补0。</p>
-<p>二进制表示由<code>0010 0000 0000</code>变成了<code>0001 0000 000</code>。值由512变成了256，可见右移1位相当于除以2。前面十六进制和二进制转换是在大脑中完成，转换到十进制我是笔算的，可能这是采用十六进制表示int原因之一吧。</p>
-<p>同样左移思路也是如此。</p>
-</li>
-<li><p>位与&amp;/位或|</p>
-<p>位与/位或是对参与运算的数的二进制进行位与/位或。</p>
-<p>位与&amp;：两数二进制对应位均为1时结果才为1，其余为0</p>
-<p>位或|：两数二进制对应位有一个为1时，结果位就为1</p>
-<p>在源码和框架中，很多时候需要存储一些状态组合，比如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">addFlags</span><span class="params">(<span class="keyword">int</span> flags)</span> </span>&#123;</div><div class="line">     mFlags |= flags;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>最后在一些地方会根据状态组合的不同值来做出不同的响应。这时使用1，2，4，8这种格式的十六进制就很方便，因为不同的状态值只是在二进制的不同位上用1标记而已。这样最后可以根据mFlags的值二进制有多少位为1，基本就能判断有多少种状态。当然这里说的是位或。</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-关于Intent那些事" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/17/关于Intent那些事/">关于Intent那些事</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/17/关于Intent那些事/" class="archive-article-date">
-  	<time datetime="2017-07-17T07:51:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月17日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Intent，译为“意图”。从汉语角度理解，意图是什么意思？意图谋反，就是想要谋反。所以意图可以通俗理解为想要做什么。当然这里的“想要做什么”是告诉Android系统的而不是别人。</p>
-<p>虽然想要做什么就告诉Android系统，但是并不是为所欲为的。通过Intent只能请求三大组件：Activity，Service，Broadcast。</p>
-<h1 id="0x01-抽象理解"><a href="#0x01-抽象理解" class="headerlink" title="0x01 抽象理解"></a>0x01 抽象理解</h1><p>因为涉及三个组件，这里不会单独讲每个组件和Intent。startActivity不要叫启动Activity，startService也不要叫启动服务，我们把他们抽象为一个请求。通过Intent向Android发出请求，Android去哪给你匹配呢？你不注册系统当然没地方找，所以我们要在AndroidManifest.xml中进行注册(广播可以动态注册)。注册的作用不光告诉系统可以从这找我，还告诉系统本组件只接收满足要求的请求。说到要求这就要提到IntentFilter了，每个IntentFilter代表一种要求，一个组件可以有多种要求即多个IntentFilter，但只要满足一种就能请求成功。系统所要做的就是把接收到得请求Intent和组件的要求IntentFilter进行匹配，如果匹配上了则牵手成功~</p>
-<p>这个流程抽象为：</p>
-<p><img src="/2017/07/17/关于Intent那些事/请求流程.png" alt="请求流程"></p>
-<h1 id="0x02-分类"><a href="#0x02-分类" class="headerlink" title="0x02 分类"></a>0x02 分类</h1><p>通过Intent告诉Android系统“我想要做什么”，可以有两种方式阐述，一种是直白的表述“我想要启动某个页面”，我们称之为显性，另一种是告诉系统“我想要一个满足我某些要求的页面”,至于是哪个或哪几个页面由系统决定，如果是多个可以返回列表给我，这种称之为隐性。</p>
-<blockquote>
-<p>Intent从请求性质上分为显性和隐性两种。</p>
-</blockquote>
-<p>由于显性Intent指定了具体的请求，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">intent.setClass(Context packageContext, Class&lt;?&gt; cls)</div></pre></td></tr></table></figure>
-<p>所以匹配并不会发生在显性Intent,显性组件注册时一般这样的：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">".ThirdActivity"</span> /&gt;</span></div></pre></td></tr></table></figure>
-<p>没有多余的要求。</p>
-<p>在抽象理解中，IntentFilter匹配只是为隐性准备的。</p>
-<p>下面要了解具体匹配规则如何：</p>
-<h1 id="0x03-匹配规则"><a href="#0x03-匹配规则" class="headerlink" title="0x03 匹配规则"></a>0x03 匹配规则</h1><p>要了解匹配规则是怎样的，首先要知道是从哪几方面入手匹配的，由于Android系统也是根据组件注册的要求进行匹配，所以看看注册时的IntentFilter有哪些属性就知道要匹配哪些方面了：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.CALL"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:mimeType</span>=<span class="string">"image/*"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"http"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>显然系统匹配也就是匹配category、action和data。</p>
-<p>下面分别来看看这三种是分别如何匹配的：</p>
-<p><strong>注意：下面将原理、源码、实例三管齐下</strong> </p>
-<ul>
-<li><p>category如何匹配</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①在请求的Intent中需要在IntentFilter找到匹配项才算匹配成功。</p>
-<p>②如果Intent没有添加任何category，那么系统会自动给你添加android.intent.category.DEFAULT，所以如果你的三大组件是为隐性启动准备的，那么你就要在注册时手动添加<category android:name="android.intent.category.DEFAULT">。</category></p>
-<p>③当然如果添加了其他值得category也可以不用添加default了。</p>
-</blockquote>
-<p>​</p>
-</li>
-</ul>
-<ul>
-<li><p>action如何匹配</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①IntentFilter如果没有声明action，则所有Intent都不能匹配成功。</p>
-<p>②若IntentFilter声明了action，而Intent没有不带任何action，则匹配通过。</p>
-<p>③若IntentFilter声明了action，Intent也声明了action，那么Intent中action必须是IntentFilter中action的子集才能匹配成功。</p>
-</blockquote>
-</li>
-</ul>
-<ul>
-<li><p>data如何匹配</p>
-<p>data分为两部分，MIME type和URI。</p>
-<ul>
-<li><p>MIME type就是表明数据格式类型，方便系统正确解析处理</p>
-<p>MIME type又分为两部分：主类型type和子类型subtype，以”/“分割。比如：</p>
-<p>video/mp4，image/jpeg。</p>
-</li>
-<li><p>URI 唯一资源标识符</p>
-<p>URI分为scheme、Authory和path三部分。</p>
-<p>scheme表示采用协议，既可以是http网络协议也可以是本地content和file协议。</p>
-<p>Authority由host和port组成。</p>
-<p>path表示文件在host中具体位置。</p>
-</li>
-</ul>
-<p>了解了data组成，下面说说data匹配原理</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①data只匹配IntentFilter中所拥有部分。</p>
-<p>②如果Intent中既没有MIME，也没用URI，那么IntentFilter中也都不能有才能通过。</p>
-<p>③若Intent没有指定类型，只指定了URI，那么IntentFilter必须没有指定类型。特殊情况下能根据URI推断出类型，这种情况按⑤情况算。</p>
-<p>④若Intent只指定了类型，没有URI。那么IntentFilter也必须没有指定URI</p>
-<p>⑤若Intent同时指定了类型和URI，那么必须都匹配上才能通过。</p>
-</blockquote>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/17/关于Intent那些事/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1675,15 +1647,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1703,7 +1675,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1711,11 +1683,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1723,11 +1699,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GC</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
