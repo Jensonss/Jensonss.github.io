@@ -174,6 +174,115 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Android内存分析工具之MAT详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/Android内存分析工具之MAT详解/">Android内存分析工具之MAT详解</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/27/Android内存分析工具之MAT详解/" class="archive-article-date">
+  	<time datetime="2017-04-27T05:07:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>关于Android内存优化可参见我的另一篇文章[<a href="http://www.jensondev.me/2017/04/21/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/" target="_blank" rel="external">Android性能优化之内存优化</a>]。Android性能优化中内存优化可谓重中之重，而内存泄露又是Android内存优化的重灾区。重灾区就要重拳出击，整治内存泄露，Mat是必备的利器。</p>
+<h1 id="关于Mat"><a href="#关于Mat" class="headerlink" title="关于Mat"></a>关于Mat</h1><p>Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat是由eclipse社区维护，所以如果使用Android studio开发的话，需要单独下载，<a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="external">官方通道</a>。我用的是mac版，后面也会使用mac版来分析。</p>
+<h1 id="Mat使用"><a href="#Mat使用" class="headerlink" title="Mat使用"></a>Mat使用</h1><p>注意：我的测试app包名为：com.example.jenson.myapplication</p>
+<p>在eclipse中集成了Mat，可以直接拿来使用，而使用Android studio时。这两个是分开的，所以我们要先导出dump文件。</p>
+<h2 id="Android-studio导出dump文件"><a href="#Android-studio导出dump文件" class="headerlink" title="Android studio导出dump文件"></a>Android studio导出dump文件</h2><p>打开Android Monitor窗口，<img src="/2017/04/27/Android内存分析工具之MAT详解/0B8D42B7-E5A5-431D-9658-2A99C923CF4E.png" alt="0B8D42B7-E5A5-431D-9658-2A99C923CF4E"></p>
+<p>点击圆圈中的按钮，过几秒中会自动生成一个dump文件，然后自动打开如下图的窗口：<img src="/2017/04/27/Android内存分析工具之MAT详解/1A94CD89-1BE9-46BC-9449-8B55EE34D741.png" alt="1A94CD89-1BE9-46BC-9449-8B55EE34D741"></p>
+<p>在Heap Snapshot下的几个文件就是自动生成的dump文件，但是这不是标准的dump文件，所以需要选择文件右键导出标准dump文件，保存到一个目录下：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午1.49.26.png" alt="屏幕快照 2017-04-27 下午1.49.26"></p>
+<h2 id="Mat打开标准dump文件"><a href="#Mat打开标准dump文件" class="headerlink" title="Mat打开标准dump文件"></a>Mat打开标准dump文件</h2><p>使用Mat，菜单open File选择刚才导出的dump文件，经过分析后回显示如下所示的项目：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午2.08.27.png" alt="屏幕快照 2017-04-27 下午2.08.27"></p>
+<p>Mat从多角度提供了内存分析，其中包括Histogram、Dominator Tree、Leak Suspects和Top consumers等。</p>
+<p>overview是一个概况图，把内存的消耗以饼状图形式显示出来，鼠标在每个饼块区域划过或者点击，就会在Inspector栏目显示这块区域的相关信息。</p>
+<p>Leak Suspectss是一个关于内存泄露猜想的饼图，Problem Suspect 1是泄露猜想的描述。看我这里说的像是字节数组，这么大的数组难不成是图片，要知道图片在内存中就是以字节数组形式存在的。</p>
+<p>平常内存分析比较常用的还是Histogram、Dominator Tree。</p>
+<h2 id="开始分析内存"><a href="#开始分析内存" class="headerlink" title="开始分析内存"></a>开始分析内存</h2><p>这里我们使用Histogram进行分析，切换到Histogram页面。这个页面主要有4个列，Class Name、Objects、Shallow Heap和Retained Heap。其中Class Name是全类名，Objects是这个类的对象实例个数。Shallow Heap是对象本身占用内存大小，非数组的常规对象，本身内存占用很小，所以这个对泄露分析作用不大。Retained Heap指当前对象大小和当前对象能直接或间接引用的对象大小的总和。这个栏目是分析重点。</p>
+<p>内存分析是分析的整个系统的内存泄露，而我们只要查找我们APP的内存泄露情况。这无疑增加了很多工作，不过幸亏Histogram支持正则表达式查找，在Regex中输入我们的包名进行过滤，直奔和我们APP有关的内存泄露：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.11.33.png" alt="屏幕快照 2017-04-27 下午3.11.33"></p>
+<p>过滤后就显示了我们APP相关内存信息，按Retained Heap大小排列下，发现Student和MainActivity这两个类问题比较大。但是MainActivity的Objects数量为1，而Student的为130，看起来Student问题更严重，所以先从Student入手：</p>
+<p>首先看下是哪里的引用导致了Student不能被GC回收。<img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.19.06.png" alt="屏幕快照 2017-04-27 下午3.19.06"></p>
+<p>右键使用Merge Shortest Paths to GC Roots显示距GC Root最短路径，当然选择过程中要排除软引用和弱引用，因为这些标记的一般都是可以被回收的。进入结果页查看：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.22.23.png" alt="屏幕快照 2017-04-27 下午3.22.23"></p>
+<p>啧啧，原来Student不能被回收竟然就是这个MainActivity搞的鬼，可以看到这个类里面有个students集合里面存放的正式不能回收的Student对象。</p>
+<p>看代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">static List&lt;Student&gt; students=new ArrayList&lt;&gt;();</div><div class="line">static final String tag=&quot;MainActivity&quot;;</div><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">    sample_text = (TextView) findViewById(R.id.sample_text);</div><div class="line">    TestNative testNative = new TestNative();</div><div class="line">    sample_text.setText(testNative.stringFromJNI());</div><div class="line">    for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line"></div><div class="line">        Student student = new Student(&quot;jenson&quot; + i, i);</div><div class="line">        students.add(student);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原来不能被回收是因为用static修饰了students集合。这导致其生命周期边长，在Activity销毁时，仍然存在。问题找到了，去掉static完成内存泄露修复。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/27/Android内存分析工具之MAT详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2016公司清明节坝上草原" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1156,108 +1265,6 @@ public static int w(String tag, String msg) {
 
 
   
-    <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">Python入门系列(1):如何使用Sublime text开发Python</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
-<h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
-<li>找到Python3的安装路径<br>终端中输入命令</li>
-</ul>
-<figure class="highlight plain"><figcaption><span>-a python3 ```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到结果</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.io/upload_images/1796052-01e91620f87d697b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">复制路径```/Library/Frameworks/Python.framework/Versions/3.5/bin/python3</div></pre></td></tr></table></figure>
-<ul>
-<li>配置Sublime<br>打开Sublime-&gt;Tools-&gt;build system-&gt;new build system<br>如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.41.06.png"></p>
-<p>点击new build system 后的窗口如下图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
-<p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
-<p>print(“hello python!”)<br>```</p>
-<p>编写完代码保存，command+B执行编译</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
-<p>本节完成。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1485,11 +1492,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1505,11 +1516,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1521,10 +1532,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
@@ -1533,11 +1540,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">GC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
