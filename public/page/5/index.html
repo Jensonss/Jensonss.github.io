@@ -174,6 +174,364 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Android性能优化之UI优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/04/Android性能优化之UI优化/">Android性能优化之UI优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/04/Android性能优化之UI优化/" class="archive-article-date">
+  	<time datetime="2017-05-04T04:00:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月04日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="为什么要进行UI优化"><a href="#为什么要进行UI优化" class="headerlink" title="为什么要进行UI优化"></a>为什么要进行UI优化</h1><p>UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。</p>
+<h1 id="优化到什么程度"><a href="#优化到什么程度" class="headerlink" title="优化到什么程度"></a>优化到什么程度</h1><p>如今屏幕刷新频率大都是60FPS，就是说每帧绘制只要16ms，即保证你的UI页面在16ms内绘制渲染完成，就会让用户感觉到体验是流畅的，所以我们需要做的就是确保我们的APP页面渲染小于16ms。</p>
+<h1 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h1><h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><ul>
+<li><p>减少xml布局层级</p>
+<ul>
+<li><p>Merge的使用</p>
+<p>Merge是合并的意思，使用Merge合并子元素和父View，而Merge本身可以被忽略。使用Merge的场合：</p>
+<p>xml布局中，根元素是FrameLayout时；</p>
+<p>自定义View中，父元素尽量是FrameLayout或者LinearLayout；</p>
+<blockquote>
+<p>Merge不能乱用：</p>
+<p>Merge只能用在xml布局根元素；</p>
+<p>使用Merge加载一个布局时，必须制定一个ViewGroup作为其父元素，并且设置attachToRoot参数为True（inflate(int,ViewGroup,boolean)）；</p>
+<p>不能在ViewStub中使用Merge标签，原因就是ViewStub的inflate方法中没有attachToRoot的设置</p>
+</blockquote>
+</li>
+<li><p>合理使用RelativeLayout和LinearLayout</p>
+<p>RelativeLayout一定程度上可以减少布局层级，但是其对子View测量次数多于LinearLayout。所以综合考虑：如果层级较多情况下，使用RelativeLayout能减少层级的话，优先使用RelativeLayout以便保持界面扁平化；如果层级相同的情况下优先使用LinearLayout，这样能减少子View多次测量。</p>
+</li>
+</ul>
+</li>
+<li><p>ViewStub提高加载速度</p>
+<p>ViewStub默认不可见不占位置，</p>
+<p>如果在特定情况下才显示某些布局，可以使用ViewStub。</p>
+<p>显示ViewStub有两种方法：ViewStub.inflate()和ViewStub.setVisibility(View.Visible)；</p>
+<blockquote>
+<p>使用ViewStub注意：</p>
+<p>Viewstub只能加载一次，之后该对象引用会被置空；</p>
+<p>Viewstub只能用来加载一个布局文件，而不是某个View</p>
+<p>Viewstub中不能嵌套Merge</p>
+</blockquote>
+</li>
+<li><p>include实现view复用</p>
+<p>对于在多个页面都会使用的公共布局诸如Title栏或导航栏，提取出来通过使用inlucde引入，这样只需要维护一份代码即可。</p>
+</li>
+</ul>
+<h2 id="避免过度绘制"><a href="#避免过度绘制" class="headerlink" title="避免过度绘制"></a>避免过度绘制</h2><ul>
+<li><p>什么是过度绘制</p>
+<p>过度绘制是说屏幕上某一像素在同一帧时间内被绘制多次。在UI布局中如果不可见的部分UI也在进行绘制，这会导致浪费多余的CPU和GPU资源。</p>
+</li>
+<li><p>引起过度绘制原因</p>
+<p>xml布局中控件重叠且都设置了背景或图片</p>
+<p>自定义View，onDraw方法中同一区域绘制了多次</p>
+</li>
+<li><p>如何避免过度绘制</p>
+<ul>
+<li><p>布局优化</p>
+<p>移除xml中非必须背景，或根据条件设置</p>
+<p>移除window默认背景</p>
+<p>按需设置占位背景图</p>
+</li>
+<li><p>自定义View优化</p>
+<p>在自定义 V i e w中可以通过 c a n v a s . c l i p R e c t （ ）来帮助系统识别那些可见的区域 。这个方法可以指定一块矩形区域 ，只有在这个区域内才会被绘制 ，其他的区域会被忽视 。 c a n v a s . c l i p R e c t （ ）可以很好地帮助那些有多组重叠组件的自定义 V i e w来控制显示的区域 。 c l i p R e c t方法还可以帮助节约 C P U与 G P U资源 ，在 c l i p R e c t区域之外的绘制指令都不会被执行 ，那些部分内容在矩形区域内的组件 ，仍然会得到绘制 ，并且可以使用 c a n v a s . q u i c k r e j e c t （ ）来判断是否没和某个矩形相交 ，从而跳过那些非矩形区域内的绘制操作 。</p>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/04/Android性能优化之UI优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-算法查找之二分查找" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/03/算法查找之二分查找/">算法查找之二分查找</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/03/算法查找之二分查找/" class="archive-article-date">
+  	<time datetime="2017-05-03T14:52:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>查看24是否在数组{ 8，14，24，28，30，31，32 }中，</p>
+<p>如果在数组中则返回数组元素下标，否则返回-1 。</p>
+<p>数组下标从0开始，查找24时最终返回下标2。</p>
+<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
+<li><p>说明</p>
+<p>二分法前提是数组是有序的；</p>
+<p>要查找的数我们称为关键值</p>
+</li>
+<li><p>阐述实现</p>
+<p>在一个有序数组中二分查找一个数，数组长度为n。</p>
+<p>1、设置左右下标变量：left，right，初始时left为0，right为n-1。</p>
+<p>2、求出中间下标，得到中间数</p>
+<p>3、如果中间数等于关键值则直接返回下标，</p>
+<p>​    如果中间数大于关键值则 right为中间下标-1</p>
+<p>​    如果中间数小于关键值则 left为中间下标+1</p>
+<p>4、如果未结束，则重复步骤2和3，重复的前提是不管left和right的值            如何改变，都要保证left&lt;right。</p>
+</li>
+<li><p>阐述转换通用代码</p>
+<p>步骤1：<code>int left=0,right =n-1;</code></p>
+<p>步骤4中说重复2和3步，说明这是一个循环，循环条件是left&lt;right，</p>
+<p>所以使用<code>while(left&lt;right)</code></p>
+</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public static int binarySearch(int[] arr, int key) &#123;</div><div class="line">	int left = 0, right = arr.length - 1;</div><div class="line">	while (left &lt; right) &#123;</div><div class="line">		int mid = (left + right) &gt;&gt; 1;</div><div class="line">		if (arr[mid] == key) &#123;</div><div class="line">			return mid;</div><div class="line">		&#125; else if (arr[mid] &gt; key) &#123;</div><div class="line">			right = mid - 1;</div><div class="line">		&#125; else &#123;</div><div class="line">			left = mid + 1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return -1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/03/算法查找之二分查找/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-算法排序之交换排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/03/算法排序之交换排序/">算法排序之交换排序</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/03/算法排序之交换排序/" class="archive-article-date">
+  	<time datetime="2017-05-03T13:04:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过交换排序，使得数组最终按非递减顺序排列。</p>
+<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
+<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
+<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
+<li><p>说明</p>
+<p>希望数组按非递减顺序排列，我们可以得到两点消息：1、数组中可能会有重复的元素，所以才说是非递减。2、排序后第一个元素是最小值 ，最后一个元素是最大值。</p>
+</li>
+<li><p>阐述实现</p>
+<p>第一轮，第一个元素分别与后面的每个元素比较，如果大于后面的元素则进行交换，把较小值交换到第一个元素位置，本轮结束后的第一个元素就是数组中最小值。</p>
+<p>第二轮，由于第一轮的第一个元素已经求出了最小值，所以第二轮从第二个元素开始，与后面的每个元素分别比较，如果大于后面的元素则进行交换，把较小值交换到第二个元素位置，本轮结束后的第二个元素就是数组中倒数第二小的值。</p>
+<p>以此类推，进行n-1轮比较，n为数组长度。之所以是n-1轮而不是n轮，是因为第i轮的i个元素要和后面的元素进行比较，如果是n轮，它本身就是最后的元素，不需要比较了。</p>
+</li>
+<li><p>阐述转换通用代码</p>
+<p>交换方法提取：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">void swap(int[] arr, int i,int j)&#123;</div><div class="line">  int tmp = arr[i];</div><div class="line">  arr[i] = arr[j];</div><div class="line">  arr[j] = tmp ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=0；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第二轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=1；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>每轮遍历出一个当前未排序中最小值，以此类推，遍历n-1轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for(int i=0;i&lt;n-1;i++)&#123;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void swapSort(int[] arr) &#123;</div><div class="line">	int length = arr.length;</div><div class="line">	for (int i = 0; i &lt; length-1 ; i++) &#123;</div><div class="line">		for (int j = i + 1; j &lt; length; j++) &#123;</div><div class="line">			if (arr[i] &gt;  arr[j]) &#123;</div><div class="line">				int tmp = arr[i];</div><div class="line">				arr[i] = arr[j];</div><div class="line">				arr[j] = tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/03/算法排序之交换排序/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java字符串压缩去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -890,507 +1248,6 @@
 
 
   
-    <article id="post-hexo本地图片发布后不能显示的问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/25/hexo本地图片发布后不能显示的问题/">hexo本地图片发布后不能显示的问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/25/hexo本地图片发布后不能显示的问题/" class="archive-article-date">
-  	<time datetime="2017-04-25T07:16:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是url地址是本地地址。这样如果你发布文章后，别人肯定是看不到你的图片的。这样体验很不好。最开始的想法就是先在简书发布，发布后图片url都是来自简书网站url，而非本地，这样是没问题的，但是这样自己的网站显示个图片还要依赖简书平台，可能代码写多了，总感觉耦合性太强啊~~所以就在找怎么把两个平台独立开来，而自己网站又能发布图片的方法。</p>
-<p>经过查找发现hexo-asset-image插件可以比较好的支持本地图片发布。</p>
-<h1 id="开启资源文件支持"><a href="#开启资源文件支持" class="headerlink" title="开启资源文件支持"></a>开启资源文件支持</h1><p>在hexo目录下的_config.yml配置文件中找到这个配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: false</div></pre></td></tr></table></figure>
-<p>把这里的false改为true。开启hexo的媒体文件支持。</p>
-<h1 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h1><p>在命令行中，跳转到hexo目录下，执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</div></pre></td></tr></table></figure>
-<p>会自动安装插件，插件会安装到node_moudules目录下，<img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.33.13.png" alt="屏幕快照 2017-04-25 下午3.33.13"></p>
-<p>同时还会自动在hexo目录下package.json中添加一行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;hexo-asset-image&quot;: &quot;git+https://github.com/CodeFalling/hexo-asset-image.git&quot;,</div></pre></td></tr></table></figure>
-<blockquote>
-<p>说这些就是想告诉你，不用的时候如何卸载：删掉那个文件夹和那一行就行了。</p>
-</blockquote>
-<p>以上执行完毕后，在命令行执行：hexo new “文件”时，会在_post文件夹下同时生成md文件和同名文件夹，这个同名文件夹就是用来放图片的，把你在该文章中需要显示的图片放进去，然后在markdown中选择该目录下的图片使用，这样当md编译生成html文件时，会把图片拷贝到html文件同目录中。最后执行hexo d -g 部署到服务器时，图片也就被部署到服务器中了。</p>
-<p>注意：如果直接把图片拖动到markdown编辑器中，其路径可能为绝对路径，需要改下：</p>
-<p><img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.34.46.png" alt="屏幕快照 2017-04-25 下午3.34.46"></p>
-<p>修改为相对路径：</p>
-<p><img src="/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照 2017-04-25 下午3.45.37.png" alt="屏幕快照 2017-04-25 下午3.45.37"></p>
-<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>上面说了hexo new “名称” ，这样每次同时生成文件和文件夹，当然也可以不使用命令行，直接在_post目录下手动创建md文件和文件夹亦可，手动创建的好处时如果你的文章不需要图片，那么你可以不创建对应的文件夹。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/25/hexo本地图片发布后不能显示的问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android开发之JNI深入解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/25/Android开发之JNI深入解析/">Android开发之JNI深入解析</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/25/Android开发之JNI深入解析/" class="archive-article-date">
-  	<time datetime="2017-04-24T16:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
-<p>本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。</p>
-</blockquote>
-<h1 id="通过本章可以了解到这些："><a href="#通过本章可以了解到这些：" class="headerlink" title="通过本章可以了解到这些："></a>通过本章可以了解到这些：</h1><ul>
-<li><p>jni介绍</p>
-</li>
-<li><p>为什么要学习jni</p>
-</li>
-<li><p>jni使用流程是怎样的</p>
-</li>
-<li><p>如何Java调用C</p>
-</li>
-<li><p>如何C调用Java</p>
-</li>
-<li><p>了解jni源码和机制</p>
-<p>​</p>
-</li>
-</ul>
-<h1 id="什么是jni、ndk"><a href="#什么是jni、ndk" class="headerlink" title="什么是jni、ndk"></a>什么是jni、ndk</h1><p>jni(java native interface)，Java本地接口。在Java中接口就是一套协议标准，同样这里也是如此，jni是一套让Java和C互通有无的一套标准。看到这脑子里应该有个大概情况：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-062e7ea6f0c17ef3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-21 下午12.17.32.png"><br>ndk,它只是一套开发工具集，如果再给它加个形容词，那就是本地开发工具集，即Native Development Kit。</p>
-<blockquote>
-<p>注意区别ndk和jni，一个是一套软件，一个是套标准。</p>
-</blockquote>
-<h1 id="为什么使用jni"><a href="#为什么使用jni" class="headerlink" title="为什么使用jni"></a>为什么使用jni</h1><ul>
-<li><p>1、效率问题</p>
-<p>C和C++效率比Java要高一些，虽然这种差距随着Java性能优化有越来越小的趋势，但是总归还是存在的。</p>
-</li>
-<li><p>2、安全问题</p>
-<p>虽然没有绝对的安全，但是相对来说C语言的反汇编比Java更不容易看懂</p>
-</li>
-<li><p>3、代码复用</p>
-<p>C语言年代久远，有很多现成的库，如果Java需要使用同样的功能，不需要自己从新实现，jni直接调用库即可。</p>
-</li>
-</ul>
-<h1 id="jni步骤流程"><a href="#jni步骤流程" class="headerlink" title="jni步骤流程"></a>jni步骤流程</h1><p>就像使用Java类要先加载类文件一样，要使用jni，首先要加载类库，然后通过Java层方法调用JNI层方法。调用流程如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4792879d689f210.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-21 下午1.29.01.png"></p>
-<p>上面是调用流程，调用的前提是先完成开发，也就是说开发流程是要先完成Java层方法和Native层方法。</p>
-<p>基础介绍的差不多了，下面开始进入实际开发部分：</p>
-<h1 id="Java调用C"><a href="#Java调用C" class="headerlink" title="Java调用C"></a>Java调用C</h1><h2 id="看看一般开发时Java如何调用C"><a href="#看看一般开发时Java如何调用C" class="headerlink" title="看看一般开发时Java如何调用C"></a>看看一般开发时Java如何调用C</h2><p>Java层和JNI层之间源码是有对应规律的。</p>
-<p>JNI实现文件命名为：Java全类名(下划线作分隔符)</p>
-<p>JNI实现方法命名为：Java_为前缀+全类名(下划线作分隔符)+方法名</p>
-<p>例如，现在Java定义native方法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class TestNative &#123;</div><div class="line">    // Used to load the &apos;native-lib&apos; library on application startup.</div><div class="line">    public native int add(int a,int b);</div><div class="line">    public native String stringFromJNI();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>那么按照规范，jni实现方法名为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Java_com_example_jenson_myapplication_TestNative_add(JNIEnv *env, jobject instance, jint a,</div><div class="line">                                                     jint b) &#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Java声明方法和jni实现方法都已经实现了，接下来就是调用实现库(.so文件，关于so的编译不在讲):</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static &#123;</div><div class="line">       System.loadLibrary(&quot;native-lib&quot;);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>上面是最普通也是最简单的jni开发流程三步走，但是其中有很多问题没有弄明白，比如JNIENV是什么，Java中参数int为什么变为jint了等等。</p>
-<p>学习最好的方法就是看代码，那么我们就看看系统jni使用示例：Log打印系统。</p>
-<h2 id="看看Log打印系统Java如何调用C"><a href="#看看Log打印系统Java如何调用C" class="headerlink" title="看看Log打印系统Java如何调用C"></a>看看Log打印系统Java如何调用C</h2><p>首先我们看下Log.java的源码才好下手。</p>
-<h3 id="简单介绍Log-java源码"><a href="#简单介绍Log-java源码" class="headerlink" title="简单介绍Log.java源码"></a>简单介绍Log.java源码</h3><p>看看Log.i()方法实现：</p>
-<pre><code>public static int i(String tag, String msg, Throwable tr) {
-    return println_native(LOG_ID_MAIN, INFO, tag, msg + &apos;\n&apos; + getStackTraceString(tr));
-}
-
-public static int w(String tag, String msg) {
-    return println_native(LOG_ID_MAIN, WARN, tag, msg);
-}
-</code></pre><p>可以看出真正的打印是在 println_native 方法中，而这个方法是一个本地方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public static native int println_native(int bufID,int priority, String tag, String msg);</div><div class="line">public static native boolean isLoggable(String tag, int level);</div></pre></td></tr></table></figure>
-<blockquote>
-<p>原来JNI中Java层的实现这么简单，只需要声明一个native修饰的方法，传入必须的参数就行了。</p>
-</blockquote>
-<p>下面研究中心要转移到jni层实现了，源码那么多如何找到jni实现呢？</p>
-<h3 id="JNI层源码探究"><a href="#JNI层源码探究" class="headerlink" title="JNI层源码探究"></a>JNI层源码探究</h3><ul>
-<li><p>查找JNI层实现</p>
-<p>按照上面说的规范，直接查找Java类Log的全类名。</p>
-<p>例如 Log类全类名为android.util.Log，其对应的Native文件名称应该为android_util_Log。我们试下：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午9.57.43.png" alt="屏幕快照 2017-04-24 下午9.57.43"></p>
-<p>果真找到了，下面开始探究源码：</p>
-</li>
-<li><p>JNI源码开扒</p>
-<p>我们首先找到Java层println_native方法JNI层的实现，按照上面的命名规范，没有找到 Java_android_util_Log_println_native ，但是却找到了这个方法：android_util_Log_println<em>native ，看来Android系统级的JNI没有遵循规范啊。不过没关系，*只要记住JNI有两种方式：一种是遵守JNI命名规范的日常使用方法，另一种是是这种系统级JNI没有Java</em>前缀就行了* 。不影响我们看代码：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午10.29.17.png" alt="屏幕快照 2017-04-24 下午10.29.17"></p>
-<p>可以看出该方法代码比较少，因为我们是研究JNI，而不是研究Log如何打印，所以方法中对于其他方法调用不再深入研究，但是现在Java声明方法和JNI实现方法都找到了，但是系统式如何把这两个给关联起来的呢？我们继续往下看：</p>
-<p>​</p>
-</li>
-<li><p>Java和JNI双方的方法如何对上眼的</p>
-<p>在该文件中有这样一个方法 register_android_util_Log，我们看下实现：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.04.06.png" alt="屏幕快照 2017-04-24 下午11.04.06"></p>
-<p>这个方法前面大部分代码给我的第一感觉就是：这么TM和Java的反射好像啊！难道是C++版反射？反正意思就是通过Java的Log类拿到该类的几个变量(C语言中习惯称为域)</p>
-<p>看最后一行调用了AndroidRunTime的方法，顾名思义是注册本地方法，其中参数 gMethods  值得一看：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-24 下午11.14.36.png" alt="屏幕快照 2017-04-24 下午11.14.36"></p>
-<p>这是一个静态结构体数组，这个比较有意思，看注释可以看出大括弧的三个元素分别是名称、签名和函数指针。而名称恰恰是Java里面声明的本地方法，签名是本地方法的签名，函数指针指向的是Native实现方法。一个数组就把Java方法和Native方法给关联起来了。因为Java支持方法重载，为了确保调用的唯一性，于是就有了方法签名，下面说说方法签名机制：</p>
-<p>首先看下签名规则：</p>
-<p>| Java类型  | 类型签名    |<br>| ——- | ——- |<br>| boolean | Z       |<br>| byte    | B       |<br>| char    | C       |<br>| long    | J       |<br>| float   | F       |<br>| double  | D       |<br>| short   | S       |<br>| int     | I       |<br>| 其他类     | L全类名;   |<br>| 数组      | [元素类型签名 |</p>
-<blockquote>
-<p>注意：方法签名格式分为两部分：参数类型签名+返回值类型签名，类型签名之间没有空格，其中参数类型签名使用()括起来，有多少参数就有多少参数类型签名，格式为： <em>(参数1类型签名参数n类型签名)返回值类型签名</em> ,注意全类名用”/“分隔。</p>
-</blockquote>
-<p>拿 boolean isLoggable(String tag, int level) 举例来说其方法签名为(Ljava/lang/String;I)Z 。</p>
-<p>说完了方法签名规则，我们继续，在android_util_Log文件中有jni方法，所以有了 register_android_util_Log 来注册该文件的jni方法，那么在其他有jni方法的文件中是不是也有类似的register_xxx方法呢？怀着好奇心，打开Parcel看看：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">int register_android_os_Parcel(JNIEnv* env)</div><div class="line">&#123;</div><div class="line">    jclass clazz;</div><div class="line"></div><div class="line">    clazz = env-&gt;FindClass(kParcelPathName);</div><div class="line">    LOG_FATAL_IF(clazz == NULL, &quot;Unable to find class android.os.Parcel&quot;);</div><div class="line"></div><div class="line">    gParcelOffsets.clazz = (jclass) env-&gt;NewGlobalRef(clazz);</div><div class="line">    gParcelOffsets.mNativePtr = env-&gt;GetFieldID(clazz, &quot;mNativePtr&quot;, &quot;J&quot;);</div><div class="line">    gParcelOffsets.obtain = env-&gt;GetStaticMethodID(clazz, &quot;obtain&quot;,</div><div class="line">                                                   &quot;()Landroid/os/Parcel;&quot;);</div><div class="line">    gParcelOffsets.recycle = env-&gt;GetMethodID(clazz, &quot;recycle&quot;, &quot;()V&quot;);</div><div class="line"></div><div class="line">    return AndroidRuntime::registerNativeMethods(</div><div class="line">        env, kParcelPathName,</div><div class="line">        gParcelMethods, NELEM(gParcelMethods));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>看到register_android_os_Parcel 方法证实了我的猜测，所以根据归纳法暂且可以认为系统的涉及jni方法的文件中都会有对应的注册方法而且最终都调用了AndroidRunTime::registerNativeMethods()。</p>
-<p>其实registerNativeMethods方法的第二个参数是类文件路径：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AndroidRuntime::registerNativeMethods(env, &quot;android/util/Log&quot;, gMethods, NELEM(gMethods));</div></pre></td></tr></table></figure>
-<p>而mMethods数组中又对应了JNI实现方法和Java方法，通过registerNativeMethods方法调用jniRegisterNativeMethods()然后调用RegisterNatives方法最终告诉了JVM Java类和JNI实现方法的映射关系，这样就完了Java调用C。</p>
-<p>​</p>
-</li>
-<li><p>Java类型和JNI类型如何对应的</p>
-<p>首先看下基本类型的对应关系：</p>
-<p>| Java类型  | JNI类型    | 字长   |<br>| ——- | ——– | —- |<br>| boolean | jboolean | 8位   |<br>| byte    | jbyte    | 8位   |<br>| char    | jchar    | 16位  |<br>| short   | jshort   | 16位  |<br>| int     | jint     | 32位  |<br>| long    | jlong    | 64位  |<br>| float   | jfloat   | 32位  |<br>| double  | jdouble  | 64位  |<br>| void    | void     |      |</p>
-<p>很好奇jboolean这些类型是怎么来的，既然是jni类型就先去jni.h头文件下看看有没有定义：</p>
-<p><img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-25 下午12.56.36.png" alt="屏幕快照 2017-04-25 下午12.56.36"></p>
-<p>竟然找到了，本来以为jxx是jni新开发的类型，原来就是对C类型起了一个别名。简单理解就是把Java基本类型的值给到了占用同样字节大小的C类型上。</p>
-<p>下面再看看引用类型对应关系：</p>
-<p>| Java类型                                   | JNI类型                                    |<br>| —————————————- | —————————————- |<br>| java.lang.Class                          | class                                    |<br>| java.lang.String                         | string                                   |<br>| java.lang.Throwable                      | throwable                                |<br>| Object[]、boolean[]、byte[]、char[]、short[]、int[]、long[]、float[]、double[] | jobjectArray、jbooleanArray、jbyteArray、jcharArray、jshortArray、jintArray、jlongArray、jfloatArray、jdoubleArray |<br>| java.lang.Object                         | jobject                                  |</p>
-<p>​</p>
-</li>
-</ul>
-<h1 id="C调用Java"><a href="#C调用Java" class="headerlink" title="C调用Java"></a>C调用Java</h1><p>上面介绍了Java如何调用C，本节讲下C如何调用Java：</p>
-<p>C调用Java按流程走也很简单，通过全类名找到类，找到类构造方法，根据构造方法构建对象，根据对象调用变量和方法。OK，我们通过一个示例来讲解下：</p>
-<p>示例流程是这样子，我们通过Java方法stringFromJNI调用JNI实现方法，但是在实现方法中并没有直接返回一个字符串，而是该方法中调用了一个Java方法，其实现如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public String callByNative( )&#123;</div><div class="line">    return &quot;callByNative&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>返回的字符串直接显示在TextView中：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sample_text = (TextView) findViewById(R.id.sample_text);</div><div class="line">TestNative testNative = new TestNative();</div><div class="line">sample_text.setText(testNative.stringFromJNI());</div></pre></td></tr></table></figure>
-<p>接下来我们需要自己在stringFromJNI的实现方法中调用Java层的callByNative：</p>
-<p>首先通过全类名找到类，通过FindClass方法,参数为全类名：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jclass clazz = env-&gt;FindClass(&quot;com/example/jenson/myapplication/TestNative&quot;);</div></pre></td></tr></table></figure>
-<p>然后通过构造方法构建对象，要调用构造方法先找到构造方法的ID：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jmethodID mid = env-&gt;GetMethodID(clazz,&quot;&lt;init&gt;&quot;,&quot;()V&quot;);</div><div class="line">jobject  obj= env-&gt;NewObject(clazz,mid);</div></pre></td></tr></table></figure>
-<p>要注意的是：构造方法比较特殊，所以第二个参数的方法名要传”<init>“，第三个参数为方法签名，至于签名规则上面有介绍，根据参数自己填写签名。</init></p>
-<p>创建对象时使用NewObject，需要传入创建对象使用的类及构造方法对应的id。</p>
-<p>对象上面已经创建完成，接下来可以调用实例方法callByNative了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mid = env-&gt;GetMethodID(clazz,&quot;callByNative&quot;,&quot;()Ljava/lang/String;&quot;);</div><div class="line">jstring js = (jstring) env-&gt;CallObjectMethod(obj, mid);</div></pre></td></tr></table></figure>
-<p>注意调用一个方法前要先获取方法ID，然后通过Call<type>Method方法传入对象和方法ID，达到实例方法调用。</type></p>
-<p>因为callByNative方法返回的是String，所以按照上面说的应该调用CallStringMethod方法，但是jni没有这个方法，所以直接使用了CallObjectMethod，然后强制转换来得到String，比较Object是一切类基类。</p>
-<p>最终stringFromJNI实现代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Java_com_example_jenson_myapplication_TestNative_stringFromJNI(JNIEnv *env, jobject instance) &#123;</div><div class="line"></div><div class="line">    // 这里通过C调用callByNative方法</div><div class="line">    jclass clazz = env-&gt;FindClass(&quot;com/example/jenson/myapplication/TestNative&quot;);</div><div class="line">    jmethodID mid = env-&gt;GetMethodID(clazz,&quot;&lt;init&gt;&quot;,&quot;()V&quot;);</div><div class="line">    jobject  obj= env-&gt;NewObject(clazz,mid);</div><div class="line">    mid = env-&gt;GetMethodID(clazz,&quot;callByNative&quot;,&quot;()Ljava/lang/String;&quot;);</div><div class="line">    jstring js = (jstring) env-&gt;CallObjectMethod(obj, mid);</div><div class="line">    if (js ==NULL) &#123;</div><div class="line">        js = (jstring) &quot;hello&quot;;</div><div class="line">    &#125;</div><div class="line">    return js;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>看下执行结果，达到了我们的要求：<img src="/2017/04/25/Android开发之JNI深入解析/屏幕快照 2017-04-25 下午2.54.18.png" alt="屏幕快照 2017-04-25 下午2.54.18"></p>
-<p>jnienv提供了很多参数实现C调用Java，诸如：GetMethodID、FindClass、GetFieldID，还有静态方法和域：GetStaticMethodID、GetStaticFieldID等，感兴趣的可以去jni.h去研究下。</p>
-<h1 id="JNIENV是什么鬼"><a href="#JNIENV是什么鬼" class="headerlink" title="JNIENV是什么鬼"></a>JNIENV是什么鬼</h1><h1 id="JNI异常处理"><a href="#JNI异常处理" class="headerlink" title="JNI异常处理"></a>JNI异常处理</h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/25/Android开发之JNI深入解析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-30分钟搭建自己的网站" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/23/30分钟搭建自己的网站/">Hexo+GitHub 30分钟拥有属于自己的网站</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/23/30分钟搭建自己的网站/" class="archive-article-date">
-  	<time datetime="2017-04-23T04:57:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月23日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
-<p>很多ITer都想拥有一个个人网站，记录自己工作经验和生活。哪怕已经有了简书这样好的一个平台，但是那种情节并没有就此打消。下面给大家分享下我个人网站创建流程及中途遇到的坑，希望对那些想建站却又嫌麻烦的朋友有所帮助。</p>
-</blockquote>
-<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在开始前要做好系列准备工作，如环境搭建、GitHub账号注册等。下面分别来看下要做哪些：</p>
-<h2 id="GitHub官网"><a href="#GitHub官网" class="headerlink" title="GitHub官网"></a>GitHub官网</h2><ul>
-<li><p>账号注册<br>  如果你还没有GitHub账号，请前往<a href="https://github.com/" target="_blank" rel="external">官网注册</a>。如果已经注册过，请登录</p>
-</li>
-<li><p>创建仓库<br>  登录后，点击左上角+号创建仓库：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-076ccee5f6f8713c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index.png"><br>在新的创建页面，写上   yourname.github.io ，然后下方选框勾上(我当时没有勾后来本地文件向git提交时出了点小问题)。yourname最好就是你的GitHub的名字，</p>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-68a0ed4e1dd8fc95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index1.png"></p>
-<h2 id="Git客户端安装"><a href="#Git客户端安装" class="headerlink" title="Git客户端安装"></a>Git客户端安装</h2><ul>
-<li>安装<br>  Git可以直接从<a href="https://git-scm.com/downloads" target="_blank" rel="external">官网下载</a> 系统版本自行选择。<br>Git安装基本也可以认为一路next点过来，如果你的 on the Desktop没有勾选的话，为了方便可以勾选上</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-1b1909354d7db0bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index3.png"></p>
-<ul>
-<li>验证<br>  同样为了查看是否正确安装，需要从命令行查看能否正确显示版本信息：  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git --version</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>如果显示了版本信息，则说明正确安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git version 2.12.2.windows.2</div></pre></td></tr></table></figure></p>
-<ul>
-<li><p>配置git</p>
-<ul>
-<li><p>配置Git的user name和email：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global user.name &quot;你的名字&quot;</div><div class="line">git config --global user.email &quot;你的git使用的邮箱&quot;</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成密钥：<br>  使用ssh-keygen -t rsa -C 你的git使用的邮箱 命令生成密钥，输入命令后连续点击好像三四次回车就行，出现的一些设置提示不用管，全部默认就行。执行完成后会生成密钥文件如图：</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6a752a526843a255.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index4.png"></p>
-<ul>
-<li><p>密钥和GitHub关联<br>  编辑器打开id_rsa.pub复制所有内容。<br>  打开GitHub Setting如图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-fbd7fecb18c1669f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index5.png"><br>找到SSH key，点击new SSH key，把内容粘贴到key文本框中，title随意起，保存，如下图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-091de6d5aa8682a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index6.png"></p>
-</li>
-</ul>
-<h2 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h2><ul>
-<li>安装<br>  我笔记本是win系统，所以关于Node.js下载：<br><a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi" target="_blank" rel="external">32位下载</a><br><a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi" target="_blank" rel="external">64位下载</a><br>如果是其他系统，需要自行去官网下载。<br>关于安装没有什么注意的，反正我是一路next，如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c67fd55dd0a8089a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index7.png"></p>
-<ul>
-<li><p>验证<br>  安装完成后，可以像JDK一样，使用命令行验证是否正确安装，在cmd命令窗口执行以下：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node -v</div><div class="line">npm -v</div></pre></td></tr></table></figure>
-<p>  如果正确显示了当前版本号，则说明安装成功：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">v4.2.3</div><div class="line">2.14.7</div></pre></td></tr></table></figure>
-<p>  否则，请根据具体异常信息搜索下。</p>
-</li>
-</ul>
-<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><ul>
-<li><p>安装<br>  在合适地方创建一个文件夹并命名，例如我在 E盘 下创建了hexo文件夹：<br>  通过命令行进入该文件夹目录下：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">C:\Users\Jenson&gt;E:</div><div class="line">E:\&gt;cd hexo</div><div class="line">E:\hexo&gt;</div></pre></td></tr></table></figure>
-<p>  执行 npm命令 安装hexo：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure>
-<p>  期间cmd窗口会自动刷出一些信息，可能会有warn不过不要紧。待命令执行完毕，继续执行</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo --save</div></pre></td></tr></table></figure>
-<p>  这时又会有信息刷屏，信息滚动完毕，通过</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo -v</div></pre></td></tr></table></figure>
-<p>  命令验证是否安装成功。<br>  如果出现了下面字样，说明安装成功了：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-89811acc016bd532.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index12.png"></p>
-</li>
-<li><p>初体验</p>
-<ul>
-<li><p>窗口中继续执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init</div></pre></td></tr></table></figure>
-<p>初始化</p>
-</li>
-<li><p>执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install</div></pre></td></tr></table></figure>
-<p>自动安装所需组件，直到完成</p>
-</li>
-<li><p>执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
-</li>
-<li><p>执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s</div></pre></td></tr></table></figure>
-<p>启动本地服务，在浏览器地址栏输入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:4000/</div></pre></td></tr></table></figure>
-<p>看能否打开本地部署的网站，如果成功打开，恭喜你本地部署完成。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="本地hexo关联到GitHub"><a href="#本地hexo关联到GitHub" class="headerlink" title="本地hexo关联到GitHub"></a>本地hexo关联到GitHub</h1><p>本地网站已经可以打开，接下来要把hexo部署到GitHub上，让别人也能访问。<br>在hexo目录下找到_config.yml文件，按如下格式修改成你的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repo: https://github.com/Jensonss/Jensonss.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
-<p>修改完成后，执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo d -g</div></pre></td></tr></table></figure></p>
-<p>生成部署，这样就会根据刚才的GitHub地址commit到GitHub仓库，首次的话会弹窗让你输入你的GitHub登录的用户名和密码。登录成功后就会自动commit了。<br>此时通过 <code>xxx.github.io</code> 应该是可以访问你的网站了。</p>
-<h1 id="个性域名绑定"><a href="#个性域名绑定" class="headerlink" title="个性域名绑定"></a>个性域名绑定</h1><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>我的域名是在万网购买的，不过进入网站才发现万网成了阿里云的二级域名，不知道什么时候被阿里云收购了。购买通道<a href="https://wanwang.aliyun.com/" target="_blank" rel="external">猛戳</a>,用淘宝账号直接登录，由于是个人使用所以我选了 .me 类型的，而且13元/首年价格比较便宜，以后续费价格好像是89元/年。</p>
-<p>付款时会让选择持有者是个人还是企业，选择个人，然后创建一个个人使用的信息模板，可能由于我的是.me域名，所以没有进行身份证验证也能使用。</p>
-<h2 id="域名DNS解析"><a href="#域名DNS解析" class="headerlink" title="域名DNS解析"></a>域名DNS解析</h2><p>购买后的域名不能直接使用，因为现在只是把域名颁发给你，但是还没有和IP地址绑定，还需要进行DNS解析。<br>在你购买后，可以直接点击域名进入域名控制台，页面长这样：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-d32c7d57b43b7559.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index8.png"></p>
-<p>点击左侧的菜单-云解析DNS，然后再点击你的域名：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bbca539b61e74602.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index9.png"></p>
-<p>进入了新手引导设置：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-97f979d9b478abb8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index10.png"></p>
-<p>如果点击设置网站解析，进入的页面只能输入一个IP地址，由于GitHub有2个IP地址要绑定，所以我直接选择了高级设置，点击 添加解析，添加如下三条记录，其中xxx.github.io  ，xxx为你得GitHub配置的名称：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-15f930f4842f9ba2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index11.png"></p>
-<p>注意：CNAME 必须大写<br>这样过几分钟域名就会生效了，</p>
-<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>上一步DNS解析用到了CNAME ，现在在hexo/source目录下创建一个不带后缀的文件，名为CNAME，内容只填写你购买的域名：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-617ebc06eda88723.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
-<p>然后执行<code>hexo d -g</code>部署到GitHub上。这样就能通过你的新域名访问你的网站了。</p>
-<p>如果只是把hexo部署到GitHub上，半个小时是足够的，但是入果从找网站买域名、DNS解析、绑定。前前后后大概花了近1个小时。可能因为我有强迫症的缘故，填写一些信息时总是要想好久。</p>
-<p>话不多说，看看完成后的网站吧：<a href="www.jensondev.me">我的站点</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/23/30分钟搭建自己的网站/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
@@ -1505,11 +1362,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1533,6 +1390,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
@@ -1541,11 +1402,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1557,7 +1418,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1565,7 +1426,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
