@@ -174,6 +174,291 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python自动化之hexo自动发布和提交源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/Python自动化之hexo自动发布和提交源码/">Python自动化之hexo自动发布和提交源码</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/Python自动化之hexo自动发布和提交源码/" class="archive-article-date">
+  	<time datetime="2017-07-26T08:43:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>现在的博客系统是使用hexo+github搭建的静态页面系统。</p>
+<p>博客文章页面和源码都由github托管。所以每次发布文章时要跳转到相应目录下，执行<code>hexo d -g</code>命令发布新文章。如果要同步源码方便其他机器也能写文章，那么还要使用<code>git add .</code>添加暂存，<code>git commit -m message</code>添加本地和<code>git push</code>推送远程分支。</p>
+<h1 id="0x01-自动化设想"><a href="#0x01-自动化设想" class="headerlink" title="0x01 自动化设想"></a>0x01 自动化设想</h1><p>开始因为新鲜感这些操作都还好，顺便练手。但是时间久了就觉得每次都操作这么多次太浪费时间了。</p>
+<p>这时候就萌生了自动化命令的想法，一步操作完成所有这些命令，该多省心！</p>
+<h1 id="0x02-自动化设计"><a href="#0x02-自动化设计" class="headerlink" title="0x02 自动化设计"></a>0x02 自动化设计</h1><p>实现自动化首先想到的是Python，而且最近也学了不久，练练手也刚好。</p>
+<p>由于都是终端命令，所以要先实现让Python执行终端命令的方法：</p>
+<p>①通过<code>os.system</code>方法</p>
+<p>②通过<code>subprocess.Popen</code>方法</p>
+<p>通过使用发现都可以执行命令，但是如果命令分开执行，命令之间的前后结果不会关联起来，比如我第一个命令执行<code>cd /jenson/</code>，再执行第二个命令<code>pwd</code>时时发现路径仍然是旧路径。</p>
+<p>所以现在面临新的问题：多个命令一起执行。如何一起执行呢？</p>
+<p>其实上面①和②都支持多命令一起，譬如：</p>
+<p>如果多个命令共同执行，不管前一个命令是否成功，都要执行后一个则使用<strong>&amp;&amp;</strong>连接命令：</p>
+<ul>
+<li><code>os.system(&#39;cmd1 &amp;&amp; cmd2&#39;)</code></li>
+<li><code>subprocess.Popen(&#39;cmd1 &amp;&amp; cmd2&#39;, shell=True)</code></li>
+</ul>
+<p>如果前一个命令执行成功才执行后一个命令，则使用<strong>;</strong>连接：</p>
+<ul>
+<li><code>os.system(&#39;cmd1 ; cmd2&#39;)</code></li>
+<li><code>subprocess.Popen(&#39;cmd1 ; cmd2&#39;, shell=True)</code></li>
+</ul>
+<p>接下来代码实现：</p>
+<h1 id="0x03-自动化实现"><a href="#0x03-自动化实现" class="headerlink" title="0x03 自动化实现"></a>0x03 自动化实现</h1><p>创建<code>AutoCommit.py</code>文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line"></div><div class="line"><span class="comment"># 跳转工作目录</span></div><div class="line">to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line"><span class="comment"># 发布命令</span></div><div class="line">to_deploy = <span class="string">'hexo d -g'</span></div><div class="line"><span class="comment"># git add命令</span></div><div class="line">to_add = <span class="string">'git add .'</span></div><div class="line"><span class="comment"># git commit命令</span></div><div class="line">to_commit = <span class="string">'git commit -m 新添加文章'</span> </div><div class="line"><span class="comment"># git push命令</span></div><div class="line">to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>这就算完成了，运行<code>python3 AutoCommit.py</code>时候也能正常提交。</p>
+<p>但是这样感觉还能再完善些，继续改造：</p>
+<h1 id="0x04-自动化优化"><a href="#0x04-自动化优化" class="headerlink" title="0x04 自动化优化"></a>0x04 自动化优化</h1><p>首先关于git commit的信息，我想实现自定义，而不是每次都固定这几个内容，这样不容易区分每次版本提交了哪些内容。</p>
+<p>现在的初步想法是在终端执行<code>python3 AutoCommit.py</code>命令时，同时接收命令行参数作为提交的内容，比如这样<code>python3 AutoCommit.py  message</code>。</p>
+<p>Python文件要接收命令行参数，需要使用<code>sys</code>模块，接收参数：</p>
+<p><code>message = sys.argv[1]</code>。</p>
+<p>这里argv[0]表示脚本名，argv[1]开始才表示后面的参数</p>
+<p>同时接收message后判断是否为空，如果为空在使用默认提交信息，所以封装一个方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isNullMessage</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    判断消息是否为空,如果为空赋默认值</div><div class="line">    :param message:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> len(message.strip()) == <span class="number">0</span>:</div><div class="line">        message = <span class="string">'提交新文章'</span></div><div class="line">    <span class="keyword">return</span> message</div></pre></td></tr></table></figure>
+<p>既然判断提交信息都封装到方法了，那么这一些列命令也应该封装到方法中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deployAndGitPush</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    hexo静态页面发布和源码push git服务器</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="comment"># 跳转工作目录</span></div><div class="line">    to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line">    <span class="comment"># 发布命令</span></div><div class="line">    to_deploy = <span class="string">'hexo d -g'</span></div><div class="line">    <span class="comment"># git add命令</span></div><div class="line">    to_add = <span class="string">'git add .'</span></div><div class="line">    <span class="comment"># git commit命令</span></div><div class="line">    to_commit = <span class="string">'git commit -m '</span> + message</div><div class="line">    <span class="comment"># git push命令</span></div><div class="line">    to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">    tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>最终调用如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deployAndGitPush(message=isNullMessage(message=message))</div></pre></td></tr></table></figure>
+<p>OK，自动化优化完成。执行<code>python3 AutpCommit.py Android文章提交</code>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">自动化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/自动化/" class="article-tag-list-link color4">自动化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/Python自动化之hexo自动发布和提交源码/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Android各版本新功能及区别" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/Android各版本新功能及区别/">Android各版本新功能及区别</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/Android各版本新功能及区别/" class="archive-article-date">
+  	<time datetime="2017-07-26T05:17:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Android版本更新快，版本越来越越多，兼容性也就要越来越注意，注意各个版本新加了哪些功能，哪些功能和API对开发有帮助，都要心里有个数</p>
+<h1 id="0x01-Android8-0"><a href="#0x01-Android8-0" class="headerlink" title="0x01 Android8.0"></a>0x01 Android8.0</h1><p>waiting…</p>
+<h1 id="0x02-Android-7-0-Nougat"><a href="#0x02-Android-7-0-Nougat" class="headerlink" title="0x02 Android 7.0 Nougat"></a>0x02 Android 7.0 Nougat</h1><ul>
+<li><p>引入了一个新的而且非常需要的多任务处理功能 — 多窗口支持。</p>
+</li>
+<li><p><strong>通知增强</strong> 通知界面直接回复等</p>
+</li>
+<li><p>进一步的低耗电模式Doze 增强版</p>
+</li>
+<li><p>删除了三个常用隐式广播 — <code>CONNECTIVITY_ACTION</code>、<code>ACTION_NEW_PICTURE</code> 和<code>ACTION_NEW_VIDEO</code> </p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x03-Android-6-0-Marshmallow"><a href="#0x03-Android-6-0-Marshmallow" class="headerlink" title="0x03 Android 6.0 Marshmallow"></a>0x03 Android 6.0 Marshmallow</h1><ul>
+<li><p><strong>引入了一种新的权限模式 运行时权限检查</strong></p>
+<p>对于以 Android 6.0（API 级别 23）或更高版本为目标平台的应用，请务必在运行时检查和请求权限。要确定您的应用是否已被授予权限，请调用新增的 <code>checkSelfPermission()</code> 方法。要请求权限，请调用新增的 <code>requestPermissions()</code> 方法。即使您的应用并不以 Android 6.0（API 级别 23）为目标平台，您也应该在新权限模式下测试您的应用。</p>
+</li>
+<li><p>取消支持 Apache HTTP 客户端</p>
+<p>Android 6.0 版移除了对 Apache HTTP 客户端的支持。如果您的应用使用该客户端，并以 Android 2.3（API 级别 9）或更高版本为目标平台，请改用 <code>HttpURLConnection</code> 类。此 API 效率更高，因为它可以通过透明压缩和响应缓存减少网络使用，并可最大限度降低耗电量。要继续使用 Apache HTTP API，您必须先在 <code>build.gradle</code>文件中声明以下编译时依赖项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line">    useLibrary &apos;org.apache.http.legacy&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>低电耗模式和应用待机模式：Doze模式</strong></p>
+</li>
+<li><p><strong>新的通知构建方法</strong></p>
+<p>移除了 <code>Notification.setLatestEventInfo()</code> 方法。请改用 <code>Notification.Builder</code> 类来构建通知。要重复更新通知，请重复使用 <code>Notification.Builder</code> 实例。调用 <code>build()</code> 方法可获取更新后的 <code>Notification</code> 实例。</p>
+<p><code>adb shell dumpsys notification</code> 命令不再打印输出您的通知文本。请改用 <code>adb shell dumpsys notification --noredact</code> 命令打印输出 notification 对象中的文本。</p>
+</li>
+<li><p><strong>Android 密钥库变更</strong></p>
+<p>从此版本开始，<a href="https://developer.android.com/training/articles/keystore.html" target="_blank" rel="external">Android 密钥库提供程序</a>不再支持 DSA。但仍支持 ECDSA。</p>
+<p>停用或重置安全锁定屏幕时（例如，由用户或设备管理员执行此类操作时），系统将不再删除需要闲时加密的密钥，但在上述事件期间会删除需要闲时加密的密钥。</p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x04-Android-5-0-Lollipop"><a href="#0x04-Android-5-0-Lollipop" class="headerlink" title="0x04 Android 5.0 Lollipop"></a>0x04 Android 5.0 Lollipop</h1><ul>
+<li><p><strong>引入了Material Design并提供了UI工具包</strong></p>
+</li>
+<li><p><strong>把ART模式作为默认的运行模式</strong></p>
+</li>
+<li><p>Android 5.0 中的通知更醒目、更便于访问并且可配置程度更高。</p>
+</li>
+<li><p>Android 5.0 还引入了 Android 扩展包 (AEP)，支持 OpenGL ES 3.1</p>
+</li>
+<li><p>Android 5.0 引入了全新的 Camera API</p>
+</li>
+<li><p>在 Android 5.0 中，新增的倾斜检测器传感器有助于改善受支持设备上的 Activity 识别</p>
+</li>
+<li><p>新增的 <strong>Job Scheduling</strong> API 允许通过将作业推迟到稍后或指定条件下（如设备充电或连入 WLAN 时）运行来优化电池寿命。</p>
+<p>新增的 <code>dumpsys batterystats</code> 命令可生成<strong>电池使用情况统计信息</strong>，可通过它了解整个系统的耗电情况，以及了解应用对设备电池的影响。</p>
+</li>
+</ul>
+<h1 id="0x05-Android-4-4-Jelly-Bean"><a href="#0x05-Android-4-4-Jelly-Bean" class="headerlink" title="0x05 Android 4.4 Jelly Bean"></a>0x05 Android 4.4 Jelly Bean</h1><ul>
+<li><p>Android 4.4 针对硬件传感器批处理引入平台支持</p>
+</li>
+<li><p><strong>全屏沉浸模式</strong></p>
+<p>Android 4.4 添加了新的全屏沉浸模式，让您可以在手机和平板电脑上创建从一个边缘延伸到另一个边缘的全出血 UI，<strong>隐藏所有系统 UI</strong>，例如状态栏和导航栏。它适用于鲜艳的视觉内容，例如照片、视频、地图、书本和游戏。</p>
+<p>在新模式中，系统 UI 保持隐藏状态，即使在用户与您的应用或游戏交互时 - 您可以从屏幕上的任何位置（甚至在系统栏占据的其他位置）捕获触摸事件。这是您在应用或游戏中创建更大、更加丰富和更加沉浸式的 UI 并减少视觉分散的绝佳方式。</p>
+<p>为确保用户在全屏沉浸模式中始终能轻松、一致地访问系统 UI， Android 4.4 支持新的手势。现在，在沉浸模式中，从屏幕顶部或底部边缘滑动手指可以显示系统 UI。</p>
+<p>要返回沉浸模式，用户可以触摸栏界限之外的屏幕或等待一小段时间，让栏自动隐藏。为提供一致的用户体验，新的手势还与之前隐藏状态栏的方法配合使用。</p>
+</li>
+<li><p>安全增强功能</p>
+<p>SELinux（强制模式）<br>Android 4.4 将其 SELinux 配置从“permissive”更新为“enforcing”。这意味着，在具有强制政策的 SELinux 域中，将阻止潜在的政策违规行为。</p>
+<p>改进加密算法<br>Android 添加了对另外两种加密算法的支持，进一步提升了其安全性。已向密钥库提供程序添加椭圆曲线数字签名算法 (ECDSA) 支持，从而提升了数字签名的安全性，适用于应用签名或数据连接等场景。实现 Scrypt 密钥派生函数，以保护用于全磁盘加密的加密密钥。</p>
+</li>
+<li><p>内存使用率分析工具procstats</p>
+</li>
+<li><p>Android 4.4 包含新的开发者选项：设备内存状态和分析</p>
+<p>Settings &gt; Developer options &gt; Process stats</p>
+</li>
+<li><p><strong>可重复使用的位图，参考<a href="https://developer.android.com/reference/android/graphics/BitmapFactory.Options.html#inBitmap" target="_blank" rel="external">inBitmap</a></strong></p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/Android各版本新功能及区别/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android事件传递机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1276,265 +1561,6 @@
 
 
   
-    <article id="post-hexo添加网易云音乐播放器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/hexo添加网易云音乐播放器/">hexo添加网易云音乐播放器</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/hexo添加网易云音乐播放器/" class="archive-article-date">
-  	<time datetime="2017-07-14T06:47:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月14日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-拿到网易云音乐外链"><a href="#0x00-拿到网易云音乐外链" class="headerlink" title="0x00 拿到网易云音乐外链"></a>0x00 拿到网易云音乐外链</h1><p>因为版权问题有一些音乐不能设置外链，所以要先找到合适的音乐，然后点击生成外链播放器，音乐界面如下：</p>
-<p><img src="/2017/07/14/hexo添加网易云音乐播放器/音乐界面.png" alt="音乐界面"></p>
-<p>如果没有权限会弹出提示，如果有权限就会跳转对应页面<a href="http://music.163.com/#/outchain/2/114442/" target="_blank" rel="external">外链页面</a>。</p>
-<h1 id="0x01-给文章添加播放器"><a href="#0x01-给文章添加播放器" class="headerlink" title="0x01 给文章添加播放器"></a>0x01 给文章添加播放器</h1><p>给文章添加外链很简单，直接复制上面的外链到x.md文件中即可。运行后就会在对应的发布后的文章中显示出播放器。</p>
-<h1 id="0x02-给主题yilia添加播放器"><a href="#0x02-给主题yilia添加播放器" class="headerlink" title="0x02 给主题yilia添加播放器"></a>0x02 给主题yilia添加播放器</h1><ul>
-<li><p>找到对应布局ejs文件添加外链</p>
-<p>找到<code>theme/yilia/layout/_partial/left-col.ejs</code>文件，在末尾header标签前添加外链：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">	<span class="comment">&lt;!-- 添加网易云音乐插件--&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">"header_music"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">iframe</span> <span class="attr">frameborder</span>=<span class="string">"no"</span> <span class="attr">border</span>=<span class="string">"0"</span> 	<span class="attr">marginwidth</span>=<span class="string">"0"</span> <span class="attr">marginheight</span>=<span class="string">"0"</span> <span class="attr">width</span>=<span class="string">250</span> <span class="attr">height</span>=<span class="string">86</span> <span class="attr">src</span>=<span class="string">"//music.163.com/outchain/player?type=2&amp;id=114442&amp;auto=0&amp;height=66"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">nav</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><code>auto=0</code>为关闭自动播放，<code>auto=1</code>为开启自动播放。</p>
-</li>
-<li><p>找到对应css文件添加格式</p>
-<p>找到<code>theme/yilia/source/main.266c1c.css</code>文件。如果你的目录下没有这个文件，那就在同目录下找到类似<code>main.xxx.css</code>文件。不同版本名称可能有不同，格式都一样。</p>
-<p>在最后添加代码：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.header_music</span> &#123;</div><div class="line">  <span class="attribute">margin-top</span>: <span class="number">140px</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>最后如果当时没有刷新过来，</p>
-<p>就执行<code>hexo clean</code>清除缓存，</p>
-<p>然后在<code>hexo d -g</code>。</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/hexo添加网易云音乐播放器/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hexo更换主题及配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/hexo更换主题及配置/">hexo更换主题及配置</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/hexo更换主题及配置/" class="archive-article-date">
-  	<time datetime="2017-07-14T02:42:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月14日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>看惯了next样式，这几天想换一款主题换个心情。挑来挑去发现<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">yilia</a>主题不错，左侧导航和个人信息，还能带头像。so接下来就开始主题切换流程。</p>
-<h1 id="0x01-下载"><a href="#0x01-下载" class="headerlink" title="0x01 下载"></a>0x01 下载</h1><ul>
-<li><p>切换到你的博客根目录下</p>
-<p>如我的是这样子：<code>cd ~/Downloads/hexo/</code> </p>
-</li>
-<li><p>下载前进行源文件备份</p>
-<p>首先<code>hero d -g</code>把当前博客从新部署，</p>
-<p>然后把源文件全部提交：<code>git add .</code>添加临时，<code>git commit -m &quot;全部备份&quot;</code>提交本地，<code>git push origin xxx</code>push到服务器。</p>
-</li>
-<li><p>在根目录下执行clone</p>
-<p>命令：<code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p>
-</li>
-</ul>
-<h1 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h1><p>完成了下载和备份，接下来开始主题切换，在未确认完全完成之前不要执行<code>hexo d -g</code>部署到服务器，先在本地测试。</p>
-<ul>
-<li><p>切换到主题</p>
-<p>打开博客根目录下的<code>_config.yml</code>文件，找到<code>theme: next</code>栏目把next改为<code>yilia</code>后保存。如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/换主题.png" alt="换主题"></p>
-<p>​</p>
-</li>
-<li><p>运行本地测试</p>
-<p>执行<code>hexo s -debug</code>启动本地测试服务，打开<code>http://localhost:4000/</code>页面发现主题已经切换过来了，切换就是这么简单，但是还有很多地方要配置。</p>
-</li>
-</ul>
-<h1 id="0x03-配置"><a href="#0x03-配置" class="headerlink" title="0x03 配置"></a>0x03 配置</h1><p>这里的配置如果没有特殊说明，默认都是<code>themes/yilia/_config.yml</code>文件的配置</p>
-<ul>
-<li><p>menu配置</p>
-<p>默认menu中只有主页和相册，但是我不想要相册，同时还想添加特定的栏目。</p>
-<p>相册不要只要注释掉就好了，但是如何添加特定栏目呢？我们在写文章时头部文件都有类似的格式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">title: hexo更换主题</div><div class="line">date: 2017-07-14 10:42:33</div><div class="line">tags: 网络</div><div class="line">categories: 网络</div></pre></td></tr></table></figure>
-<p>其中tags和categories都是可以在menu中使用的，比如我想添加Android菜单，只要设置<code>Android: /tags/Android</code>即可，前提是我之前的文章中已经存在tags为Android的标签了。当然如果设置categories也可以的，只要之前有设置过这个类型即可，比如<code>Java: /categories/Java</code>。我的配置如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/menu配置.png" alt="menu配置"></p>
-<p>这样在点击Android菜单后，右侧都是Android类型的文章列表。</p>
-</li>
-<li><p>subnav配置</p>
-<p>subnav主要是个人其他站点相关页面链接，如果没有则直接注释掉，但是为了UI好看还是留了三个：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># SubNav</div><div class="line">subnav:</div><div class="line">  #github: &quot;#&quot;</div><div class="line">  #weibo: &quot;#&quot;</div><div class="line">  #rss: &quot;#&quot;</div><div class="line">  #zhihu: &quot;#&quot;</div><div class="line">  #qq: &quot;840418528&quot;</div><div class="line">  #weixin: &quot;#&quot;</div><div class="line">  jianshu: &quot;http://www.jianshu.com/u/1b5cb41384f4&quot;</div><div class="line">  #douban: &quot;#&quot;</div><div class="line">  #segmentfault: &quot;#&quot;</div><div class="line">  #bilibili: &quot;#&quot;</div><div class="line">  #acfun: &quot;#&quot;</div><div class="line">  mail: &quot;mailto:songjlforever@foxmail.com&quot;</div><div class="line">  #facebook: &quot;#&quot;</div><div class="line">  google: &quot;https://www.google.com&quot;</div><div class="line">  #twitter: &quot;#&quot;</div><div class="line">  #linkedin: &quot;#&quot;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>头像配置</p>
-<p>在source下新建一个文件夹起个名字比如：image。头像就是一个图片为什么还要单独建个文件夹？因为下面的打赏里面还要微信和支付宝两个二维码图片！将头像图片拷贝到image目录中，在配置文件中找到<code>avatar:</code>修改如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#你的头像url</div><div class="line">avatar: /image/avatar.jpg</div></pre></td></tr></table></figure>
-<p>刷新<code>http://localhost:4000/</code>发现头像已经出现了。</p>
-</li>
-<li><p>打赏配置</p>
-<p>把支付宝和微信收款二维码拷贝到上面创建的image文件夹。然后在配置文件中修改如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 打赏</div><div class="line"># 打赏type设定：0-关闭打赏； 1-文章对应的md文件里有reward:true属性，才有打赏； 2-所有文章均有打赏</div><div class="line">reward_type: 2</div><div class="line"># 打赏wording</div><div class="line">reward_wording: &apos;谢谢您的支持!&apos;</div><div class="line"># 支付宝二维码图片地址，跟你设置头像的方式一样。比如：/assets/img/alipay.jpg</div><div class="line">alipay: /image/alipay.jpg</div><div class="line"># 微信二维码图片地址</div><div class="line">weixin: /image/weixin.png</div></pre></td></tr></table></figure>
-<p>显示效果如图：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/打赏效果图.png" alt="打赏效果图"></p>
-<p>​</p>
-<p>​</p>
-</li>
-<li><p>关于我配置</p>
-<p>smart_menu中有关于我的menu，点击后只显示配置文件中的<code>aboutme: 一个从运维转战开发的程序猿。</code>这里内容格式样式太少，我想像next主题中关于我是个单独的页面，那样看起来更舒服。</p>
-<p>当然可以实现，</p>
-<p>首先注释掉<code>smart_menu</code>中的<code>aboutme</code>。</p>
-<p>然后在配置文件顶部<code>menu</code>中添加<code>关于我: /about/</code>。这是刷新UI后点击关于我，打开新的页面如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/关于我.png" alt="关于我"></p>
-<p>​</p>
-</li>
-<li><p>点击所有文章提示模块缺失</p>
-<p>问题如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/模块缺失.png" alt="模块缺失"></p>
-<p>首先确保node版本在6.2以上，我的是6.10.2仍然出现这个问题。</p>
-<p>然后在博客根目录下执行<code>npm i hexo-generator-content --save</code></p>
-<p>最后在根目录中的<code>_config.yml</code>里添加如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">jsonContent:</div><div class="line">  meta: false</div><div class="line">  pages: false</div><div class="line">  posts:</div><div class="line">    title: true</div><div class="line">    date: true</div><div class="line">    path: true</div><div class="line">    text: false</div><div class="line">    raw: false</div><div class="line">    content: false</div><div class="line">    slug: false</div><div class="line">    updated: false</div><div class="line">    comments: false</div><div class="line">    link: false</div><div class="line">    permalink: false</div><div class="line">    excerpt: false</div><div class="line">    categories: false</div><div class="line">    tags: true</div></pre></td></tr></table></figure>
-<blockquote>
-<p>注意这段内容格式，尤其是多余空格，否则可能引发其他错误</p>
-</blockquote>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/hexo更换主题及配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1661,6 +1687,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -1669,11 +1699,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1685,11 +1715,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1701,11 +1731,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1714,10 +1748,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
             
             <div class="clearfix"></div>
