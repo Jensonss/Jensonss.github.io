@@ -571,6 +571,92 @@
 
 
   
+    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
+<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1048,121 +1134,6 @@
 
 
   
-    <article id="post-详解设计模式之单例模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/详解设计模式之单例模式/">详解设计模式之单例模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/详解设计模式之单例模式/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>####1、什么是单例?<br>单例顾名思义就是单个实例。日常工作都是自由的通过构造方法创建对象的，所以听到单例时，我们应该意识到其下是暗含了2层意思的，①构造方法不在为你所用，你不需要知道如何创建对象。②我会给你提供获取实例的方法，不需要你自己动手创建。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-fc54578715942157.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="单例示意图.png"></p>
-<p>不清楚uml类关系的请移步<a href="http://www.jianshu.com/p/bf23234d5d2b" target="_blank" rel="external">UML–类图详解</a></p>
-<p>####2、什么情况下使用单例?<br>当你需要内存中只有一个对象的时候。</p>
-<p>####3、为什么使用单例？<br>单例保证了内存中数据的唯一性，同时也降低了内存的开销。</p>
-<p>####3、如何实现单例？<br>在1中了解到两层含义后，对我们创建单例类是有帮助的，总结下就是：①私有化构造方法  ②对外提供获取实例方法</p>
-<ul>
-<li>饿汉式<br>所谓饿汉式，就是在类加载的时候就迫不及待的创建对象，等到调用获取实例方法直接拿到对象返回即可。<br>看实现代码：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class HungarySingleton &#123;</div><div class="line">	private static HungarySingleton intance = new HungarySingleton();</div><div class="line">	</div><div class="line">	private HungarySingleton()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	public static HungarySingleton getInstance()&#123;</div><div class="line">		return intance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>懒汉式是最简单的单例模式，在类加载的时候就实例化，避免了多线程问题的同时保证了实例唯一性。缺点是即使不需要时候也会被实例，会占用内存。所以推荐在实例占用内存不多的情况下使用，否则请使用下面几种方式。</em></p>
-<ul>
-<li>懒汉式<br>懒汉式，就是在首次调用的时候才会创建实例，相比饿汉式，延迟了初始化。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class LayzySingleton &#123;</div><div class="line">	private static LayzySingleton instance = null;</div><div class="line"></div><div class="line">	private LayzySingleton() &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	public LayzySingleton getInstatnce() &#123;</div><div class="line">		if (null == instance) &#123;</div><div class="line">			instance = new LayzySingleton();</div><div class="line">		&#125;</div><div class="line">		return instance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面代码有个问题，就是在多线程调用中会有产生多个实例的隐患，所以需要使用线程同步：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class LayzySingleton &#123;</div><div class="line">	private static LayzySingleton instance = null;</div><div class="line"></div><div class="line">	private LayzySingleton() &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	public synchronized LayzySingleton getInstatnce() &#123;</div><div class="line">		if (null == instance) &#123;</div><div class="line">			instance = new LayzySingleton();</div><div class="line">		&#125;</div><div class="line">		return instance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>synchronized的加入虽然解决了多实例的隐患，但是又带来了性能低下的问题，因为我们只需要在首次创建对象时让同步产生作用即可，其后的调用无需同步，现在只要是调用该方法就同步，看来还需要改进</em><br>下面使用双重校验加锁(DCL)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public class LayzySingleton &#123;</div><div class="line">	private static LayzySingleton instance = null;</div><div class="line"></div><div class="line">	private LayzySingleton() &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	public  LayzySingleton getInstatnce() &#123;</div><div class="line">		if (null == instance) &#123;</div><div class="line">			synchronized(LayzySingleton.class)&#123;</div><div class="line">				if (null == instance) &#123;</div><div class="line">					instance = new LayzySingleton();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return instance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>现在多线程问题解决了，性能也得到优化了是不是双重校验加锁就完美了呢？<br>NO~<br>在Java并发编程中的指令重排序中有讲到双重校验加锁失效问题。<br>要禁止指令重排序需要使用volatile修饰变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private volatile static LayzySingleton instance = null;</div></pre></td></tr></table></figure>
-<ul>
-<li>静态内部类<br>如果觉得饿汉式占内存，懒汉式又要考虑多线程问题，那么可以使用静态内部类可能是你想要的：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Singleton &#123;</div><div class="line">	</div><div class="line">	private Singleton()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	public Singleton getInstance()&#123;</div><div class="line">		return Holder.instance;</div><div class="line">	&#125;</div><div class="line">	private class Holder&#123;</div><div class="line">		private  static final  Singleton instance = new Singleton();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>静态内部类避免了加载Singleton类时就初始化问题，只有在调用getInstance时才会致使Holder类被加载并初始化，同时也避免了线程安全问题和性能问题，推荐使用此方法。</em></p>
-<ul>
-<li>枚举式<br>如果觉得上面的还是麻烦，可以使用枚举单例，<br>代码实现：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public enum EnumSingleton &#123;</div><div class="line">	</div><div class="line">	INSTANCE ;</div><div class="line">	</div><div class="line">	int num = 33;</div><div class="line">	String config = &quot;jenson&quot;;</div><div class="line">	</div><div class="line">	public void doSomething()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>枚举单例也可以有属性可以有方法，重要的是枚举默认就是线程安全的。</em></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/详解设计模式之单例模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -1289,19 +1260,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1309,11 +1268,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1325,7 +1296,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1333,7 +1304,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1345,11 +1316,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1358,10 +1333,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
             
             <div class="clearfix"></div>
