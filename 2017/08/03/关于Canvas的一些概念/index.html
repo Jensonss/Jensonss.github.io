@@ -6,17 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017/4 | Jenson</title>
+  <title>关于Canvas的一些概念 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录工作、生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jenson">
-<meta property="og:url" content="http://yoursite.com/archives/2017/04/index.html">
+  <meta name="description" content="前言在Android开发中不管是图片的绘制还是控件的绘制都少不了Canvas的参与。 Canvas如此重要，对其多一些了解自然是对开发有益的。 获得对象有两种获得Canvas对象的方法：  重写onDraw方法，使用参数中的Canvas 直接创建Canvas对象  它有什么用Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为An">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Canvas的一些概念">
+<meta property="og:url" content="http://yoursite.com/2017/08/03/关于Canvas的一些概念/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="记录工作、生活">
+<meta property="og:description" content="前言在Android开发中不管是图片的绘制还是控件的绘制都少不了Canvas的参与。 Canvas如此重要，对其多一些了解自然是对开发有益的。 获得对象有两种获得Canvas对象的方法：  重写onDraw方法，使用参数中的Canvas 直接创建Canvas对象  它有什么用Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为An">
+<meta property="og:updated_time" content="2017-08-03T08:29:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jenson">
-<meta name="twitter:description" content="记录工作、生活">
+<meta name="twitter:title" content="关于Canvas的一些概念">
+<meta name="twitter:description" content="前言在Android开发中不管是图片的绘制还是控件的绘制都少不了Canvas的参与。 Canvas如此重要，对其多一些了解自然是对开发有益的。 获得对象有两种获得Canvas对象的方法：  重写onDraw方法，使用参数中的Canvas 直接创建Canvas对象  它有什么用Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为An">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -172,36 +174,184 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-关于Canvas的一些概念" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于Canvas的一些概念
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/关于Canvas的一些概念/" class="archive-article-date">
+  	<time datetime="2017-08-03T06:46:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在Android开发中不管是图片的绘制还是控件的绘制都少不了<strong>Canvas</strong>的参与。</p>
+<p><strong>Canvas</strong>如此重要，对其多一些了解自然是对开发有益的。</p>
+<h1 id="获得对象"><a href="#获得对象" class="headerlink" title="获得对象"></a>获得对象</h1><p>有两种获得Canvas对象的方法：</p>
+<ul>
+<li>重写onDraw方法，使用参数中的Canvas</li>
+<li>直接创建Canvas对象</li>
+</ul>
+<h1 id="它有什么用"><a href="#它有什么用" class="headerlink" title="它有什么用"></a>它有什么用</h1><p>Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为Android开发中，Canvas不仅提供了动画特效还提供了常见图形绘制方法，比如圆形、矩形、扇形等。</p>
+<p>在进行绘制过程中，还需要借助Pain辅助，Paint可以理解为画笔。</p>
+<h1 id="绘制图形方法"><a href="#绘制图形方法" class="headerlink" title="绘制图形方法"></a>绘制图形方法</h1><ul>
+<li><p>绘制文字</p>
+<p><code>drawText(String text, float x, float y, Paint paint)</code></p>
+<p><code>drawText(char[] text, int index, int count, float x, float y, Paint paint)</code></p>
+<p><code>drawText(CharSequence text, int start, int end, float x, float y, Paint paint)</code></p>
+<p><strong>float x</strong>：文本开始的x轴位置</p>
+<p><strong>float y</strong>：文本开始的y轴位置</p>
+<p><strong>text</strong>：要绘制的文本</p>
+<p><strong>paint</strong>: 使用的画笔</p>
+<p><strong>start</strong>：文本开始的位置</p>
+<p><strong>end</strong>：文本结束的位置</p>
+<p>​</p>
+</li>
+<li><p>绘制圆形</p>
+<p><code>drawCircle(float cx, float cy, float radius, Paint paint)</code></p>
+<p><strong>float cx</strong>：圆心x轴坐标</p>
+<p><strong>float cy</strong>：圆心y轴坐标</p>
+<p><strong>float radius</strong>：圆半径</p>
+<p><strong>paint</strong>：画笔</p>
+<p>​</p>
+</li>
+<li><p>绘制线条</p>
+<p><code>drawLine(float startX, float startY, float stopX, float stopY, Paint paint)</code></p>
+<p><strong>float startX</strong>：起点x坐标</p>
+<p><strong>float startY</strong>：起点y坐标</p>
+<p><strong>float stopX</strong>：终点x坐标</p>
+<p><strong>float stopY</strong>：终点y坐标</p>
+<p>​</p>
+</li>
+<li><p>绘制椭圆</p>
+<p><code>drawOval(float left, float top, float right, float bottom, Paint paint)</code></p>
+<p><code>drawOval(RectF oval, Paint paint)</code></p>
+<p>这里的两个方法可以是一样的，因为绘制一个<strong>RectF</strong>也是需要方法一中的四个点。</p>
+<p><strong>float left</strong>：左下</p>
+<p><strong>float top</strong>：左上</p>
+<p><strong>float right</strong>：右上</p>
+<p><strong>float bottom</strong>：右下</p>
+<p>​</p>
+</li>
+<li><p>绘制弧度</p>
+<p><code>drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
+<p>​</p>
+<p><code>drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
+<p><strong>float startAngle</strong>：开始角度</p>
+<p><strong>float sweepAngle</strong>：扫过角度</p>
+<p><strong>boolean useCenter</strong>：是否和中心连线 </p>
+<p>​</p>
+</li>
+<li><p>绘制矩形</p>
+<p><code>drawRect(float left, float top, float right, float bottom, Paint paint)</code></p>
+<p><code>drawRect(Rect r, Paint paint)</code></p>
+<p>​</p>
+</li>
+<li><p>绘制多边形</p>
+<p>多边形绘制需要用到Path，路径类</p>
+<p>用到moveTo，lineTo等常用方法</p>
+<p><code>moveTo(float x, float y)</code></p>
+<p><code>lineTo(float x, float y)</code></p>
+<p>​</p>
+</li>
+<li><p>绘制赛贝尔曲线</p>
+<p>赛贝尔曲线的绘制也用到了Path。</p>
+<p><code>quadTo(float x1, float y1, float x2, float y2)</code></p>
+<p>​</p>
+</li>
+<li><p>绘制点</p>
+<p><code>drawPoint(float x, float y, Paint paint)</code></p>
+<p><code>drawPoints(float[] pts, Paint paint)</code></p>
+<p><strong>float x</strong>：点x轴坐标</p>
+<p><strong>float y</strong>：点y轴坐标</p>
+<p><strong>float pts</strong>：点数组，每两个值组合一个点，最后如果不够2个点则忽略。</p>
+<p>​</p>
+</li>
+<li><p>绘制图片</p>
+<p><code>drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)</code></p>
+<p>​</p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="动画方法"><a href="#动画方法" class="headerlink" title="动画方法"></a>动画方法</h1><ul>
+<li><p>位移</p>
+<p><code>translate(float dx, float dy)</code></p>
+<p><strong>float dx</strong>：x轴移动距离</p>
+<p><strong>float dy</strong>：y轴移动距离</p>
+<p>​</p>
+</li>
+<li><p>缩放</p>
+<p><code>scale(float sx, float sy)</code></p>
+<p><code>scale(float sx, float sy, float px, float py)</code></p>
+<p><strong>float sx</strong>：x轴放大倍数</p>
+<p><strong>float sy</strong>：y轴放大倍数</p>
+<p><strong>float px, float py</strong>：以该点为中心缩放</p>
+</li>
+<li><p>旋转</p>
+<p><code>rotate(float degrees)</code></p>
+<p><code>rotate(float degrees, float px, float py)</code></p>
+<p><strong>float degrees</strong>：旋转角度</p>
+<p><strong>float px, float py</strong>：以px，py组成的点为中心旋转degrees角度</p>
+</li>
+</ul>
+<h1 id="save和restore"><a href="#save和restore" class="headerlink" title="save和restore"></a>save和restore</h1><ul>
+<li><p>save保存画布</p>
+<p>把save之前的数据保存起来，以便后续的操作在一个新的图层。</p>
+</li>
+<li><p>restore合并图层</p>
+<p>把save之前和之后的多个图层进行合并</p>
+<p>​</p>
+<p>​</p>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢您的支持!<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/image/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/image/weixin.png">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/27/Android进程和线程/" class="archive-article-date">
-  	<time datetime="2017-04-27T12:36:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/27/Android进程和线程/">Android进程和线程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -213,7 +363,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -226,461 +376,105 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/08/03/关于Canvas的一些概念/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/27/Android内存分析工具之MAT详解/" class="archive-article-date">
-  	<time datetime="2017-04-27T05:07:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2017/08/02/Python爬虫爬取简书首页文章-二/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Python爬虫爬取简书首页文章(二)
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/27/Android内存分析工具之MAT详解/">Android内存分析工具之MAT详解</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/25/2016公司清明节坝上草原/" class="archive-article-date">
-  	<time datetime="2017-04-25T09:35:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/25/2016公司清明节坝上草原/">2016公司清明节坝上草原</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/生活/" class="article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/25/2016圆明园荷花节/" class="archive-article-date">
-  	<time datetime="2017-04-25T09:27:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/25/2016圆明园荷花节/">2016圆明园荷花节</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/生活/" class="article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/25/2015圆明园荷花节/" class="archive-article-date">
-  	<time datetime="2017-04-25T08:15:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/25/2015圆明园荷花节/">2015圆明园荷花节</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/生活/" class="article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/25/hexo本地图片发布后不能显示的问题/" class="archive-article-date">
-  	<time datetime="2017-04-25T07:16:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/25/hexo本地图片发布后不能显示的问题/">hexo本地图片发布后不能显示的问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/25/Android开发之JNI深入解析/" class="archive-article-date">
-  	<time datetime="2017-04-24T16:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/25/Android开发之JNI深入解析/">Android开发之JNI深入解析</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/23/30分钟搭建自己的网站/" class="archive-article-date">
-  	<time datetime="2017-04-23T04:57:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月23日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/23/30分钟搭建自己的网站/">Hexo+GitHub 30分钟拥有属于自己的网站</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/22/Python入门系列(2) 字符串、变量和简单数据类型的上手/">Python入门系列(2):字符串、变量和简单数据类型的上手</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2017/04/page/2/">2</a><a class="page-number" href="/archives/2017/04/page/3/">3</a><a class="extend next" rel="next" href="/archives/2017/04/page/2/">Next &raquo;</a>
-    </nav>
+  
+
   
 
 
@@ -704,8 +498,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
