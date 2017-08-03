@@ -174,6 +174,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">WireShark the capture session could not be initiated (you don&#39;t have permission to capture on that device)异常</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/" class="archive-article-date">
+  	<time datetime="2017-08-03T11:07:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>异常信息如下：<strong>the capture session could not be initiated (you don’t have permission to capture on that device)</strong></p>
+<p>在WireShark启动后，选择网卡设备时，出现这个异常。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>由于是Mac系统，所以直接终端窗口命令行解决：</p>
+<p><strong>sudo chmod 777 /dev/bpf*</strong>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">WireShakr</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/WireShakr/" class="article-tag-list-link color5">WireShakr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Gradle和Gradle-Plugin之间对应关系" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1400,100 +1496,9 @@ If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
 
 
   
-    <article id="post-typeerror-module-init-takes-at-most-2-arguments-3-given" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">typeerror module.__init__() takes at most 2 arguments (3 given)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/" class="archive-article-date">
-  	<time datetime="2017-07-31T12:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月31日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> spiders , item</div><div class="line"><span class="keyword">from</span> scrapy.utils <span class="keyword">import</span> response</div><div class="line"></div><div class="line"><span class="keyword">from</span> daobanSpider.items <span class="keyword">import</span> Article</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">articleSpider</span><span class="params">(spiders)</span>:</span></div><div class="line">    name = <span class="string">"article"</span></div><div class="line">    allowed_domains = [<span class="string">"en.wikipedia.org"</span>]</div><div class="line">    start_urls = [<span class="string">"http://en.wikipedia.org/wiki/Main_Page"</span>,</div><div class="line">                  <span class="string">"http://en.wikipedia.org/wiki/Python_%28programming_language%29"</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    item = Article()</div><div class="line">    title = response.xpath(<span class="string">'//h1/text()'</span>)[<span class="number">0</span>].extract()</div><div class="line">    print(<span class="string">"Title is: "</span> + title)</div><div class="line">    item[<span class="string">'title'</span>] = title</div><div class="line">    <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p><code>class articleSpider(spiders):</code>这一行出现异常，信息如下：</p>
-<p>TypeError: module.<strong>init</strong>() takes at most 2 arguments (3 given)</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>我这是定义的一个class继承spider。但是这里提示类型错误，竟然还出现了module.<strong>init</strong>() 。。</p>
-<p>查找后才明白过来<code>from scrapy import spiders</code>导入的spiders不是类，而是从scrapy框架导入spiders模块，如要使用某些类，需要再通过module.class格式引入</p>
-<p>所以异常的那一行改为：<code>class articleSpider(spiders.CrawlSpider):</code>。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1617,11 +1622,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1629,7 +1634,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1645,11 +1650,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1657,11 +1662,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1677,11 +1686,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
