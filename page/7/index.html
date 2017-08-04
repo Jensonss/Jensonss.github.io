@@ -174,6 +174,190 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-30分钟搭建自己的网站" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/23/30分钟搭建自己的网站/">Hexo+GitHub 30分钟拥有属于自己的网站</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/23/30分钟搭建自己的网站/" class="archive-article-date">
+  	<time datetime="2017-04-23T04:57:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月23日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
+<p>很多ITer都想拥有一个个人网站，记录自己工作经验和生活。哪怕已经有了简书这样好的一个平台，但是那种情节并没有就此打消。下面给大家分享下我个人网站创建流程及中途遇到的坑，希望对那些想建站却又嫌麻烦的朋友有所帮助。</p>
+</blockquote>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在开始前要做好系列准备工作，如环境搭建、GitHub账号注册等。下面分别来看下要做哪些：</p>
+<h2 id="GitHub官网"><a href="#GitHub官网" class="headerlink" title="GitHub官网"></a>GitHub官网</h2><ul>
+<li><p>账号注册<br>  如果你还没有GitHub账号，请前往<a href="https://github.com/" target="_blank" rel="external">官网注册</a>。如果已经注册过，请登录</p>
+</li>
+<li><p>创建仓库<br>  登录后，点击左上角+号创建仓库：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-076ccee5f6f8713c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index.png"><br>在新的创建页面，写上   yourname.github.io ，然后下方选框勾上(我当时没有勾后来本地文件向git提交时出了点小问题)。yourname最好就是你的GitHub的名字，</p>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-68a0ed4e1dd8fc95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index1.png"></p>
+<h2 id="Git客户端安装"><a href="#Git客户端安装" class="headerlink" title="Git客户端安装"></a>Git客户端安装</h2><ul>
+<li>安装<br>  Git可以直接从<a href="https://git-scm.com/downloads" target="_blank" rel="external">官网下载</a> 系统版本自行选择。<br>Git安装基本也可以认为一路next点过来，如果你的 on the Desktop没有勾选的话，为了方便可以勾选上</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-1b1909354d7db0bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index3.png"></p>
+<ul>
+<li>验证<br>  同样为了查看是否正确安装，需要从命令行查看能否正确显示版本信息：  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git --version</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果显示了版本信息，则说明正确安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git version 2.12.2.windows.2</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>配置git</p>
+<ul>
+<li><p>配置Git的user name和email：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global user.name &quot;你的名字&quot;</div><div class="line">git config --global user.email &quot;你的git使用的邮箱&quot;</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成密钥：<br>  使用ssh-keygen -t rsa -C 你的git使用的邮箱 命令生成密钥，输入命令后连续点击好像三四次回车就行，出现的一些设置提示不用管，全部默认就行。执行完成后会生成密钥文件如图：</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6a752a526843a255.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index4.png"></p>
+<ul>
+<li><p>密钥和GitHub关联<br>  编辑器打开id_rsa.pub复制所有内容。<br>  打开GitHub Setting如图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-fbd7fecb18c1669f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index5.png"><br>找到SSH key，点击new SSH key，把内容粘贴到key文本框中，title随意起，保存，如下图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-091de6d5aa8682a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index6.png"></p>
+</li>
+</ul>
+<h2 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h2><ul>
+<li>安装<br>  我笔记本是win系统，所以关于Node.js下载：<br><a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x86.msi" target="_blank" rel="external">32位下载</a><br><a href="https://nodejs.org/dist/v4.2.3/node-v4.2.3-x64.msi" target="_blank" rel="external">64位下载</a><br>如果是其他系统，需要自行去官网下载。<br>关于安装没有什么注意的，反正我是一路next，如图：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c67fd55dd0a8089a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index7.png"></p>
+<ul>
+<li><p>验证<br>  安装完成后，可以像JDK一样，使用命令行验证是否正确安装，在cmd命令窗口执行以下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">node -v</div><div class="line">npm -v</div></pre></td></tr></table></figure>
+<p>  如果正确显示了当前版本号，则说明安装成功：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">v4.2.3</div><div class="line">2.14.7</div></pre></td></tr></table></figure>
+<p>  否则，请根据具体异常信息搜索下。</p>
+</li>
+</ul>
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><ul>
+<li><p>安装<br>  在合适地方创建一个文件夹并命名，例如我在 E盘 下创建了hexo文件夹：<br>  通过命令行进入该文件夹目录下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">C:\Users\Jenson&gt;E:</div><div class="line">E:\&gt;cd hexo</div><div class="line">E:\hexo&gt;</div></pre></td></tr></table></figure>
+<p>  执行 npm命令 安装hexo：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure>
+<p>  期间cmd窗口会自动刷出一些信息，可能会有warn不过不要紧。待命令执行完毕，继续执行</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo --save</div></pre></td></tr></table></figure>
+<p>  这时又会有信息刷屏，信息滚动完毕，通过</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo -v</div></pre></td></tr></table></figure>
+<p>  命令验证是否安装成功。<br>  如果出现了下面字样，说明安装成功了：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-89811acc016bd532.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index12.png"></p>
+</li>
+<li><p>初体验</p>
+<ul>
+<li><p>窗口中继续执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init</div></pre></td></tr></table></figure>
+<p>初始化</p>
+</li>
+<li><p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install</div></pre></td></tr></table></figure>
+<p>自动安装所需组件，直到完成</p>
+</li>
+<li><p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
+</li>
+<li><p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s</div></pre></td></tr></table></figure>
+<p>启动本地服务，在浏览器地址栏输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:4000/</div></pre></td></tr></table></figure>
+<p>看能否打开本地部署的网站，如果成功打开，恭喜你本地部署完成。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="本地hexo关联到GitHub"><a href="#本地hexo关联到GitHub" class="headerlink" title="本地hexo关联到GitHub"></a>本地hexo关联到GitHub</h1><p>本地网站已经可以打开，接下来要把hexo部署到GitHub上，让别人也能访问。<br>在hexo目录下找到_config.yml文件，按如下格式修改成你的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repo: https://github.com/Jensonss/Jensonss.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
+<p>修改完成后，执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo d -g</div></pre></td></tr></table></figure></p>
+<p>生成部署，这样就会根据刚才的GitHub地址commit到GitHub仓库，首次的话会弹窗让你输入你的GitHub登录的用户名和密码。登录成功后就会自动commit了。<br>此时通过 <code>xxx.github.io</code> 应该是可以访问你的网站了。</p>
+<h1 id="个性域名绑定"><a href="#个性域名绑定" class="headerlink" title="个性域名绑定"></a>个性域名绑定</h1><h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>我的域名是在万网购买的，不过进入网站才发现万网成了阿里云的二级域名，不知道什么时候被阿里云收购了。购买通道<a href="https://wanwang.aliyun.com/" target="_blank" rel="external">猛戳</a>,用淘宝账号直接登录，由于是个人使用所以我选了 .me 类型的，而且13元/首年价格比较便宜，以后续费价格好像是89元/年。</p>
+<p>付款时会让选择持有者是个人还是企业，选择个人，然后创建一个个人使用的信息模板，可能由于我的是.me域名，所以没有进行身份证验证也能使用。</p>
+<h2 id="域名DNS解析"><a href="#域名DNS解析" class="headerlink" title="域名DNS解析"></a>域名DNS解析</h2><p>购买后的域名不能直接使用，因为现在只是把域名颁发给你，但是还没有和IP地址绑定，还需要进行DNS解析。<br>在你购买后，可以直接点击域名进入域名控制台，页面长这样：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-d32c7d57b43b7559.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index8.png"></p>
+<p>点击左侧的菜单-云解析DNS，然后再点击你的域名：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bbca539b61e74602.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index9.png"></p>
+<p>进入了新手引导设置：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-97f979d9b478abb8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index10.png"></p>
+<p>如果点击设置网站解析，进入的页面只能输入一个IP地址，由于GitHub有2个IP地址要绑定，所以我直接选择了高级设置，点击 添加解析，添加如下三条记录，其中xxx.github.io  ，xxx为你得GitHub配置的名称：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-15f930f4842f9ba2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="index11.png"></p>
+<p>注意：CNAME 必须大写<br>这样过几分钟域名就会生效了，</p>
+<h2 id="域名绑定"><a href="#域名绑定" class="headerlink" title="域名绑定"></a>域名绑定</h2><p>上一步DNS解析用到了CNAME ，现在在hexo/source目录下创建一个不带后缀的文件，名为CNAME，内容只填写你购买的域名：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-617ebc06eda88723.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片.png"></p>
+<p>然后执行<code>hexo d -g</code>部署到GitHub上。这样就能通过你的新域名访问你的网站了。</p>
+<p>如果只是把hexo部署到GitHub上，半个小时是足够的，但是入果从找网站买域名、DNS解析、绑定。前前后后大概花了近1个小时。可能因为我有强迫症的缘故，填写一些信息时总是要想好久。</p>
+<p>话不多说，看看完成后的网站吧：<a href="www.jensondev.me">我的站点</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/23/30分钟搭建自己的网站/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -247,6 +431,365 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">使用Sublime text编译python3时中文打印异常问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
+<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
+<p>mark一下</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">Python入门系列(0):OSX系统下Python3的配置与安装</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
+<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
+<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
+<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
+<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-pycharm黄线问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/pycharm黄线问题/">pycharm黄线问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/pycharm黄线问题/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
+<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/pycharm黄线问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
+</li>
+<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
+</li>
+<li>3.执行执行<code>brew help</code>看是否有提示</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/osx如何安装Homrbrew/">展开全文 >></a>
         </p>
       
 
@@ -403,19 +946,19 @@
 
 
   
-    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
+      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
     </h1>
   
 
         
-        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
+        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
   	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
 </a>
         
@@ -423,13 +966,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ul>
-<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
-</li>
-<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
-</li>
-<li>3.执行执行<code>brew help</code>看是否有提示</li>
-</ul>
+        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
+<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
 
       
 
@@ -464,96 +1002,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx如何安装Homrbrew/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">使用Sublime text编译python3时中文打印异常问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
-<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
-<p>mark一下</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">展开全文 >></a>
         </p>
       
 
@@ -716,271 +1165,6 @@
 
 
   
-    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-pycharm黄线问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/pycharm黄线问题/">pycharm黄线问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/pycharm黄线问题/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
-<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/pycharm黄线问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">Python入门系列(0):OSX系统下Python3的配置与安装</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
-<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
-<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
-<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
-<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-Mac版eclipse中每次重启电脑后字体自动变小" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1040,111 +1224,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/22/Mac版eclipse中每次重启电脑后字体自动变小/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-关于家庭网络宽带、路由及上网设备那些事---后续篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事---后续篇/">关于家庭网络宽带、路由及上网设备那些事---后续篇</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事---后续篇/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:50:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>上一篇主要写了几点制约网速的可能原因，没有看过上一篇的请移步<a href="http://www.jianshu.com/p/f1018427d0eb" target="_blank" rel="external">关于家庭网络宽带、路由及上网设备那些事</a>。这一篇就分别介绍下宽带、路由和用网设备的一些知识。</p>
-<h3 id="家庭宽带的那些事"><a href="#家庭宽带的那些事" class="headerlink" title="家庭宽带的那些事"></a>家庭宽带的那些事</h3><p>网络出了问题都会打客服咨询，但是你知道你家的网络服务商是几级的吗？</p>
-<p>####1.宽带运营商分级</p>
-<p>目前宽带运营商一般分为三级即可，三级··立马就邪恶了。<br>一级服运营商是国家、省市、城域骨干网的建设者。主要有联通、电信、移动和广电，以前小的时候就有种说法叫南电信北联通。</p>
-<p>电信在一级运营商里算是老前辈了。之所以就叫北联通是因为北方以前上网是通过电话线来拨号的，座机的电话那时候归属网通，后来联通收购了网通。移动以前只有无限上网的业务，宽带业务应该是合并了铁通后才有的，广电应该近些年发展起来的，据说广电是租用电信和自建都有的。<br>二级运营商是租用了一级运营商的网络设备来发展的。如果一级运营商是厂家的话，二级运营商就相当于批发商了。主要有歌华宽带、长城宽带等。二级运营商的优势就是性价比较高和比较优质的售后。<br>三级运营商是写字楼和办公楼这类，背靠房地产开发商和物业提供商发展的。比如有些写字楼只提供某一种宽带，网络 差但又不允许公司拉其他服务商的宽带，着实可恨。</p>
-<p>看到这里相信大家对自家的网络提供商有了个大概了解，如果感兴趣请继续：</p>
-<h3 id="路由器的那些事"><a href="#路由器的那些事" class="headerlink" title="路由器的那些事"></a>路由器的那些事</h3><p>先上一张图放松下，你们觉得这张图说明了什么问题？<br><img src="http://upload-images.jianshu.io/upload_images/1796052-6efbb8ea799a2ea4.JPEG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="148318216333359786_620_1000.JPEG"><br>跟风！！中国人跟风习气太严重，一旦发现别人尝到了点甜头，马上就会有一大波人挤破头的往里钻。</p>
-<h4 id="1-互联网路由器兴起"><a href="#1-互联网路由器兴起" class="headerlink" title="1.互联网路由器兴起"></a>1.互联网路由器兴起</h4><p>也是由于跟风，前两年物联网炒的热闹，家中万物互联，有人分析路由器是物联设备走向网络的首个大门，所以就纷纷研发所谓智能路由器。某米、某为、某极和某数字加入战斗，互联网行业经常是老大和老二掐架，老三莫名的死了。这次乱战虽然没有谁阵亡，但是其实用户还是受益的。最起码手机app管理路由器算是普及了不少，查看联网设备和拉黑蹭网设备也方便不少。</p>
-<h4 id="2-智能路由器"><a href="#2-智能路由器" class="headerlink" title="2.智能路由器"></a>2.智能路由器</h4><p>个人觉得现在所谓的智能路由器其实就是互联网路由器后续发展的产物，而且其实在当不起“智能”二字，可能也是如此，所以目前对于智能路由器的定义也就是拥有独立的系统，可以扩展应用插件来实现不同的功能。<br>目前区别路由器是否智能，比较直观的应该是看官方对该型号路由器是否有一个app来支持其手机端操作。</p>
-<h4 id="3-双频路由器"><a href="#3-双频路由器" class="headerlink" title="3. 双频路由器"></a>3. 双频路由器</h4><p>上一篇中简单介绍了双频路由器的优点，这里在详细说下：<br>以前的无线路由器中只有一个频段就是2.4G，双频路由器中多了一个5G频段。两个频段是由802.11 工作组划分，每个频段又划分为若干信道<br>2.4 GHz (802.11b/g/n)信道图如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-fb028f78b96bfa77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="be261390397543.png"></p>
-<p>有人可能会说中国有13个信道可用，可以的啦。其实每个信道的频宽有22MHz，所以这13个信道有很多重叠的区域，不信你看</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e74729391935e100.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="880px-2.4_GHz_Wi-Fi_channels_(802.11b,g_WLAN).svg.png"></p>
-<p>这样一看刨去重叠的的那些，只有1、6和11三个信道可以互不影响。<br>下面我们再看看5G:<br><img src="http://upload-images.jianshu.io/upload_images/1796052-d39dbb91334a0469.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2e2eb9389b504fc21a213501e3dde71190ef6dbc.jpg"></p>
-<p>发现中国地5G有5个信道可以使用，看起来也没有比2.4G的好到哪里，为什么传输速率会快呢?<br>看下图5G信道间距有20MHz相比2.4G的5MHz大很多，如果使用一个信道时，不会受到其他信道的干扰，如果想提升速率，可以把多个信道合并为40MHz或者80MHz。相比之下速度就提升很多了。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0b2998b024656dfd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="223707rvzdtllllcvkcv7w.png"></p>
-<p><em>所以综合得出结论：<br>2.4G 信道虽然多，但是互不影响的只有三个，加上使用设备多，干扰大，所以传输速率2.4G低于5G<br>但是由于 5G频率高，波长短，所以穿透性2.4G大于5G。<br>举个例子理解下穿透性强弱：假如靠近路由器时都是100%信号，但是穿过一堵墙时，2.4G可能还有80%信号，而5G可能仅剩50%信号，就是说两个频段都能穿墙，但是5G穿墙过程自身损失的更严重，所以常说穿透性弱。</em></p>
-<h4 id="4-什么样的路由器才是好路由器？"><a href="#4-什么样的路由器才是好路由器？" class="headerlink" title="4.什么样的路由器才是好路由器？"></a>4.什么样的路由器才是好路由器？</h4><p>在我看来好的路由器首要因素就是是否稳定。上面说了穿墙后的信号会减弱。日常路由器放客厅，但是我们又不可能随时守在客厅，可能在卧室、可能在厕所、也可能在院子，远距离加穿墙后，信号可能只有一格了，很多路由器这时候网络是很差的，经常QQ和微信就可能提示网络无法连接，但是现在明明还有一格信号啊。这就是我所说的稳定。一个性能稳定的路由器就算信号只有微弱的一格，仍然能保持网络的流畅，这是我认为的好路由器。就这一点恰恰是很多市面路由都不具备的。<br>其他就是参考路由器的性能指标了，如cpu、内存、flash等越大越好，但能耗能也愈大，发热也严重。一般来说家庭百兆宽带最好配上千兆路由，这里的千兆是wlan和lan口也要是千兆的。</p>
-<h3 id="用网设备那些事"><a href="#用网设备那些事" class="headerlink" title="用网设备那些事"></a>用网设备那些事</h3><h4 id="1-用有线网"><a href="#1-用有线网" class="headerlink" title="1.用有线网"></a>1.用有线网</h4><p>这里只想说一点如果你刚配的主机加上百兆光纤感觉还是网速不达标，那么你可能遇到假网线了。<br>其实网线也是分类的，网线分为五类线、超五类线、六类线、七类线，可以通过网线外皮的Cat.5, Cat.5e,Cat.6等来判断,其中cat.6中间有十字的骨架把网线分开<br><img src="http://upload-images.jianshu.io/upload_images/1796052-21fa54d3e840c9a5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="70c2802e87d8e3a8224e0e928e0951b7_r.jpg"></p>
-<p>如果家里是百兆光纤一般用超五类或者六类，当然六类最好，因为抗干扰更强。</p>
-<h4 id="2-无线设备"><a href="#2-无线设备" class="headerlink" title="2.无线设备"></a>2.无线设备</h4><p>暂时没啥想说的了，想起了再更。见谅~</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事---后续篇/">展开全文 >></a>
         </p>
       
 
@@ -1292,11 +1371,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1320,11 +1399,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1336,11 +1415,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1360,7 +1439,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1368,7 +1447,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
