@@ -174,6 +174,94 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-两个栈实现队列功能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/18/两个栈实现队列功能/">两个栈实现队列功能</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/18/两个栈实现队列功能/" class="archive-article-date">
+  	<time datetime="2017-05-18T08:28:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月18日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>用2个栈实现队列，首先要明白栈和队列的区别：栈是FILO，队列是FIFO。明白了这两点就比较容易实现了。</p>
+<h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>栈是一端开口，队列是两端开口，如果要让栈实现队列功能，需要2个栈一个负责进数据，一个负责出数据。为了保证出数据的顺序，在出数据栈不为空时，入数据的栈中数据不能往出数据的栈里存。</p>
+<h1 id="0x02-实现"><a href="#0x02-实现" class="headerlink" title="0x02 实现"></a>0x02 实现</h1><p>在2个栈数据都为空时注意抛出异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.Stack;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 两个栈实现队列功能</div><div class="line"> * @author jenson</div><div class="line"> */</div><div class="line">public class StackToQueue &#123;</div><div class="line">	private Stack&lt;Integer&gt; inStack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; outStack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 添加元素</div><div class="line">	 * @param value</div><div class="line">	 */</div><div class="line">	public void add(int value) &#123;</div><div class="line">		inStack.push(value);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 出队列</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	public int poll() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.pop();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 查看队列头的元素 &lt;/br&gt;</div><div class="line">	 * 注意一点：如果出栈队列为空，则把入栈数据倒入到处栈，然后从出栈取&lt;br&gt;</div><div class="line">	 * 如果两个栈都为空抛异常</div><div class="line">	 * </div><div class="line">	 */</div><div class="line">	public int peek() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.peek();</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 入栈数据倒入到出栈</div><div class="line">	 */</div><div class="line">	private void reverse() &#123;</div><div class="line">		while (!inStack.isEmpty()) &#123;</div><div class="line">			outStack.push(inStack.pop());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private void queueEmptyException() &#123;</div><div class="line">		throw new RuntimeException(&quot;队列为空&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackToQueue stackToQueue = new StackToQueue();</div><div class="line">		stackToQueue.add(9);</div><div class="line">		stackToQueue.add(5);</div><div class="line">		stackToQueue.add(2);</div><div class="line">		stackToQueue.add(7);</div><div class="line"></div><div class="line">		System.out.println(stackToQueue.peek());</div><div class="line">		System.out.println(stackToQueue.poll());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/18/两个栈实现队列功能/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-设计一个有获取元素最小值getMin的栈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1180,104 +1268,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/05/10/Android网络框架执行流程分析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android关于Activity生命周期误解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/05/Android关于Activity生命周期误解/">Android关于Activity生命周期误解</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/05/Android关于Activity生命周期误解/" class="archive-article-date">
-  	<time datetime="2017-05-05T03:03:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月05日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>两个Activity  A和B，先启动A，通过A打开B，在关闭B，这时候两个Activity的生命周期分别是如何执行的？</p>
-<p>我的答案是：</p>
-<p>A启动时</p>
-<p><code>A onCreate onStart onResume</code></p>
-<p>点击启动B之后</p>
-<p><code>A onPause onStop, B onCreate onStart onResume</code></p>
-<p>B关闭之后</p>
-<p><code>B onPause onStop onDestory ,A onRestart onStart onResume</code></p>
-<p>但是想的太简单了，我以为的并不是我以为的。下面是打印的生命周期执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">05-05 11:01:33.801 5494-5494/com.example.jenson.myapplication I/MainActivity: onCreate</div><div class="line">05-05 11:01:33.801 5494-5494/com.example.jenson.myapplication I/MainActivity: onStart</div><div class="line">05-05 11:01:33.801 5494-5494/com.example.jenson.myapplication I/MainActivity: onResume</div><div class="line">05-05 11:01:33.861 5494-5542/com.example.jenson.myapplication I/OpenGLRenderer: Initialized EGL, version 1.4</div><div class="line">05-05 11:01:46.391 5494-5494/com.example.jenson.myapplication I/MainActivity: onPause</div><div class="line">05-05 11:01:46.411 5494-5494/com.example.jenson.myapplication I/FirstActivity: onCreate</div><div class="line">05-05 11:01:46.411 5494-5494/com.example.jenson.myapplication I/FirstActivity: onStart</div><div class="line">05-05 11:01:46.411 5494-5494/com.example.jenson.myapplication I/FirstActivity: onResume</div><div class="line">05-05 11:01:46.691 5494-5494/com.example.jenson.myapplication I/MainActivity: onStop</div><div class="line">05-05 11:02:20.641 5494-5494/com.example.jenson.myapplication I/ViewRootImpl: WindowInputEventReceiver onInputEvent!! KeyCode is 4, action is 0</div><div class="line">05-05 11:02:20.641 5494-5494/com.example.jenson.myapplication I/ViewRootImpl: WindowInputEventReceiver onInputEvent!! KeyCode is 4, action is 1</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/FirstActivity: onPause</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/MainActivity: onRestart</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/MainActivity: onStart</div><div class="line">05-05 11:02:20.651 5494-5494/com.example.jenson.myapplication I/MainActivity: onResume</div><div class="line">05-05 11:02:20.871 5494-5494/com.example.jenson.myapplication I/FirstActivity: onStop</div><div class="line">05-05 11:02:20.871 5494-5494/com.example.jenson.myapplication I/FirstActivity: onDestroy</div></pre></td></tr></table></figure>
-<blockquote>
-<p>记住一点：启动一个新Activity，先把自己onPause，然后等新Activity启动成功即onResume后再onStop，关闭当前Activity时，还是先把自己onPause，下一帧的Activity(相对于Activity栈来说)执行恢复onResume，然后自己再执行onStop、onDestory</p>
-</blockquote>
-<p>虽然知道了真相，但是现在还不清楚为什么要这样设计，，有时间还要看看这里的源码，mark下。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/05/Android关于Activity生命周期误解/">展开全文 >></a>
         </p>
       
 

@@ -174,6 +174,142 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-垃圾回收机制-关于GC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/垃圾回收机制-关于GC/">垃圾回收机制~关于GC</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/垃圾回收机制-关于GC/" class="archive-article-date">
+  	<time datetime="2017-07-26T12:25:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。</p>
+<p>虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。</p>
+<p>说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就是标记-清除算法。</p>
+<p>如果是一门语言可以从基础语法学起，但是GC该如何学习呢？</p>
+<p><strong>其实问答形式就是最好的学习方式</strong></p>
+<h1 id="0x01-什么是GC"><a href="#0x01-什么是GC" class="headerlink" title="0x01 什么是GC"></a>0x01 什么是GC</h1><p>GC(垃圾回收)，通过查找无效对象释放空间达到自动管理内存的目的。</p>
+<h1 id="0x02-如何确定垃圾"><a href="#0x02-如何确定垃圾" class="headerlink" title="0x02 如何确定垃圾"></a>0x02 如何确定垃圾</h1><p>要查找垃圾对象，首先要知道什么样对象才算是垃圾对象才好对症下药。</p>
+<p><strong>在内存中，不再被引用的对象就称为垃圾对象</strong></p>
+<p>现在的问题又转到如何确定一个对象是否被引用？</p>
+<p>首先想到一种方法是给每个对象都添加一个计数器功能，这个计数器用例记录引用自己的指针数量，每多一个引用数量计数器就增加1，每减少一个引用数量计数器就减少1，如果计数器为0，说明没有其他对象引用当前对象，那么这个对象就是垃圾对象，可以被回收。这种方式叫做<strong>引用计数法</strong></p>
+<p>引用计数法虽然容易理解，但是因为缺点也很明显，所以不得不另寻它法。这时<strong>可达性分析法</strong>就登场了。</p>
+<p><strong>可达性分析法</strong>也可以称为<strong>跟踪收集器法</strong>，找一个对象作为GC的根节点(Root)，通过对对象的连续引用形成一条引用链，如果一个对象能够通过直接或间接的到达Root称为对象可达，否则称为对象不可达。对于不可达对象就可以判定为垃圾对象。</p>
+<h1 id="0x03-如何回收垃圾"><a href="#0x03-如何回收垃圾" class="headerlink" title="0x03 如何回收垃圾"></a>0x03 如何回收垃圾</h1><p>上一节知道了哪些对象是垃圾，现在该讨论有哪些方式能回收垃圾了。</p>
+<p>常用的GC算法有<strong>标记-清除算法</strong>、<strong>标记-整理算法</strong>、<strong>复制算法</strong>、<strong>分代GC</strong>、<strong>G1 GC</strong>。</p>
+<h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p><strong>标记-清除算法(Mark-Weep)</strong>看名字就知道分为标记和清除两个阶段。</p>
+<p><strong>注意一点这里的标记是指标记活着的对象，而非死对象。</strong></p>
+<p><strong>标记阶段</strong>从Root开始首先标记Root能直接访问的对象，然后递归通过指针能访问到得对象，同时把这些对象做标记。</p>
+<p><strong>清除阶段</strong>遍历堆内存，把未被标记的对象清除以达到垃圾回收目的。</p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4.png" alt="标记清除"></p>
+<p>图中问题很明显：回收后会产生大量的内存碎片，不利于对内存连续要求的数据结构的使用，譬如数组。</p>
+<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p><strong>标记-整理算法也叫标记-压缩</strong>，这里的标记阶段和上面的标记-清除的标记阶段完全一样，不同的是整理阶段是对清除阶段的改进。</p>
+<p>整理阶段简单来说就是把活着的对象移动到一端，然后从边界处清除另一端所有空间。</p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86.png" alt="标记整理"></p>
+<p>优点是有效利用堆，但又不会产生内存碎片。</p>
+<p>缺点是浪费时间，整理阶段要搜索三次堆内存，而标记-清除算法的清除阶段只搜索一次堆内存。</p>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p><strong>复制算法</strong>是把堆内存分为两块空间标识为from和to。当from空间被占满时，GC把活着的对象复制到to空间，复制完成后把from和to标识互换，GC结束。为了保证from空间对象都能复制到to空间，须要保证from和to空间大小一致。</p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95.png" alt="复制算法"></p>
+<p>复制算法吞吐量优秀，分配内存速度快，没有碎片，但是堆内存利用率低下</p>
+<h2 id="分代GC"><a href="#分代GC" class="headerlink" title="分代GC"></a>分代GC</h2><p>根据日常研发总结出一个经验“大部分对象在生成后不久就变成垃圾，很少能活的久”。据此经验，分代GC引入了“年龄”的概念。经历过一次GC后活下来的对象年龄+1。</p>
+<p><strong>分代GC</strong>把内存分为新生代和老年代，针对不同的年代使用不同的GC算法。刚生产的对象称为新生代对象，活到一定年龄的称为老年代对象。</p>
+<p>我们把对新对象执行的GC称为<strong>新生代GC(minor GC)</strong>， 把老年代对象执行的GC称为<strong>老年代GC(major GC)</strong>。</p>
+<p><strong>分代GC属于综合性GC，对上面GC算法的综合使用。</strong></p>
+<p>图片表示如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6.png" alt="分代GC"></p>
+<p>如图所示：<strong>新生代空间包括Eden，S0和S1三个区，老年代空间是Old区</strong></p>
+<p>其中新生代每次回收只有少数对象存活，可以使用复制算法，而老年代对象存活率高也没用额外空间，可以使用标记-整理和标记清除算法。</p>
+<p>刚开始时，Eden用来存放刚创建的对象，S0和S1为空，如果发生GC，Eden区幸存对象转移到S0区，如果S0区已有数据前提下再次进行GC时，会把Eden和S0区存活对象转移到S1区，同时清空Eden和S0，然后交换S0和S1标识。经过一定次数的GC仍然存活的对象转移到老年代。</p>
+<h2 id="G1-GC"><a href="#G1-GC" class="headerlink" title="G1 GC"></a>G1 GC</h2><h1 id="0x04-谁来回收垃圾"><a href="#0x04-谁来回收垃圾" class="headerlink" title="0x04 谁来回收垃圾"></a>0x04 谁来回收垃圾</h1><p>知道了哪些对象是垃圾，也知道了用哪些算法来回收垃圾，然后呢？直接满地调用算法回收垃圾吗？</p>
+<p>当然不是！GC要分时机且统一来回收垃圾，这里是由垃圾收集器来来根据时机统一回收垃圾对象。</p>
+<p>由于各方面需求原因，垃圾收集器也是有多种的。</p>
+<p>未完待续…….</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/GC/" class="article-tag-list-link color3">GC</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/26/垃圾回收机制-关于GC/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python自动化之hexo自动发布和提交源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1380,158 +1516,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-关于Intent那些事" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/17/关于Intent那些事/">关于Intent那些事</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/17/关于Intent那些事/" class="archive-article-date">
-  	<time datetime="2017-07-17T07:51:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月17日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Intent，译为“意图”。从汉语角度理解，意图是什么意思？意图谋反，就是想要谋反。所以意图可以通俗理解为想要做什么。当然这里的“想要做什么”是告诉Android系统的而不是别人。</p>
-<p>虽然想要做什么就告诉Android系统，但是并不是为所欲为的。通过Intent只能请求三大组件：Activity，Service，Broadcast。</p>
-<h1 id="0x01-抽象理解"><a href="#0x01-抽象理解" class="headerlink" title="0x01 抽象理解"></a>0x01 抽象理解</h1><p>因为涉及三个组件，这里不会单独讲每个组件和Intent。startActivity不要叫启动Activity，startService也不要叫启动服务，我们把他们抽象为一个请求。通过Intent向Android发出请求，Android去哪给你匹配呢？你不注册系统当然没地方找，所以我们要在AndroidManifest.xml中进行注册(广播可以动态注册)。注册的作用不光告诉系统可以从这找我，还告诉系统本组件只接收满足要求的请求。说到要求这就要提到IntentFilter了，每个IntentFilter代表一种要求，一个组件可以有多种要求即多个IntentFilter，但只要满足一种就能请求成功。系统所要做的就是把接收到得请求Intent和组件的要求IntentFilter进行匹配，如果匹配上了则牵手成功~</p>
-<p>这个流程抽象为：</p>
-<p><img src="/2017/07/17/关于Intent那些事/请求流程.png" alt="请求流程"></p>
-<h1 id="0x02-分类"><a href="#0x02-分类" class="headerlink" title="0x02 分类"></a>0x02 分类</h1><p>通过Intent告诉Android系统“我想要做什么”，可以有两种方式阐述，一种是直白的表述“我想要启动某个页面”，我们称之为显性，另一种是告诉系统“我想要一个满足我某些要求的页面”,至于是哪个或哪几个页面由系统决定，如果是多个可以返回列表给我，这种称之为隐性。</p>
-<blockquote>
-<p>Intent从请求性质上分为显性和隐性两种。</p>
-</blockquote>
-<p>由于显性Intent指定了具体的请求，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">intent.setClass(Context packageContext, Class&lt;?&gt; cls)</div></pre></td></tr></table></figure>
-<p>所以匹配并不会发生在显性Intent,显性组件注册时一般这样的：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">".ThirdActivity"</span> /&gt;</span></div></pre></td></tr></table></figure>
-<p>没有多余的要求。</p>
-<p>在抽象理解中，IntentFilter匹配只是为隐性准备的。</p>
-<p>下面要了解具体匹配规则如何：</p>
-<h1 id="0x03-匹配规则"><a href="#0x03-匹配规则" class="headerlink" title="0x03 匹配规则"></a>0x03 匹配规则</h1><p>要了解匹配规则是怎样的，首先要知道是从哪几方面入手匹配的，由于Android系统也是根据组件注册的要求进行匹配，所以看看注册时的IntentFilter有哪些属性就知道要匹配哪些方面了：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.CALL"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:mimeType</span>=<span class="string">"image/*"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"http"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>显然系统匹配也就是匹配category、action和data。</p>
-<p>下面分别来看看这三种是分别如何匹配的：</p>
-<p><strong>注意：下面将原理、源码、实例三管齐下</strong> </p>
-<ul>
-<li><p>category如何匹配</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①在请求的Intent中需要在IntentFilter找到匹配项才算匹配成功。</p>
-<p>②如果Intent没有添加任何category，那么系统会自动给你添加android.intent.category.DEFAULT，所以如果你的三大组件是为隐性启动准备的，那么你就要在注册时手动添加<category android:name="android.intent.category.DEFAULT">。</category></p>
-<p>③当然如果添加了其他值得category也可以不用添加default了。</p>
-</blockquote>
-<p>​</p>
-</li>
-</ul>
-<ul>
-<li><p>action如何匹配</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①IntentFilter如果没有声明action，则所有Intent都不能匹配成功。</p>
-<p>②若IntentFilter声明了action，而Intent没有不带任何action，则匹配通过。</p>
-<p>③若IntentFilter声明了action，Intent也声明了action，那么Intent中action必须是IntentFilter中action的子集才能匹配成功。</p>
-</blockquote>
-</li>
-</ul>
-<ul>
-<li><p>data如何匹配</p>
-<p>data分为两部分，MIME type和URI。</p>
-<ul>
-<li><p>MIME type就是表明数据格式类型，方便系统正确解析处理</p>
-<p>MIME type又分为两部分：主类型type和子类型subtype，以”/“分割。比如：</p>
-<p>video/mp4，image/jpeg。</p>
-</li>
-<li><p>URI 唯一资源标识符</p>
-<p>URI分为scheme、Authory和path三部分。</p>
-<p>scheme表示采用协议，既可以是http网络协议也可以是本地content和file协议。</p>
-<p>Authority由host和port组成。</p>
-<p>path表示文件在host中具体位置。</p>
-</li>
-</ul>
-<p>了解了data组成，下面说说data匹配原理</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①data只匹配IntentFilter中所拥有部分。</p>
-<p>②如果Intent中既没有MIME，也没用URI，那么IntentFilter中也都不能有才能通过。</p>
-<p>③若Intent没有指定类型，只指定了URI，那么IntentFilter必须没有指定类型。特殊情况下能根据URI推断出类型，这种情况按⑤情况算。</p>
-<p>④若Intent只指定了类型，没有URI。那么IntentFilter也必须没有指定URI</p>
-<p>⑤若Intent同时指定了类型和URI，那么必须都匹配上才能通过。</p>
-</blockquote>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/17/关于Intent那些事/">展开全文 >></a>
         </p>
       
 
