@@ -261,6 +261,100 @@
 
 
   
+    <article id="post-Android源码下载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/Android源码下载/">Android源码下载</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/Android源码下载/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h4><p>win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。</p>
+<h4 id="从官网下载"><a href="#从官网下载" class="headerlink" title="从官网下载"></a>从官网下载</h4><p>下载Android源码首先想到的就是<a href="https://source.android.com/source/downloading.html" target="_blank" rel="external">官网</a><br>按照指示要先安装repo。但是在执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div></pre></td></tr></table></figure></p>
+<p>时候就出现异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--    0</div><div class="line">curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out</div></pre></td></tr></table></figure>
+<p>搜索了下异常发现很早就有这个问题，比如<a href="https://github.com/npm/npm/issues/10037" target="_blank" rel="external">这里</a><br>但是好像没什么好的解决方法。网传有其他地址可以使用，但是没有继续浪费时间了，不能一条路走到黑。</p>
+<h4 id="使用国内资源"><a href="#使用国内资源" class="headerlink" title="使用国内资源"></a>使用国内资源</h4><p>国外太麻烦，毕竟只是想看源码，不想在下载方面浪费太多精力。所以把想法转战到国内的源上。<br>分享2个源，<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/aosp#已有仓库如何改用科大源" target="_blank" rel="external">科大源</a>和<a href="https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/" target="_blank" rel="external">清大源</a><br>其中我选择使用的是科大源，打开页面看到初始同步有两个方法，方法1毕竟简单，下载一个打好的包，自己repo sync。方法2还是要下载repo，而且如果中途断掉还要从头下载，所以果断选了方法1，直接使用迅雷下载tar包还是很快的。<br>不到一个小时下载完成，解压后打开aosp文件夹发现没有文件，因为是.开头的，都是隐藏文件，显示后如图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48a38e120b53440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午1.55.14.png"><br>执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo sync</div></pre></td></tr></table></figure></p>
+<p>同步</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-185f5625074cf187.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-16 下午2.08.54.png"></p>
+<h4 id="如何修改已经init的repo"><a href="#如何修改已经init的repo" class="headerlink" title="如何修改已经init的repo"></a>如何修改已经init的repo</h4><p>如果想下载其他版本的源码，但是repo已经初始化过，<br>如果再次执行repo init xxx会提示 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Your identity is: jenson &lt;xxx@foxmail.com&gt;</div><div class="line">If you want to change this, please re-run &apos;repo init&apos; with --config-name</div><div class="line">repo has been initialized in /Users/jenson/Downloads/aosp</div></pre></td></tr></table></figure></p>
+<p>上面意思是如果要修改init，需要重新运行repo init +新的url +config<br>这时会自动修改配置并初始化:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Users/jenson/Downloads/aosp/.repo/repo/repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-6.0.1_r58  --config</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/Android源码下载/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android性能优化之耗电优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -395,6 +489,111 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/21/Android性能优化之耗电优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-番茄工作法使用说明书" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/番茄工作法使用说明书/">番茄工作法使用说明书</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/番茄工作法使用说明书/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天花了点时间把番茄工作法这本书看完了，和以前上学时45分钟每节课的感觉差不多，只是这个时间更短，流程也更细化，容易让人集中注意力。</p>
+<p>先来几个问题看看中刀的人有多少：<br>1.有拖延症，上午的工作要拖到下午，下午的工作要拖到明天或者有反正周六要加班，那就周五多玩玩，刷刷微博这样的思想。<br>2.经常我们想看一本书，看了一点后就厌烦抛诸脑后，等过一段时间兴致又来了想继续读，发现前面的内容已经忘了不得已要从头开始，如此往复，一年到头一本书还在原地徘徊，年终总结时才悔恨不已。<br>3.上班就开始干活，但是手头的事情刚干了一点，又一摊新的工作挤进来，然后倒手又去忙新的事情，经常下班了感觉忙了一天却没有一件拿得出手的已完成的活来交差。<br>如果你有上面的一种或者几种那么番茄工作法适合你。</p>
+<h2 id="番茄工作法的历史"><a href="#番茄工作法的历史" class="headerlink" title="番茄工作法的历史"></a>番茄工作法的历史</h2><p>番茄工作法是由弗朗西斯科·西里洛在1992年创建的，但其实在更早的时候西里洛就已经使用了。20世纪80年代西里洛还在大学时，由于学习效率低下作业完不成，就在想怎么让自己踏实的学一会，哪怕十分钟也行。如果有人监督帮忙掐表，会不会很好，后来西里洛找到了厨房定时器，形状酷似番茄，就这样他邂逅了番茄钟。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be51678192608453.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="未命名.png"></p>
+<h2 id="什么是番茄工作法？"><a href="#什么是番茄工作法？" class="headerlink" title="什么是番茄工作法？"></a>什么是番茄工作法？</h2><p>简单的说就是列出要做的事，标记当天要完成的，设置闹钟为25分钟，然后从第一件事情开始做。还要有每日回顾、每日承诺、中断和预估等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">番茄工作法是一套简单的流程，它可以让我们提高时间观念、提升注意力、加强自我决策意识、改善目前不好的工作流程从而提高工作效率，当然这一切好处的前提是正确并长期的执行了番茄法。</div></pre></td></tr></table></figure>
+<h2 id="番茄工作法需要哪些工具？"><a href="#番茄工作法需要哪些工具？" class="headerlink" title="番茄工作法需要哪些工具？"></a>番茄工作法需要哪些工具？</h2><p>一个番茄钟<br>铅笔/橡皮<br>三张表格(活动清单、今日待办、记录)</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3a5435880d169f91.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender.jpg"></p>
+<h2 id="番茄工作法流程详解"><a href="#番茄工作法流程详解" class="headerlink" title="番茄工作法流程详解"></a>番茄工作法流程详解</h2><h3 id="将近期要完成的活动-任务加入到活动清单"><a href="#将近期要完成的活动-任务加入到活动清单" class="headerlink" title="将近期要完成的活动/任务加入到活动清单"></a>将近期要完成的活动/任务加入到活动清单</h3><p>把近几天准备工作的内容填写到活动清单中，活动清单内容力求简洁，不要求别人看懂，只需要自己几个月后仍能看懂即可。<br>如果某件事明确了必须在某时间之前完成，则可以在活动末尾加上最后期限作为提醒。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bcb5ae9b4fa83b5d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(1).jpg"></p>
+<h3 id="从活动清单中选择今日要完成的几项抄入到今日待办中"><a href="#从活动清单中选择今日要完成的几项抄入到今日待办中" class="headerlink" title="从活动清单中选择今日要完成的几项抄入到今日待办中"></a>从活动清单中选择今日要完成的几项抄入到今日待办中</h3><p>今日待办的任务一定是要从活动清单抄入过来的，如果是自己又单独创建的那活动清单有何意义？填写今日待办时要注意划分优先级(事情的重要程度)，然后给每个待办预估需要多少番茄钟来完成，在待办后面用方格表示出来。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6386cf28a2aa20ff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(4).jpg"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从开始的活动清单列举，到今日待办的筛选，有没有觉得原本杂乱无章的事情，现在有了头绪而且当天目标已经明确只需要放手去做了。无形中注意力已经转移到所选活动了。</div></pre></td></tr></table></figure>
+<h3 id="准备好工作后，启动番茄钟时间设定为25分钟。"><a href="#准备好工作后，启动番茄钟时间设定为25分钟。" class="headerlink" title="准备好工作后，启动番茄钟时间设定为25分钟。"></a>准备好工作后，启动番茄钟时间设定为25分钟。</h3><p>注意每个番茄钟都是原子性的，即不能再分割，一旦番茄钟启动，25分钟必须从一而终。<br>可能有人会有疑问：如果番茄钟期间渴了怎么办？有人打电话或者有同事来询问怎么办？别急，这些都是中断，参见步骤4。</p>
+<h3 id="开始工作，直到番茄钟响铃结束"><a href="#开始工作，直到番茄钟响铃结束" class="headerlink" title="开始工作，直到番茄钟响铃结束"></a>开始工作，直到番茄钟响铃结束</h3><p>工作期间可能会受到中断，在日常工作中，中断是不可完全避免的，需要自己处理好中断。<br>中断有两种形式：内部中断和外部中断。<br><figure class="highlight plain"><figcaption><span>是自己造成的，是直觉向大脑发出信号，告诉我让我去专注当下活动以外的事情。```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">比如工作了一会，突然想打开qq去群里扯皮几句，想起有个电话没有回复，水杯没水了要去续杯等，这些都是来自自身内部的本能，其实是想拖延，这时该怎么办？接受、记录然后继续番茄钟。</div><div class="line">首先看引起中断原因，如果是突然想起没有做的事情，那么可以在今日待办(如果想起的事情不紧急可以直接加入到活动清单中，并在左边加一个“U”表示计划外事件“unplanned”)下方添加一个“计划外紧急”栏目，记录中断原因(下图中的③)，并在今日待办的当前活动后面添加一个 撇号 &apos; (下图中的①)，表示当下活动产生一个内部中断，记录完成继续番茄钟。</div><div class="line"> 至于说要聊天扯皮和续杯，等到番茄钟结束后再去，当然如果只是喝水那你想喝多少喝多少。</div><div class="line">如果作为初学者感觉内部中断太多，可以尝试缩小番茄钟为5、10、15分钟。当然番茄钟的每次更改至少要保持两个星期再次更改。</div><div class="line">```外部中断 是别人造成的，有人向你询问请你帮忙，等你答复，外部中断往往具有互动性。但是我们不能因为保护番茄钟就拒绝帮忙同事，毕竟低头不见抬头见的。</div></pre></td></tr></table></figure></p>
+<p>可以在番茄钟期间手机、邮件静音，<br>同事来面谈，如果比较急可以商量稍后推迟下，用下一个番茄钟来解决中断事件，而不是在当前活动直接中断处理；如果不着急可以添加到计划外事件，同时在当前活动后添加一个减号 -(下图中的②)，表示受到一次外部中断；如果非常着急，那么不得已只有废弃当前的番茄钟，先帮同事解决问题，过后休息一会然后开启新的番茄钟开始专注起来。</p>
+<p>每个番茄钟结束都要在今日待办的当下活动方格中画×。如果当下活动已经完成则可以给活动内容划一条横线表示完成状态(下图中的③)。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4ab23cde90bb31c5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(5).jpg"></p>
+<h3 id="休息"><a href="#休息" class="headerlink" title="休息"></a>休息</h3><p>小休时间一般为3-5分钟，每隔4个番茄钟就大休一次，大休一般15-30分钟。注意休息期间要站起来走动一下，让自己能消除对上一个番茄钟的思考，完全抽身出来放松下。可以泡杯茶或咖啡，去个厕所，窗台发呆等，总之拒绝任何用脑的活动。<br>以下说明了休息时箭头所指从最佳到最差休息方式：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-32cc2cfdbfaad96f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(3).jpg"></p>
+<h3 id="开始下一个番茄钟，重复3-5步"><a href="#开始下一个番茄钟，重复3-5步" class="headerlink" title="开始下一个番茄钟，重复3-5步"></a>开始下一个番茄钟，重复3-5步</h3><h3 id="下班前记录"><a href="#下班前记录" class="headerlink" title="下班前记录"></a>下班前记录</h3><p>记录什么内容？记录当天完成的番茄钟数、被打断数、今日待办完成数等，通过记录可以知晓自己承诺完成了多少，相差多少，如果差距很大，就要寻找原因。经过一段时间的记录，数据可视化，看自己的承诺和已完成是否越来越接近。通过记录发现总结不足，在以后的清单中持续改善。</p>
+<p>以上只介绍了番茄工作法流程和一些需要注意的点，其他一些边缘内容或者没有get到的点欢迎探讨。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">职场杂谈</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/职场杂谈/" class="article-tag-list-link color5">职场杂谈</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/番茄工作法使用说明书/">展开全文 >></a>
         </p>
       
 
@@ -630,111 +829,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/21/为什么我在工作线程刷新UI没报错/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-番茄工作法使用说明书" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/番茄工作法使用说明书/">番茄工作法使用说明书</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/番茄工作法使用说明书/" class="archive-article-date">
-  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天花了点时间把番茄工作法这本书看完了，和以前上学时45分钟每节课的感觉差不多，只是这个时间更短，流程也更细化，容易让人集中注意力。</p>
-<p>先来几个问题看看中刀的人有多少：<br>1.有拖延症，上午的工作要拖到下午，下午的工作要拖到明天或者有反正周六要加班，那就周五多玩玩，刷刷微博这样的思想。<br>2.经常我们想看一本书，看了一点后就厌烦抛诸脑后，等过一段时间兴致又来了想继续读，发现前面的内容已经忘了不得已要从头开始，如此往复，一年到头一本书还在原地徘徊，年终总结时才悔恨不已。<br>3.上班就开始干活，但是手头的事情刚干了一点，又一摊新的工作挤进来，然后倒手又去忙新的事情，经常下班了感觉忙了一天却没有一件拿得出手的已完成的活来交差。<br>如果你有上面的一种或者几种那么番茄工作法适合你。</p>
-<h2 id="番茄工作法的历史"><a href="#番茄工作法的历史" class="headerlink" title="番茄工作法的历史"></a>番茄工作法的历史</h2><p>番茄工作法是由弗朗西斯科·西里洛在1992年创建的，但其实在更早的时候西里洛就已经使用了。20世纪80年代西里洛还在大学时，由于学习效率低下作业完不成，就在想怎么让自己踏实的学一会，哪怕十分钟也行。如果有人监督帮忙掐表，会不会很好，后来西里洛找到了厨房定时器，形状酷似番茄，就这样他邂逅了番茄钟。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be51678192608453.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="未命名.png"></p>
-<h2 id="什么是番茄工作法？"><a href="#什么是番茄工作法？" class="headerlink" title="什么是番茄工作法？"></a>什么是番茄工作法？</h2><p>简单的说就是列出要做的事，标记当天要完成的，设置闹钟为25分钟，然后从第一件事情开始做。还要有每日回顾、每日承诺、中断和预估等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">番茄工作法是一套简单的流程，它可以让我们提高时间观念、提升注意力、加强自我决策意识、改善目前不好的工作流程从而提高工作效率，当然这一切好处的前提是正确并长期的执行了番茄法。</div></pre></td></tr></table></figure>
-<h2 id="番茄工作法需要哪些工具？"><a href="#番茄工作法需要哪些工具？" class="headerlink" title="番茄工作法需要哪些工具？"></a>番茄工作法需要哪些工具？</h2><p>一个番茄钟<br>铅笔/橡皮<br>三张表格(活动清单、今日待办、记录)</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3a5435880d169f91.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender.jpg"></p>
-<h2 id="番茄工作法流程详解"><a href="#番茄工作法流程详解" class="headerlink" title="番茄工作法流程详解"></a>番茄工作法流程详解</h2><h3 id="将近期要完成的活动-任务加入到活动清单"><a href="#将近期要完成的活动-任务加入到活动清单" class="headerlink" title="将近期要完成的活动/任务加入到活动清单"></a>将近期要完成的活动/任务加入到活动清单</h3><p>把近几天准备工作的内容填写到活动清单中，活动清单内容力求简洁，不要求别人看懂，只需要自己几个月后仍能看懂即可。<br>如果某件事明确了必须在某时间之前完成，则可以在活动末尾加上最后期限作为提醒。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bcb5ae9b4fa83b5d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(1).jpg"></p>
-<h3 id="从活动清单中选择今日要完成的几项抄入到今日待办中"><a href="#从活动清单中选择今日要完成的几项抄入到今日待办中" class="headerlink" title="从活动清单中选择今日要完成的几项抄入到今日待办中"></a>从活动清单中选择今日要完成的几项抄入到今日待办中</h3><p>今日待办的任务一定是要从活动清单抄入过来的，如果是自己又单独创建的那活动清单有何意义？填写今日待办时要注意划分优先级(事情的重要程度)，然后给每个待办预估需要多少番茄钟来完成，在待办后面用方格表示出来。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6386cf28a2aa20ff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(4).jpg"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从开始的活动清单列举，到今日待办的筛选，有没有觉得原本杂乱无章的事情，现在有了头绪而且当天目标已经明确只需要放手去做了。无形中注意力已经转移到所选活动了。</div></pre></td></tr></table></figure>
-<h3 id="准备好工作后，启动番茄钟时间设定为25分钟。"><a href="#准备好工作后，启动番茄钟时间设定为25分钟。" class="headerlink" title="准备好工作后，启动番茄钟时间设定为25分钟。"></a>准备好工作后，启动番茄钟时间设定为25分钟。</h3><p>注意每个番茄钟都是原子性的，即不能再分割，一旦番茄钟启动，25分钟必须从一而终。<br>可能有人会有疑问：如果番茄钟期间渴了怎么办？有人打电话或者有同事来询问怎么办？别急，这些都是中断，参见步骤4。</p>
-<h3 id="开始工作，直到番茄钟响铃结束"><a href="#开始工作，直到番茄钟响铃结束" class="headerlink" title="开始工作，直到番茄钟响铃结束"></a>开始工作，直到番茄钟响铃结束</h3><p>工作期间可能会受到中断，在日常工作中，中断是不可完全避免的，需要自己处理好中断。<br>中断有两种形式：内部中断和外部中断。<br><figure class="highlight plain"><figcaption><span>是自己造成的，是直觉向大脑发出信号，告诉我让我去专注当下活动以外的事情。```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">比如工作了一会，突然想打开qq去群里扯皮几句，想起有个电话没有回复，水杯没水了要去续杯等，这些都是来自自身内部的本能，其实是想拖延，这时该怎么办？接受、记录然后继续番茄钟。</div><div class="line">首先看引起中断原因，如果是突然想起没有做的事情，那么可以在今日待办(如果想起的事情不紧急可以直接加入到活动清单中，并在左边加一个“U”表示计划外事件“unplanned”)下方添加一个“计划外紧急”栏目，记录中断原因(下图中的③)，并在今日待办的当前活动后面添加一个 撇号 &apos; (下图中的①)，表示当下活动产生一个内部中断，记录完成继续番茄钟。</div><div class="line"> 至于说要聊天扯皮和续杯，等到番茄钟结束后再去，当然如果只是喝水那你想喝多少喝多少。</div><div class="line">如果作为初学者感觉内部中断太多，可以尝试缩小番茄钟为5、10、15分钟。当然番茄钟的每次更改至少要保持两个星期再次更改。</div><div class="line">```外部中断 是别人造成的，有人向你询问请你帮忙，等你答复，外部中断往往具有互动性。但是我们不能因为保护番茄钟就拒绝帮忙同事，毕竟低头不见抬头见的。</div></pre></td></tr></table></figure></p>
-<p>可以在番茄钟期间手机、邮件静音，<br>同事来面谈，如果比较急可以商量稍后推迟下，用下一个番茄钟来解决中断事件，而不是在当前活动直接中断处理；如果不着急可以添加到计划外事件，同时在当前活动后添加一个减号 -(下图中的②)，表示受到一次外部中断；如果非常着急，那么不得已只有废弃当前的番茄钟，先帮同事解决问题，过后休息一会然后开启新的番茄钟开始专注起来。</p>
-<p>每个番茄钟结束都要在今日待办的当下活动方格中画×。如果当下活动已经完成则可以给活动内容划一条横线表示完成状态(下图中的③)。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4ab23cde90bb31c5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(5).jpg"></p>
-<h3 id="休息"><a href="#休息" class="headerlink" title="休息"></a>休息</h3><p>小休时间一般为3-5分钟，每隔4个番茄钟就大休一次，大休一般15-30分钟。注意休息期间要站起来走动一下，让自己能消除对上一个番茄钟的思考，完全抽身出来放松下。可以泡杯茶或咖啡，去个厕所，窗台发呆等，总之拒绝任何用脑的活动。<br>以下说明了休息时箭头所指从最佳到最差休息方式：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-32cc2cfdbfaad96f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(3).jpg"></p>
-<h3 id="开始下一个番茄钟，重复3-5步"><a href="#开始下一个番茄钟，重复3-5步" class="headerlink" title="开始下一个番茄钟，重复3-5步"></a>开始下一个番茄钟，重复3-5步</h3><h3 id="下班前记录"><a href="#下班前记录" class="headerlink" title="下班前记录"></a>下班前记录</h3><p>记录什么内容？记录当天完成的番茄钟数、被打断数、今日待办完成数等，通过记录可以知晓自己承诺完成了多少，相差多少，如果差距很大，就要寻找原因。经过一段时间的记录，数据可视化，看自己的承诺和已完成是否越来越接近。通过记录发现总结不足，在以后的清单中持续改善。</p>
-<p>以上只介绍了番茄工作法流程和一些需要注意的点，其他一些边缘内容或者没有get到的点欢迎探讨。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">职场杂谈</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/职场杂谈/" class="article-tag-list-link color5">职场杂谈</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/番茄工作法使用说明书/">展开全文 >></a>
         </p>
       
 
