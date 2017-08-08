@@ -6,17 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2017/8 | Jenson</title>
+  <title>Python入门系列(4):文件IO | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录工作、生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jenson">
-<meta property="og:url" content="http://yoursite.com/archives/2017/08/page/2/index.html">
+  <meta name="description" content="前言文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。 操作mode不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？ 什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？ 下面表格列出了mode值及含义：    值 描述     ‘r’ 读模式   ‘w’ 写模式   ‘a’ 追加模式">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python入门系列(4):文件IO">
+<meta property="og:url" content="http://yoursite.com/2017/08/06/Python入门系列(4)文件IO/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="记录工作、生活">
+<meta property="og:description" content="前言文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。 操作mode不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？ 什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？ 下面表格列出了mode值及含义：    值 描述     ‘r’ 读模式   ‘w’ 写模式   ‘a’ 追加模式">
+<meta property="og:updated_time" content="2017-08-08T05:53:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jenson">
-<meta name="twitter:description" content="记录工作、生活">
+<meta name="twitter:title" content="Python入门系列(4):文件IO">
+<meta name="twitter:description" content="前言文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。 操作mode不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？ 什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？ 下面表格列出了mode值及含义：    值 描述     ‘r’ 读模式   ‘w’ 写模式   ‘a’ 追加模式">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -172,36 +174,117 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Python入门系列(4)文件IO" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/08/01/Python爬虫应该掌握哪些知识/" class="archive-article-date">
-  	<time datetime="2017-08-01T02:24:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/01/Python爬虫应该掌握哪些知识/">Python爬虫应该掌握哪些知识</a>
+    <h1 class="article-title" itemprop="name">
+      Python入门系列(4):文件IO
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/08/06/Python入门系列(4)文件IO/" class="archive-article-date">
+  	<time datetime="2017-08-06T09:25:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月06日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。</p>
+<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="mode"><a href="#mode" class="headerlink" title="mode"></a>mode</h2><p>不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？</p>
+<p>什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？</p>
+<p>下面表格列出了mode值及含义：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">值</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">‘r’</td>
+<td style="text-align:center">读模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘w’</td>
+<td style="text-align:center">写模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘a’</td>
+<td style="text-align:center">追加模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘b’</td>
+<td style="text-align:center">二进制模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘+’</td>
+<td style="text-align:center">读/写模式</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其中b和+可以和前面模式混用</strong>。</p>
+<p>打开文件使用<strong>open*</strong>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file= open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>open函数中第三个可选参数buffering控制着⽂件的缓冲。 如果参数是0， I/O操作就是⽆缓冲的， 直接<br>将数据写到硬盘上； 如果参数是1， I/O操作就是有缓冲的， 数据先写到内存⾥， 只有使⽤flush函数或者<br>close函数才会将数据更新到硬盘； 如果参数为⼤于1的数字则代表缓冲区的⼤⼩（单位是字节） ， -1（或者<br>是任何负数） 代表使⽤默认缓冲区的⼤⼩。 </p>
+</blockquote>
+<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><p>文件读取使用read方法。可以一次读取全部、读取一行、读取指定长度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(file.read())</div><div class="line">print(file.readline())</div><div class="line">print(file.read(<span class="number">3</span>))</div></pre></td></tr></table></figure>
+<h2 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h2><p>写文件使用write方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">file.write(<span class="string">'\ntoday is sunday'</span>)</div><div class="line">str=[<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>]</div><div class="line">file.writelines(str)</div></pre></td></tr></table></figure>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>IO操作完成后都要有一个关闭操作对于文件来说，不使用时要关闭：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file.close()</div></pre></td></tr></table></figure>
+<p>但是IO操作难免出现异常，如果在文件操作期间出现异常可能会导致无法关闭文件。这时需要异常处理机制：<code>try except</code></p>
+<p>但是异常处理机制又略显繁琐，so这里推荐使用<strong>with</strong>语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span>  open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>) <span class="keyword">as</span> file_object:</div><div class="line">contents = file_object.read()</div><div class="line">print(contents)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>关键字with在不再需要访问文件后将其关闭。在这个程序中，注意到我们调用了open()，但<br>没有调用close()；你也可以调用open()和close()来打开和关闭文件，但这样做时，如果程序存<br>在bug，导致close()语句未执行，文件将不会关闭。这看似微不足道，但未妥善地关闭文件可能<br>会导致数据丢失或受损。如果在程序中过早地调用close()，你会发现需要使用文件时它已关闭<br>（无法访问），这会导致更多的错误。并非在任何情况下都能轻松确定关闭文件的恰当时机，但通<br>过使用前面所示的结构，可让Python去确定：你只管打开文件，并在需要时使用它， Python自会<br>在合适的时候自动将其关闭 </p>
+</blockquote>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢您的支持!<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/image/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/image/weixin.png">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -213,7 +296,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -226,126 +309,105 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/08/06/Python入门系列(4)文件IO/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/08/01/Mac系统中希捷移动硬盘NTFS格式只能读/" class="archive-article-date">
-  	<time datetime="2017-07-31T17:03:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2017/08/06/字符串前的r和u/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          字符串前的r和u
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/01/Mac系统中希捷移动硬盘NTFS格式只能读/">Mac系统中希捷移动硬盘NTFS格式只能读</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Mac</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Mac/" class="article-tag-list-link color4">Mac</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/08/01/Python第三方库没有代码快捷提示/" class="archive-article-date">
-  	<time datetime="2017-07-31T16:45:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/01/Python第三方库没有代码快捷提示/">Python第三方库没有代码快捷提示</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2017/08/">&laquo; Prev</a><a class="page-number" href="/archives/2017/08/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
   
 
 
@@ -369,8 +431,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

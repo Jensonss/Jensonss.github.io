@@ -174,6 +174,265 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-hexo添加网易云音乐播放器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/hexo添加网易云音乐播放器/">hexo添加网易云音乐播放器</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/hexo添加网易云音乐播放器/" class="archive-article-date">
+  	<time datetime="2017-07-14T06:47:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月14日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-拿到网易云音乐外链"><a href="#0x00-拿到网易云音乐外链" class="headerlink" title="0x00 拿到网易云音乐外链"></a>0x00 拿到网易云音乐外链</h1><p>因为版权问题有一些音乐不能设置外链，所以要先找到合适的音乐，然后点击生成外链播放器，音乐界面如下：</p>
+<p><img src="/2017/07/14/hexo添加网易云音乐播放器/音乐界面.png" alt="音乐界面"></p>
+<p>如果没有权限会弹出提示，如果有权限就会跳转对应页面<a href="http://music.163.com/#/outchain/2/114442/" target="_blank" rel="external">外链页面</a>。</p>
+<h1 id="0x01-给文章添加播放器"><a href="#0x01-给文章添加播放器" class="headerlink" title="0x01 给文章添加播放器"></a>0x01 给文章添加播放器</h1><p>给文章添加外链很简单，直接复制上面的外链到x.md文件中即可。运行后就会在对应的发布后的文章中显示出播放器。</p>
+<h1 id="0x02-给主题yilia添加播放器"><a href="#0x02-给主题yilia添加播放器" class="headerlink" title="0x02 给主题yilia添加播放器"></a>0x02 给主题yilia添加播放器</h1><ul>
+<li><p>找到对应布局ejs文件添加外链</p>
+<p>找到<code>theme/yilia/layout/_partial/left-col.ejs</code>文件，在末尾header标签前添加外链：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">	<span class="comment">&lt;!-- 添加网易云音乐插件--&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">"header_music"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">iframe</span> <span class="attr">frameborder</span>=<span class="string">"no"</span> <span class="attr">border</span>=<span class="string">"0"</span> 	<span class="attr">marginwidth</span>=<span class="string">"0"</span> <span class="attr">marginheight</span>=<span class="string">"0"</span> <span class="attr">width</span>=<span class="string">250</span> <span class="attr">height</span>=<span class="string">86</span> <span class="attr">src</span>=<span class="string">"//music.163.com/outchain/player?type=2&amp;id=114442&amp;auto=0&amp;height=66"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">nav</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><code>auto=0</code>为关闭自动播放，<code>auto=1</code>为开启自动播放。</p>
+</li>
+<li><p>找到对应css文件添加格式</p>
+<p>找到<code>theme/yilia/source/main.266c1c.css</code>文件。如果你的目录下没有这个文件，那就在同目录下找到类似<code>main.xxx.css</code>文件。不同版本名称可能有不同，格式都一样。</p>
+<p>在最后添加代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.header_music</span> &#123;</div><div class="line">  <span class="attribute">margin-top</span>: <span class="number">140px</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后如果当时没有刷新过来，</p>
+<p>就执行<code>hexo clean</code>清除缓存，</p>
+<p>然后在<code>hexo d -g</code>。</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/hexo添加网易云音乐播放器/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hexo更换主题及配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/14/hexo更换主题及配置/">hexo更换主题及配置</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/14/hexo更换主题及配置/" class="archive-article-date">
+  	<time datetime="2017-07-14T02:42:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月14日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>看惯了next样式，这几天想换一款主题换个心情。挑来挑去发现<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">yilia</a>主题不错，左侧导航和个人信息，还能带头像。so接下来就开始主题切换流程。</p>
+<h1 id="0x01-下载"><a href="#0x01-下载" class="headerlink" title="0x01 下载"></a>0x01 下载</h1><ul>
+<li><p>切换到你的博客根目录下</p>
+<p>如我的是这样子：<code>cd ~/Downloads/hexo/</code> </p>
+</li>
+<li><p>下载前进行源文件备份</p>
+<p>首先<code>hero d -g</code>把当前博客从新部署，</p>
+<p>然后把源文件全部提交：<code>git add .</code>添加临时，<code>git commit -m &quot;全部备份&quot;</code>提交本地，<code>git push origin xxx</code>push到服务器。</p>
+</li>
+<li><p>在根目录下执行clone</p>
+<p>命令：<code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p>
+</li>
+</ul>
+<h1 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h1><p>完成了下载和备份，接下来开始主题切换，在未确认完全完成之前不要执行<code>hexo d -g</code>部署到服务器，先在本地测试。</p>
+<ul>
+<li><p>切换到主题</p>
+<p>打开博客根目录下的<code>_config.yml</code>文件，找到<code>theme: next</code>栏目把next改为<code>yilia</code>后保存。如下：</p>
+<p><img src="/2017/07/14/hexo更换主题及配置/换主题.png" alt="换主题"></p>
+<p>​</p>
+</li>
+<li><p>运行本地测试</p>
+<p>执行<code>hexo s -debug</code>启动本地测试服务，打开<code>http://localhost:4000/</code>页面发现主题已经切换过来了，切换就是这么简单，但是还有很多地方要配置。</p>
+</li>
+</ul>
+<h1 id="0x03-配置"><a href="#0x03-配置" class="headerlink" title="0x03 配置"></a>0x03 配置</h1><p>这里的配置如果没有特殊说明，默认都是<code>themes/yilia/_config.yml</code>文件的配置</p>
+<ul>
+<li><p>menu配置</p>
+<p>默认menu中只有主页和相册，但是我不想要相册，同时还想添加特定的栏目。</p>
+<p>相册不要只要注释掉就好了，但是如何添加特定栏目呢？我们在写文章时头部文件都有类似的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">title: hexo更换主题</div><div class="line">date: 2017-07-14 10:42:33</div><div class="line">tags: 网络</div><div class="line">categories: 网络</div></pre></td></tr></table></figure>
+<p>其中tags和categories都是可以在menu中使用的，比如我想添加Android菜单，只要设置<code>Android: /tags/Android</code>即可，前提是我之前的文章中已经存在tags为Android的标签了。当然如果设置categories也可以的，只要之前有设置过这个类型即可，比如<code>Java: /categories/Java</code>。我的配置如下：</p>
+<p><img src="/2017/07/14/hexo更换主题及配置/menu配置.png" alt="menu配置"></p>
+<p>这样在点击Android菜单后，右侧都是Android类型的文章列表。</p>
+</li>
+<li><p>subnav配置</p>
+<p>subnav主要是个人其他站点相关页面链接，如果没有则直接注释掉，但是为了UI好看还是留了三个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># SubNav</div><div class="line">subnav:</div><div class="line">  #github: &quot;#&quot;</div><div class="line">  #weibo: &quot;#&quot;</div><div class="line">  #rss: &quot;#&quot;</div><div class="line">  #zhihu: &quot;#&quot;</div><div class="line">  #qq: &quot;840418528&quot;</div><div class="line">  #weixin: &quot;#&quot;</div><div class="line">  jianshu: &quot;http://www.jianshu.com/u/1b5cb41384f4&quot;</div><div class="line">  #douban: &quot;#&quot;</div><div class="line">  #segmentfault: &quot;#&quot;</div><div class="line">  #bilibili: &quot;#&quot;</div><div class="line">  #acfun: &quot;#&quot;</div><div class="line">  mail: &quot;mailto:songjlforever@foxmail.com&quot;</div><div class="line">  #facebook: &quot;#&quot;</div><div class="line">  google: &quot;https://www.google.com&quot;</div><div class="line">  #twitter: &quot;#&quot;</div><div class="line">  #linkedin: &quot;#&quot;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>头像配置</p>
+<p>在source下新建一个文件夹起个名字比如：image。头像就是一个图片为什么还要单独建个文件夹？因为下面的打赏里面还要微信和支付宝两个二维码图片！将头像图片拷贝到image目录中，在配置文件中找到<code>avatar:</code>修改如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#你的头像url</div><div class="line">avatar: /image/avatar.jpg</div></pre></td></tr></table></figure>
+<p>刷新<code>http://localhost:4000/</code>发现头像已经出现了。</p>
+</li>
+<li><p>打赏配置</p>
+<p>把支付宝和微信收款二维码拷贝到上面创建的image文件夹。然后在配置文件中修改如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 打赏</div><div class="line"># 打赏type设定：0-关闭打赏； 1-文章对应的md文件里有reward:true属性，才有打赏； 2-所有文章均有打赏</div><div class="line">reward_type: 2</div><div class="line"># 打赏wording</div><div class="line">reward_wording: &apos;谢谢您的支持!&apos;</div><div class="line"># 支付宝二维码图片地址，跟你设置头像的方式一样。比如：/assets/img/alipay.jpg</div><div class="line">alipay: /image/alipay.jpg</div><div class="line"># 微信二维码图片地址</div><div class="line">weixin: /image/weixin.png</div></pre></td></tr></table></figure>
+<p>显示效果如图：</p>
+<p><img src="/2017/07/14/hexo更换主题及配置/打赏效果图.png" alt="打赏效果图"></p>
+<p>​</p>
+<p>​</p>
+</li>
+<li><p>关于我配置</p>
+<p>smart_menu中有关于我的menu，点击后只显示配置文件中的<code>aboutme: 一个从运维转战开发的程序猿。</code>这里内容格式样式太少，我想像next主题中关于我是个单独的页面，那样看起来更舒服。</p>
+<p>当然可以实现，</p>
+<p>首先注释掉<code>smart_menu</code>中的<code>aboutme</code>。</p>
+<p>然后在配置文件顶部<code>menu</code>中添加<code>关于我: /about/</code>。这是刷新UI后点击关于我，打开新的页面如下：</p>
+<p><img src="/2017/07/14/hexo更换主题及配置/关于我.png" alt="关于我"></p>
+<p>​</p>
+</li>
+<li><p>点击所有文章提示模块缺失</p>
+<p>问题如下：</p>
+<p><img src="/2017/07/14/hexo更换主题及配置/模块缺失.png" alt="模块缺失"></p>
+<p>首先确保node版本在6.2以上，我的是6.10.2仍然出现这个问题。</p>
+<p>然后在博客根目录下执行<code>npm i hexo-generator-content --save</code></p>
+<p>最后在根目录中的<code>_config.yml</code>里添加如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">jsonContent:</div><div class="line">  meta: false</div><div class="line">  pages: false</div><div class="line">  posts:</div><div class="line">    title: true</div><div class="line">    date: true</div><div class="line">    path: true</div><div class="line">    text: false</div><div class="line">    raw: false</div><div class="line">    content: false</div><div class="line">    slug: false</div><div class="line">    updated: false</div><div class="line">    comments: false</div><div class="line">    link: false</div><div class="line">    permalink: false</div><div class="line">    excerpt: false</div><div class="line">    categories: false</div><div class="line">    tags: true</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意这段内容格式，尤其是多余空格，否则可能引发其他错误</p>
+</blockquote>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/14/hexo更换主题及配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Mac下配置adb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -910,190 +1169,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/05/18/两个栈实现队列功能/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-设计一个有获取元素最小值getMin的栈" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/">设计一个有获取元素最小值getMin的栈</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/17/设计一个有获取元素最小值getMin的栈/" class="archive-article-date">
-  	<time datetime="2017-05-17T08:24:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月17日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>栈可以看成一个瓶子，只有一个口，另一端被封底。这样数据进出都只能从一个口经过。这样就导致的一个直接结果就是数据FILO问题。要找到栈中最小数据，单靠一个栈不能完成，需要外部提供辅助。</p>
-<h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>一个存好数据的栈，要从里面找到最小数值，不可避免的要把数据出栈，然后进行对比。这时有个问题就来了，找到最小数值后，其他数据还有用吗？换句话说，其他数据还要不要了？如果不要的话，比较完成后不用再次存储，如果要德话，比较期间还要注意数据的保存。这里注意要分这两种情况来考虑。</p>
-<h1 id="0x02-不要其他数据的实现"><a href="#0x02-不要其他数据的实现" class="headerlink" title="0x02 不要其他数据的实现"></a>0x02 不要其他数据的实现</h1><p>既然不需要其他数据，那就直接把数据弹出栈就好了，每次弹栈时对比临时值，如果当前弹栈数据比临时值大则直接弹栈，否则就把值赋给临时值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里代码只实现了getStackMin方法，栈的其他方法就直接定义一个方法后直接调用Stack方法即可。</p>
-<h1 id="0x03-需要其他数据的实现"><a href="#0x03-需要其他数据的实现" class="headerlink" title="0x03 需要其他数据的实现"></a>0x03 需要其他数据的实现</h1><p>如果要保留栈的数据，那最直接的想法是在弹栈比较期间，把弹出栈的数据顺路给入道一个新的栈中，这里相比上面，需要多一个栈即可实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; backUp = new Stack&lt;&gt;();//备份栈</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">			backUp.push(current);//弹出栈时进入备份栈</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-算法排序之快速排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/16/算法排序之快速排序/">算法排序之快速排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/16/算法排序之快速排序/" class="archive-article-date">
-  	<time datetime="2017-05-16T10:21:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月16日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过快速排序，使得数组最终按非递减顺序排列。</p>
-<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
-<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
-<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><p>快排是根据分治思想，</p>
-<p>①选取一个基数，</p>
-<p>②将无序数组分为大小两个数组，其中一个数组值全都比基数小，另一个数组值全都比基数大。</p>
-<p>③然后将这两个数组分别再次分组，递归重复①②的步骤直到每个拆分后的数组不可再分割为止。也就是说最后每个元素单独为一个数组为止。</p>
-<p>④最后得出数组就是排序好的。</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">public static int partition3(int[] arr, int low, int high) &#123;</div><div class="line">	int i, j;</div><div class="line">	i = low;</div><div class="line">	int base = arr[i];</div><div class="line">	for (j = i + 1; j &lt;= high; j++) &#123;</div><div class="line">		if (arr[j] &lt; base) &#123;</div><div class="line">			i++;</div><div class="line">			swap(arr, i, j);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	swap(arr, low, i);</div><div class="line">	return i;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line">*交换数组中两个值</div><div class="line">**/</div><div class="line">public static void swap(int[] arr, int i, int j) &#123;</div><div class="line">	if (i != j) &#123;</div><div class="line">		int tmp = arr[i];</div><div class="line">		arr[i] = arr[j];</div><div class="line">		arr[j] = tmp;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line">*right为数组最大下标而不是数组长度</div><div class="line">**/</div><div class="line">public static void quickSort(int[] arr, int left, int right) &#123;</div><div class="line">	if (left &lt; right) &#123;</div><div class="line">		int piv = partition3(arr, left, right);</div><div class="line">		quickSort(arr, left, piv - 1);</div><div class="line">		quickSort(arr, piv + 1, right);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/16/算法排序之快速排序/">展开全文 >></a>
         </p>
       
 

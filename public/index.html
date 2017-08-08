@@ -174,6 +174,246 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python入门系列(4)文件IO" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/06/Python入门系列(4)文件IO/">Python入门系列(4):文件IO</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/06/Python入门系列(4)文件IO/" class="archive-article-date">
+  	<time datetime="2017-08-06T09:25:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月06日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。</p>
+<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="mode"><a href="#mode" class="headerlink" title="mode"></a>mode</h2><p>不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？</p>
+<p>什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？</p>
+<p>下面表格列出了mode值及含义：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">值</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">‘r’</td>
+<td style="text-align:center">读模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘w’</td>
+<td style="text-align:center">写模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘a’</td>
+<td style="text-align:center">追加模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘b’</td>
+<td style="text-align:center">二进制模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘+’</td>
+<td style="text-align:center">读/写模式</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其中b和+可以和前面模式混用</strong>。</p>
+<p>打开文件使用<strong>open*</strong>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file= open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>open函数中第三个可选参数buffering控制着⽂件的缓冲。 如果参数是0， I/O操作就是⽆缓冲的， 直接<br>将数据写到硬盘上； 如果参数是1， I/O操作就是有缓冲的， 数据先写到内存⾥， 只有使⽤flush函数或者<br>close函数才会将数据更新到硬盘； 如果参数为⼤于1的数字则代表缓冲区的⼤⼩（单位是字节） ， -1（或者<br>是任何负数） 代表使⽤默认缓冲区的⼤⼩。 </p>
+</blockquote>
+<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><p>文件读取使用read方法。可以一次读取全部、读取一行、读取指定长度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(file.read())</div><div class="line">print(file.readline())</div><div class="line">print(file.read(<span class="number">3</span>))</div></pre></td></tr></table></figure>
+<h2 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h2><p>写文件使用write方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">file.write(<span class="string">'\ntoday is sunday'</span>)</div><div class="line">str=[<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>]</div><div class="line">file.writelines(str)</div></pre></td></tr></table></figure>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>IO操作完成后都要有一个关闭操作对于文件来说，不使用时要关闭：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file.close()</div></pre></td></tr></table></figure>
+<p>但是IO操作难免出现异常，如果在文件操作期间出现异常可能会导致无法关闭文件。这时需要异常处理机制：<code>try except</code></p>
+<p>但是异常处理机制又略显繁琐，so这里推荐使用<strong>with</strong>语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span>  open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>) <span class="keyword">as</span> file_object:</div><div class="line">contents = file_object.read()</div><div class="line">print(contents)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>关键字with在不再需要访问文件后将其关闭。在这个程序中，注意到我们调用了open()，但<br>没有调用close()；你也可以调用open()和close()来打开和关闭文件，但这样做时，如果程序存<br>在bug，导致close()语句未执行，文件将不会关闭。这看似微不足道，但未妥善地关闭文件可能<br>会导致数据丢失或受损。如果在程序中过早地调用close()，你会发现需要使用文件时它已关闭<br>（无法访问），这会导致更多的错误。并非在任何情况下都能轻松确定关闭文件的恰当时机，但通<br>过使用前面所示的结构，可让Python去确定：你只管打开文件，并在需要时使用它， Python自会<br>在合适的时候自动将其关闭 </p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/06/Python入门系列(4)文件IO/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-字符串前的r和u" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/06/字符串前的r和u/">字符串前的r和u</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/06/字符串前的r和u/" class="archive-article-date">
+  	<time datetime="2017-08-06T08:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月06日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在看python代码时经常看到这样的代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">r"aa\nbb"</span>)</div><div class="line">print(<span class="string">u"aa\nbb"</span>)</div></pre></td></tr></table></figure>
+<p>字符串使用时直接引用就好了，前面的r和u这两个前缀是什么鬼？有什么作用？</p>
+<p>纸上得来终觉浅，绝知此事要躬行。</p>
+<p>要了解r和u的作用还是实际操作来看看</p>
+<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
+<li><p>r的作用</p>
+<p>首先看看r的作用，执行如下代码看看结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">"aa\nbb"</span>)</div><div class="line">print(<span class="string">r"aa\nbb"</span>)</div></pre></td></tr></table></figure>
+<p>打印结果是这样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">aa</div><div class="line">bb</div><div class="line">aa\nbb</div></pre></td></tr></table></figure>
+<p>第一个打印，<strong>\n</strong>把字符串截开了，而第二个打印是全部打印。</p>
+<p>在python中，<strong>\n</strong>是换行符作用。所以第一个打印才是正常的。</p>
+<p>第二个打印中的<strong>r作用就是取消字符串中的转移字符的作用，让其老老实实作为一个普通字符串</strong>。</p>
+<p>接下来看看u的作用：</p>
+</li>
+<li><p>u的作用</p>
+<p>u表示将后面跟的字符串以unicode格式存储，否则会使用源文件的默认编码格式来编码字符串</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/06/字符串前的r和u/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-No-resource-identifier-found-for-attribute-roundIcon-in-package-android" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1278,209 +1518,6 @@ If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/08/01/Android屏幕适配/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python爬虫应该掌握哪些知识" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/Python爬虫应该掌握哪些知识/">Python爬虫应该掌握哪些知识</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/Python爬虫应该掌握哪些知识/" class="archive-article-date">
-  	<time datetime="2017-08-01T02:24:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>其实对某些网站有针对性的爬取需要的内容并不是很难，只要缕清自己的需求。从0到需求实现须要哪些步骤给列出来，然后各个实现最后组合在一起就基本完成了一个简单的爬虫。</p>
-<h1 id="整体流程分析"><a href="#整体流程分析" class="headerlink" title="整体流程分析"></a>整体流程分析</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%88%AC%E8%99%AB%E6%B5%81%E7%A8%8B.png" alt="爬虫整体流程"></p>
-<p>如图，我们爬取数据最终都是要展示出来看的，所以基本的一个自己的小型爬虫流程可以分为数据采集、数据存储、数据清洗、数据展示四大流程。</p>
-<p><strong>兵法云:”分而治之，各个击破”</strong>，下面把四个步骤涉及到得知识分别说一下。</p>
-<h1 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h1><p>爬虫爬取过程就是采集过程，既然要爬取别人的网站数据，首先要处理网络请求这就是离不开网络库，通常使用<code>urllib</code>就可以。</p>
-<p>爬到的页面都是html源码形式的，习惯称为DOM树，要通过DOM树获取需要的信息，需要使用解析库，这里推荐<code>BeautifulSoup4</code>。</p>
-<p>因为要找到内容的规律才能进行顺利爬取，期间免不了涉及到正则表达式。所以这也是必须要掌握的。</p>
-<p>这样基本能完成简单的爬取了。</p>
-<blockquote>
-<p>如果涉及到透过表单和登陆窗口后面的爬取或者爬取内容和实际显示不一样，这些涉及深入爬取暂时不做讨论。</p>
-</blockquote>
-<h1 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h1><p>爬取到得数据总在内存中存放是个问题。所以爬取后的内容需要及时进行存储以防丢失。</p>
-<p>存储一般分为文件存储和数据库存储，Android中也是如此。</p>
-<p>而数据处理的文件存储一般式CVS格式，so使用<code>cvs</code>库可以方便进行数据读写，</p>
-<p>数据库存储可以自由选择所熟悉的数据库类型。</p>
-<p>很多时候个人爬虫到这步基本已经完成了。后面两步主要在数据分析时才会用到</p>
-<h1 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h1><p>如果爬取到得数据本身就是很符合规范的话那就省心了，否则需要对采集的数据进行清洗。</p>
-<p>由于错误的标点符号、大小写字母不一致、断行和拼写错误等问题，零乱的数据是网络中的大问题。而数据清洗就是清除这些问题，让数据标准化。</p>
-<h1 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h1><p>数据展示即数据可视化，可以使用<code>matplotlib</code>库生成各种统计图</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/Python爬虫应该掌握哪些知识/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Mac系统中希捷移动硬盘NTFS格式只能读" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/Mac系统中希捷移动硬盘NTFS格式只能读/">Mac系统中希捷移动硬盘NTFS格式只能读</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/Mac系统中希捷移动硬盘NTFS格式只能读/" class="archive-article-date">
-  	<time datetime="2017-07-31T17:03:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天Mac系统更新完成后，希捷移动硬盘突然只能读不能写了。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>Mac默认不支持NTFS格式，所以要想兼容需要安装<a href="http://www.seagate.com/cn/zh/support/downloads/item/ntfs-driver-for-mac-os-master-dl/" target="_blank" rel="external">Paragon驱动</a>。</p>
-<ul>
-<li>在开始安装前，确保硬盘连接至电脑。</li>
-<li>双击您下载的 <strong>NTFS_for_Mac_14.0.456.dmg</strong> 文件。</li>
-<li>按照屏幕提示完成安装。</li>
-<li>重启后即可读写硬盘</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Mac</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Mac/" class="article-tag-list-link color4">Mac</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/Mac系统中希捷移动硬盘NTFS格式只能读/">展开全文 >></a>
         </p>
       
 

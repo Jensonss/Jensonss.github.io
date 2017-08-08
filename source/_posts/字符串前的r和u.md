@@ -1,5 +1,5 @@
 ---
-title:字符串前的r和u
+title: 字符串前的r和u
 date: 2017-08-06 16:55:54
 tags: Python
 categories: Python

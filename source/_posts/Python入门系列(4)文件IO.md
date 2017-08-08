@@ -1,5 +1,5 @@
 ---
-title:Python入门系列(4):文件IO
+title: Python入门系列(4):文件IO
 date: 2017-08-06 17:25:54
 tags: Python
 categories: Python
