@@ -174,6 +174,105 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python中-和-有什么意义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/08/Python中-和-有什么意义/">Python中_和__有什么意义?</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/08/Python中-和-有什么意义/" class="archive-article-date">
+  	<time datetime="2017-08-08T14:35:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月08日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>python中很多源码都是由单下划线和双下划线开头的函数、变量、模块。</p>
+<p>但是一直不太明白这表示什么意思。然后因为好奇就查了下资料才才明白怎么回事。</p>
+<h1 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h1><h2 id="单下划线（-）"><a href="#单下划线（-）" class="headerlink" title="单下划线（_）"></a>单下划线（_）</h2><p>以<strong>单下划线</strong>开头的名字都应该是内部实现.</p>
+<p>函数以单下划线开头说明这是一个特殊函数或者认为是一个隐藏函数，作为一个内部方法，只能被本模块代码使用。</p>
+<p>Python没有强制依赖于语言特性去达到封装数据目的，而是通过归约。而这里的下划线就是归约。</p>
+<blockquote>
+<p>Python 并不会真的阻止别人访问内部名称。但是如果你这么做肯定是不好的，可能会导致脆弱的代码。同时还要注意到，使用下划线开头的约定同样适用于模块名和模块级别函数。</p>
+</blockquote>
+<h2 id="双下划线（-）"><a href="#双下划线（-）" class="headerlink" title="双下划线（__）"></a>双下划线（__）</h2><p>使用双下划线开始会导致访问名称变成其他形式。这种以双下划线开头的函数不会被通过类继承覆盖。</p>
+<p>Python文档指出，“<strong>spam”这种形式（至少两个前导下划线，最多一个后续下划线）的任何标识符将会被“_classname</strong>spam”这种形式原文取代，在这里“classname”是去掉前导下划线的当前类名。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'b___private_method'</span>)</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">public_method</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private_method()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(B)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super().__init__()</div><div class="line">        self.__private = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'c___private_method'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"></div><div class="line">c = C()</div><div class="line">c.public_method()</div><div class="line"><span class="comment"># print(c.getPrivateValue())</span></div></pre></td></tr></table></figure>
+<p>上面代码执行后结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b___private_method</div><div class="line"></div><div class="line">Process finished with exit code 0</div></pre></td></tr></table></figure>
+<p>可以看到打印的时B类中方法，而不是C类方法，说明虽然这两个方法方法名一样，但是没有被重写。</p>
+<h2 id="前后双下划线"><a href="#前后双下划线" class="headerlink" title="前后双下划线"></a>前后双下划线</h2><p>这种用法表示Python中特殊的方法名。其实，这只是一种惯例，对Python系统来说，这将确保不会与用户自定义的名称冲突。通常，你将会覆写这些方法，并在里面实现你所需要的功能，以便Python调用它们。例如，当定义一个类时，你经常会覆写“<strong>init</strong>”方法。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/08/Python中-和-有什么意义/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python入门系列(5)：进程、线程和协程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1415,103 +1514,6 @@ If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
 
 
   
-    <article id="post-Selenium-ChromeDriver安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/02/Selenium-ChromeDriver安装/">Selenium ChromeDriver安装</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/02/Selenium-ChromeDriver安装/" class="archive-article-date">
-  	<time datetime="2017-08-01T18:57:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月02日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Selenium默认自带了Firefox的驱动，所以如果要使用该框架，要么自己安装Chrome或IE驱动，要么安装FireFox浏览器。</p>
-<p>因为我习惯使用Chrome，所以要手动安装驱动。</p>
-<h1 id="驱动下载"><a href="#驱动下载" class="headerlink" title="驱动下载"></a>驱动下载</h1><p><a href="https://sites.google.com/a/chromium.org/chromedriver/home" target="_blank" rel="external">ChromeDriver</a>下载地址：<a href="https://chromedriver.storage.googleapis.com/index.html?path=2.31/" target="_blank" rel="external">https://chromedriver.storage.googleapis.com/index.html?path=2.31/</a></p>
-<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>mac端下载完成解压后可直接使用，不过要在代码中声明解压后的文件路径，如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/jenson/Downloads/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"http://www.jianshu.com"</span>)</div></pre></td></tr></table></figure>
-<h1 id=""><a href="#" class="headerlink" title=" "></a> </h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">自动化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/自动化/" class="article-tag-list-link color4">自动化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/02/Selenium-ChromeDriver安装/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1658,15 +1660,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1674,11 +1668,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">

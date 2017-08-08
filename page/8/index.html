@@ -174,19 +174,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-osx下如何使用SublimeText阅读Android系统源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">osx下如何使用SublimeText阅读Android系统源码</a>
+      <a class="article-title" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">Python入门系列(1):如何使用Sublime text开发Python</a>
     </h1>
   
 
         
-        <a href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" class="archive-article-date">
+        <a href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" class="archive-article-date">
   	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
 </a>
         
@@ -194,135 +194,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
+        <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
+<h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
+<li>找到Python3的安装路径<br>终端中输入命令</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>-a python3 ```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到结果</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.io/upload_images/1796052-01e91620f87d697b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">复制路径```/Library/Frameworks/Python.framework/Versions/3.5/bin/python3</div></pre></td></tr></table></figure>
 <ul>
-<li><p>安装CTags</p>
-<ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
-<ul>
-<li>3.创建索引</li>
+<li>配置Sublime<br>打开Sublime-&gt;Tools-&gt;build system-&gt;new build system<br>如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。</li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.41.06.png"></p>
+<p>点击new build system 后的窗口如下图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
+<p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
+<p>print(“hello python!”)<br>```</p>
+<p>编写完代码保存，command+B执行编译</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>
+<p>本节完成。</p>
 
       
 
@@ -357,7 +246,184 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-pycharm黄线问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/pycharm黄线问题/">pycharm黄线问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/pycharm黄线问题/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
+<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/pycharm黄线问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
+</li>
+<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
+</li>
+<li>3.执行执行<code>brew help</code>看是否有提示</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/osx如何安装Homrbrew/">展开全文 >></a>
         </p>
       
 
@@ -673,112 +739,6 @@
 
 
   
-    <article id="post-详解设计模式之简单工厂模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/详解设计模式之简单工厂模式/">详解设计模式之简单工厂模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/详解设计模式之简单工厂模式/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
-<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
-<p>####3、如何使用工厂模式？</p>
-<ul>
-<li>先看下不使用模式如何创建接口实例</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>起亚汽车实现代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>客户端代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
-<p>public class BmwImpl implements CarApi {</p>
-<pre><code>@Override
-public void run() {
-    // TODO Auto-generated method stub
-    System.out.println(&quot;宝马跑起来&quot;);
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
-<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
-<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
-<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
-<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/详解设计模式之简单工厂模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-详解设计模式之单例模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -865,6 +825,112 @@ public void run() {
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/21/详解设计模式之单例模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-详解设计模式之简单工厂模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/详解设计模式之简单工厂模式/">详解设计模式之简单工厂模式</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/详解设计模式之简单工厂模式/" class="archive-article-date">
+  	<time datetime="2017-04-21T14:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
+<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
+<p>####3、如何使用工厂模式？</p>
+<ul>
+<li>先看下不使用模式如何创建接口实例</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>起亚汽车实现代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>客户端代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
+<p>public class BmwImpl implements CarApi {</p>
+<pre><code>@Override
+public void run() {
+    // TODO Auto-generated method stub
+    System.out.println(&quot;宝马跑起来&quot;);
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
+<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
+<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
+<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
+<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/详解设计模式之简单工厂模式/">展开全文 >></a>
         </p>
       
 
@@ -995,19 +1061,19 @@ public void run() {
 
 
   
-    <article id="post-Android性能优化之内存优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-如何知道下载好的aosp版本" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/Android性能优化之内存优化/">Android性能优化之内存优化</a>
+      <a class="article-title" href="/2017/04/21/如何知道下载好的aosp版本/">如何知道下载好的aosp版本？</a>
     </h1>
   
 
         
-        <a href="/2017/04/21/Android性能优化之内存优化/" class="archive-article-date">
+        <a href="/2017/04/21/如何知道下载好的aosp版本/" class="archive-article-date">
   	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
 </a>
         
@@ -1015,129 +1081,10 @@ public void run() {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979" target="_blank" rel="external">Android性能优化之耗电优化
-</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
-<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
-<h4 id="如何保证已使用内存顺利被回收？"><a href="#如何保证已使用内存顺利被回收？" class="headerlink" title="如何保证已使用内存顺利被回收？"></a>如何保证已使用内存顺利被回收？</h4><ul>
-<li><p>Java对象生命周期</p>
-<ul>
-<li>创建阶段<br>申请内存空间，构造对象并初始化相关属性值</li>
-<li>使用阶段<br>根据对象应用调用相关方法完成业务逻辑。对象至少被一个强引用持有，除非对象创建时显示声明使用软引用、弱引用和虚引用。</li>
-<li>不可见阶段<br>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，当然对象还是存在着的。</li>
-<li><p>不可达阶段<br>对象处于不可达阶段是指该对象不再被任何强引用所持有。GC会发现对象已不可达</p>
-</li>
-<li><p>收集阶段<br>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。</p>
-</li>
-<li><p>终结阶段<br>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段，等待垃圾回收器对该对象空间进行回收。</p>
-</li>
-<li><p>对象空间重新分配阶段<br>若垃圾回收器对该对象的所占用的内存空间进行回收或者再分配，则该对象彻底消失，这个阶段称之为“对象空间重新分配阶段”。</p>
-<p>以上是Java对象生命周期的简要介绍，要保证内存顺利回收，正确使用Java对象生命周期很重要，如果不能及时回收，我们就称之为“发生了内存泄露”。</p>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>在不可见阶段，程序本身不再持有对象强引用，但对象仍可能被JVM等系统下的某些已装载的静态变量或线程或JNI等强引用持有着，这些特殊的强引用被称为”GC root”。存在着这些GC root会导致对象的内存泄露情况，无法被回收。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="垃圾回收.jpeg"></p>
-<p>图中灰色的孤立无援的对象对于GC Roots来说不可达，会被回收。知道了内存泄露会影响回收，下面说下哪些方面会导致内存泄露</p>
-<ul>
-<li><p>引起内存泄露的情况</p>
-<ul>
-<li>资源没有适时关闭<br>sqlite的cursor、读写文件使用的File文件流等在使用完后没有及时关闭。虽然cursor会在系统回收时自动关闭，但是这样效率较低。对于资源对象使用还是应该养成良好习惯，使用完毕close并置空。</li>
-<li>注册对象未注销<br>在Android中主要是指注册的广播在Activity销毁时反注销。<br>在Activity中如果有使用的观察者模式在生命周期发生变化时根据需求注销。<br>在Activity中使用的各类传感器(光线、重力等)在页面销毁时及时注销，否则不光导致内存泄露还会因为传感器频繁的采样导致耗电及cpu的占用。</li>
-<li><p>使用static修饰变量<br>这里只说一点，被static修饰的变量可以认为是直接被GC Roots引用了，那你就知道其生命周期有多长了。这时候你如果用static 修饰Bitmap、View、Context和Activity等后果有多严重了吧。</p>
-</li>
-<li><p>非静态内部类的静态实例</p>
-<p>   先看几行代码：</p>
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">public static People people;</div><div class="line"> 		 @Override</div><div class="line">  		protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">     		 super.onCreate(savedInstanceState);</div><div class="line">     		 setContentView(R.layout.activity_main);</div><div class="line">     		 people = new People();</div><div class="line">  		&#125;</div><div class="line"> 		 class  People&#123;</div><div class="line">     		 int age ;</div><div class="line">     		 String name ;</div><div class="line">  		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>   非静态内部类People持有外部类即当前Activity的引用，而该非静态内部类实例又是static修饰        的，导致Activity一直被持有而不得释放，最终导致Activity所包含的view不能释放，如果view         tree中包含多图片，那泄露的内存是很大的。</p>
-</li>
-<li><p>Handler</p>
-<p>   众所周知handler用来发送和处理消息回调的。<br>handler导致泄露主要是handler实例是作为非静态匿名内部类方式创建，并且MessageQueue队列中有未处理消息，这时如果退出Activity，MessageQueue中还有Message，而Message持有handler实例，handler实例作为非静态内部类持有Activity引用，最终的连锁反应导致Activity泄露。</p>
-<blockquote>
-<p>handler引起的内存泄露一般是临时性的，因为消息队列里的Message在延时到时间或者某一情况激活后还是会执行的，除非你是故意搞事情。创建handler时最好使用静态内部类，同时在Activity退出时执行 handler.removeCallbacksAndMessages(null);清空队列消息</p>
-</blockquote>
-</li>
-<li><p>Webview</p>
-<p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
-</li>
-</ul>
-<ul>
-<li><p>容器中的对象未清理对象</p>
-<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<h4 id="如何尽量小的申请内存？"><a href="#如何尽量小的申请内存？" class="headerlink" title="如何尽量小的申请内存？"></a>如何尽量小的申请内存？</h4><p>上面说完了如何保证GC顺利回收，现在来讲讲要最小使用内存应该怎么做：</p>
-<ul>
-<li><p>慎用自动封装</p>
-<p>  来几行代码尝尝：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Integer num=0;</div><div class="line">for (int i=0;i&lt;100;i++) &#123;</div><div class="line">    num+=i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>  Java基本数据类型是有自动装箱机制的。每次执行循环都会发生一次装箱操作创建一个Integer对象，造成内存消耗。包括其他基本数据类型都有可能造成这种情况。</p>
-</li>
-<li><p>内存复用</p>
-<ul>
-<li><p>视图复用</p>
-<pre><code>在ListView中使用ViewHolder复用item组件，一方面节省内存，一方面提高滑动流畅性。都用过不多介绍。
-</code></pre></li>
-<li><p>使用对象池</p>
-<pre><code>看过Handler、Looper、Message、MessageQueue这一套消息循环源码的同志应该知道里面的Message使用了对象池模式。
-</code></pre><blockquote>
-<p>对象池类似线程池， 首先初始化一个固定大小池子，每次创建对象时候先去池子中找有没有，如果有直接取出，如果没有new出来使用后还到池子里。这样便可达到对象复用的目的。<br>对象池模式适用于那些频繁使用创建的对象，比如一个聊天app，里面对象最多的恐怕就是聊天信息(每条聊天信息对应一个信息对象)。都知道对象的创建是很耗费时间和内存的，没事不要new着玩。如果每条消息都创建一个对象，那可想而知该APP的性能。</p>
-</blockquote>
-<pre><code>对象池的使用也很简单，少量代码即可完成：
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class People &#123;</div><div class="line">     			private static final Pools.SynchronizedPool&lt;People&gt; sPool = new Pools.SynchronizedPool&lt;People&gt;(</div><div class="line">        		   	  20);//需要维持对象的数量</div><div class="line">     			int age;</div><div class="line">    			String name;</div><div class="line">   </div><div class="line">     			public static People obtain() &#123;</div><div class="line">       			  People instance = sPool.acquire();</div><div class="line">       			  return (instance != null) ? instance : new People();</div><div class="line">     			&#125;</div><div class="line">     			public void recycle() &#123;</div><div class="line">       			  sPool.release(this);</div><div class="line">    		 	&#125;</div><div class="line"> 			&#125;</div></pre></td></tr></table></figure>
-
-&gt;注意：对象申请(obtain)和释放(recycle)成对出现，使用一个对象后一定要释放还给对象池。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>- Bitmap复用
-
-    如果设置了options.inBitmap属性，以后再使用带有该options参数的decode方法加载图片资源时        ，decode会尝试重用已存在的位图内存，这样节省了加载和分配的时间，同时也节省了内存空间
-
-    &gt;该属性从3.0开始引进，低版本不支持inBitmap，4.4系统之前只能重用大小相同的内存区域，4.4以后可以重用任何比所需内存小的区域。具体使用可参考[官网](https://developer.android.com/topic/performance/graphics/manage-memory.html)。
-</code></pre><ul>
-<li><p>纯色规则形状背景用Color Res代替图片</p>
-<pre><code>经常遇到一些按钮背景是纯色显示，比如选中状态背景变为纯灰，但是设计已经发来了切图用还是不用？大声say NO！如果背景使用图片来显示，那背景每个像素都要绘制。
-
-假设一个分辨率为100x100的图片，占用4通道。那该图片内存占用就是100x100x4 =4万Byte≈40KB；但是如果使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">- 选择合适数据类型</div><div class="line"></div><div class="line">   - 使用ArrayMap替换HashMap</div><div class="line"></div><div class="line">		先看一下HashMap模型和ArrayMap模型：</div><div class="line">![hashmap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-3e3049cb811341c1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">![arraymap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-0d979501c5d1358f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"></div><div class="line">&gt;HashMap是一个散列链表，稀疏阵列导致内存稍大，而ArrayMap提供了和HashMap一样的功能，但是避免了内存过度开销。在执行插入或删除操作时，从性能上看ArrayMap比HashMap稍差，但是如果对象数很小，比如1000以内不用担心性能问题。如果想深入了解这2个的原理请自行搜索，这里不过多阐述。</div><div class="line"></div><div class="line"></div><div class="line">  - 枚举替身来了</div><div class="line">      JDK1.5就支持了枚举类型，使用Enum关键字定义。使用枚举类型很多时候出于参数类型安全迫不得已作出的选择。</div></pre></td></tr></table></figure>
-</code></pre><p>public String  getValue(int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    default:
-        throw new IllegalArgumentException(&quot;不合法参数&quot;);
-}
-</code></pre><p>return “”;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> 试想一下如果一个函数的参数为int type，函数处理时只用到了1，2，3三种值，如果是其他值就抛出异常，这无疑增加了程序的不稳定性，按以前此时最好的解决办法就是参数改为枚举类型，增加了限定也就提高了稳定性。但是枚举类型就是一把双刃剑，增加安全同时也大大增加了内存占用,尤其是在移动设备上，资源有限更应该注意内存节省。</div><div class="line"></div><div class="line">谷歌或许考虑到了这些问题，在提供的注解包里添加了注解方式检查类型安全，目前支持int和String两种，看下使用方式：</div></pre></td></tr></table></figure>
-<p>//1、先声明需要的类型常量值<br>public static final int TYPE_1 = 1;<br>public static final int TYPE_2 = 2;<br>//2、创建注解接口同时把上一步声明的常量囊括到这里<br>@IntDef({TYPE_1,TYPE_2})<br>@Retention(RetentionPolicy.SOURCE)<br>public @interface _TYPE{</p>
-<p>}<br>//3、在函数参数中增加 注解接口名称<br>public String getValue(@_TYPE int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-}
-return &quot;&quot;;
-</code></pre><p>}<br>```</p>
-<p>   经过上面的步骤，再调用getValue()函数时如果传入其他int则报错编译不通过，这样通过注解就增加了安全性：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午7.13.32.png"></p>
-</li>
-</ul>
-<p>结语：基本上APP大部分内存还是被图片占用，处理好图片尤为重要，但是关于图片三级缓存及缩放，目前都使用第三方框架如ImageLoader，所以这里一笔带过。以上就是日常内存优化需要注意的地方，自己做个总结，也希望能对各位看官有所帮助。</p>
-
+        <p>下载源码时执行的是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
+<p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
       
 
       
@@ -1171,111 +1118,7 @@ return &quot;&quot;;
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/Android性能优化之内存优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/" class="archive-article-date">
-  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>一直以来对这几个SDK版本概念都有点模糊不清，对于API的使用又会产生什么样的影响。所以今天花点时间来记录下。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-947f3215a5f6169e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午12.09.45.png"></p>
-<h4 id="minSDKVersion"><a href="#minSDKVersion" class="headerlink" title="minSDKVersion"></a>minSDKVersion</h4><p>顾名思义是设置sdk最低版本的。作用就是操作系统会拒绝低于<br>该标准的APP的安装。</p>
-<p>例如，minSDKVersion设置为16(Jelly Bean 4.1系统)，那么该APP将只能运行在4.1系统以上的设备中，想要在2.3系统上安装是不被允许的。</p>
-<p>minSDKVersion比较容易理解，经常让我混淆的时其他两个版本设置会对API产生的影响。</p>
-<h4 id="targetSDKVersion"><a href="#targetSDKVersion" class="headerlink" title="targetSDKVersion"></a>targetSDKVersion</h4><p>targetSDKVersion就是设置SDK目标版本，目标版本的设置就是为了告诉Android系统：本APP是设计计划给哪个API级别运行的。</p>
-<p>一般情况下目标版本设置为当前Android最新版本即可。既然是一般那也就有特殊情况，什么情况下需要修改目标版本呢？</p>
-<p>如果新发布的SDK版本会对UI显示甚至操作系统运行机制产生影响，而你的APP又没有做好应对措施，为了保证你的APP正常运行，那你需要降低目标版本。因为你的目标版本仍然是旧的SDK，所以在新版系统中那些新的变化会在你的APP中被忽略，继而保证其正常运行。</p>
-<p>例如，Android6.0系统增加了动态权限机制，如果为了追时髦，盲目把你的targetSDKVersion设置为23(6.0)，那么在需要使用权限的地方将会出现异常。为此，在你做好动态权限申请之前，为保障APP正常运行，你需要将目标版本设置低于23。</p>
-<h4 id="compileSDKVersion"><a href="#compileSDKVersion" class="headerlink" title="compileSDKVersion"></a>compileSDKVersion</h4><p>compileSDKVersion是设置编译版本。</p>
-<p>一般来说编译目标版本是选择最新的SDK，这样可以及时使用体验到新的API提供的新功能。</p>
-<p>值得注意的是，如果minSDKVersion和compileSDKVersion版本差距比较大的话，可能会造成API的不兼容。例如，你的最低版本是2.3 ，但是编译版本是5.0，API中使用了4.0SDK提供的一些新API，这样的后果是在2.3系统中运行到该处代码时会发生异常崩溃。这是因为代码的不兼容造成的。如图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-67bfb13669a8dce2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.05.00.png"></p>
-<p>如何解决这种API的不兼容呢？<br>一种办法是提升minSDKVersion到新API使用的SDK版本，但是这种方法只是回避兼容性，并没有确实解决问题，而且还要放弃低版本部分市场。<br>比较好的做法是在使用新API地方做设备版本的检查。Build.VERSION_SDK_INT常量表示当前Android设备的版本号。可以将该常量同新API版本进行比较，如果版本大于等于新版API版本号，则正常使用新API功能，否则使用旧的调用。兼容设置如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a2d7e548c4a118cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.16.40.png"></p>
-<blockquote>
-<p>注意：compileSDKVersion是和编译器打交道的，而minSDKVersion和targetSDKVersion是和系统打交道的。</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/21/如何知道下载好的aosp版本/">展开全文 >></a>
         </p>
       
 
@@ -1451,15 +1294,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1467,11 +1302,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
