@@ -174,6 +174,508 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Android性能优化之内存优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/Android性能优化之内存优化/">Android性能优化之内存优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/Android性能优化之内存优化/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979" target="_blank" rel="external">Android性能优化之耗电优化
+</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
+<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
+<h4 id="如何保证已使用内存顺利被回收？"><a href="#如何保证已使用内存顺利被回收？" class="headerlink" title="如何保证已使用内存顺利被回收？"></a>如何保证已使用内存顺利被回收？</h4><ul>
+<li><p>Java对象生命周期</p>
+<ul>
+<li>创建阶段<br>申请内存空间，构造对象并初始化相关属性值</li>
+<li>使用阶段<br>根据对象应用调用相关方法完成业务逻辑。对象至少被一个强引用持有，除非对象创建时显示声明使用软引用、弱引用和虚引用。</li>
+<li>不可见阶段<br>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，当然对象还是存在着的。</li>
+<li><p>不可达阶段<br>对象处于不可达阶段是指该对象不再被任何强引用所持有。GC会发现对象已不可达</p>
+</li>
+<li><p>收集阶段<br>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。</p>
+</li>
+<li><p>终结阶段<br>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段，等待垃圾回收器对该对象空间进行回收。</p>
+</li>
+<li><p>对象空间重新分配阶段<br>若垃圾回收器对该对象的所占用的内存空间进行回收或者再分配，则该对象彻底消失，这个阶段称之为“对象空间重新分配阶段”。</p>
+<p>以上是Java对象生命周期的简要介绍，要保证内存顺利回收，正确使用Java对象生命周期很重要，如果不能及时回收，我们就称之为“发生了内存泄露”。</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>在不可见阶段，程序本身不再持有对象强引用，但对象仍可能被JVM等系统下的某些已装载的静态变量或线程或JNI等强引用持有着，这些特殊的强引用被称为”GC root”。存在着这些GC root会导致对象的内存泄露情况，无法被回收。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="垃圾回收.jpeg"></p>
+<p>图中灰色的孤立无援的对象对于GC Roots来说不可达，会被回收。知道了内存泄露会影响回收，下面说下哪些方面会导致内存泄露</p>
+<ul>
+<li><p>引起内存泄露的情况</p>
+<ul>
+<li>资源没有适时关闭<br>sqlite的cursor、读写文件使用的File文件流等在使用完后没有及时关闭。虽然cursor会在系统回收时自动关闭，但是这样效率较低。对于资源对象使用还是应该养成良好习惯，使用完毕close并置空。</li>
+<li>注册对象未注销<br>在Android中主要是指注册的广播在Activity销毁时反注销。<br>在Activity中如果有使用的观察者模式在生命周期发生变化时根据需求注销。<br>在Activity中使用的各类传感器(光线、重力等)在页面销毁时及时注销，否则不光导致内存泄露还会因为传感器频繁的采样导致耗电及cpu的占用。</li>
+<li><p>使用static修饰变量<br>这里只说一点，被static修饰的变量可以认为是直接被GC Roots引用了，那你就知道其生命周期有多长了。这时候你如果用static 修饰Bitmap、View、Context和Activity等后果有多严重了吧。</p>
+</li>
+<li><p>非静态内部类的静态实例</p>
+<p>   先看几行代码：</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">public static People people;</div><div class="line"> 		 @Override</div><div class="line">  		protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">     		 super.onCreate(savedInstanceState);</div><div class="line">     		 setContentView(R.layout.activity_main);</div><div class="line">     		 people = new People();</div><div class="line">  		&#125;</div><div class="line"> 		 class  People&#123;</div><div class="line">     		 int age ;</div><div class="line">     		 String name ;</div><div class="line">  		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>   非静态内部类People持有外部类即当前Activity的引用，而该非静态内部类实例又是static修饰        的，导致Activity一直被持有而不得释放，最终导致Activity所包含的view不能释放，如果view         tree中包含多图片，那泄露的内存是很大的。</p>
+</li>
+<li><p>Handler</p>
+<p>   众所周知handler用来发送和处理消息回调的。<br>handler导致泄露主要是handler实例是作为非静态匿名内部类方式创建，并且MessageQueue队列中有未处理消息，这时如果退出Activity，MessageQueue中还有Message，而Message持有handler实例，handler实例作为非静态内部类持有Activity引用，最终的连锁反应导致Activity泄露。</p>
+<blockquote>
+<p>handler引起的内存泄露一般是临时性的，因为消息队列里的Message在延时到时间或者某一情况激活后还是会执行的，除非你是故意搞事情。创建handler时最好使用静态内部类，同时在Activity退出时执行 handler.removeCallbacksAndMessages(null);清空队列消息</p>
+</blockquote>
+</li>
+<li><p>Webview</p>
+<p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
+</li>
+</ul>
+<ul>
+<li><p>容器中的对象未清理对象</p>
+<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h4 id="如何尽量小的申请内存？"><a href="#如何尽量小的申请内存？" class="headerlink" title="如何尽量小的申请内存？"></a>如何尽量小的申请内存？</h4><p>上面说完了如何保证GC顺利回收，现在来讲讲要最小使用内存应该怎么做：</p>
+<ul>
+<li><p>慎用自动封装</p>
+<p>  来几行代码尝尝：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Integer num=0;</div><div class="line">for (int i=0;i&lt;100;i++) &#123;</div><div class="line">    num+=i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  Java基本数据类型是有自动装箱机制的。每次执行循环都会发生一次装箱操作创建一个Integer对象，造成内存消耗。包括其他基本数据类型都有可能造成这种情况。</p>
+</li>
+<li><p>内存复用</p>
+<ul>
+<li><p>视图复用</p>
+<pre><code>在ListView中使用ViewHolder复用item组件，一方面节省内存，一方面提高滑动流畅性。都用过不多介绍。
+</code></pre></li>
+<li><p>使用对象池</p>
+<pre><code>看过Handler、Looper、Message、MessageQueue这一套消息循环源码的同志应该知道里面的Message使用了对象池模式。
+</code></pre><blockquote>
+<p>对象池类似线程池， 首先初始化一个固定大小池子，每次创建对象时候先去池子中找有没有，如果有直接取出，如果没有new出来使用后还到池子里。这样便可达到对象复用的目的。<br>对象池模式适用于那些频繁使用创建的对象，比如一个聊天app，里面对象最多的恐怕就是聊天信息(每条聊天信息对应一个信息对象)。都知道对象的创建是很耗费时间和内存的，没事不要new着玩。如果每条消息都创建一个对象，那可想而知该APP的性能。</p>
+</blockquote>
+<pre><code>对象池的使用也很简单，少量代码即可完成：
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class People &#123;</div><div class="line">     			private static final Pools.SynchronizedPool&lt;People&gt; sPool = new Pools.SynchronizedPool&lt;People&gt;(</div><div class="line">        		   	  20);//需要维持对象的数量</div><div class="line">     			int age;</div><div class="line">    			String name;</div><div class="line">   </div><div class="line">     			public static People obtain() &#123;</div><div class="line">       			  People instance = sPool.acquire();</div><div class="line">       			  return (instance != null) ? instance : new People();</div><div class="line">     			&#125;</div><div class="line">     			public void recycle() &#123;</div><div class="line">       			  sPool.release(this);</div><div class="line">    		 	&#125;</div><div class="line"> 			&#125;</div></pre></td></tr></table></figure>
+
+&gt;注意：对象申请(obtain)和释放(recycle)成对出现，使用一个对象后一定要释放还给对象池。
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<pre><code>- Bitmap复用
+
+    如果设置了options.inBitmap属性，以后再使用带有该options参数的decode方法加载图片资源时        ，decode会尝试重用已存在的位图内存，这样节省了加载和分配的时间，同时也节省了内存空间
+
+    &gt;该属性从3.0开始引进，低版本不支持inBitmap，4.4系统之前只能重用大小相同的内存区域，4.4以后可以重用任何比所需内存小的区域。具体使用可参考[官网](https://developer.android.com/topic/performance/graphics/manage-memory.html)。
+</code></pre><ul>
+<li><p>纯色规则形状背景用Color Res代替图片</p>
+<pre><code>经常遇到一些按钮背景是纯色显示，比如选中状态背景变为纯灰，但是设计已经发来了切图用还是不用？大声say NO！如果背景使用图片来显示，那背景每个像素都要绘制。
+
+假设一个分辨率为100x100的图片，占用4通道。那该图片内存占用就是100x100x4 =4万Byte≈40KB；但是如果使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">- 选择合适数据类型</div><div class="line"></div><div class="line">   - 使用ArrayMap替换HashMap</div><div class="line"></div><div class="line">		先看一下HashMap模型和ArrayMap模型：</div><div class="line">![hashmap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-3e3049cb811341c1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">![arraymap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-0d979501c5d1358f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"></div><div class="line">&gt;HashMap是一个散列链表，稀疏阵列导致内存稍大，而ArrayMap提供了和HashMap一样的功能，但是避免了内存过度开销。在执行插入或删除操作时，从性能上看ArrayMap比HashMap稍差，但是如果对象数很小，比如1000以内不用担心性能问题。如果想深入了解这2个的原理请自行搜索，这里不过多阐述。</div><div class="line"></div><div class="line"></div><div class="line">  - 枚举替身来了</div><div class="line">      JDK1.5就支持了枚举类型，使用Enum关键字定义。使用枚举类型很多时候出于参数类型安全迫不得已作出的选择。</div></pre></td></tr></table></figure>
+</code></pre><p>public String  getValue(int type){</p>
+<pre><code>switch (type) {
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    default:
+        throw new IllegalArgumentException(&quot;不合法参数&quot;);
+}
+</code></pre><p>return “”;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> 试想一下如果一个函数的参数为int type，函数处理时只用到了1，2，3三种值，如果是其他值就抛出异常，这无疑增加了程序的不稳定性，按以前此时最好的解决办法就是参数改为枚举类型，增加了限定也就提高了稳定性。但是枚举类型就是一把双刃剑，增加安全同时也大大增加了内存占用,尤其是在移动设备上，资源有限更应该注意内存节省。</div><div class="line"></div><div class="line">谷歌或许考虑到了这些问题，在提供的注解包里添加了注解方式检查类型安全，目前支持int和String两种，看下使用方式：</div></pre></td></tr></table></figure>
+<p>//1、先声明需要的类型常量值<br>public static final int TYPE_1 = 1;<br>public static final int TYPE_2 = 2;<br>//2、创建注解接口同时把上一步声明的常量囊括到这里<br>@IntDef({TYPE_1,TYPE_2})<br>@Retention(RetentionPolicy.SOURCE)<br>public @interface _TYPE{</p>
+<p>}<br>//3、在函数参数中增加 注解接口名称<br>public String getValue(@_TYPE int type){</p>
+<pre><code>switch (type) {
+    case 1:
+        break;
+    case 2:
+        break;
+}
+return &quot;&quot;;
+</code></pre><p>}<br>```</p>
+<p>   经过上面的步骤，再调用getValue()函数时如果传入其他int则报错编译不通过，这样通过注解就增加了安全性：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午7.13.32.png"></p>
+</li>
+</ul>
+<p>结语：基本上APP大部分内存还是被图片占用，处理好图片尤为重要，但是关于图片三级缓存及缩放，目前都使用第三方框架如ImageLoader，所以这里一笔带过。以上就是日常内存优化需要注意的地方，自己做个总结，也希望能对各位看官有所帮助。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/Android性能优化之内存优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>一直以来对这几个SDK版本概念都有点模糊不清，对于API的使用又会产生什么样的影响。所以今天花点时间来记录下。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-947f3215a5f6169e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午12.09.45.png"></p>
+<h4 id="minSDKVersion"><a href="#minSDKVersion" class="headerlink" title="minSDKVersion"></a>minSDKVersion</h4><p>顾名思义是设置sdk最低版本的。作用就是操作系统会拒绝低于<br>该标准的APP的安装。</p>
+<p>例如，minSDKVersion设置为16(Jelly Bean 4.1系统)，那么该APP将只能运行在4.1系统以上的设备中，想要在2.3系统上安装是不被允许的。</p>
+<p>minSDKVersion比较容易理解，经常让我混淆的时其他两个版本设置会对API产生的影响。</p>
+<h4 id="targetSDKVersion"><a href="#targetSDKVersion" class="headerlink" title="targetSDKVersion"></a>targetSDKVersion</h4><p>targetSDKVersion就是设置SDK目标版本，目标版本的设置就是为了告诉Android系统：本APP是设计计划给哪个API级别运行的。</p>
+<p>一般情况下目标版本设置为当前Android最新版本即可。既然是一般那也就有特殊情况，什么情况下需要修改目标版本呢？</p>
+<p>如果新发布的SDK版本会对UI显示甚至操作系统运行机制产生影响，而你的APP又没有做好应对措施，为了保证你的APP正常运行，那你需要降低目标版本。因为你的目标版本仍然是旧的SDK，所以在新版系统中那些新的变化会在你的APP中被忽略，继而保证其正常运行。</p>
+<p>例如，Android6.0系统增加了动态权限机制，如果为了追时髦，盲目把你的targetSDKVersion设置为23(6.0)，那么在需要使用权限的地方将会出现异常。为此，在你做好动态权限申请之前，为保障APP正常运行，你需要将目标版本设置低于23。</p>
+<h4 id="compileSDKVersion"><a href="#compileSDKVersion" class="headerlink" title="compileSDKVersion"></a>compileSDKVersion</h4><p>compileSDKVersion是设置编译版本。</p>
+<p>一般来说编译目标版本是选择最新的SDK，这样可以及时使用体验到新的API提供的新功能。</p>
+<p>值得注意的是，如果minSDKVersion和compileSDKVersion版本差距比较大的话，可能会造成API的不兼容。例如，你的最低版本是2.3 ，但是编译版本是5.0，API中使用了4.0SDK提供的一些新API，这样的后果是在2.3系统中运行到该处代码时会发生异常崩溃。这是因为代码的不兼容造成的。如图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-67bfb13669a8dce2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.05.00.png"></p>
+<p>如何解决这种API的不兼容呢？<br>一种办法是提升minSDKVersion到新API使用的SDK版本，但是这种方法只是回避兼容性，并没有确实解决问题，而且还要放弃低版本部分市场。<br>比较好的做法是在使用新API地方做设备版本的检查。Build.VERSION_SDK_INT常量表示当前Android设备的版本号。可以将该常量同新API版本进行比较，如果版本大于等于新版API版本号，则正常使用新API功能，否则使用旧的调用。兼容设置如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a2d7e548c4a118cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.16.40.png"></p>
+<blockquote>
+<p>注意：compileSDKVersion是和编译器打交道的，而minSDKVersion和targetSDKVersion是和系统打交道的。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-如何知道下载好的aosp版本" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/如何知道下载好的aosp版本/">如何知道下载好的aosp版本？</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/如何知道下载好的aosp版本/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>下载源码时执行的是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
+<p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/如何知道下载好的aosp版本/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-番茄工作法使用说明书" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/番茄工作法使用说明书/">番茄工作法使用说明书</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/番茄工作法使用说明书/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天花了点时间把番茄工作法这本书看完了，和以前上学时45分钟每节课的感觉差不多，只是这个时间更短，流程也更细化，容易让人集中注意力。</p>
+<p>先来几个问题看看中刀的人有多少：<br>1.有拖延症，上午的工作要拖到下午，下午的工作要拖到明天或者有反正周六要加班，那就周五多玩玩，刷刷微博这样的思想。<br>2.经常我们想看一本书，看了一点后就厌烦抛诸脑后，等过一段时间兴致又来了想继续读，发现前面的内容已经忘了不得已要从头开始，如此往复，一年到头一本书还在原地徘徊，年终总结时才悔恨不已。<br>3.上班就开始干活，但是手头的事情刚干了一点，又一摊新的工作挤进来，然后倒手又去忙新的事情，经常下班了感觉忙了一天却没有一件拿得出手的已完成的活来交差。<br>如果你有上面的一种或者几种那么番茄工作法适合你。</p>
+<h2 id="番茄工作法的历史"><a href="#番茄工作法的历史" class="headerlink" title="番茄工作法的历史"></a>番茄工作法的历史</h2><p>番茄工作法是由弗朗西斯科·西里洛在1992年创建的，但其实在更早的时候西里洛就已经使用了。20世纪80年代西里洛还在大学时，由于学习效率低下作业完不成，就在想怎么让自己踏实的学一会，哪怕十分钟也行。如果有人监督帮忙掐表，会不会很好，后来西里洛找到了厨房定时器，形状酷似番茄，就这样他邂逅了番茄钟。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be51678192608453.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="未命名.png"></p>
+<h2 id="什么是番茄工作法？"><a href="#什么是番茄工作法？" class="headerlink" title="什么是番茄工作法？"></a>什么是番茄工作法？</h2><p>简单的说就是列出要做的事，标记当天要完成的，设置闹钟为25分钟，然后从第一件事情开始做。还要有每日回顾、每日承诺、中断和预估等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">番茄工作法是一套简单的流程，它可以让我们提高时间观念、提升注意力、加强自我决策意识、改善目前不好的工作流程从而提高工作效率，当然这一切好处的前提是正确并长期的执行了番茄法。</div></pre></td></tr></table></figure>
+<h2 id="番茄工作法需要哪些工具？"><a href="#番茄工作法需要哪些工具？" class="headerlink" title="番茄工作法需要哪些工具？"></a>番茄工作法需要哪些工具？</h2><p>一个番茄钟<br>铅笔/橡皮<br>三张表格(活动清单、今日待办、记录)</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3a5435880d169f91.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender.jpg"></p>
+<h2 id="番茄工作法流程详解"><a href="#番茄工作法流程详解" class="headerlink" title="番茄工作法流程详解"></a>番茄工作法流程详解</h2><h3 id="将近期要完成的活动-任务加入到活动清单"><a href="#将近期要完成的活动-任务加入到活动清单" class="headerlink" title="将近期要完成的活动/任务加入到活动清单"></a>将近期要完成的活动/任务加入到活动清单</h3><p>把近几天准备工作的内容填写到活动清单中，活动清单内容力求简洁，不要求别人看懂，只需要自己几个月后仍能看懂即可。<br>如果某件事明确了必须在某时间之前完成，则可以在活动末尾加上最后期限作为提醒。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bcb5ae9b4fa83b5d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(1).jpg"></p>
+<h3 id="从活动清单中选择今日要完成的几项抄入到今日待办中"><a href="#从活动清单中选择今日要完成的几项抄入到今日待办中" class="headerlink" title="从活动清单中选择今日要完成的几项抄入到今日待办中"></a>从活动清单中选择今日要完成的几项抄入到今日待办中</h3><p>今日待办的任务一定是要从活动清单抄入过来的，如果是自己又单独创建的那活动清单有何意义？填写今日待办时要注意划分优先级(事情的重要程度)，然后给每个待办预估需要多少番茄钟来完成，在待办后面用方格表示出来。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6386cf28a2aa20ff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(4).jpg"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从开始的活动清单列举，到今日待办的筛选，有没有觉得原本杂乱无章的事情，现在有了头绪而且当天目标已经明确只需要放手去做了。无形中注意力已经转移到所选活动了。</div></pre></td></tr></table></figure>
+<h3 id="准备好工作后，启动番茄钟时间设定为25分钟。"><a href="#准备好工作后，启动番茄钟时间设定为25分钟。" class="headerlink" title="准备好工作后，启动番茄钟时间设定为25分钟。"></a>准备好工作后，启动番茄钟时间设定为25分钟。</h3><p>注意每个番茄钟都是原子性的，即不能再分割，一旦番茄钟启动，25分钟必须从一而终。<br>可能有人会有疑问：如果番茄钟期间渴了怎么办？有人打电话或者有同事来询问怎么办？别急，这些都是中断，参见步骤4。</p>
+<h3 id="开始工作，直到番茄钟响铃结束"><a href="#开始工作，直到番茄钟响铃结束" class="headerlink" title="开始工作，直到番茄钟响铃结束"></a>开始工作，直到番茄钟响铃结束</h3><p>工作期间可能会受到中断，在日常工作中，中断是不可完全避免的，需要自己处理好中断。<br>中断有两种形式：内部中断和外部中断。<br><figure class="highlight plain"><figcaption><span>是自己造成的，是直觉向大脑发出信号，告诉我让我去专注当下活动以外的事情。```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">比如工作了一会，突然想打开qq去群里扯皮几句，想起有个电话没有回复，水杯没水了要去续杯等，这些都是来自自身内部的本能，其实是想拖延，这时该怎么办？接受、记录然后继续番茄钟。</div><div class="line">首先看引起中断原因，如果是突然想起没有做的事情，那么可以在今日待办(如果想起的事情不紧急可以直接加入到活动清单中，并在左边加一个“U”表示计划外事件“unplanned”)下方添加一个“计划外紧急”栏目，记录中断原因(下图中的③)，并在今日待办的当前活动后面添加一个 撇号 &apos; (下图中的①)，表示当下活动产生一个内部中断，记录完成继续番茄钟。</div><div class="line"> 至于说要聊天扯皮和续杯，等到番茄钟结束后再去，当然如果只是喝水那你想喝多少喝多少。</div><div class="line">如果作为初学者感觉内部中断太多，可以尝试缩小番茄钟为5、10、15分钟。当然番茄钟的每次更改至少要保持两个星期再次更改。</div><div class="line">```外部中断 是别人造成的，有人向你询问请你帮忙，等你答复，外部中断往往具有互动性。但是我们不能因为保护番茄钟就拒绝帮忙同事，毕竟低头不见抬头见的。</div></pre></td></tr></table></figure></p>
+<p>可以在番茄钟期间手机、邮件静音，<br>同事来面谈，如果比较急可以商量稍后推迟下，用下一个番茄钟来解决中断事件，而不是在当前活动直接中断处理；如果不着急可以添加到计划外事件，同时在当前活动后添加一个减号 -(下图中的②)，表示受到一次外部中断；如果非常着急，那么不得已只有废弃当前的番茄钟，先帮同事解决问题，过后休息一会然后开启新的番茄钟开始专注起来。</p>
+<p>每个番茄钟结束都要在今日待办的当下活动方格中画×。如果当下活动已经完成则可以给活动内容划一条横线表示完成状态(下图中的③)。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4ab23cde90bb31c5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(5).jpg"></p>
+<h3 id="休息"><a href="#休息" class="headerlink" title="休息"></a>休息</h3><p>小休时间一般为3-5分钟，每隔4个番茄钟就大休一次，大休一般15-30分钟。注意休息期间要站起来走动一下，让自己能消除对上一个番茄钟的思考，完全抽身出来放松下。可以泡杯茶或咖啡，去个厕所，窗台发呆等，总之拒绝任何用脑的活动。<br>以下说明了休息时箭头所指从最佳到最差休息方式：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-32cc2cfdbfaad96f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(3).jpg"></p>
+<h3 id="开始下一个番茄钟，重复3-5步"><a href="#开始下一个番茄钟，重复3-5步" class="headerlink" title="开始下一个番茄钟，重复3-5步"></a>开始下一个番茄钟，重复3-5步</h3><h3 id="下班前记录"><a href="#下班前记录" class="headerlink" title="下班前记录"></a>下班前记录</h3><p>记录什么内容？记录当天完成的番茄钟数、被打断数、今日待办完成数等，通过记录可以知晓自己承诺完成了多少，相差多少，如果差距很大，就要寻找原因。经过一段时间的记录，数据可视化，看自己的承诺和已完成是否越来越接近。通过记录发现总结不足，在以后的清单中持续改善。</p>
+<p>以上只介绍了番茄工作法流程和一些需要注意的点，其他一些边缘内容或者没有get到的点欢迎探讨。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">职场杂谈</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/职场杂谈/" class="article-tag-list-link color5">职场杂谈</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/21/番茄工作法使用说明书/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-为什么我在工作线程刷新UI没报错" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -666,421 +1168,6 @@
 
 
   
-    <article id="post-Android性能优化之内存优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/Android性能优化之内存优化/">Android性能优化之内存优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/Android性能优化之内存优化/" class="archive-article-date">
-  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979" target="_blank" rel="external">Android性能优化之耗电优化
-</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
-<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
-<h4 id="如何保证已使用内存顺利被回收？"><a href="#如何保证已使用内存顺利被回收？" class="headerlink" title="如何保证已使用内存顺利被回收？"></a>如何保证已使用内存顺利被回收？</h4><ul>
-<li><p>Java对象生命周期</p>
-<ul>
-<li>创建阶段<br>申请内存空间，构造对象并初始化相关属性值</li>
-<li>使用阶段<br>根据对象应用调用相关方法完成业务逻辑。对象至少被一个强引用持有，除非对象创建时显示声明使用软引用、弱引用和虚引用。</li>
-<li>不可见阶段<br>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，当然对象还是存在着的。</li>
-<li><p>不可达阶段<br>对象处于不可达阶段是指该对象不再被任何强引用所持有。GC会发现对象已不可达</p>
-</li>
-<li><p>收集阶段<br>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。</p>
-</li>
-<li><p>终结阶段<br>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段，等待垃圾回收器对该对象空间进行回收。</p>
-</li>
-<li><p>对象空间重新分配阶段<br>若垃圾回收器对该对象的所占用的内存空间进行回收或者再分配，则该对象彻底消失，这个阶段称之为“对象空间重新分配阶段”。</p>
-<p>以上是Java对象生命周期的简要介绍，要保证内存顺利回收，正确使用Java对象生命周期很重要，如果不能及时回收，我们就称之为“发生了内存泄露”。</p>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>在不可见阶段，程序本身不再持有对象强引用，但对象仍可能被JVM等系统下的某些已装载的静态变量或线程或JNI等强引用持有着，这些特殊的强引用被称为”GC root”。存在着这些GC root会导致对象的内存泄露情况，无法被回收。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="垃圾回收.jpeg"></p>
-<p>图中灰色的孤立无援的对象对于GC Roots来说不可达，会被回收。知道了内存泄露会影响回收，下面说下哪些方面会导致内存泄露</p>
-<ul>
-<li><p>引起内存泄露的情况</p>
-<ul>
-<li>资源没有适时关闭<br>sqlite的cursor、读写文件使用的File文件流等在使用完后没有及时关闭。虽然cursor会在系统回收时自动关闭，但是这样效率较低。对于资源对象使用还是应该养成良好习惯，使用完毕close并置空。</li>
-<li>注册对象未注销<br>在Android中主要是指注册的广播在Activity销毁时反注销。<br>在Activity中如果有使用的观察者模式在生命周期发生变化时根据需求注销。<br>在Activity中使用的各类传感器(光线、重力等)在页面销毁时及时注销，否则不光导致内存泄露还会因为传感器频繁的采样导致耗电及cpu的占用。</li>
-<li><p>使用static修饰变量<br>这里只说一点，被static修饰的变量可以认为是直接被GC Roots引用了，那你就知道其生命周期有多长了。这时候你如果用static 修饰Bitmap、View、Context和Activity等后果有多严重了吧。</p>
-</li>
-<li><p>非静态内部类的静态实例</p>
-<p>   先看几行代码：</p>
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">public static People people;</div><div class="line"> 		 @Override</div><div class="line">  		protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">     		 super.onCreate(savedInstanceState);</div><div class="line">     		 setContentView(R.layout.activity_main);</div><div class="line">     		 people = new People();</div><div class="line">  		&#125;</div><div class="line"> 		 class  People&#123;</div><div class="line">     		 int age ;</div><div class="line">     		 String name ;</div><div class="line">  		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>   非静态内部类People持有外部类即当前Activity的引用，而该非静态内部类实例又是static修饰        的，导致Activity一直被持有而不得释放，最终导致Activity所包含的view不能释放，如果view         tree中包含多图片，那泄露的内存是很大的。</p>
-</li>
-<li><p>Handler</p>
-<p>   众所周知handler用来发送和处理消息回调的。<br>handler导致泄露主要是handler实例是作为非静态匿名内部类方式创建，并且MessageQueue队列中有未处理消息，这时如果退出Activity，MessageQueue中还有Message，而Message持有handler实例，handler实例作为非静态内部类持有Activity引用，最终的连锁反应导致Activity泄露。</p>
-<blockquote>
-<p>handler引起的内存泄露一般是临时性的，因为消息队列里的Message在延时到时间或者某一情况激活后还是会执行的，除非你是故意搞事情。创建handler时最好使用静态内部类，同时在Activity退出时执行 handler.removeCallbacksAndMessages(null);清空队列消息</p>
-</blockquote>
-</li>
-<li><p>Webview</p>
-<p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
-</li>
-</ul>
-<ul>
-<li><p>容器中的对象未清理对象</p>
-<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<h4 id="如何尽量小的申请内存？"><a href="#如何尽量小的申请内存？" class="headerlink" title="如何尽量小的申请内存？"></a>如何尽量小的申请内存？</h4><p>上面说完了如何保证GC顺利回收，现在来讲讲要最小使用内存应该怎么做：</p>
-<ul>
-<li><p>慎用自动封装</p>
-<p>  来几行代码尝尝：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Integer num=0;</div><div class="line">for (int i=0;i&lt;100;i++) &#123;</div><div class="line">    num+=i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>  Java基本数据类型是有自动装箱机制的。每次执行循环都会发生一次装箱操作创建一个Integer对象，造成内存消耗。包括其他基本数据类型都有可能造成这种情况。</p>
-</li>
-<li><p>内存复用</p>
-<ul>
-<li><p>视图复用</p>
-<pre><code>在ListView中使用ViewHolder复用item组件，一方面节省内存，一方面提高滑动流畅性。都用过不多介绍。
-</code></pre></li>
-<li><p>使用对象池</p>
-<pre><code>看过Handler、Looper、Message、MessageQueue这一套消息循环源码的同志应该知道里面的Message使用了对象池模式。
-</code></pre><blockquote>
-<p>对象池类似线程池， 首先初始化一个固定大小池子，每次创建对象时候先去池子中找有没有，如果有直接取出，如果没有new出来使用后还到池子里。这样便可达到对象复用的目的。<br>对象池模式适用于那些频繁使用创建的对象，比如一个聊天app，里面对象最多的恐怕就是聊天信息(每条聊天信息对应一个信息对象)。都知道对象的创建是很耗费时间和内存的，没事不要new着玩。如果每条消息都创建一个对象，那可想而知该APP的性能。</p>
-</blockquote>
-<pre><code>对象池的使用也很简单，少量代码即可完成：
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class People &#123;</div><div class="line">     			private static final Pools.SynchronizedPool&lt;People&gt; sPool = new Pools.SynchronizedPool&lt;People&gt;(</div><div class="line">        		   	  20);//需要维持对象的数量</div><div class="line">     			int age;</div><div class="line">    			String name;</div><div class="line">   </div><div class="line">     			public static People obtain() &#123;</div><div class="line">       			  People instance = sPool.acquire();</div><div class="line">       			  return (instance != null) ? instance : new People();</div><div class="line">     			&#125;</div><div class="line">     			public void recycle() &#123;</div><div class="line">       			  sPool.release(this);</div><div class="line">    		 	&#125;</div><div class="line"> 			&#125;</div></pre></td></tr></table></figure>
-
-&gt;注意：对象申请(obtain)和释放(recycle)成对出现，使用一个对象后一定要释放还给对象池。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>- Bitmap复用
-
-    如果设置了options.inBitmap属性，以后再使用带有该options参数的decode方法加载图片资源时        ，decode会尝试重用已存在的位图内存，这样节省了加载和分配的时间，同时也节省了内存空间
-
-    &gt;该属性从3.0开始引进，低版本不支持inBitmap，4.4系统之前只能重用大小相同的内存区域，4.4以后可以重用任何比所需内存小的区域。具体使用可参考[官网](https://developer.android.com/topic/performance/graphics/manage-memory.html)。
-</code></pre><ul>
-<li><p>纯色规则形状背景用Color Res代替图片</p>
-<pre><code>经常遇到一些按钮背景是纯色显示，比如选中状态背景变为纯灰，但是设计已经发来了切图用还是不用？大声say NO！如果背景使用图片来显示，那背景每个像素都要绘制。
-
-假设一个分辨率为100x100的图片，占用4通道。那该图片内存占用就是100x100x4 =4万Byte≈40KB；但是如果使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">- 选择合适数据类型</div><div class="line"></div><div class="line">   - 使用ArrayMap替换HashMap</div><div class="line"></div><div class="line">		先看一下HashMap模型和ArrayMap模型：</div><div class="line">![hashmap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-3e3049cb811341c1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">![arraymap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-0d979501c5d1358f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"></div><div class="line">&gt;HashMap是一个散列链表，稀疏阵列导致内存稍大，而ArrayMap提供了和HashMap一样的功能，但是避免了内存过度开销。在执行插入或删除操作时，从性能上看ArrayMap比HashMap稍差，但是如果对象数很小，比如1000以内不用担心性能问题。如果想深入了解这2个的原理请自行搜索，这里不过多阐述。</div><div class="line"></div><div class="line"></div><div class="line">  - 枚举替身来了</div><div class="line">      JDK1.5就支持了枚举类型，使用Enum关键字定义。使用枚举类型很多时候出于参数类型安全迫不得已作出的选择。</div></pre></td></tr></table></figure>
-</code></pre><p>public String  getValue(int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    default:
-        throw new IllegalArgumentException(&quot;不合法参数&quot;);
-}
-</code></pre><p>return “”;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> 试想一下如果一个函数的参数为int type，函数处理时只用到了1，2，3三种值，如果是其他值就抛出异常，这无疑增加了程序的不稳定性，按以前此时最好的解决办法就是参数改为枚举类型，增加了限定也就提高了稳定性。但是枚举类型就是一把双刃剑，增加安全同时也大大增加了内存占用,尤其是在移动设备上，资源有限更应该注意内存节省。</div><div class="line"></div><div class="line">谷歌或许考虑到了这些问题，在提供的注解包里添加了注解方式检查类型安全，目前支持int和String两种，看下使用方式：</div></pre></td></tr></table></figure>
-<p>//1、先声明需要的类型常量值<br>public static final int TYPE_1 = 1;<br>public static final int TYPE_2 = 2;<br>//2、创建注解接口同时把上一步声明的常量囊括到这里<br>@IntDef({TYPE_1,TYPE_2})<br>@Retention(RetentionPolicy.SOURCE)<br>public @interface _TYPE{</p>
-<p>}<br>//3、在函数参数中增加 注解接口名称<br>public String getValue(@_TYPE int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-}
-return &quot;&quot;;
-</code></pre><p>}<br>```</p>
-<p>   经过上面的步骤，再调用getValue()函数时如果传入其他int则报错编译不通过，这样通过注解就增加了安全性：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午7.13.32.png"></p>
-</li>
-</ul>
-<p>结语：基本上APP大部分内存还是被图片占用，处理好图片尤为重要，但是关于图片三级缓存及缩放，目前都使用第三方框架如ImageLoader，所以这里一笔带过。以上就是日常内存优化需要注意的地方，自己做个总结，也希望能对各位看官有所帮助。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/Android性能优化之内存优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/" class="archive-article-date">
-  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>一直以来对这几个SDK版本概念都有点模糊不清，对于API的使用又会产生什么样的影响。所以今天花点时间来记录下。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-947f3215a5f6169e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午12.09.45.png"></p>
-<h4 id="minSDKVersion"><a href="#minSDKVersion" class="headerlink" title="minSDKVersion"></a>minSDKVersion</h4><p>顾名思义是设置sdk最低版本的。作用就是操作系统会拒绝低于<br>该标准的APP的安装。</p>
-<p>例如，minSDKVersion设置为16(Jelly Bean 4.1系统)，那么该APP将只能运行在4.1系统以上的设备中，想要在2.3系统上安装是不被允许的。</p>
-<p>minSDKVersion比较容易理解，经常让我混淆的时其他两个版本设置会对API产生的影响。</p>
-<h4 id="targetSDKVersion"><a href="#targetSDKVersion" class="headerlink" title="targetSDKVersion"></a>targetSDKVersion</h4><p>targetSDKVersion就是设置SDK目标版本，目标版本的设置就是为了告诉Android系统：本APP是设计计划给哪个API级别运行的。</p>
-<p>一般情况下目标版本设置为当前Android最新版本即可。既然是一般那也就有特殊情况，什么情况下需要修改目标版本呢？</p>
-<p>如果新发布的SDK版本会对UI显示甚至操作系统运行机制产生影响，而你的APP又没有做好应对措施，为了保证你的APP正常运行，那你需要降低目标版本。因为你的目标版本仍然是旧的SDK，所以在新版系统中那些新的变化会在你的APP中被忽略，继而保证其正常运行。</p>
-<p>例如，Android6.0系统增加了动态权限机制，如果为了追时髦，盲目把你的targetSDKVersion设置为23(6.0)，那么在需要使用权限的地方将会出现异常。为此，在你做好动态权限申请之前，为保障APP正常运行，你需要将目标版本设置低于23。</p>
-<h4 id="compileSDKVersion"><a href="#compileSDKVersion" class="headerlink" title="compileSDKVersion"></a>compileSDKVersion</h4><p>compileSDKVersion是设置编译版本。</p>
-<p>一般来说编译目标版本是选择最新的SDK，这样可以及时使用体验到新的API提供的新功能。</p>
-<p>值得注意的是，如果minSDKVersion和compileSDKVersion版本差距比较大的话，可能会造成API的不兼容。例如，你的最低版本是2.3 ，但是编译版本是5.0，API中使用了4.0SDK提供的一些新API，这样的后果是在2.3系统中运行到该处代码时会发生异常崩溃。这是因为代码的不兼容造成的。如图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-67bfb13669a8dce2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.05.00.png"></p>
-<p>如何解决这种API的不兼容呢？<br>一种办法是提升minSDKVersion到新API使用的SDK版本，但是这种方法只是回避兼容性，并没有确实解决问题，而且还要放弃低版本部分市场。<br>比较好的做法是在使用新API地方做设备版本的检查。Build.VERSION_SDK_INT常量表示当前Android设备的版本号。可以将该常量同新API版本进行比较，如果版本大于等于新版API版本号，则正常使用新API功能，否则使用旧的调用。兼容设置如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a2d7e548c4a118cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-04-19 下午1.16.40.png"></p>
-<blockquote>
-<p>注意：compileSDKVersion是和编译器打交道的，而minSDKVersion和targetSDKVersion是和系统打交道的。</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-番茄工作法使用说明书" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/番茄工作法使用说明书/">番茄工作法使用说明书</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/番茄工作法使用说明书/" class="archive-article-date">
-  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天花了点时间把番茄工作法这本书看完了，和以前上学时45分钟每节课的感觉差不多，只是这个时间更短，流程也更细化，容易让人集中注意力。</p>
-<p>先来几个问题看看中刀的人有多少：<br>1.有拖延症，上午的工作要拖到下午，下午的工作要拖到明天或者有反正周六要加班，那就周五多玩玩，刷刷微博这样的思想。<br>2.经常我们想看一本书，看了一点后就厌烦抛诸脑后，等过一段时间兴致又来了想继续读，发现前面的内容已经忘了不得已要从头开始，如此往复，一年到头一本书还在原地徘徊，年终总结时才悔恨不已。<br>3.上班就开始干活，但是手头的事情刚干了一点，又一摊新的工作挤进来，然后倒手又去忙新的事情，经常下班了感觉忙了一天却没有一件拿得出手的已完成的活来交差。<br>如果你有上面的一种或者几种那么番茄工作法适合你。</p>
-<h2 id="番茄工作法的历史"><a href="#番茄工作法的历史" class="headerlink" title="番茄工作法的历史"></a>番茄工作法的历史</h2><p>番茄工作法是由弗朗西斯科·西里洛在1992年创建的，但其实在更早的时候西里洛就已经使用了。20世纪80年代西里洛还在大学时，由于学习效率低下作业完不成，就在想怎么让自己踏实的学一会，哪怕十分钟也行。如果有人监督帮忙掐表，会不会很好，后来西里洛找到了厨房定时器，形状酷似番茄，就这样他邂逅了番茄钟。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be51678192608453.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="未命名.png"></p>
-<h2 id="什么是番茄工作法？"><a href="#什么是番茄工作法？" class="headerlink" title="什么是番茄工作法？"></a>什么是番茄工作法？</h2><p>简单的说就是列出要做的事，标记当天要完成的，设置闹钟为25分钟，然后从第一件事情开始做。还要有每日回顾、每日承诺、中断和预估等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">番茄工作法是一套简单的流程，它可以让我们提高时间观念、提升注意力、加强自我决策意识、改善目前不好的工作流程从而提高工作效率，当然这一切好处的前提是正确并长期的执行了番茄法。</div></pre></td></tr></table></figure>
-<h2 id="番茄工作法需要哪些工具？"><a href="#番茄工作法需要哪些工具？" class="headerlink" title="番茄工作法需要哪些工具？"></a>番茄工作法需要哪些工具？</h2><p>一个番茄钟<br>铅笔/橡皮<br>三张表格(活动清单、今日待办、记录)</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3a5435880d169f91.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender.jpg"></p>
-<h2 id="番茄工作法流程详解"><a href="#番茄工作法流程详解" class="headerlink" title="番茄工作法流程详解"></a>番茄工作法流程详解</h2><h3 id="将近期要完成的活动-任务加入到活动清单"><a href="#将近期要完成的活动-任务加入到活动清单" class="headerlink" title="将近期要完成的活动/任务加入到活动清单"></a>将近期要完成的活动/任务加入到活动清单</h3><p>把近几天准备工作的内容填写到活动清单中，活动清单内容力求简洁，不要求别人看懂，只需要自己几个月后仍能看懂即可。<br>如果某件事明确了必须在某时间之前完成，则可以在活动末尾加上最后期限作为提醒。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-bcb5ae9b4fa83b5d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(1).jpg"></p>
-<h3 id="从活动清单中选择今日要完成的几项抄入到今日待办中"><a href="#从活动清单中选择今日要完成的几项抄入到今日待办中" class="headerlink" title="从活动清单中选择今日要完成的几项抄入到今日待办中"></a>从活动清单中选择今日要完成的几项抄入到今日待办中</h3><p>今日待办的任务一定是要从活动清单抄入过来的，如果是自己又单独创建的那活动清单有何意义？填写今日待办时要注意划分优先级(事情的重要程度)，然后给每个待办预估需要多少番茄钟来完成，在待办后面用方格表示出来。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6386cf28a2aa20ff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(4).jpg"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从开始的活动清单列举，到今日待办的筛选，有没有觉得原本杂乱无章的事情，现在有了头绪而且当天目标已经明确只需要放手去做了。无形中注意力已经转移到所选活动了。</div></pre></td></tr></table></figure>
-<h3 id="准备好工作后，启动番茄钟时间设定为25分钟。"><a href="#准备好工作后，启动番茄钟时间设定为25分钟。" class="headerlink" title="准备好工作后，启动番茄钟时间设定为25分钟。"></a>准备好工作后，启动番茄钟时间设定为25分钟。</h3><p>注意每个番茄钟都是原子性的，即不能再分割，一旦番茄钟启动，25分钟必须从一而终。<br>可能有人会有疑问：如果番茄钟期间渴了怎么办？有人打电话或者有同事来询问怎么办？别急，这些都是中断，参见步骤4。</p>
-<h3 id="开始工作，直到番茄钟响铃结束"><a href="#开始工作，直到番茄钟响铃结束" class="headerlink" title="开始工作，直到番茄钟响铃结束"></a>开始工作，直到番茄钟响铃结束</h3><p>工作期间可能会受到中断，在日常工作中，中断是不可完全避免的，需要自己处理好中断。<br>中断有两种形式：内部中断和外部中断。<br><figure class="highlight plain"><figcaption><span>是自己造成的，是直觉向大脑发出信号，告诉我让我去专注当下活动以外的事情。```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">比如工作了一会，突然想打开qq去群里扯皮几句，想起有个电话没有回复，水杯没水了要去续杯等，这些都是来自自身内部的本能，其实是想拖延，这时该怎么办？接受、记录然后继续番茄钟。</div><div class="line">首先看引起中断原因，如果是突然想起没有做的事情，那么可以在今日待办(如果想起的事情不紧急可以直接加入到活动清单中，并在左边加一个“U”表示计划外事件“unplanned”)下方添加一个“计划外紧急”栏目，记录中断原因(下图中的③)，并在今日待办的当前活动后面添加一个 撇号 &apos; (下图中的①)，表示当下活动产生一个内部中断，记录完成继续番茄钟。</div><div class="line"> 至于说要聊天扯皮和续杯，等到番茄钟结束后再去，当然如果只是喝水那你想喝多少喝多少。</div><div class="line">如果作为初学者感觉内部中断太多，可以尝试缩小番茄钟为5、10、15分钟。当然番茄钟的每次更改至少要保持两个星期再次更改。</div><div class="line">```外部中断 是别人造成的，有人向你询问请你帮忙，等你答复，外部中断往往具有互动性。但是我们不能因为保护番茄钟就拒绝帮忙同事，毕竟低头不见抬头见的。</div></pre></td></tr></table></figure></p>
-<p>可以在番茄钟期间手机、邮件静音，<br>同事来面谈，如果比较急可以商量稍后推迟下，用下一个番茄钟来解决中断事件，而不是在当前活动直接中断处理；如果不着急可以添加到计划外事件，同时在当前活动后添加一个减号 -(下图中的②)，表示受到一次外部中断；如果非常着急，那么不得已只有废弃当前的番茄钟，先帮同事解决问题，过后休息一会然后开启新的番茄钟开始专注起来。</p>
-<p>每个番茄钟结束都要在今日待办的当下活动方格中画×。如果当下活动已经完成则可以给活动内容划一条横线表示完成状态(下图中的③)。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-4ab23cde90bb31c5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(5).jpg"></p>
-<h3 id="休息"><a href="#休息" class="headerlink" title="休息"></a>休息</h3><p>小休时间一般为3-5分钟，每隔4个番茄钟就大休一次，大休一般15-30分钟。注意休息期间要站起来走动一下，让自己能消除对上一个番茄钟的思考，完全抽身出来放松下。可以泡杯茶或咖啡，去个厕所，窗台发呆等，总之拒绝任何用脑的活动。<br>以下说明了休息时箭头所指从最佳到最差休息方式：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-32cc2cfdbfaad96f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fullsizerender(3).jpg"></p>
-<h3 id="开始下一个番茄钟，重复3-5步"><a href="#开始下一个番茄钟，重复3-5步" class="headerlink" title="开始下一个番茄钟，重复3-5步"></a>开始下一个番茄钟，重复3-5步</h3><h3 id="下班前记录"><a href="#下班前记录" class="headerlink" title="下班前记录"></a>下班前记录</h3><p>记录什么内容？记录当天完成的番茄钟数、被打断数、今日待办完成数等，通过记录可以知晓自己承诺完成了多少，相差多少，如果差距很大，就要寻找原因。经过一段时间的记录，数据可视化，看自己的承诺和已完成是否越来越接近。通过记录发现总结不足，在以后的清单中持续改善。</p>
-<p>以上只介绍了番茄工作法流程和一些需要注意的点，其他一些边缘内容或者没有get到的点欢迎探讨。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">职场杂谈</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/职场杂谈/" class="article-tag-list-link color5">职场杂谈</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/番茄工作法使用说明书/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span>
@@ -1199,11 +1286,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1231,15 +1318,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1247,7 +1334,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1263,6 +1350,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GC</a>
               </li>
              
@@ -1272,10 +1363,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
