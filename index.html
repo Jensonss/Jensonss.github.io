@@ -174,6 +174,141 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-使用sychronized注意事项" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/10/使用sychronized注意事项/">使用sychronized注意事项</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/10/使用sychronized注意事项/" class="archive-article-date">
+  	<time datetime="2017-08-10T13:43:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月10日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Java编程中多线程并发是一个举足轻重的模块，所以加深对这一块的理解是很有必要的。</p>
+<h1 id="0x01锁定对象而非函数或代码块"><a href="#0x01锁定对象而非函数或代码块" class="headerlink" title="0x01锁定对象而非函数或代码块"></a>0x01锁定对象而非函数或代码块</h1><ul>
+<li><p>当sychronized修饰实例方法时，锁定的是调用该方法的对象</p>
+<p>如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> sychronized <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>当sychronized锁定this时，锁定的也是当前对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">    sychronized(<span class="keyword">this</span>)&#123; </div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>既然锁定的是对象，也就意味着调用该函数的线程A会获得该对象lock，同样的，线程B在调用该对象的函数时也要获得该对象的lock，但是该对象的lock此时被线程A持有，所以线程B就要处于阻塞状态，直到lock被线程A释放。</strong></p>
+<p>看看下面代码有何问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">		<span class="keyword">private</span> <span class="keyword">int</span> key;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">TThread</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.key = key;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			go(<span class="keyword">this</span>.key);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">go</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</div><div class="line">			<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">				System.out.println(key);</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					Thread.currentThread().sleep(<span class="number">1000</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SecondThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">		TThread tt;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">SecondThread</span><span class="params">(TThread tt)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.tt = tt;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.tt.go(<span class="number">3</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		TThread t1 = <span class="keyword">new</span> TThread(<span class="number">1</span>);</div><div class="line">		t1.start();</div><div class="line">		SecondThread st = <span class="keyword">new</span> SecondThread(t1);</div><div class="line">		st.start();</div><div class="line">		TThread t2 = <span class="keyword">new</span> TThread(<span class="number">2</span>);</div><div class="line">		t2.start();</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>上述代码会打印1和2，但是却不会打印3。因为synchronized锁定的是线程对象，而t1和t2是两个不同的对象，所以可以并发执行。而实例st中run方法实际执行的是t1的同步方法，因而1和3不会同时打印。</p>
+<p><strong>另一方面，既然是锁定对象，意味着每个对象都有自己的lock，如果是同一个类的不同实例在多个线程间调用时，仍然会并发执行。</strong></p>
+</li>
+</ul>
+<h1 id="0x02-锁定类Class对象"><a href="#0x02-锁定类Class对象" class="headerlink" title="0x02 锁定类Class对象"></a>0x02 锁定类Class对象</h1><ul>
+<li><p>当sychronized修饰static方法时，锁定的是该class的Class对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> sychronized <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>当sychronized锁定xx.class时，锁定的也是该class的Class对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">    sychronized(Text.class)&#123;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如下代码有何问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		go1();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">go1</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">			System.out.println(<span class="number">1</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">1000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">go2</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">			System.out.println(<span class="number">2</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">1000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	TThread t1 = <span class="keyword">new</span> TThread();</div><div class="line">	t1.start();</div><div class="line">	t1.go2();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>go1函数是实例函数，go2是类函数。尽管上述两个函数都声明为synchronized，它们并非线程安全的。因为两个线程获取的是不同的lock。</p>
+<p>因此上述代码执行时，打印1和2交替执行。</p>
+<p><strong>时刻注意对象锁和类锁的区分，不要为了实现某些数据同步而同时使用两种方法。因为这两种方法获取的是不同的锁</strong></p>
+</li>
+</ul>
+<h1 id="0x03-避免因权限导致锁无效"><a href="#0x03-避免因权限导致锁无效" class="headerlink" title="0x03 避免因权限导致锁无效"></a>0x03 避免因权限导致锁无效</h1><p>直接看如下代码有何问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] intArr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addArr</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> len = intArr.length;</div><div class="line">	<span class="keyword">if</span> (len == arr.length) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">			intArr[i] += arr[i];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">subtrackArr</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> len = intArr.length;</div><div class="line">	<span class="keyword">if</span> (len == arr.length) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">			intArr[i] -= arr[i];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面代码是线程安全的吗？</p>
+<p>当然不是。虽然两个实例方法实现了线程同步，但是还有其他漏洞。</p>
+<p>首先要明白同步的目的是保证<strong>intArr</strong>的准确性。但是因为该实例属性权限是<strong>public</strong>状态。这导致无须通过同步方法，也能修改数组。所以应该修改权限为私有状态。</p>
+<p><strong>有时看似添加了同步方法就以为万无一失了，但是就因为权限开放导致线程安全没有生效</strong></p>
+<h1 id="0x04-避免无谓的同步导致性能降低"><a href="#0x04-避免无谓的同步导致性能降低" class="headerlink" title="0x04 避免无谓的同步导致性能降低"></a>0x04 避免无谓的同步导致性能降低</h1><p>看看如下代码正确吗：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr1;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr2;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr3;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr4;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上述操作无疑是线程安全的，但是这种方法同步带来了很大的性能问题。</p>
+<p>因为同步所以互斥，这也就决定了四个方法不能并发，但是逻辑上，method1和method2由于都操作了arr1和arr2，所以应该互斥，但是不应该和method3、method4互斥。</p>
+<p>但是现在的结果是操作arr1和arr2的时候就不能操作arr3和arr4。造成了性能下降。</p>
+<p>要避免这种情况可以缩小锁范围，<strong>创建专门的对象锁以替代方法所属对象的锁</strong></p>
+<p>如下修改：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr1;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr2;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr3;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr4;</div><div class="line"><span class="keyword">private</span> <span class="keyword">byte</span>[] lock1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</div><div class="line"><span class="keyword">private</span> <span class="keyword">byte</span>[] lock2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">	<span class="keyword">synchronized</span> (lock1) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">	<span class="keyword">synchronized</span> (lock1) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">	<span class="keyword">synchronized</span> (lock2) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">	<span class="keyword">synchronized</span> (lock2) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="0x05-避免多个锁顺序不同导致死锁"><a href="#0x05-避免多个锁顺序不同导致死锁" class="headerlink" title="0x05 避免多个锁顺序不同导致死锁"></a>0x05 避免多个锁顺序不同导致死锁</h1><p>要避免死锁首先要知道什么是死锁，以及死锁如何发生得。</p>
+<p><strong>线程A申请一个对象锁，但是对象锁被线程B持有了，而线程B申请的对象锁又被线程A持有了，这样导致两个线程分别阻塞了对方，这就是死锁。</strong></p>
+<p>死锁是如何形成的？</p>
+<p><strong>死锁一般是由于多个锁对象在不同的线程中获取对象锁顺序不同造成的</strong></p>
+<p>看如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TT</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">(<span class="keyword">int</span>[] arr1, <span class="keyword">int</span>[] arr2)</span> </span>&#123;</div><div class="line">		<span class="comment">// 操作arr1和arr2</span></div><div class="line">		<span class="keyword">synchronized</span> (arr1) &#123;</div><div class="line">			<span class="keyword">synchronized</span> (arr2) &#123;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	TT tt = <span class="keyword">new</span> TT();</div><div class="line">	<span class="keyword">int</span>[] arr1 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line">	<span class="keyword">int</span>[] arr2 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line">	tt.method1(arr1, arr2);</div><div class="line">	tt.method1(arr2, arr1);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在method1的方法调用中，因为两个数组参数的顺序调换，导致了多线程情况下获取对象锁顺序不同，导致死锁发生。</p>
+<p>如何解决死锁？</p>
+<p><strong>一种简单的方法就是保证不同线程中多个锁对象获取锁的顺序是相同的。</strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/10/使用sychronized注意事项/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java参数到底是值传递还是引用传递" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1219,209 +1354,6 @@
 
 
   
-    <article id="post-关于Canvas的一些概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/03/关于Canvas的一些概念/">关于Canvas的一些概念</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/03/关于Canvas的一些概念/" class="archive-article-date">
-  	<time datetime="2017-08-03T06:46:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在Android开发中不管是图片的绘制还是控件的绘制都少不了<strong>Canvas</strong>的参与。</p>
-<p><strong>Canvas</strong>如此重要，对其多一些了解自然是对开发有益的。</p>
-<h1 id="获得对象"><a href="#获得对象" class="headerlink" title="获得对象"></a>获得对象</h1><p>有两种获得Canvas对象的方法：</p>
-<ul>
-<li>重写onDraw方法，使用参数中的Canvas</li>
-<li>直接创建Canvas对象</li>
-</ul>
-<h1 id="它有什么用"><a href="#它有什么用" class="headerlink" title="它有什么用"></a>它有什么用</h1><p>Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为Android开发中，Canvas不仅提供了动画特效还提供了常见图形绘制方法，比如圆形、矩形、扇形等。</p>
-<p>在进行绘制过程中，还需要借助Pain辅助，Paint可以理解为画笔。</p>
-<h1 id="绘制图形方法"><a href="#绘制图形方法" class="headerlink" title="绘制图形方法"></a>绘制图形方法</h1><ul>
-<li><p>绘制文字</p>
-<p><code>drawText(String text, float x, float y, Paint paint)</code></p>
-<p><code>drawText(char[] text, int index, int count, float x, float y, Paint paint)</code></p>
-<p><code>drawText(CharSequence text, int start, int end, float x, float y, Paint paint)</code></p>
-<p><strong>float x</strong>：文本开始的x轴位置</p>
-<p><strong>float y</strong>：文本开始的y轴位置</p>
-<p><strong>text</strong>：要绘制的文本</p>
-<p><strong>paint</strong>: 使用的画笔</p>
-<p><strong>start</strong>：文本开始的位置</p>
-<p><strong>end</strong>：文本结束的位置</p>
-<p>​</p>
-</li>
-<li><p>绘制圆形</p>
-<p><code>drawCircle(float cx, float cy, float radius, Paint paint)</code></p>
-<p><strong>float cx</strong>：圆心x轴坐标</p>
-<p><strong>float cy</strong>：圆心y轴坐标</p>
-<p><strong>float radius</strong>：圆半径</p>
-<p><strong>paint</strong>：画笔</p>
-<p>​</p>
-</li>
-<li><p>绘制线条</p>
-<p><code>drawLine(float startX, float startY, float stopX, float stopY, Paint paint)</code></p>
-<p><strong>float startX</strong>：起点x坐标</p>
-<p><strong>float startY</strong>：起点y坐标</p>
-<p><strong>float stopX</strong>：终点x坐标</p>
-<p><strong>float stopY</strong>：终点y坐标</p>
-<p>​</p>
-</li>
-<li><p>绘制椭圆</p>
-<p><code>drawOval(float left, float top, float right, float bottom, Paint paint)</code></p>
-<p><code>drawOval(RectF oval, Paint paint)</code></p>
-<p>这里的两个方法可以是一样的，因为绘制一个<strong>RectF</strong>也是需要方法一中的四个点。</p>
-<p><strong>float left</strong>：左下</p>
-<p><strong>float top</strong>：左上</p>
-<p><strong>float right</strong>：右上</p>
-<p><strong>float bottom</strong>：右下</p>
-<p>​</p>
-</li>
-<li><p>绘制弧度</p>
-<p><code>drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
-<p>​</p>
-<p><code>drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
-<p><strong>float startAngle</strong>：开始角度</p>
-<p><strong>float sweepAngle</strong>：扫过角度</p>
-<p><strong>boolean useCenter</strong>：是否和中心连线 </p>
-<p>​</p>
-</li>
-<li><p>绘制矩形</p>
-<p><code>drawRect(float left, float top, float right, float bottom, Paint paint)</code></p>
-<p><code>drawRect(Rect r, Paint paint)</code></p>
-<p>​</p>
-</li>
-<li><p>绘制多边形</p>
-<p>多边形绘制需要用到Path，路径类</p>
-<p>用到moveTo，lineTo等常用方法</p>
-<p><code>moveTo(float x, float y)</code></p>
-<p><code>lineTo(float x, float y)</code></p>
-<p>​</p>
-</li>
-<li><p>绘制赛贝尔曲线</p>
-<p>赛贝尔曲线的绘制也用到了Path。</p>
-<p><code>quadTo(float x1, float y1, float x2, float y2)</code></p>
-<p>​</p>
-</li>
-<li><p>绘制点</p>
-<p><code>drawPoint(float x, float y, Paint paint)</code></p>
-<p><code>drawPoints(float[] pts, Paint paint)</code></p>
-<p><strong>float x</strong>：点x轴坐标</p>
-<p><strong>float y</strong>：点y轴坐标</p>
-<p><strong>float pts</strong>：点数组，每两个值组合一个点，最后如果不够2个点则忽略。</p>
-<p>​</p>
-</li>
-<li><p>绘制图片</p>
-<p><code>drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)</code></p>
-<p>​</p>
-<p>​</p>
-</li>
-</ul>
-<h1 id="动画方法"><a href="#动画方法" class="headerlink" title="动画方法"></a>动画方法</h1><ul>
-<li><p>位移</p>
-<p><code>translate(float dx, float dy)</code></p>
-<p><strong>float dx</strong>：x轴移动距离</p>
-<p><strong>float dy</strong>：y轴移动距离</p>
-<p>​</p>
-</li>
-<li><p>缩放</p>
-<p><code>scale(float sx, float sy)</code></p>
-<p><code>scale(float sx, float sy, float px, float py)</code></p>
-<p><strong>float sx</strong>：x轴放大倍数</p>
-<p><strong>float sy</strong>：y轴放大倍数</p>
-<p><strong>float px, float py</strong>：以该点为中心缩放</p>
-</li>
-<li><p>旋转</p>
-<p><code>rotate(float degrees)</code></p>
-<p><code>rotate(float degrees, float px, float py)</code></p>
-<p><strong>float degrees</strong>：旋转角度</p>
-<p><strong>float px, float py</strong>：以px，py组成的点为中心旋转degrees角度</p>
-</li>
-</ul>
-<h1 id="save和restore"><a href="#save和restore" class="headerlink" title="save和restore"></a>save和restore</h1><ul>
-<li><p>save保存画布</p>
-<p>把save之前的数据保存起来，以便后续的操作在一个新的图层。</p>
-</li>
-<li><p>restore合并图层</p>
-<p>把save之前和之后的多个图层进行合并</p>
-<p>​</p>
-<p>​</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/03/关于Canvas的一些概念/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1540,11 +1472,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1572,11 +1504,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1585,10 +1521,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
