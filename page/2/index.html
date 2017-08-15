@@ -174,6 +174,344 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-No-resource-identifier-found-for-attribute-roundIcon-in-package-android" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/04/No-resource-identifier-found-for-attribute-roundIcon-in-package-android/">No resource identifier found for attribute &#39;roundIcon&#39; in package &#39;android&#39;</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/04/No-resource-identifier-found-for-attribute-roundIcon-in-package-android/" class="archive-article-date">
+  	<time datetime="2017-08-04T03:37:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月04日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Android studio更新到2.3后创建项目时就出现了这个问题，我只要降低版本就出现编译异常信息：</p>
+<p><code>No resource identifier found for attribute &#39;roundIcon&#39; in package &#39;android&#39;Ask Question</code>。</p>
+<p>这个<strong>roundIcon</strong>真是害人匪浅。</p>
+<p>而且也是感受到了天下文章一大抄的说法所言非虚。。</p>
+<p>只要搜出来的说法都是删掉<code>roundIcon</code>那个属性即可。</p>
+<p>可是我和其他网友都遇到了另一个问题：删除后再编译又会自动给添加上，而编译版本已经改为了5.0。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><ul>
+<li>简单做法</li>
+</ul>
+<p>如果只是因为没有为最新系统功能做好适配工作。那么可以把<strong>targetSdkVersion</strong>降回到所需版本，但保留<strong>compileSdkVersion 26</strong>编译版本最新。这是最简单做法，但是可能有一些过时API需要进行版本判断。</p>
+<ul>
+<li><p>我还想降低compileSdkVersion为20</p>
+<p>当把<strong>compileSdkVersion</strong>降为20的时候，再次编译项目就出现了<code>Error:(11) No resource identifier found for attribute &#39;roundIcon&#39; in package &#39;android&#39;</code>。</p>
+<p>这时想到还有构建版本还是26.0.0，然后也改为20.0.0了。再次编译</p>
+<p>这时候仍然有异常，但是信息变了：<code>Error:The SDK Build Tools revision (20.0.0) is too low for project &#39;:app&#39;. Minimum required is 25.0.0
+&lt;a href=&quot;fix.build.tools.version&quot;&gt;Update Build Tools version and sync project&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;openFile:/Users/jenson/AndroidStudioProjects/CanvasTest/app/build.gradle&quot;&gt;Open File&lt;/a&gt;</code>。</p>
+<p>这是一个好兆头，说明我们的对手变了。我现在要做的就是让项目认可低版本的bt(build tool)。</p>
+<p>这条异常是由：Gradle sync发出的。所以异常和Gradle有关，那现在问题矛头指向Gradle，而Gradle又有Gradle版本和插件版本，</p>
+<p><strong>会不会是版本太新缘故，毕竟谷歌老喜欢搞新花样，所以现在的想法是回退到一个合适的版本。</strong><br>目前版本是<strong>gradle-3.3-all</strong>和<strong>com.android.tools.build:gradle:2.3.3</strong></p>
+<p>现在使用<strong>gradle-3.0-all</strong>和<strong>com.android.tools.build:gradle:2.2.0</strong></p>
+<p>从新编译时出现了如下弹窗：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/gradle%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E6%8F%90%E7%A4%BA%E5%BC%B9%E7%AA%97.png" alt="gradle版本升级弹窗"></p>
+</li>
+</ul>
+<p>​    说明两个版本在匹配范围内，获得初步成功，但是编译完成时再次提示了<strong>roundIcon</strong>，然后这次把<strong>属性删掉</strong>，同时<strong>clean project</strong>。</p>
+<p>然后又出现了如下异常信息：</p>
+<p>Error:In <declare-styleable> ConstraintSet, unable to find attribute android:elevation</declare-styleable></p>
+<p>这可能是由于把compileSdkVersion设置20，有点太低了得缘故。</p>
+<p>既然如此，干脆一不做二不休，进入布局文件把<strong>android.support.constraint.ConstraintLayout</strong>布局替换为其他布局。同时删除该类用到的一些属性，譬如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">app:layout_constraintBottom_toBottomOf=&quot;parent&quot;</div><div class="line">app:layout_constraintLeft_toLeftOf=&quot;parent&quot;</div><div class="line">app:layout_constraintRight_toRightOf=&quot;parent&quot;</div><div class="line">app:layout_constraintTop_toTopOf=&quot;parent&quot;</div></pre></td></tr></table></figure>
+<p>斩草要除根，把依赖包也干脆去掉：</p>
+<p>删除<strong>compile ‘com.android.support.constraint:constraint-layout:1.0.2’</strong></p>
+<p>最最最后clean project，各种build后没有终于恢复正常了。。。。</p>
+<blockquote>
+<p>提示：每次升级前注意下当前Gradle版本是多少，对应的Plugin版本又是多少，如果升级后有问题，可以方便的回退。</p>
+</blockquote>
+<p>gradle本地：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">distributionUrl=file:/Users/jenson/.gradle/wrapper/dists/gradle-3.0-all.zip</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/04/No-resource-identifier-found-for-attribute-roundIcon-in-package-android/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">WireShark the capture session could not be initiated (you don&#39;t have permission to capture on that device)异常</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/" class="archive-article-date">
+  	<time datetime="2017-08-03T11:07:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>异常信息如下：<strong>the capture session could not be initiated (you don’t have permission to capture on that device)</strong></p>
+<p>在WireShark启动后，选择网卡设备时，出现这个异常。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>由于是Mac系统，所以直接终端窗口命令行解决：</p>
+<p><strong>sudo chmod 777 /dev/bpf*</strong>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">WireShakr</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/WireShakr/" class="article-tag-list-link color5">WireShakr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Gradle和Gradle-Plugin之间对应关系" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/03/Gradle和Gradle-Plugin之间对应关系/">Gradle和Gradle Plugin之间对应关系</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/Gradle和Gradle-Plugin之间对应关系/" class="archive-article-date">
+  	<time datetime="2017-08-03T09:36:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>每次Android studio版本升级经常会造成Gradle和Gradle plugin版本不兼容问题。进而又会引发其他一些列问题，简直让人泪奔。搞得真的是想去转python的心都有了。</p>
+<p>说归说，遇到问题还是要解决。如果知道了Gradle和plugin版本对应兼容关系，那就少了很多麻烦。</p>
+<p>经过查找，就目前版本情况，对应关系已经找出来了。</p>
+<h1 id="对应关系"><a href="#对应关系" class="headerlink" title="对应关系"></a>对应关系</h1><table>
+<thead>
+<tr>
+<th>Plugin version</th>
+<th>Required Gradle version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0.0 - 1.1.3</td>
+<td>2.2.1 - 2.3</td>
+</tr>
+<tr>
+<td>1.2.0 - 1.3.1</td>
+<td>2.2.1 - 2.9</td>
+</tr>
+<tr>
+<td>1.5.0</td>
+<td>2.2.1 - 2.13</td>
+</tr>
+<tr>
+<td>2.0.0 - 2.1.2</td>
+<td>2.10 - 2.13</td>
+</tr>
+<tr>
+<td>2.1.3 - 2.2.3</td>
+<td>2.14.1+</td>
+</tr>
+<tr>
+<td>2.3.0+</td>
+<td>3.3+</td>
+</tr>
+</tbody>
+</table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/03/Gradle和Gradle-Plugin之间对应关系/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-关于Canvas的一些概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1172,297 +1510,9 @@ If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
 
 
   
-    <article id="post-Python第三方库没有代码快捷提示" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/Python第三方库没有代码快捷提示/">Python第三方库没有代码快捷提示</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/Python第三方库没有代码快捷提示/" class="archive-article-date">
-  	<time datetime="2017-07-31T16:45:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>做Python开发IDE首选当然是Pycharm，但是有个问题是如果安装第三方库后，在使用的时候，第三方库返回的变量调用方法时没有代码快捷提示。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>其实是因为Python是弱类型编程语言。</p>
-<p>像Java这种强类型语言，在声明变量时都要先声明变量类型。这种类型明确自然也就知道其实例所对应的方法，所以能给出提示。</p>
-<p>而Python这种弱类型语言，使用时候只声明变量，不声明类型即可使用，</p>
-<p>变量不知道当前引用所指向的类型是哪个，IDE自然也给不出快捷提示。</p>
-<p>但是如果在代码中给出变量指定类型，那么IDE就可以给出提示。</p>
-<p>那么问题来了，如何给变量指定类型？</p>
-<ul>
-<li><p>单行注释指定类型 :</p>
-<p><code>csv_writer = csv.writer(csvFile)  # type: csv.DictWriter</code>。</p>
-<p><strong>注意格式：#后面跟type:</strong></p>
-</li>
-<li><p>多行注释指定类型：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="string">"""</span></div><div class="line">   :type: csv.DictWriter</div><div class="line">"""</div></pre></td></tr></table></figure>
-<p><strong>注意：这个多行注释中的type前须添加 : </strong></p>
-<p>​</p>
-</li>
-<li><p>使用isinstance指定</p>
-<p><code>assert isinstance(item, bs4.Tag)</code>。</p>
-<p><strong>注意：参数1表示变量，参数2表示指定类型</strong></p>
-<p>​</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/Python第三方库没有代码快捷提示/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-typeerror-module-init-takes-at-most-2-arguments-3-given" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">typeerror module.__init__() takes at most 2 arguments (3 given)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/" class="archive-article-date">
-  	<time datetime="2017-07-31T12:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月31日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> spiders , item</div><div class="line"><span class="keyword">from</span> scrapy.utils <span class="keyword">import</span> response</div><div class="line"></div><div class="line"><span class="keyword">from</span> daobanSpider.items <span class="keyword">import</span> Article</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">articleSpider</span><span class="params">(spiders)</span>:</span></div><div class="line">    name = <span class="string">"article"</span></div><div class="line">    allowed_domains = [<span class="string">"en.wikipedia.org"</span>]</div><div class="line">    start_urls = [<span class="string">"http://en.wikipedia.org/wiki/Main_Page"</span>,</div><div class="line">                  <span class="string">"http://en.wikipedia.org/wiki/Python_%28programming_language%29"</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    item = Article()</div><div class="line">    title = response.xpath(<span class="string">'//h1/text()'</span>)[<span class="number">0</span>].extract()</div><div class="line">    print(<span class="string">"Title is: "</span> + title)</div><div class="line">    item[<span class="string">'title'</span>] = title</div><div class="line">    <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p><code>class articleSpider(spiders):</code>这一行出现异常，信息如下：</p>
-<p>TypeError: module.<strong>init</strong>() takes at most 2 arguments (3 given)</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>我这是定义的一个class继承spider。但是这里提示类型错误，竟然还出现了module.<strong>init</strong>() 。。</p>
-<p>查找后才明白过来<code>from scrapy import spiders</code>导入的spiders不是类，而是从scrapy框架导入spiders模块，如要使用某些类，需要再通过module.class格式引入</p>
-<p>所以异常的那一行改为：<code>class articleSpider(spiders.CrawlSpider):</code>。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/">Python读取文件出现UnicodeDecodeError: &#39;utf-8&#39; codec can&#39;t decode byte 0xc9 in position 0: invalid continuation byte异常</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/" class="archive-article-date">
-  	<time datetime="2017-07-29T11:00:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在用python读取文本时出现了如下异常：</p>
-<p><code>UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte</code>。</p>
-<p>在读取的时候注意统一编码，因为文本文档设置的时GBK，</p>
-<p>所以读取的时候也要设置GBK，而没有设置时默认使用的UTF-8。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">text_from_file_with_apath = open(<span class="string">'/Users/jenson/Downloads/炮灰修仙记事.txt'</span>,encoding=<span class="string">'GBK'</span>).read()</div></pre></td></tr></table></figure>
-<p><strong>读取时设置统一编码即可</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
