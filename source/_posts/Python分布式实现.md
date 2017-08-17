@@ -68,7 +68,7 @@ nager.start()
 
 **注意：authkey需要为bytes，多个进程要保证authkey相同**
 
-###通过manager获得网络队列
+### 通过manager获得网络队列
 
 ```python
 # step4.通过manager获取网络中的Queue       
