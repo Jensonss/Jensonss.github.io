@@ -35,7 +35,7 @@ result_que = Queue()
 
 这时创建的队列还只能在本地使用，如果成为网络级还要通过manager注册，也就是第二步
 
-###把队列通过manager注册到网络
+### 把队列通过manager注册到网络
 
 ```python
 class QueueManager(BaseManager):                               
@@ -58,7 +58,7 @@ QueueManager.register('get_result_que', callable=result_queue)
 
 **这里的注册可以认为是给QueueManager添加了typeid为属性方法，后面通过该方法获得经过处理的callable(也就是Queue队列)。就是说通过typeid方法获得的队列是网络队列**
 
-###创建并启动manager
+### 创建并启动manager
 
 ```python
 step3.创建并启动manager                                          
@@ -76,7 +76,7 @@ task = manager.get_task_que()
 result = manager.get_result_que()  
 ```
 
-###操作网络队列进行任务分发和结果获取
+### 操作网络队列进行任务分发和结果获取
 
 ```python
 # step5.操作该网络Queue                                     
