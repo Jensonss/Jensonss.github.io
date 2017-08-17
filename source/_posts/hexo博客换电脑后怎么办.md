@@ -1,8 +1,8 @@
 ---
 title: hexo网站换电脑后怎么办
 date: 2017-05-02 16:31:28
-tags: 网络
-categories: 网络
+tags: [hexo,博客]
+categories: [hexo,博客]
 ---
 
 # 说在前面的话

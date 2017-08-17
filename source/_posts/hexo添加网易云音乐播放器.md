@@ -1,8 +1,8 @@
 ---
 title: hexo添加网易云音乐播放器
 date: 2017-07-14 14:47:05
-tags: 网络
-categories: 网络
+tags: [hexo,博客]
+categories: [hexo,博客]
 ---
 
 # 0x00 拿到网易云音乐外链

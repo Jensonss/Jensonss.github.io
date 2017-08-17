@@ -1,8 +1,8 @@
 ---
 title: hexo更换主题及配置
 date: 2017-07-14 10:42:33
-tags: 网络
-categories: 网络
+tags: [hexo,博客]
+categories: [hexo,博客]
 ---
 
 # 0x00 前言

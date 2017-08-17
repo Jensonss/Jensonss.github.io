@@ -1,8 +1,8 @@
 ---
 title: hexo文章tags添加多标签
 date: 2017-07-1 13:52:19
-tags: 网络
-categories: 网络
+tags: [hexo,博客]
+categories: [hexo,博客]
 ---
 
 hexo博客在给文章添加标签tags时，如果只添加一个，冒号后面空格跟上标签名称即可，

@@ -1,8 +1,8 @@
 ---
 title: hexo本地图片发布后不能显示的问题
 date: 2017-04-25 15:16:33
-tags: 网络
-categories: 网络
+tags: [hexo,博客]
+categories: [hexo,博客]
 ---
 
 # 说在前面的话
