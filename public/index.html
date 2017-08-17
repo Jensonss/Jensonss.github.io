@@ -180,6 +180,110 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python分布式实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/17/Python分布式实现/">Python分布式实现</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/17/Python分布式实现/" class="archive-article-date">
+  	<time datetime="2017-08-17T09:04:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>本文只是python分布式的简单实现</p>
+<p>分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南，</p>
+<p>既然是多进程免不了要用到<strong>multiprocessing</strong>模块了。</p>
+<p>当然这里主要用到Queue和multiprocessing模块下的<strong>baseManager</strong></p>
+<p>下面看看具体如何实现：</p>
+<h1 id="0x01-步骤"><a href="#0x01-步骤" class="headerlink" title="0x01 步骤"></a>0x01 步骤</h1><p>这里分布式分为服务进程和工作进程2个。</p>
+<h2 id="首先创建服务进程："><a href="#首先创建服务进程：" class="headerlink" title="首先创建服务进程："></a>首先创建服务进程：</h2><h3 id="建立队列"><a href="#建立队列" class="headerlink" title="建立队列"></a>建立队列</h3><p>这里主要是发送任务和接收结果，所以创建2个队列：task_que和result_que</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step1.建立队列           </span></div><div class="line">task_que = Queue()     </div><div class="line">result_que = Queue()</div></pre></td></tr></table></figure>
+<p>这时创建的队列还只能在本地使用，如果成为网络级还要通过manager注册，也就是第二步</p>
+<p>###把队列通过manager注册到网络</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueueManager</span><span class="params">(BaseManager)</span>:</span>                               </div><div class="line">    <span class="keyword">pass</span>                                                                                                               </div><div class="line">                                                               </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">task_queue</span><span class="params">()</span>:</span>                                              </div><div class="line">    <span class="keyword">return</span> task_que                                                                                                        </div><div class="line">                                                               </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">result_queue</span><span class="params">()</span>:</span>                                            </div><div class="line">    <span class="keyword">return</span> result_que                                          </div><div class="line">                                                                                                                          </div><div class="line"><span class="comment"># step2.把队列通过manager注册到网络                                      </span></div><div class="line">QueueManager.register(<span class="string">'get_task_que'</span>, callable=task_queue)     </div><div class="line">QueueManager.register(<span class="string">'get_result_que'</span>, callable=result_queue)</div></pre></td></tr></table></figure>
+<p>参数1为typeid，参数2为调用方法。</p>
+<p>这里的typeid在任务进程也要使用，</p>
+<p><strong>这里的注册可以认为是给QueueManager添加了typeid为属性方法，后面通过该方法获得经过处理的callable(也就是Queue队列)。就是说通过typeid方法获得的队列是网络队列</strong></p>
+<p>###创建并启动manager</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">step3.创建并启动manager                                          </div><div class="line">nager = QueueManager(address=(<span class="string">''</span>, <span class="number">8001</span>), authkey=<span class="string">b'jenson'</span>) </div><div class="line">nager.start()</div></pre></td></tr></table></figure>
+<p><strong>注意：authkey需要为bytes，多个进程要保证authkey相同</strong></p>
+<p>###通过manager获得网络队列</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step4.通过manager获取网络中的Queue       </span></div><div class="line">task = manager.get_task_que()      </div><div class="line">result = manager.get_result_que()</div></pre></td></tr></table></figure>
+<p>###操作网络队列进行任务分发和结果获取</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step5.操作该网络Queue                                     </span></div><div class="line"><span class="keyword">for</span> url <span class="keyword">in</span> [<span class="string">"ImageUrl_"</span> + str(i) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]:  </div><div class="line">    print(<span class="string">'put task %s ...'</span> % url)                     </div><div class="line">    task.put(url)                                      </div><div class="line">    time.sleep(<span class="number">1</span>)                                      </div><div class="line">                                                       </div><div class="line">print(<span class="string">'try get result...'</span>)                             </div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):                                    </div><div class="line">    print(<span class="string">'result is %s'</span> % result.get(timeout=<span class="number">10</span>))     </div><div class="line">    time.sleep(<span class="number">1</span>)                                      </div><div class="line"><span class="comment"># 关闭管理                                                 </span></div><div class="line">manager.shutdown()</div></pre></td></tr></table></figure>
+<h2 id="接下来创建任务进程"><a href="#接下来创建任务进程" class="headerlink" title="接下来创建任务进程"></a>接下来创建任务进程</h2><h3 id="通过manager注册"><a href="#通过manager注册" class="headerlink" title="通过manager注册"></a>通过manager注册</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueueManager</span><span class="params">(BaseManager)</span>:</span>         </div><div class="line">    <span class="keyword">pass</span>                                 </div><div class="line"> <span class="comment"># step1.注册和服务进程                         </span></div><div class="line">QueueManager.register(<span class="string">'get_task_que'</span>)    </div><div class="line">QueueManager.register(<span class="string">'get_result_que'</span>)</div></pre></td></tr></table></figure>
+<h3 id="创建并连接manager"><a href="#创建并连接manager" class="headerlink" title="创建并连接manager"></a>创建并连接manager</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step2.创建并启动manager</span></div><div class="line">m = QueueManager(address=(<span class="string">'127.0.0.1'</span>, <span class="number">8001</span>), authkey=<span class="string">b'jenson'</span>)</div><div class="line">m.connect()</div></pre></td></tr></table></figure>
+<h3 id="获取网络队列"><a href="#获取网络队列" class="headerlink" title="获取网络队列"></a>获取网络队列</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step3.通过manager获取网络队列</span></div><div class="line">task = m.get_task_que()  <span class="comment"># type: Queue</span></div><div class="line">result = m.get_result_que()  <span class="comment"># type: Queue</span></div></pre></td></tr></table></figure>
+<h3 id="操作网络队列"><a href="#操作网络队列" class="headerlink" title="操作网络队列"></a>操作网络队列</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> (<span class="keyword">not</span> task.empty()):</div><div class="line">    url = task.get(<span class="keyword">True</span>, <span class="number">5</span>)</div><div class="line">    print(<span class="string">'download=='</span> + url)</div><div class="line">    time.sleep(<span class="number">1</span>)</div><div class="line">    result.put(<span class="string">'already download'</span> + url)</div></pre></td></tr></table></figure>
+<h1 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h1><p>服务进程首先执行，结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">put task ImageUrl_0 ...</div><div class="line">put task ImageUrl_1 ...</div><div class="line">put task ImageUrl_2 ...</div><div class="line">put task ImageUrl_3 ...</div><div class="line">put task ImageUrl_4 ...</div><div class="line">put task ImageUrl_5 ...</div><div class="line">put task ImageUrl_6 ...</div><div class="line">put task ImageUrl_7 ...</div><div class="line">put task ImageUrl_8 ...</div><div class="line">put task ImageUrl_9 ...</div><div class="line">try get result...</div></pre></td></tr></table></figure>
+<p>然后运行工作进程，结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">download==ImageUrl_0</div><div class="line">download==ImageUrl_1</div><div class="line">download==ImageUrl_2</div><div class="line">download==ImageUrl_3</div><div class="line">download==ImageUrl_4</div><div class="line">download==ImageUrl_5</div><div class="line">download==ImageUrl_6</div><div class="line">download==ImageUrl_7</div><div class="line">download==ImageUrl_8</div><div class="line">download==ImageUrl_9</div></pre></td></tr></table></figure>
+<p>最后服务进程又收到信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">result is already downloadImageUrl_0</div><div class="line">result is already downloadImageUrl_1</div><div class="line">result is already downloadImageUrl_2</div><div class="line">result is already downloadImageUrl_3</div><div class="line">result is already downloadImageUrl_4</div><div class="line">result is already downloadImageUrl_5</div><div class="line">result is already downloadImageUrl_6</div><div class="line">result is already downloadImageUrl_7</div><div class="line">result is already downloadImageUrl_8</div><div class="line">result is already downloadImageUrl_9</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/17/Python分布式实现/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python入门系列(5)：进程、线程和协程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1216,110 +1320,6 @@
 
 
   
-    <article id="post-字符串前的r和u" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/06/字符串前的r和u/">字符串前的r和u</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/06/字符串前的r和u/" class="archive-article-date">
-  	<time datetime="2017-08-06T08:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月06日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在看python代码时经常看到这样的代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">r"aa\nbb"</span>)</div><div class="line">print(<span class="string">u"aa\nbb"</span>)</div></pre></td></tr></table></figure>
-<p>字符串使用时直接引用就好了，前面的r和u这两个前缀是什么鬼？有什么作用？</p>
-<p>纸上得来终觉浅，绝知此事要躬行。</p>
-<p>要了解r和u的作用还是实际操作来看看</p>
-<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
-<li><p>r的作用</p>
-<p>首先看看r的作用，执行如下代码看看结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">"aa\nbb"</span>)</div><div class="line">print(<span class="string">r"aa\nbb"</span>)</div></pre></td></tr></table></figure>
-<p>打印结果是这样子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">aa</div><div class="line">bb</div><div class="line">aa\nbb</div></pre></td></tr></table></figure>
-<p>第一个打印，<strong>\n</strong>把字符串截开了，而第二个打印是全部打印。</p>
-<p>在python中，<strong>\n</strong>是换行符作用。所以第一个打印才是正常的。</p>
-<p>第二个打印中的<strong>r作用就是取消字符串中的转移字符的作用，让其老老实实作为一个普通字符串</strong>。</p>
-<p>接下来看看u的作用：</p>
-</li>
-<li><p>u的作用</p>
-<p>u表示将后面跟的字符串以unicode格式存储，否则会使用源文件的默认编码格式来编码字符串</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/06/字符串前的r和u/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1438,15 +1438,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">网络</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1455,6 +1455,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1482,11 +1486,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+                <a href="javascript:void(0)" class="js-tag color3">网络</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1506,6 +1514,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
@@ -1514,23 +1526,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">excel</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
               </li>
             
             <div class="clearfix"></div>
