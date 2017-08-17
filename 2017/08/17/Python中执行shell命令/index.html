@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>反转字符串 | Jenson</title>
+  <title>Python中执行shell命令 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言比如abc，反转后cba 0x01 实现1234567public static String reverseStr(String str) &amp;#123;	StringBuilder sb = new StringBuilder();	for (int i = str.length() - 1; i &amp;gt;= 0; i--) &amp;#123;		sb.append(str.charAt">
-<meta name="keywords" content="Java,算法,趣题">
+  <meta name="description" content="0x00前言这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式 0x01 方式os模块 os.system(‘ls’) 这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。 该方法没有返回值    os.popen(‘ls’) popen方法通过p">
+<meta name="keywords" content="Python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="反转字符串">
-<meta property="og:url" content="http://yoursite.com/2017/07/27/反转字符串/index.html">
+<meta property="og:title" content="Python中执行shell命令">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/Python中执行shell命令/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00 前言比如abc，反转后cba 0x01 实现1234567public static String reverseStr(String str) &amp;#123;	StringBuilder sb = new StringBuilder();	for (int i = str.length() - 1; i &amp;gt;= 0; i--) &amp;#123;		sb.append(str.charAt">
-<meta property="og:updated_time" content="2017-07-27T08:42:52.000Z">
+<meta property="og:description" content="0x00前言这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式 0x01 方式os模块 os.system(‘ls’) 这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。 该方法没有返回值    os.popen(‘ls’) popen方法通过p">
+<meta property="og:updated_time" content="2017-08-17T12:23:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="反转字符串">
-<meta name="twitter:description" content="0x00 前言比如abc，反转后cba 0x01 实现1234567public static String reverseStr(String str) &amp;#123;	StringBuilder sb = new StringBuilder();	for (int i = str.length() - 1; i &amp;gt;= 0; i--) &amp;#123;		sb.append(str.charAt">
+<meta name="twitter:title" content="Python中执行shell命令">
+<meta name="twitter:description" content="0x00前言这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式 0x01 方式os模块 os.system(‘ls’) 这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。 该方法没有返回值    os.popen(‘ls’) popen方法通过p">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -180,31 +180,45 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-反转字符串" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Python中执行shell命令" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      反转字符串
+      Python中执行shell命令
     </h1>
   
 
         
-        <a href="/2017/07/27/反转字符串/" class="archive-article-date">
-  	<time datetime="2017-07-27T05:28:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月27日</time>
+        <a href="/2017/08/17/Python中执行shell命令/" class="archive-article-date">
+  	<time datetime="2017-08-17T12:07:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>比如abc，反转后cba</p>
-<h1 id="0x01-实现"><a href="#0x01-实现" class="headerlink" title="0x01 实现"></a>0x01 实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">reverseStr</span><span class="params">(String str)</span> </span>&#123;</div><div class="line">	StringBuilder sb = <span class="keyword">new</span> StringBuilder();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = str.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">		sb.append(str.charAt(i));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> sb.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面这种是遍历所有字符串长度，复杂度为O(n)。</p>
-<p>应该还有更好的方法:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">reverse</span><span class="params">(String str)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> len = str.length();</div><div class="line">	<span class="keyword">int</span> max = len - <span class="number">1</span>;</div><div class="line">	<span class="keyword">char</span>[] chars = str.toCharArray();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; (len &gt;&gt; <span class="number">1</span>); i++) &#123;</div><div class="line">		<span class="keyword">char</span> pre = str.charAt(i);</div><div class="line">		<span class="keyword">char</span> last = str.charAt(max);</div><div class="line">		chars[i] = last;</div><div class="line">		chars[max] = pre;</div><div class="line">		max--;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> String.valueOf(chars);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式</p>
+<h1 id="0x01-方式"><a href="#0x01-方式" class="headerlink" title="0x01 方式"></a>0x01 方式</h1><h2 id="os模块"><a href="#os模块" class="headerlink" title="os模块"></a>os模块</h2><ul>
+<li><p>os.system(‘ls’)</p>
+<p>这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。</p>
+<p><strong>该方法没有返回值</strong></p>
+</li>
+</ul>
+<ul>
+<li><p>os.popen(‘ls’)</p>
+<p>popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。</p>
+</li>
+</ul>
+<h2 id="commands模块"><a href="#commands模块" class="headerlink" title="commands模块"></a>commands模块</h2><p>​    根据你需要的不同，commands模块有三个方法可供选择。getstatusoutput, getoutput, getstatus。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import commands</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;ls /bin/ls&apos;)</div><div class="line">(0, &apos;/bin/ls&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;cat /bin/junk&apos;)</div><div class="line">(256, &apos;cat: /bin/junk: No such file or directory&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;/bin/junk&apos;)</div><div class="line">(256, &apos;sh: /bin/junk: not found&apos;)</div><div class="line">&gt;&gt;&gt; commands.getoutput(&apos;ls /bin/ls&apos;)</div><div class="line">&apos;/bin/ls&apos;</div><div class="line">&gt;&gt;&gt; commands.getstatus(&apos;/bin/ls&apos;)</div><div class="line">&apos;-rwxr-xr-x  1 root        13352 Oct 14  1994 /bin/ls&apos;</div></pre></td></tr></table></figure>
+<p><strong>该模块在python3.6中已经不存在，不知道具体从哪个版本移除了，所以这部分代码来自网友分析</strong></p>
+<h2 id="subprocess模块"><a href="#subprocess模块" class="headerlink" title="subprocess模块"></a>subprocess模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>shell=True表示命令最终在shell中运行。Python文档中出于安全考虑，不建议使用shell=True。建议使用Python库来代替shell命令，或使用pipe的一些功能做一些转义。</p>
+<p>如果是多条命令可以使用‘&amp;&amp;’</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls&amp;&amp;pwd'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
 
       
 
@@ -249,15 +263,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
@@ -269,15 +275,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
@@ -332,7 +330,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/07/27/反转字符串/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/08/17/Python中执行shell命令/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -346,18 +344,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/07/26/垃圾回收机制-关于GC/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/08/17/Python分布式实现/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          垃圾回收机制~关于GC
+          Python分布式实现
         
       </div>
     </a>
   
   
-    <a href="/2017/07/28/求解1到n中1的个数/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">求解1到n中1的个数</div>
+    <a href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">如何在Pycharm中运行Scrapy爬虫</div>
       <i class="icon-circle-right"></i>
     </a>
   
