@@ -68,6 +68,8 @@ nager.start()
 
 **注意：authkey需要为bytes，多个进程要保证authkey相同**
 
+
+
 ### 通过manager获得网络队列
 
 ```python
