@@ -1,6 +1,6 @@
 ---
 title: Python入门系列(5)：进程、线程和协程
-date: 2017-08-7 15:22:54
+date: 2017-08-17 15:22:54
 tags: Python
 categories: Python
 ---
@@ -94,7 +94,138 @@ categories: Python
 
 ## IPC
 
+Python提供了多种进程间通信方式如Queue、Pipe。
 
+这里两种方式都体验一下：
+
+- Queue
+
+  Queue是多进程安全的队列， 可以使⽤Queue实现多进程之间的数据传
+  递。 有两个⽅法： Put和Get可以进⾏Queue操作：
+
+  **·Put**⽅法⽤以插⼊数据到队列中， 它还有两个可选参数： blocked和timeout。 如果blocked为True（ 默认值） ， 并且timeout为正值， 该⽅法会阻塞timeout指定的时间， 直到该队列有剩余的空间。 如果超时， 会抛出Queue.Full异常。 如果blocked为False， 但该Queue已满， 会⽴即抛出Queue.Full异常。
+
+  **.Get**⽅法可以从队列读取并且删除⼀个元素。 同样， Get⽅法有两个可选参数： blocked和timeout。 如果blocked为True（ 默认值） ， 并且timeout为正值， 那么在等待时间内没有取到任何元素， 会抛出Queue.Empty异常。 如果blocked为False， 分两种情况： 如果Queue有⼀个值可⽤， 则⽴即返回该值； 否则，如果队列为空， 则⽴即抛出Queue.Empty异常。
+
+  ```python
+  from multiprocessing import Process, Queue
+  import time
+
+
+  def write_proc(queue, urls):
+      '''
+      :type queue Queue
+      :param queue:
+      :param urls:
+      :return:
+      '''
+      for url in urls:
+          print("put:" + url)
+          queue.put(url)
+          time.sleep(1)#这里睡眠时间是秒，Java中是毫秒
+
+
+  def read_proc(queue):
+      '''
+      :type queue Queue
+      :param queue:
+      :return:
+      '''
+      while True:
+         url = queue.get(True)
+         print('get:' + url)
+
+
+  q =  Queue()
+  write1 = Process(target=write_proc,args=(q,['url1','url2','url3']))
+  write2 = Process(target=write_proc,args=(q,['url4','url5','url6']))
+  read  = Process(target=read_proc,args=(q,))
+  write1.start()
+  write2.start()
+  read.start()
+  write1.join()
+  write2.join()
+  read.terminate()
+
+  ```
+
+  执行结果如下：
+
+  ```
+  put:url1
+  put:url4
+  get:url1
+  get:url4
+  put:url5
+  put:url2
+  get:url2
+  get:url5
+  put:url6
+  put:url3
+  get:url6
+  get:url3
+  ```
+
+- Pipe
+
+  Pipe常⽤来在两个进程间进⾏通信， 两个进程分别位于管道的两端。
+
+  Pipe⽅法返回（ conn1， conn2） 代表⼀个管道的两个端。
+
+   Pipe⽅法有duplex参数， 如果duplex参数为True（ 默认值） ， 那么这个管道是全双⼯模式， 也就是说conn1和conn2均可收发。 
+
+  若duplex为False， conn1只负责接收消息， conn2只负责发送消息。 send和recv⽅法分别是发送和接收消息的⽅法。 例如， 在全双⼯模式下， 可以调⽤conn1.send发送消息，conn1.recv接收消息。 如果没有消息可接收， recv⽅法会⼀直阻塞。 如果管道已经被关闭， 那么recv⽅法会抛出EOFError。
+
+  ```python
+  from multiprocessing import Process,Pipe
+  import time
+
+
+  def send_proc(pipe,urls):
+      '''
+      :type pipe Connection
+      :param pipe:
+      :param urls:
+      :return:
+      '''
+      for url in urls:
+          print('send:'+url)
+          pipe.send(url)
+          time.sleep(1)
+
+  def recv_proc(pipe):
+      '''
+      :type pipe Connection
+      :param pipe:
+      :return:
+      '''
+      while True:
+          url = pipe.recv()
+          print('recv:'+url)
+          time.sleep(1)
+
+  pipe = Pipe()
+  p1 = Process(target=send_proc,args=(pipe[0],['url1','url2','url3']))
+  p2 = Process(target=recv_proc,args=(pipe[1],))
+  p1.start()
+  p2.start()
+  p1.join()
+  p2.join()
+
+  ```
+
+  执行结果如下：
+
+  ```
+  send:url1
+  recv:url1
+  send:url2
+  recv:url2
+  send:url3
+  recv:url3
+  ```
+
+  ​
 
 # 线程
 
