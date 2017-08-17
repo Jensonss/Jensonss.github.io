@@ -180,6 +180,173 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python入门系列(5)：进程、线程和协程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/17/Python入门系列(5)：进程、线程和协程/">Python入门系列(5)：进程、线程和协程</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/17/Python入门系列(5)：进程、线程和协程/" class="archive-article-date">
+  	<time datetime="2017-08-17T07:22:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如今硬件发展速度很快，就连手机cpu都是四核八核起步了。那么如何充分发掘、利用强大的cpu资源是作为研发人员的我们需要考虑的事情了。</p>
+<h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><p><strong>知己知彼，百战不殆</strong>，要充分利用cpu首先要了解cpu是如何调用程序的。</p>
+<p>在线程出现之前，cpu的调度单位是进程，每个程序启动就生成一个独立的进程。</p>
+<p>进程拥有独立的内存空间，进行IPC难度较大，且cpu对进程上下文切换耗时较多，种种因素催生了进程的亲戚~线程，自此cpu的最小调度单位就是线程了。</p>
+<p>进程，又叫重量级进程，而线程，又叫轻量级进程，之所以是轻量级，是因为多个线程共享进程空间，使得多任务执行时，多线程进行数据交换容易了不少，而且上下文切换也更容易。</p>
+<p>对进程和线程有了了解，那多并发和并行又直到多少呢？并行和并发有什么区别？</p>
+<p><strong>并行，同时运行，可以理解为多个不同实体处理多个任务</strong>，</p>
+<p><strong>并发，同时发生，可以理解为一个实体不同时间段处理多个任务</strong>，</p>
+<p><strong>所以并行可以理解为硬件上的，并发理解为逻辑上的</strong>。</p>
+<p>对以上都有了了解，下面看看在Python中如何使用：</p>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><h2 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h2><ul>
+<li><p>os.fork()</p>
+<p>fork⽅法来⾃于Unix/Linux操作系统中提供的⼀个fork系统调⽤， 这个⽅法⾮常特殊。 </p>
+<p>普通的⽅法都是调⽤⼀次， 返回⼀次， ⽽fork⽅法是调⽤⼀次， 返回两次， </p>
+<p>原因在于操作系统将当前进程（⽗进程） 复制出⼀份进程（⼦进程） ， 这两个进程⼏乎完<br>全相同， 于是fork⽅法分别在⽗进程和⼦进程中返回。 ⼦进程中永远返回0， ⽗进程中返回的是⼦进程的ID。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPidTest</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"></div><div class="line">print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line">pid = os.fork()</div><div class="line"><span class="keyword">if</span> pid == <span class="number">0</span>:<span class="comment">#子进程</span></div><div class="line">    getPidTest()</div><div class="line"><span class="keyword">elif</span> pid &gt; <span class="number">0</span>:<span class="comment"># 父进程</span></div><div class="line">    getPidTest()</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>subprocess</p>
+<p>subprocess模块可以用来创建子进程，但是主要功能是执行外部的命令和程序，而不是运行python文件中的函数，另外这里的IPC只能通过管道进行文本交流。</p>
+<p>比如执行终端命令时：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls -al'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>multiprocessing</p>
+<p>multiprocessing模块提供了⼀个Process类来描述⼀个进程对象。</p>
+<p>创建⼦进程时， 只需要传⼊⼀个执⾏函数和函数的参数， 即可完成⼀个Process实例的创建， ⽤start（） ⽅法启动进程， ⽤join（） ⽅法实现进程间的同步。  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPidTest</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"></div><div class="line">print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    p = Process(target=getPidTest, name=<span class="string">'p1'</span>, args=())</div><div class="line">    p.start()</div></pre></td></tr></table></figure>
+<p><strong>target</strong>表示进程要调用的函数名</p>
+<p><strong>name</strong>表示进程名</p>
+<p><strong>args</strong>表示函数参数的元组形式</p>
+<p><strong>kargs</strong>表示函数参数的字典形式</p>
+</li>
+</ul>
+<h2 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h2><p>Python提供了多种进程间通信方式如Queue、Pipe。</p>
+<p>这里两种方式都体验一下：</p>
+<ul>
+<li><p>Queue</p>
+<p>Queue是多进程安全的队列， 可以使⽤Queue实现多进程之间的数据传<br>递。 有两个⽅法： Put和Get可以进⾏Queue操作：</p>
+<p><strong>·Put</strong>⽅法⽤以插⼊数据到队列中， 它还有两个可选参数： blocked和timeout。 如果blocked为True（ 默认值） ， 并且timeout为正值， 该⽅法会阻塞timeout指定的时间， 直到该队列有剩余的空间。 如果超时， 会抛出Queue.Full异常。 如果blocked为False， 但该Queue已满， 会⽴即抛出Queue.Full异常。</p>
+<p><strong>.Get</strong>⽅法可以从队列读取并且删除⼀个元素。 同样， Get⽅法有两个可选参数： blocked和timeout。 如果blocked为True（ 默认值） ， 并且timeout为正值， 那么在等待时间内没有取到任何元素， 会抛出Queue.Empty异常。 如果blocked为False， 分两种情况： 如果Queue有⼀个值可⽤， 则⽴即返回该值； 否则，如果队列为空， 则⽴即抛出Queue.Empty异常。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_proc</span><span class="params">(queue, urls)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type queue Queue</div><div class="line">    :param queue:</div><div class="line">    :param urls:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urls:</div><div class="line">        print(<span class="string">"put:"</span> + url)</div><div class="line">        queue.put(url)</div><div class="line">        time.sleep(<span class="number">1</span>)<span class="comment">#这里睡眠时间是秒，Java中是毫秒</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_proc</span><span class="params">(queue)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type queue Queue</div><div class="line">    :param queue:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">       url = queue.get(<span class="keyword">True</span>)</div><div class="line">       print(<span class="string">'get:'</span> + url)</div><div class="line"></div><div class="line"></div><div class="line">q =  Queue()</div><div class="line">write1 = Process(target=write_proc,args=(q,[<span class="string">'url1'</span>,<span class="string">'url2'</span>,<span class="string">'url3'</span>]))</div><div class="line">write2 = Process(target=write_proc,args=(q,[<span class="string">'url4'</span>,<span class="string">'url5'</span>,<span class="string">'url6'</span>]))</div><div class="line">read  = Process(target=read_proc,args=(q,))</div><div class="line">write1.start()</div><div class="line">write2.start()</div><div class="line">read.start()</div><div class="line">write1.join()</div><div class="line">write2.join()</div><div class="line">read.terminate()</div></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">put:url1</div><div class="line">put:url4</div><div class="line">get:url1</div><div class="line">get:url4</div><div class="line">put:url5</div><div class="line">put:url2</div><div class="line">get:url2</div><div class="line">get:url5</div><div class="line">put:url6</div><div class="line">put:url3</div><div class="line">get:url6</div><div class="line">get:url3</div></pre></td></tr></table></figure>
+</li>
+<li><p>Pipe</p>
+<p>Pipe常⽤来在两个进程间进⾏通信， 两个进程分别位于管道的两端。</p>
+<p>Pipe⽅法返回（ conn1， conn2） 代表⼀个管道的两个端。</p>
+<p> Pipe⽅法有duplex参数， 如果duplex参数为True（ 默认值） ， 那么这个管道是全双⼯模式， 也就是说conn1和conn2均可收发。 </p>
+<p>若duplex为False， conn1只负责接收消息， conn2只负责发送消息。 send和recv⽅法分别是发送和接收消息的⽅法。 例如， 在全双⼯模式下， 可以调⽤conn1.send发送消息，conn1.recv接收消息。 如果没有消息可接收， recv⽅法会⼀直阻塞。 如果管道已经被关闭， 那么recv⽅法会抛出EOFError。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process,Pipe</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_proc</span><span class="params">(pipe,urls)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type pipe Connection</div><div class="line">    :param pipe:</div><div class="line">    :param urls:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urls:</div><div class="line">        print(<span class="string">'send:'</span>+url)</div><div class="line">        pipe.send(url)</div><div class="line">        time.sleep(<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">recv_proc</span><span class="params">(pipe)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type pipe Connection</div><div class="line">    :param pipe:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        url = pipe.recv()</div><div class="line">        print(<span class="string">'recv:'</span>+url)</div><div class="line">        time.sleep(<span class="number">1</span>)</div><div class="line"></div><div class="line">pipe = Pipe()</div><div class="line">p1 = Process(target=send_proc,args=(pipe[<span class="number">0</span>],[<span class="string">'url1'</span>,<span class="string">'url2'</span>,<span class="string">'url3'</span>]))</div><div class="line">p2 = Process(target=recv_proc,args=(pipe[<span class="number">1</span>],))</div><div class="line">p1.start()</div><div class="line">p2.start()</div><div class="line">p1.join()</div><div class="line">p2.join()</div></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">send:url1</div><div class="line">recv:url1</div><div class="line">send:url2</div><div class="line">recv:url2</div><div class="line">send:url3</div><div class="line">recv:url3</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>Python中有多个模块都可以实现多线程，比如thread，threading，但是由于thread模块自身一些原因，推荐使用threading模块。</p>
+<ul>
+<li><p>thread模块</p>
+<p> thread 模块提供了基本的线程和锁定支持。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> _thread</div><div class="line">_thread.start_new_thread(function=getPidTest, args=(),kwargs=&#123;&#125;)</div></pre></td></tr></table></figure>
+<p>thread 模块的核心函数是 start_new_thread()。它的参数包括函数、函数的参数以及可选的关键字参数。</p>
+<p><strong>该模块基本已经作为保留模块，原本的thread模块已经变为_thread</strong>  </p>
+</li>
+<li><p>threading 模块</p>
+<p>threading模块下有个Thread类，可以帮助我们实现多线程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line">threading.Thread(target=wrapper,args=(),kwargs=&#123;&#125;,name=<span class="string">"thread1"</span>).start()</div></pre></td></tr></table></figure>
+<p><strong>target</strong>表示线程要调用的函数名</p>
+<p><strong>name</strong>表示线程名</p>
+<p><strong>args</strong>表示函数参数的元组形式</p>
+<p><strong>kargs</strong>表示函数参数的字典形式</p>
+</li>
+</ul>
+<h2 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h2><h2 id="线程同步和锁"><a href="#线程同步和锁" class="headerlink" title="线程同步和锁"></a>线程同步和锁</h2><h1 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h1><p>协程是什么东西呢？</p>
+<p>我们知道线程是轻量级进程，而协程又是轻量级线程。</p>
+<p>协程拥有⾃⼰的寄存器上下⽂和栈。 协程调度切换时， 将寄存器上下⽂和栈保存到其他地⽅， 在切回来的时候， 恢复先前保存的寄存器上下⽂和栈。 因此协程能保留上⼀次调⽤时的状态， 每次过程重⼊时， 就相当于进⼊上⼀次调⽤的状态。</p>
+<p>在并发编程中， 协程与线程类似， 每个协程表⽰⼀个执⾏单元， 有⾃⼰的本地数据， 与其他协程共享全局数据和其他资源。</p>
+<p>Python通过yield提供了对协程的基本⽀持， 但是不完全， ⽽使⽤第三⽅gevent库是更好的选择， gevent提供了⽐较完善的协程⽀持。 gevent是⼀个基于协程的Python⽹络函数库， 使⽤greenlet在libev事件循环顶部提供了⼀个有⾼级别并发性的API。</p>
+<h2 id="创建协程"><a href="#创建协程" class="headerlink" title="创建协程"></a>创建协程</h2><p>这里使用gevent库创建协程:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey;</div><div class="line">monkey.patch_all()</div><div class="line"><span class="keyword">import</span> gevent</div><div class="line"><span class="keyword">from</span>  urllib <span class="keyword">import</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_task</span><span class="params">(url)</span>:</span></div><div class="line">    print(<span class="string">"visit=="</span>+url)</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        response = request.urlopen(url)</div><div class="line">        data = response.read()</div><div class="line">        print(<span class="string">'%d bytes received from %s.'</span> % (len(data), url))</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(e)</div><div class="line">    <span class="comment"># print(threading.Thread.getName())</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    urls = [<span class="string">'http://jensondev.me/'</span>, <span class="string">'http://www.baidu.com'</span>, <span class="string">'http://www.cnblogs.com/'</span>]</div><div class="line">    greenlets = [gevent.spawn(run_task, url) <span class="keyword">for</span> url <span class="keyword">in</span> urls]</div><div class="line">    gevent.joinall(greenlets)</div></pre></td></tr></table></figure>
+<p>以上程序主要⽤了gevent中的spawn⽅法和joinall⽅法。 spawn⽅法可以看做是⽤来形成协程， joinall⽅法就是添加这些协程任务， 并且启动运⾏。 从运⾏结果来看， 3个⽹络操作是并发执⾏的， ⽽且结束顺序不同， 但其实只有⼀个线程。</p>
+<p>gevent中还提供了对池的⽀持。 当拥有动态数量的greenlet需要进⾏并发管理（ 限制并发数） 时， 就可以使⽤池， 这在处理⼤量的⽹络和IO操作时是⾮常需要的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey,pool;</div><div class="line">monkey.patch_all()</div><div class="line"><span class="keyword">import</span> gevent</div><div class="line"><span class="keyword">from</span>  urllib <span class="keyword">import</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_task</span><span class="params">(url)</span>:</span></div><div class="line">    print(<span class="string">"visit=="</span>+url)</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        response = request.urlopen(url)</div><div class="line">        data = response.read()</div><div class="line">        print(<span class="string">'%d bytes received from %s.'</span> % (len(data), url))</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(e)</div><div class="line">    <span class="comment"># print(threading.Thread.getName())</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    urls = [<span class="string">'http://jensondev.me/'</span>, <span class="string">'http://www.baidu.com'</span>, <span class="string">'http://www.cnblogs.com/'</span>]</div><div class="line">    <span class="comment"># greenlets = [gevent.spawn(run_task, url) for url in urls]</span></div><div class="line">    <span class="comment"># gevent.joinall(greenlets)</span></div><div class="line">    p =pool.Pool(<span class="number">2</span>)</div><div class="line">    p.map(func=run_task,iterable=urls)</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/17/Python入门系列(5)：进程、线程和协程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python使用MD5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -884,151 +1051,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/08/08/Python中-和-有什么意义/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python入门系列(5)：进程、线程和协程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/07/Python入门系列(5)：进程、线程和协程/">Python入门系列(5)：进程、线程和协程</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/07/Python入门系列(5)：进程、线程和协程/" class="archive-article-date">
-  	<time datetime="2017-08-07T07:22:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月07日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如今硬件发展速度很快，就连手机cpu都是四核八核起步了。那么如何充分发掘、利用强大的cpu资源是作为研发人员的我们需要考虑的事情了。</p>
-<h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h1><p><strong>知己知彼，百战不殆</strong>，要充分利用cpu首先要了解cpu是如何调用程序的。</p>
-<p>在线程出现之前，cpu的调度单位是进程，每个程序启动就生成一个独立的进程。</p>
-<p>进程拥有独立的内存空间，进行IPC难度较大，且cpu对进程上下文切换耗时较多，种种因素催生了进程的亲戚~线程，自此cpu的最小调度单位就是线程了。</p>
-<p>进程，又叫重量级进程，而线程，又叫轻量级进程，之所以是轻量级，是因为多个线程共享进程空间，使得多任务执行时，多线程进行数据交换容易了不少，而且上下文切换也更容易。</p>
-<p>对进程和线程有了了解，那多并发和并行又直到多少呢？并行和并发有什么区别？</p>
-<p><strong>并行，同时运行，可以理解为多个不同实体处理多个任务</strong>，</p>
-<p><strong>并发，同时发生，可以理解为一个实体不同时间段处理多个任务</strong>，</p>
-<p><strong>所以并行可以理解为硬件上的，并发理解为逻辑上的</strong>。</p>
-<p>对以上都有了了解，下面看看在Python中如何使用：</p>
-<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><h2 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h2><ul>
-<li><p>os.fork()</p>
-<p>fork⽅法来⾃于Unix/Linux操作系统中提供的⼀个fork系统调⽤， 这个⽅法⾮常特殊。 </p>
-<p>普通的⽅法都是调⽤⼀次， 返回⼀次， ⽽fork⽅法是调⽤⼀次， 返回两次， </p>
-<p>原因在于操作系统将当前进程（⽗进程） 复制出⼀份进程（⼦进程） ， 这两个进程⼏乎完<br>全相同， 于是fork⽅法分别在⽗进程和⼦进程中返回。 ⼦进程中永远返回0， ⽗进程中返回的是⼦进程的ID。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPidTest</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"></div><div class="line">print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line">pid = os.fork()</div><div class="line"><span class="keyword">if</span> pid == <span class="number">0</span>:<span class="comment">#子进程</span></div><div class="line">    getPidTest()</div><div class="line"><span class="keyword">elif</span> pid &gt; <span class="number">0</span>:<span class="comment"># 父进程</span></div><div class="line">    getPidTest()</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>subprocess</p>
-<p>subprocess模块可以用来创建子进程，但是主要功能是执行外部的命令和程序，而不是运行python文件中的函数，另外这里的IPC只能通过管道进行文本交流。</p>
-<p>比如执行终端命令时：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls -al'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>multiprocessing</p>
-<p>multiprocessing模块提供了⼀个Process类来描述⼀个进程对象。</p>
-<p>创建⼦进程时， 只需要传⼊⼀个执⾏函数和函数的参数， 即可完成⼀个Process实例的创建， ⽤start（） ⽅法启动进程， ⽤join（） ⽅法实现进程间的同步。  </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPidTest</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"></div><div class="line">print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    p = Process(target=getPidTest, name=<span class="string">'p1'</span>, args=())</div><div class="line">    p.start()</div></pre></td></tr></table></figure>
-<p><strong>target</strong>表示进程要调用的函数名</p>
-<p><strong>name</strong>表示进程名</p>
-<p><strong>args</strong>表示函数参数的元组形式</p>
-<p><strong>kargs</strong>表示函数参数的字典形式</p>
-</li>
-</ul>
-<h2 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h2><h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>Python中有多个模块都可以实现多线程，比如thread，threading，但是由于thread模块自身一些原因，推荐使用threading模块。</p>
-<ul>
-<li><p>thread模块</p>
-<p> thread 模块提供了基本的线程和锁定支持。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> _thread</div><div class="line">_thread.start_new_thread(function=getPidTest, args=(),kwargs=&#123;&#125;)</div></pre></td></tr></table></figure>
-<p>thread 模块的核心函数是 start_new_thread()。它的参数包括函数、函数的参数以及可选的关键字参数。</p>
-<p><strong>该模块基本已经作为保留模块，原本的thread模块已经变为_thread</strong>  </p>
-</li>
-<li><p>threading 模块</p>
-<p>threading模块下有个Thread类，可以帮助我们实现多线程：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line">threading.Thread(target=wrapper,args=(),kwargs=&#123;&#125;,name=<span class="string">"thread1"</span>).start()</div></pre></td></tr></table></figure>
-<p><strong>target</strong>表示线程要调用的函数名</p>
-<p><strong>name</strong>表示线程名</p>
-<p><strong>args</strong>表示函数参数的元组形式</p>
-<p><strong>kargs</strong>表示函数参数的字典形式</p>
-</li>
-</ul>
-<h2 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h2><h2 id="线程同步和锁"><a href="#线程同步和锁" class="headerlink" title="线程同步和锁"></a>线程同步和锁</h2><h1 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h1><p>协程是什么东西呢？</p>
-<p>我们知道线程是轻量级进程，而协程又是轻量级线程。</p>
-<p>协程拥有⾃⼰的寄存器上下⽂和栈。 协程调度切换时， 将寄存器上下⽂和栈保存到其他地⽅， 在切回来的时候， 恢复先前保存的寄存器上下⽂和栈。 因此协程能保留上⼀次调⽤时的状态， 每次过程重⼊时， 就相当于进⼊上⼀次调⽤的状态。</p>
-<p>在并发编程中， 协程与线程类似， 每个协程表⽰⼀个执⾏单元， 有⾃⼰的本地数据， 与其他协程共享全局数据和其他资源。</p>
-<p>Python通过yield提供了对协程的基本⽀持， 但是不完全， ⽽使⽤第三⽅gevent库是更好的选择， gevent提供了⽐较完善的协程⽀持。 gevent是⼀个基于协程的Python⽹络函数库， 使⽤greenlet在libev事件循环顶部提供了⼀个有⾼级别并发性的API。</p>
-<h2 id="创建协程"><a href="#创建协程" class="headerlink" title="创建协程"></a>创建协程</h2><p>这里使用gevent库创建协程:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey;</div><div class="line">monkey.patch_all()</div><div class="line"><span class="keyword">import</span> gevent</div><div class="line"><span class="keyword">from</span>  urllib <span class="keyword">import</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_task</span><span class="params">(url)</span>:</span></div><div class="line">    print(<span class="string">"visit=="</span>+url)</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        response = request.urlopen(url)</div><div class="line">        data = response.read()</div><div class="line">        print(<span class="string">'%d bytes received from %s.'</span> % (len(data), url))</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(e)</div><div class="line">    <span class="comment"># print(threading.Thread.getName())</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    urls = [<span class="string">'http://jensondev.me/'</span>, <span class="string">'http://www.baidu.com'</span>, <span class="string">'http://www.cnblogs.com/'</span>]</div><div class="line">    greenlets = [gevent.spawn(run_task, url) <span class="keyword">for</span> url <span class="keyword">in</span> urls]</div><div class="line">    gevent.joinall(greenlets)</div></pre></td></tr></table></figure>
-<p>以上程序主要⽤了gevent中的spawn⽅法和joinall⽅法。 spawn⽅法可以看做是⽤来形成协程， joinall⽅法就是添加这些协程任务， 并且启动运⾏。 从运⾏结果来看， 3个⽹络操作是并发执⾏的， ⽽且结束顺序不同， 但其实只有⼀个线程。</p>
-<p>gevent中还提供了对池的⽀持。 当拥有动态数量的greenlet需要进⾏并发管理（ 限制并发数） 时， 就可以使⽤池， 这在处理⼤量的⽹络和IO操作时是⾮常需要的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey,pool;</div><div class="line">monkey.patch_all()</div><div class="line"><span class="keyword">import</span> gevent</div><div class="line"><span class="keyword">from</span>  urllib <span class="keyword">import</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_task</span><span class="params">(url)</span>:</span></div><div class="line">    print(<span class="string">"visit=="</span>+url)</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        response = request.urlopen(url)</div><div class="line">        data = response.read()</div><div class="line">        print(<span class="string">'%d bytes received from %s.'</span> % (len(data), url))</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(e)</div><div class="line">    <span class="comment"># print(threading.Thread.getName())</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    urls = [<span class="string">'http://jensondev.me/'</span>, <span class="string">'http://www.baidu.com'</span>, <span class="string">'http://www.cnblogs.com/'</span>]</div><div class="line">    <span class="comment"># greenlets = [gevent.spawn(run_task, url) for url in urls]</span></div><div class="line">    <span class="comment"># gevent.joinall(greenlets)</span></div><div class="line">    p =pool.Pool(<span class="number">2</span>)</div><div class="line">    p.map(func=run_task,iterable=urls)</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/07/Python入门系列(5)：进程、线程和协程/">展开全文 >></a>
         </p>
       
 
