@@ -72,6 +72,8 @@ nager.start()
 
 ### 通过manager获得网络队列
 
+
+
 ```python
 # step4.通过manager获取网络中的Queue       
 task = manager.get_task_que()      
