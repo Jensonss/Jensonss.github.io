@@ -187,7 +187,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/18/Python2-7乱码/">ascii</a>
+      <a class="article-title" href="/2017/08/18/Python2-7乱码/">Python2.7编码异常问题</a>
     </h1>
   
 
@@ -202,18 +202,24 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Mac里面装了python2.7和python3.6两个版本。</p>
 <p>但是Scrapy默认使用的是2.7版本，所以遇到了编码问题：</p>
-<p><strong>‘ascii’ codec can’t decode byte 0xe4 in position 0: ordinal not in range(128)</strong></p>
-<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><h2 id="只修改项目文件"><a href="#只修改项目文件" class="headerlink" title="只修改项目文件"></a>只修改项目文件</h2><p>在文件前加上如下代码：</p>
+<h1 id="‘ascii’-codec-can’t-decode-byte-0xe4-in-position-0-ordinal-not-in-range-128"><a href="#‘ascii’-codec-can’t-decode-byte-0xe4-in-position-0-ordinal-not-in-range-128" class="headerlink" title="‘ascii’ codec can’t decode byte 0xe4 in position 0: ordinal not in range(128)"></a>‘ascii’ codec can’t decode byte 0xe4 in position 0: ordinal not in range(128)</h1><h2 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h2><h3 id="只修改项目文件"><a href="#只修改项目文件" class="headerlink" title="只修改项目文件"></a>只修改项目文件</h3><p>在文件前加上如下代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">defaultencoding = <span class="string">'utf-8'</span></div><div class="line"><span class="keyword">if</span> sys.getdefaultencoding() != defaultencoding:</div><div class="line">    reload(sys)</div><div class="line">    sys.setdefaultencoding(defaultencoding)</div></pre></td></tr></table></figure>
 <blockquote>
 <p>这种情况有个问题就是如果系统默认环境是2.7，而开发工具是3.6，此时如果你的项目创建时使用默认环境2.7创建，但是确使用3.6版本IDE来开发，这样就导致<strong>reload</strong>不能被识别。</p>
 </blockquote>
 <p>所以推荐方法二：修改全局编码环境</p>
-<h2 id="修改全局编码环境"><a href="#修改全局编码环境" class="headerlink" title="修改全局编码环境"></a>修改全局编码环境</h2><p>Mac中有两处sitepackage，找到目录：</p>
+<h3 id="修改全局编码环境"><a href="#修改全局编码环境" class="headerlink" title="修改全局编码环境"></a>修改全局编码环境</h3><p>Mac中有两处sitepackage，找到目录：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/local/lib/python2.7/site-packages</div><div class="line">/Library/Python/2.7/site-packages</div></pre></td></tr></table></figure>
 <p>在目录下创建文件：<strong>sitecustomize.py</strong>，添加内容：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div></pre></td></tr></table></figure>
 <p> 这种方式可以解决所有项目的encoding问题，具体说明可参考/usr/lib/python2.7/site.py文件：</p>
+<h1 id="SyntaxError-Non-ASCII-character-‘-xe7’-in-file"><a href="#SyntaxError-Non-ASCII-character-‘-xe7’-in-file" class="headerlink" title="SyntaxError: Non-ASCII character ‘\xe7’ in file"></a>SyntaxError: Non-ASCII character ‘\xe7’ in file</h1><h3 id="0x01-解决-1"><a href="#0x01-解决-1" class="headerlink" title="0x01 解决"></a>0x01 解决</h3><p>这个异常是因为在2.7版本中，python源文件中出现了ASCII以外格式编码，我这是当然就是出现中文了，</p>
+<p>只要在源文件顶部添加编码注释即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#-*- coding: UTF-8 -*-</span></div></pre></td></tr></table></figure>
+<h1 id="ValueError-All-strings-must-be-XML-compatible-Unicode-or-ASCII-no-NULL-bytes-or-control-characters"><a href="#ValueError-All-strings-must-be-XML-compatible-Unicode-or-ASCII-no-NULL-bytes-or-control-characters" class="headerlink" title="ValueError: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters"></a>ValueError: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters</h1><h3 id="0x00-前言-1"><a href="#0x00-前言-1" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p>这是在使用xpath解析时，路径中带了中文导致的，版本仍然为2.7</p>
+<h3 id="0x01-解决-2"><a href="#0x01-解决-2" class="headerlink" title="0x01 解决"></a>0x01 解决</h3><p>异常信息已经告诉我们了，字符串只能是unicode或者ascii编码。</p>
+<p>把xpath加u即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">recommend_count = div.xpath(query=<span class="string">u"./p/span[@title='推荐']/text()"</span>)[<span class="number">0</span>].extract()</div></pre></td></tr></table></figure>
 
       
 
