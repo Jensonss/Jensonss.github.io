@@ -180,6 +180,543 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java字符串压缩去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/03/Java字符串压缩去重/">Java字符串压缩去重</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/03/Java字符串压缩去重/" class="archive-article-date">
+  	<time datetime="2017-05-03T09:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>去一家公司面试，开始就一道笔试题，做对了就继续，做不对就不用往下面了。内容是读取文件内容并压缩内容去重，压缩去重意思是如果内容为ABBCCCCAA压缩后字符串显示为A1B2C3A2。以此类推。其实这道题不难，但是我脑子转悠慢，读取文件和遍历字符做出来了，但是其余的没有做出了，或者说大概思路对了，但是卡在某一个点。总之有点废物就是了。。</p>
+<h1 id="我的做法"><a href="#我的做法" class="headerlink" title="我的做法"></a>我的做法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public static String compress(String str)&#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	//我这里是从0开始的</div><div class="line">	int count = 0;</div><div class="line">	//而这也是初始为0，这样的设置导致下面判断时候一直</div><div class="line">	//无所适从，对于何时该给count++，</div><div class="line">	//何时该给mystr.append有点混乱</div><div class="line">	char last = 0;</div><div class="line">	int length = str.length();</div><div class="line">	for(int i=0;i&lt;length;i++)&#123;</div><div class="line">		char c = str.charAt(i);</div><div class="line">		if(last!=c)&#123;</div><div class="line">			last = c;</div><div class="line">			count++;</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">		&#125;else&#123;</div><div class="line">			count++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="正确地做法"><a href="#正确地做法" class="headerlink" title="正确地做法"></a>正确地做法</h1><ul>
+<li><p>直接使用string做法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public String compressBad (String str)  </div><div class="line">&#123;  </div><div class="line">    String mystr = &quot; &quot;;  </div><div class="line">    int count = 1;  </div><div class="line">    char last = str.charAt(0);  </div><div class="line">    for (int i = 1; i &lt; str.length(); i++)  </div><div class="line">    &#123;  </div><div class="line">        if (last == str.charAt(i))  </div><div class="line">        &#123;  </div><div class="line">            count++;  </div><div class="line">        &#125;  </div><div class="line">        else  </div><div class="line">        &#123;  </div><div class="line">            mystr += last + count;  </div><div class="line">            last = str.charAt(i);  </div><div class="line">            count = 1;                </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    return mystr += last + count;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<ul>
+<li><p>使用StringBuffer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public static  String compressBetter(String str) &#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	int count = 1;</div><div class="line">	//取出第一个字符作为比较字符</div><div class="line">	char last = str.charAt(0);</div><div class="line">	for (int i = 1; i &lt; str.length(); i++) &#123;</div><div class="line">		//如果当前字符和之前的字符相同，说明是重复的，</div><div class="line">		//直接在数量值+1；</div><div class="line">		if (last == str.charAt(i)) &#123;</div><div class="line">			count++;</div><div class="line">		&#125; else &#123;</div><div class="line">			//如果不相同，说明开始了一个新的字符，</div><div class="line">			//这时要做的只有两件事：</div><div class="line">			//1、结束上格字符计数并添加字符串，</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">			//2、2、开始新的字符计数</div><div class="line">			last = str.charAt(i);</div><div class="line">			count = 1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	//最后一个字符计数并显示</div><div class="line">	mystr.append(last);</div><div class="line">	mystr.append(count);</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>作为IT从业者，大部分时间都在写业务逻辑，很多基本功已经近乎荒废了，这是非常不可取的。眼光放长远些，我们的技术不应该局限于某一种语言，而应该把重心放在跨语言的那些通用技术。比如：操作系统、算法和数据结构、网络及设计模式重构思想等，这些东西在任何语言中都会用到而且也会是重点。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/03/Java字符串压缩去重/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hexo博客换电脑后怎么办" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/02/hexo博客换电脑后怎么办/">hexo网站换电脑后怎么办</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/02/hexo博客换电脑后怎么办/" class="archive-article-date">
+  	<time datetime="2017-05-02T08:31:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月02日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>这两天遇到个问题，在自己的电脑上面搭建的搭建环境发布了几个文章，后来换了个电脑，这个电脑也有环境和几个老的文章，但是我执行了hexo d -g 后，网站中新的文章都被删除了。所以现在的问题是，换电脑后如何保证hexo环境文件的同步。</p>
+<h1 id="加入版本控制"><a href="#加入版本控制" class="headerlink" title="加入版本控制"></a>加入版本控制</h1><p>作为一名开发，实现同步，首先就想到版本控制，而网站又是hexo+github实现的。所以就打算把hexo环境及文章都纳入Git版本控制。</p>
+<p>当前项目的master分支中被发布后的静态页面占用，所以要么单独开一个项目，要么新建一个分支，最终采用新建分支办法。</p>
+<p>在hexo目录下执行<code>git init</code>初始化</p>
+<p>然后<code>git add .</code>把当前目录及子文件都添加到暂存区</p>
+<p>然后 <code>git commit -m &quot;message&quot;</code>提交到本地库</p>
+<p>最后执行<code>git push origin branch</code>推送到分支中。这样以后发布文章后随时push，在其他电脑中把分支内容pull到本地库即可。 </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/hexo/" class="article-tag-list-link color5">hexo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/博客/" class="article-tag-list-link color3">博客</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/02/hexo博客换电脑后怎么办/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Android进程和线程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/Android进程和线程/">Android进程和线程</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/27/Android进程和线程/" class="archive-article-date">
+  	<time datetime="2017-04-27T12:36:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 <code>android:process</code>，可以使原本一个应用中的组件运行在多个进程中。</p>
+<blockquote>
+<p>如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareUID方式和它共享一个进程。</p>
+</blockquote>
+<h1 id="进程优先级分类"><a href="#进程优先级分类" class="headerlink" title="进程优先级分类"></a>进程优先级分类</h1><p>根据进程的优先级可以分为五级，</p>
+<ul>
+<li><p>前台进程</p>
+<p>用户当前操作所必需的进程。如果一个进程满足以下任一条件，即视为前台进程：<br>​    托管用户正在交互的 Activity（已调用 Activity 的 onResume() 方法）<br>​    托管某个 Service，后者绑定到用户正在交互的 Activity<br>​    托管正在“前台”运行的 Service（服务已调用 startForeground()）<br>​    托管正执行一个生命周期回调的 Service（onCreate()、onStart() 或 onDestroy()）<br>​    托管正执行其 onReceive() 方法的 BroadcastReceiver<br>通常，在任意给定时间前台进程都为数不多。只有在内存不足以支持它们同时继续运行这一万不得已的情况下，系统才会终止它们。 此时，设备往往已达到内存分页状态，因此需要终止一些前台进程来确保用户界面正常响应。</p>
+</li>
+<li><p>可见进程</p>
+<p>没有任何前台组件、但仍会影响用户在屏幕上所见内容的进程。 如果一个进程满足以下任一条件，即视为可见进程：<br>​    托管不在前台、但仍对用户可见的 Activity（已调用其 onPause() 方法）。例如，如果前台 Activity 启动了一个对话框，允许在其后显示上一 Activity，则有可能会发生这种情况。<br>​    托管绑定到可见（或前台）Activity 的 Service。<br>可见进程被视为是极其重要的进程，除非为了维持所有前台进程同时运行而必须终止，否则系统不会终止这些进程。</p>
+</li>
+<li><p>服务进程</p>
+<p>正在运行已使用 startService() 方法启动的服务且不属于上述两个更高类别进程的进程。尽管服务进程与用户所见内容没有直接关联，但是它们通常在执行一些用户关心的操作（例如，在后台播放音乐或从网络下载数据）。因此，除非内存不足以维持所有前台进程和可见进程同时运行，否则系统会让服务进程保持运行状态。</p>
+</li>
+<li><p>后台进程</p>
+<p>包含目前对用户不可见的 Activity 的进程（已调用 Activity 的 onStop() 方法）。这些进程对用户体验没有直接影响，系统可能随时终止它们，以回收内存供前台进程、可见进程或服务进程使用。 通常会有很多后台进程在运行，因此它们会保存在 LRU （最近最少使用）列表中，以确保包含用户最近查看的 Activity 的进程最后一个被终止。如果某个 Activity 正确实现了生命周期方法，并保存了其当前状态，则终止其进程不会对用户体验产生明显影响，因为当用户导航回该 Activity 时，Activity 会恢复其所有可见状态。 有关保存和恢复状态的信息，请参阅 Activity文档。</p>
+</li>
+<li><p>空进程</p>
+<p>不含任何活动应用组件的进程。保留这种进程的的唯一目的是用作缓存，以缩短下次在其中运行组件所需的启动时间。 为使总体系统资源在进程缓存和底层内核缓存之间保持平衡，系统往往会终止这些进程。</p>
+</li>
+</ul>
+<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>线程可以看作是一个轻量级的进程，在Android中启动应用时系统会为APP创建一个UI线程，Android UI是非线程安全的。</p>
+<p>在Android开发中注意两点：</p>
+<p>①不能在UI线程以外的其他线程操作UI，否则异常。</p>
+<p>②不能阻塞UI线程，否则ANR。</p>
+<p>当然在某些特殊条件下，非UI线程操作 UI没有报错，参考我的[<a href="http://www.jensondev.me/2017/04/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%88%B7%E6%96%B0UI%E6%B2%A1%E6%8A%A5%E9%94%99/" target="_blank" rel="external">为什么我在工作线程刷新UI没报错？</a>] 。</p>
+<p>Android 提供了几种途径来从其他线程访问 UI 线程。 以下列出了几种有用的方法：</p>
+<p>Activity.runOnUiThread(Runnable)<br>View.post(Runnable)<br>View.postDelayed(Runnable, long)</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/27/Android进程和线程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Android内存分析工具之MAT详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/27/Android内存分析工具之MAT详解/">Android内存分析工具之MAT详解</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/27/Android内存分析工具之MAT详解/" class="archive-article-date">
+  	<time datetime="2017-04-27T05:07:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>关于Android内存优化可参见我的另一篇文章[<a href="http://www.jensondev.me/2017/04/21/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/" target="_blank" rel="external">Android性能优化之内存优化</a>]。Android性能优化中内存优化可谓重中之重，而内存泄露又是Android内存优化的重灾区。重灾区就要重拳出击，整治内存泄露，Mat是必备的利器。</p>
+<h1 id="关于Mat"><a href="#关于Mat" class="headerlink" title="关于Mat"></a>关于Mat</h1><p>Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat是由eclipse社区维护，所以如果使用Android studio开发的话，需要单独下载，<a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="external">官方通道</a>。我用的是mac版，后面也会使用mac版来分析。</p>
+<h1 id="Mat使用"><a href="#Mat使用" class="headerlink" title="Mat使用"></a>Mat使用</h1><p>注意：我的测试app包名为：com.example.jenson.myapplication</p>
+<p>在eclipse中集成了Mat，可以直接拿来使用，而使用Android studio时。这两个是分开的，所以我们要先导出dump文件。</p>
+<h2 id="Android-studio导出dump文件"><a href="#Android-studio导出dump文件" class="headerlink" title="Android studio导出dump文件"></a>Android studio导出dump文件</h2><p>打开Android Monitor窗口，<img src="/2017/04/27/Android内存分析工具之MAT详解/0B8D42B7-E5A5-431D-9658-2A99C923CF4E.png" alt="0B8D42B7-E5A5-431D-9658-2A99C923CF4E"></p>
+<p>点击圆圈中的按钮，过几秒中会自动生成一个dump文件，然后自动打开如下图的窗口：<img src="/2017/04/27/Android内存分析工具之MAT详解/1A94CD89-1BE9-46BC-9449-8B55EE34D741.png" alt="1A94CD89-1BE9-46BC-9449-8B55EE34D741"></p>
+<p>在Heap Snapshot下的几个文件就是自动生成的dump文件，但是这不是标准的dump文件，所以需要选择文件右键导出标准dump文件，保存到一个目录下：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午1.49.26.png" alt="屏幕快照 2017-04-27 下午1.49.26"></p>
+<h2 id="Mat打开标准dump文件"><a href="#Mat打开标准dump文件" class="headerlink" title="Mat打开标准dump文件"></a>Mat打开标准dump文件</h2><p>使用Mat，菜单open File选择刚才导出的dump文件，经过分析后回显示如下所示的项目：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午2.08.27.png" alt="屏幕快照 2017-04-27 下午2.08.27"></p>
+<p>Mat从多角度提供了内存分析，其中包括Histogram、Dominator Tree、Leak Suspects和Top consumers等。</p>
+<p>overview是一个概况图，把内存的消耗以饼状图形式显示出来，鼠标在每个饼块区域划过或者点击，就会在Inspector栏目显示这块区域的相关信息。</p>
+<p>Leak Suspectss是一个关于内存泄露猜想的饼图，Problem Suspect 1是泄露猜想的描述。看我这里说的像是字节数组，这么大的数组难不成是图片，要知道图片在内存中就是以字节数组形式存在的。</p>
+<p>平常内存分析比较常用的还是Histogram、Dominator Tree。</p>
+<h2 id="开始分析内存"><a href="#开始分析内存" class="headerlink" title="开始分析内存"></a>开始分析内存</h2><p>这里我们使用Histogram进行分析，切换到Histogram页面。这个页面主要有4个列，Class Name、Objects、Shallow Heap和Retained Heap。其中Class Name是全类名，Objects是这个类的对象实例个数。Shallow Heap是对象本身占用内存大小，非数组的常规对象，本身内存占用很小，所以这个对泄露分析作用不大。Retained Heap指当前对象大小和当前对象能直接或间接引用的对象大小的总和。这个栏目是分析重点。</p>
+<p>内存分析是分析的整个系统的内存泄露，而我们只要查找我们APP的内存泄露情况。这无疑增加了很多工作，不过幸亏Histogram支持正则表达式查找，在Regex中输入我们的包名进行过滤，直奔和我们APP有关的内存泄露：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.11.33.png" alt="屏幕快照 2017-04-27 下午3.11.33"></p>
+<p>过滤后就显示了我们APP相关内存信息，按Retained Heap大小排列下，发现Student和MainActivity这两个类问题比较大。但是MainActivity的Objects数量为1，而Student的为130，看起来Student问题更严重，所以先从Student入手：</p>
+<p>首先看下是哪里的引用导致了Student不能被GC回收。<img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.19.06.png" alt="屏幕快照 2017-04-27 下午3.19.06"></p>
+<p>右键使用Merge Shortest Paths to GC Roots显示距GC Root最短路径，当然选择过程中要排除软引用和弱引用，因为这些标记的一般都是可以被回收的。进入结果页查看：</p>
+<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.22.23.png" alt="屏幕快照 2017-04-27 下午3.22.23"></p>
+<p>啧啧，原来Student不能被回收竟然就是这个MainActivity搞的鬼，可以看到这个类里面有个students集合里面存放的正式不能回收的Student对象。</p>
+<p>看代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">static List&lt;Student&gt; students=new ArrayList&lt;&gt;();</div><div class="line">static final String tag=&quot;MainActivity&quot;;</div><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">    sample_text = (TextView) findViewById(R.id.sample_text);</div><div class="line">    TestNative testNative = new TestNative();</div><div class="line">    sample_text.setText(testNative.stringFromJNI());</div><div class="line">    for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line"></div><div class="line">        Student student = new Student(&quot;jenson&quot; + i, i);</div><div class="line">        students.add(student);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原来不能被回收是因为用static修饰了students集合。这导致其生命周期边长，在Activity销毁时，仍然存在。问题找到了，去掉static完成内存泄露修复。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/27/Android内存分析工具之MAT详解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-2016公司清明节坝上草原" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/25/2016公司清明节坝上草原/">2016公司清明节坝上草原</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/25/2016公司清明节坝上草原/" class="archive-article-date">
+  	<time datetime="2017-04-25T09:35:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>公司应承了很久的出游终于兑现了。不过讲真公司还是比较抠门，两年一次的出游只有两天时间，其中赶路时间就占了一半。</p>
+<p>目的：丰宁坝上草原</p>
+<p>人物：公司同事</p>
+<p>在草原玩的照片基本没有拍，当天到那就下午三四点。而后又阴天下雨了，基本没有怎么玩，拍的比较多的是行宫和湖边。</p>
+<h1 id="上图"><a href="#上图" class="headerlink" title="上图"></a>上图</h1><p>到了行宫，看到骑兵都忍不住上前合影：</p>
+<p>小鱼同志，身高不够，蹦起来够~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075354_IMG_6200.JPG" alt="20160610075354_IMG_6200"></p>
+<p>我就刚刚好了。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075557_IMG_6209.JPG" alt="20160610075557_IMG_6209"></p>
+<p>主任幸福的一家~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075842_IMG_6219.JPG" alt="20160610075842_IMG_6219"></p>
+<p>进入行宫大门不久后需要经过的南天门：</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610080912_IMG_6235.JPG" alt="20160610080912_IMG_6235"></p>
+<p>回顾行宫大门，白云压顶，壮观~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610081259_IMG_6245.JPG" alt="20160610081259_IMG_6245"></p>
+<p>这好似是一个古代官员的蒙古包~</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610082906_IMG_6261.JPG" alt="20160610082906_IMG_6261"></p>
+<p>嗯~没错，三贱客哈哈</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610083541_IMG_6276.JPG" alt="20160610083541_IMG_6276"></p>
+<p>从小迷宫走出来时，工作人员给的哈达~妥妥的披上。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610084538_IMG_6283.JPG" alt="20160610084538_IMG_6283"></p>
+<p>蓝天白云南天门，怎一个美字了得！</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610091441_IMG_6323.JPG" alt="20160610091441_IMG_6323"></p>
+<p>湿地大门口留念。小鱼、佳姐和李博。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610100357_IMG_6326.JPG" alt="20160610100357_IMG_6326"></p>
+<p>老李的风采，感觉要立地成佛。</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101211_IMG_6337.JPG" alt="20160610101211_IMG_6337"></p>
+<p>小末哥看起来好厉害的样子，这样子回公司会不会挨收拾？</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101300_IMG_6342.JPG" alt="20160610101300_IMG_6342"></p>
+<p>主任家的公子套上小鱼的衣服。可爱，那么小就那么帅，长大了还了得</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101355_IMG_6343.JPG" alt="20160610101355_IMG_6343"></p>
+<p>远处的白云、草浪</p>
+<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610102213_IMG_6353.JPG" alt="20160610102213_IMG_6353"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">生活</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/生活/" class="article-tag-list-link color3">生活</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/25/2016公司清明节坝上草原/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2016圆明园荷花节" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -886,454 +1423,9 @@ public static int w(String tag, String msg) {
 
 
   
-    <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">Python入门系列(0):OSX系统下Python3的配置与安装</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
-<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
-<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
-<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
-<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">使用Sublime text编译python3时中文打印异常问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
-<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
-<p>mark一下</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
-</li>
-<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
-</li>
-<li>3.执行执行<code>brew help</code>看是否有提示</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx如何安装Homrbrew/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-pycharm黄线问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/pycharm黄线问题/">pycharm黄线问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/pycharm黄线问题/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
-<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/pycharm黄线问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
     </nav>
   
 

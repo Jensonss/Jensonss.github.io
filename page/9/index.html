@@ -180,6 +180,394 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-osx下如何使用SublimeText阅读Android系统源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">osx下如何使用SublimeText阅读Android系统源码</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
+</blockquote>
+<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
+<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
+<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
+<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
+<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
+方法2：ctrl+~
+</code></pre>  2.输入代码：<br>python2.x代码:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<p>python3.x代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
+<ul>
+<li><p>安装CTags</p>
+<ul>
+<li><ol>
+<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
+</ol>
+</li>
+<li><ol>
+<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
+</ol>
+<ul>
+<li>3.创建索引</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
+<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
+<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
+<li>ctag rebuild时弹窗异常如图：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
+<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
+<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
+<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
+<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
+<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">使用Sublime text编译python3时中文打印异常问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
+<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
+<p>mark一下</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-pycharm黄线问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/pycharm黄线问题/">pycharm黄线问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/pycharm黄线问题/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如下图打开文件时出现很多黄色波浪警告的线条让人眼花缭乱。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-f36e7a1fd5ffa11e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.29.57.png"></p>
+<p>打开pycharm的设置然后找到Editor-&gt;Colors &amp; Fonts -&gt;  General.在右边找到警告线类型，点击后会自动选中对应的文本提示。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a5f70acfb13e6fa4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-08 下午2.32.01.png"><br>图中可以看到weak waring 去掉effects的勾选保存即可。搞定！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/pycharm黄线问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python入门系列(2) 字符串、变量和简单数据类型的上手" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -313,6 +701,190 @@
 
 
   
+    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
+</li>
+<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
+</li>
+<li>3.执行执行<code>brew help</code>看是否有提示</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/osx如何安装Homrbrew/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">Python入门系列(0):OSX系统下Python3的配置与安装</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
+<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
+<h1 id="Python3下载与安装"><a href="#Python3下载与安装" class="headerlink" title="Python3下载与安装"></a>Python3下载与安装</h1><p>先附上<a href="https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg" target="_blank" rel="external">python3.6</a>下载地址。<br>下载完成直接点击安装即可，一直点击继续或者同意操作，直到出现如下界面：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-79c9c599a48d6f23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.10.33.png"></p>
+<p>关闭安装窗口，如果此时已经打开了terminal终端需要重新启动，来使刚才的安装生效(<em>osx下Python安装后不需要配置类似jdk的环境变量</em>)<br>需要注意一点的是 2.x版本使用Python命令，在3.x下需要在后加上3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python3 --version</div></pre></td></tr></table></figure>
+<p>查看输出结果，发现已经能识别出3.x版本，至此Python3安装完毕。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ec941e46202d0d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午7.01.29.png"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -386,133 +958,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx下如何使用SublimeText阅读Android系统源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">osx下如何使用SublimeText阅读Android系统源码</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>以前用win系统时使用sourceinsight阅读源码方便至极，但是自从换到mac下，尝试了很多方法很多工具，比如understand、比如vscode、比如wine下安装sourceinsight。总是有各种问题，所以这次尝试使用SublimeText</p>
-</blockquote>
-<p>平时使用Sublimetext都是打开单个文件，这次要导入几万个文件，这在一些ide中称为project。同样在Sublime中也是如此。</p>
-<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1. 创建工程"></a>1. 创建工程</h4><p>　　Project &gt; Add Folder to Project 选择源码目录即可<br>　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。</p>
-<h4 id="2-保存工程"><a href="#2-保存工程" class="headerlink" title="2. 保存工程"></a>2. 保存工程</h4><p>　　Project &gt; Save Project As<br>　　点击保存后Sublime Text将自动生成两个文件：<br>project_name.sumlime-project：包含工程定义，该文件会被记录到版本控制里。<br>project_name.sublim-workspace：包含了用户的工程数据，例如打开的文件和修改等，该文件不会被记录到版本控制里。<br>　　在<em>.sublime-project文件中，你可以定义工程配置。例如你可以定义多个目录路径，或者哪些目录或文件需要排除在外。例如：<br>　　以上</em>.sublime-project文件中定义了两个目录，而“name”标签是该目录在Sublime Text的左边栏中显示的名字。通过定义“name”，你可以将一些长路径或者名字很长的目录以更简洁的名称显示在左边栏中。</p>
-<h4 id="3、添加索引"><a href="#3、添加索引" class="headerlink" title="3、添加索引"></a>3、添加索引</h4><ul>
-<li>安装Package Control插件<br>1.打开控制台<pre><code>方法1：View-&gt;show console 
-方法2：ctrl+~
-</code></pre>  2.输入代码：<br>python2.x代码:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib2,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib2.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<p>python3.x代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import urllib.request,os;pf=&apos;Package Control.sublime-package&apos;;ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),&apos;wb&apos;).write(urllib.request.urlopen(&apos;http://sublime.wbond.net/&apos;+pf.replace(&apos; &apos;,&apos;%20&apos;)).read())</div></pre></td></tr></table></figure>
-<ul>
-<li><p>安装CTags</p>
-<ul>
-<li><ol>
-<li>首先 Preference -&gt; Browser Packages… 查看是否已经安装了CTags Package，如果没有则继续下面步骤</li>
-</ol>
-</li>
-<li><ol>
-<li>Preference -&gt; Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装</li>
-</ol>
-<ul>
-<li>3.创建索引</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午2.55.23.png"></p>
-<h4 id="4、异常处理"><a href="#4、异常处理" class="headerlink" title="4、异常处理"></a>4、异常处理</h4><ul>
-<li>期间出现Package Control:There are no packages available for installation弹窗提示<br>选择Preference-&gt;Browser Packages打开文件夹后<br>删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。</li>
-<li>ctag rebuild时弹窗异常如图：</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-22 下午3.01.14.png"></p>
-<p>这是因为我们还没有安装和配置ctags<br>下载ctags-5.8.tar.gz解压并编译，依次执行如下命令：<br>tar xzvf ctags-5.8.tar.gz<br>cd ctags-5.8<br>./configure<br>make<br>sudo make install<br>打开Preference -&gt;Package settings-&gt;ctags-&gt;settings-user和settings-default<br>把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）</p>
-<h4 id="5、快捷键"><a href="#5、快捷键" class="headerlink" title="5、快捷键"></a>5、快捷键</h4><ul>
-<li>修改跳转<br>默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：<br>Perference-&gt;Package Settings-&gt;CTags-&gt;Mouse Binding Default-&gt;复制到Mouse Binding User，把里面的”ctrl+shift”，修改为“command”，这样就可以用“command+左键”跳转了：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Command+P：查找文件</div><div class="line">Command+R：查找方法</div><div class="line">Command+左键：文件或函数跳转        </div><div class="line">Command+右键：返回文件或函数跳转的原始位置</div></pre></td></tr></table></figure>
-<p>至此Android源码项目创建完成并创建索引，代码跳转也反应迅速。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/22/osx下如何使用SublimeText阅读Android系统源码/">展开全文 >></a>
         </p>
       
 
@@ -735,630 +1180,9 @@
 
 
   
-    <article id="post-关于家庭网络宽带、路由及上网设备那些事" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事/">关于家庭网络宽带、路由及上网设备那些事</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>看不见摸不着，但又对我们很重要的东西，你们觉得是什么？很多人一定会说是空气，但是肯定还有一部分心里会认为是WIFI~。<br>  以前经常感慨每次回家最先欢迎我的不是别人，正是WIFI(~信号强没办法，一进小区就连接上了)。的确随着宽带的普及，我们的生活也愈来愈离不开网络，不管看电影玩游戏还是查资料。那你到底对它连接多少呢？</p>
-<p>1.你知道网络运营商所说的20M、50M和100M到底是什么意思吗?<br>2.你知道运营商提供的50M和迅雷下载的速度2MB/s有什么区别联系吗？<br>3.你知道为什么升级了宽带，然而下载速度为什么没有提升吗？<br>如果都不清楚，那这篇文章就是为你准备的，请继续。</p>
-<p>我们先来看下日常家庭网络图：<br><img src="http://upload-images.jianshu.io/upload_images/1796052-375a9d5345b944e1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="P70214-123417.jpg"></p>
-<p>一般都是运营商把网线拉到家中，然后插到路由器上，然后通过无线路由功能为多台设备提供上网功能。<br>如果是光纤用户会，则应该是网线接入光猫，再把光猫接入到路由器。<br>看懂了这张图，下面的要讲的内容就很容易理解了。</p>
-<h3 id="运营商提供的20M带宽下载时并没有那么高，到底是怎么回事？这和迅雷下载速度有什么关系？"><a href="#运营商提供的20M带宽下载时并没有那么高，到底是怎么回事？这和迅雷下载速度有什么关系？" class="headerlink" title="运营商提供的20M带宽下载时并没有那么高，到底是怎么回事？这和迅雷下载速度有什么关系？"></a>运营商提供的20M带宽下载时并没有那么高，到底是怎么回事？这和迅雷下载速度有什么关系？</h3><p>其实不管是运营商还是路由器厂家标称的xxM其实是Mbps的简称，而Mbps是Million bits per second的缩写，意思就是声称的20M是20兆位/秒。迅雷的下载速度5MB/s又是什么意思？这里的MB是指兆字节/秒<br>要找出带宽和下载的关系要知道一个公式<code>1字节=8比特位  即1Byte=8bit。</code>所以声称的20M带宽实际下载速度为20/8=2.5MB/s，当然这是理论上的最大下载速度，线路的传输是有损耗的，所以一般下载速度会小于该理论值。</p>
-<h3 id="为什么升级了宽带，网速还是没有什么明显提升？"><a href="#为什么升级了宽带，网速还是没有什么明显提升？" class="headerlink" title="为什么升级了宽带，网速还是没有什么明显提升？"></a>为什么升级了宽带，网速还是没有什么明显提升？</h3><p>上面知道了带宽和下载速度的关系，那么路由器带宽和其支持的最大传输速度关系也就明白了吧。<br>哪些号称150M的路由器最大支持传输速率为150/8 =18.75MB/s ，加上路由器厂商的偷工减料，所以一般速率又严重小于18.75这个值(如果你的路由器能达到这个值，那一定是遇到良心厂家了)。假设光纤用户使用100兆时最大下载速度本可以达到12.5MB/s的，然而由于路由器偷工减料仅能达到18.75的一半即9MB/s时，这时你的家庭网络最大速度就只能被路由器所限制。</p>
-<h3 id="升级了宽带，新买了路由器这下网速该嗖嗖的了吧？只能说也许吧"><a href="#升级了宽带，新买了路由器这下网速该嗖嗖的了吧？只能说也许吧" class="headerlink" title="升级了宽带，新买了路由器这下网速该嗖嗖的了吧？只能说也许吧~"></a>升级了宽带，新买了路由器这下网速该嗖嗖的了吧？只能说也许吧~</h3><p>先来个问题：马路上能一次同时过5个人，家门口小路一次只能同时走3个人，但是我家大门一次只能同时1人过。那人员流动速率瓶颈在哪就很明显了吧，同样的，宽带、路由器都是网络的媒介，真正使用网络的是我们的手机电脑和平板。假设你的宽带和路由器的最大传输速率都达到了12.5MB/s，但是你的笔记本电脑的网卡还是54Mbps的老网卡o(╯□╰)o，结果可想而知了。</p>
-<h3 id="笔记本无线网卡已经是450M的了，为什么玩游戏延迟还是很高？"><a href="#笔记本无线网卡已经是450M的了，为什么玩游戏延迟还是很高？" class="headerlink" title="笔记本无线网卡已经是450M的了，为什么玩游戏延迟还是很高？"></a>笔记本无线网卡已经是450M的了，为什么玩游戏延迟还是很高？</h3><p>县城的马路和北京的马路差不多宽，为什么北京每天堵车而县城基本不会？因为车少哇。同样的，目前大多数路由器的无线提供的都是2.4G无线，而电磁炉、无线键鼠等也有很多使用2.4G无线。在这个频段的设备多了也就难免发生堵塞。为了缓解堵塞，无线双频路由器也就诞生了，所谓双频就是2.4G和5G。5G频段使用设备少所以数据传输也就更稳定。5G高效的还有一个原因是无干扰信道数量比2.4G的更多。对于游戏玩家和高清影视爱好者，一台双频路由是必须的。但是还有一点要注意：使用5G频段需要路由器和网卡都支持802.11ac才可以。</p>
-<p>上面说了这么多都是讲出你的网络中制约网速的瓶颈，至于具体的解决方法不用说了大家也心里有数了吧。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-详解设计模式之单例模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/详解设计模式之单例模式/">详解设计模式之单例模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/详解设计模式之单例模式/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>####1、什么是单例?<br>单例顾名思义就是单个实例。日常工作都是自由的通过构造方法创建对象的，所以听到单例时，我们应该意识到其下是暗含了2层意思的，①构造方法不在为你所用，你不需要知道如何创建对象。②我会给你提供获取实例的方法，不需要你自己动手创建。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-fc54578715942157.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="单例示意图.png"></p>
-<p>不清楚uml类关系的请移步<a href="http://www.jianshu.com/p/bf23234d5d2b" target="_blank" rel="external">UML–类图详解</a></p>
-<p>####2、什么情况下使用单例?<br>当你需要内存中只有一个对象的时候。</p>
-<p>####3、为什么使用单例？<br>单例保证了内存中数据的唯一性，同时也降低了内存的开销。</p>
-<p>####3、如何实现单例？<br>在1中了解到两层含义后，对我们创建单例类是有帮助的，总结下就是：①私有化构造方法  ②对外提供获取实例方法</p>
-<ul>
-<li>饿汉式<br>所谓饿汉式，就是在类加载的时候就迫不及待的创建对象，等到调用获取实例方法直接拿到对象返回即可。<br>看实现代码：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class HungarySingleton &#123;</div><div class="line">	private static HungarySingleton intance = new HungarySingleton();</div><div class="line">	</div><div class="line">	private HungarySingleton()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	public static HungarySingleton getInstance()&#123;</div><div class="line">		return intance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>懒汉式是最简单的单例模式，在类加载的时候就实例化，避免了多线程问题的同时保证了实例唯一性。缺点是即使不需要时候也会被实例，会占用内存。所以推荐在实例占用内存不多的情况下使用，否则请使用下面几种方式。</em></p>
-<ul>
-<li>懒汉式<br>懒汉式，就是在首次调用的时候才会创建实例，相比饿汉式，延迟了初始化。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class LayzySingleton &#123;</div><div class="line">	private static LayzySingleton instance = null;</div><div class="line"></div><div class="line">	private LayzySingleton() &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	public LayzySingleton getInstatnce() &#123;</div><div class="line">		if (null == instance) &#123;</div><div class="line">			instance = new LayzySingleton();</div><div class="line">		&#125;</div><div class="line">		return instance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面代码有个问题，就是在多线程调用中会有产生多个实例的隐患，所以需要使用线程同步：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class LayzySingleton &#123;</div><div class="line">	private static LayzySingleton instance = null;</div><div class="line"></div><div class="line">	private LayzySingleton() &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	public synchronized LayzySingleton getInstatnce() &#123;</div><div class="line">		if (null == instance) &#123;</div><div class="line">			instance = new LayzySingleton();</div><div class="line">		&#125;</div><div class="line">		return instance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>synchronized的加入虽然解决了多实例的隐患，但是又带来了性能低下的问题，因为我们只需要在首次创建对象时让同步产生作用即可，其后的调用无需同步，现在只要是调用该方法就同步，看来还需要改进</em><br>下面使用双重校验加锁(DCL)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public class LayzySingleton &#123;</div><div class="line">	private static LayzySingleton instance = null;</div><div class="line"></div><div class="line">	private LayzySingleton() &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	public  LayzySingleton getInstatnce() &#123;</div><div class="line">		if (null == instance) &#123;</div><div class="line">			synchronized(LayzySingleton.class)&#123;</div><div class="line">				if (null == instance) &#123;</div><div class="line">					instance = new LayzySingleton();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return instance;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>现在多线程问题解决了，性能也得到优化了是不是双重校验加锁就完美了呢？<br>NO~<br>在Java并发编程中的指令重排序中有讲到双重校验加锁失效问题。<br>要禁止指令重排序需要使用volatile修饰变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private volatile static LayzySingleton instance = null;</div></pre></td></tr></table></figure>
-<ul>
-<li>静态内部类<br>如果觉得饿汉式占内存，懒汉式又要考虑多线程问题，那么可以使用静态内部类可能是你想要的：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Singleton &#123;</div><div class="line">	</div><div class="line">	private Singleton()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	public Singleton getInstance()&#123;</div><div class="line">		return Holder.instance;</div><div class="line">	&#125;</div><div class="line">	private class Holder&#123;</div><div class="line">		private  static final  Singleton instance = new Singleton();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>静态内部类避免了加载Singleton类时就初始化问题，只有在调用getInstance时才会致使Holder类被加载并初始化，同时也避免了线程安全问题和性能问题，推荐使用此方法。</em></p>
-<ul>
-<li>枚举式<br>如果觉得上面的还是麻烦，可以使用枚举单例，<br>代码实现：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public enum EnumSingleton &#123;</div><div class="line">	</div><div class="line">	INSTANCE ;</div><div class="line">	</div><div class="line">	int num = 33;</div><div class="line">	String config = &quot;jenson&quot;;</div><div class="line">	</div><div class="line">	public void doSomething()&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>枚举单例也可以有属性可以有方法，重要的是枚举默认就是线程安全的。</em></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/详解设计模式之单例模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-详解设计模式之简单工厂模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/详解设计模式之简单工厂模式/">详解设计模式之简单工厂模式</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/详解设计模式之简单工厂模式/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
-<p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
-<p>####3、如何使用工厂模式？</p>
-<ul>
-<li>先看下不使用模式如何创建接口实例</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不使用模式.png"><br>汽车接口代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface CarApi &#123;</div><div class="line">	public void run();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>起亚汽车实现代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>客户端代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
-<p>public class BmwImpl implements CarApi {</p>
-<pre><code>@Override
-public void run() {
-    // TODO Auto-generated method stub
-    System.out.println(&quot;宝马跑起来&quot;);
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
-<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
-<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
-<p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
-<p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/详解设计模式之简单工厂模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-UML--类图详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/UML--类图详解/">UML--类图详解</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/UML--类图详解/" class="archive-article-date">
-  	<time datetime="2017-04-21T13:22:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>类图是面向对象系统建模中很常用也很重要的图，是定义其它图的基础。类图主要是用来显示系统中的类、接口间关系的一种模型。<br>类之间的关系主要有泛化、实现、聚合、组合、依赖、关联6种关系。</p>
-<h1 id="泛化关系-generalization"><a href="#泛化关系-generalization" class="headerlink" title="泛化关系(generalization)"></a>泛化关系(generalization)</h1><p>uml中的泛化关系也就是继承关系。继承关系的2个类可以使用 is-a来表示。继承关系使用实线空心箭头来表示，箭头从子类指向父类。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-be6493449edd5912.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.39.00.png"></p>
-<p>PS：泛化关系中的父类为非抽象类,泛化关系为面向对象中耦合度最大的一种关系</p>
-<h1 id="实现关系-Realization"><a href="#实现关系-Realization" class="headerlink" title="实现关系(Realization)"></a>实现关系(Realization)</h1><p>实现关系使用空心三角箭头的虚线表示，箭头从实现类指向接口。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-92a163450b82adc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.51.25.png"></p>
-<p>不知道为什么在我的osx版的startuml中实现关系只是一条线，不晓得是不是bug</p>
-<h1 id="聚合关系-Aggregation"><a href="#聚合关系-Aggregation" class="headerlink" title="聚合关系(Aggregation)"></a>聚合关系(Aggregation)</h1><p>聚合关系表示has-a的关系，是一种不稳定的包含关系。较强于一般关联,有整体与局部的关系,如果没有了整体,局部仍然可单独存在。如公司和员工的关系，公司包含员工，但如果公司倒闭，员工依然可以换公司。在类图使用空心的菱形的实线表示，菱形从局部指向整体。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3018f76e4b869260.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.56.37.png"></p>
-<h1 id="组合关系-Composition"><a href="#组合关系-Composition" class="headerlink" title="组合关系(Composition)"></a>组合关系(Composition)</h1><p>组合关系表示contains-a的关系，是一种强烈的包含关系。组合类负责被组合类的生命周期。是一种更强的聚合关系。部分不能脱离整体存在。如公司和部门的关系，没有了公司，部门也不能存在了。在类图使用实心菱形的实线表示，菱形从局部指向整体。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-cf5edcf29e224e3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午3.59.43.png"></p>
-<h1 id="依赖关系-Dependency"><a href="#依赖关系-Dependency" class="headerlink" title="依赖关系(Dependency)"></a>依赖关系(Dependency)</h1><p>依赖关系是对象关系最弱的一种关联方式，是临时性的关联。代码中一般指由局部变量、函数参数、返回值建立的对于其他对象的调用关系。一个类调用被依赖类中的某些方法而得以完成这个类的一些职责。在类图使用带箭头的虚线表示，箭头从使用类指向被依赖的类。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-77d40f8a95f1f73d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.03.48.png"></p>
-<h1 id="关联关系-Association"><a href="#关联关系-Association" class="headerlink" title="关联关系(Association)"></a>关联关系(Association)</h1><p>关联关系是对象之间一种引用关系，比如吃饭时客户与餐具类之间的关系。这种关系通常使用类的属性表达。关联又分为一般关联、聚合关联与组合关联。在类图使用带箭头的实线表示，箭头从使用类指向被关联的类。可以是单向和双向。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-78619e44991e9581.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.43.15.png"></p>
-<h1 id="聚合和组合如何区别？"><a href="#聚合和组合如何区别？" class="headerlink" title="聚合和组合如何区别？"></a>聚合和组合如何区别？</h1><p>直白点的理解就是聚合关系的两个类，局部类的生命周期不受整体类的影响，能够剥离整体单独存在。<br>而组合关系的两个类，局部类的生命周期受限于整体类，整体类不存在时，局部类也将消亡。<br>举个栗子：<br>学生去学校上学被分配到x年级：<br>其中学生和学校属于聚合关系，学生可以脱离学校独立存在，县里学校不好可以去市里学校。而学校和班级是组合关系，就是说班级存在的前提是要有个学校。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-a3572272c2413345.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-02 下午4.31.06.png"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/UML--类图详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android性能优化之内存优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/Android性能优化之内存优化/">Android性能优化之内存优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/21/Android性能优化之内存优化/" class="archive-article-date">
-  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979" target="_blank" rel="external">Android性能优化之耗电优化
-</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
-<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
-<h4 id="如何保证已使用内存顺利被回收？"><a href="#如何保证已使用内存顺利被回收？" class="headerlink" title="如何保证已使用内存顺利被回收？"></a>如何保证已使用内存顺利被回收？</h4><ul>
-<li><p>Java对象生命周期</p>
-<ul>
-<li>创建阶段<br>申请内存空间，构造对象并初始化相关属性值</li>
-<li>使用阶段<br>根据对象应用调用相关方法完成业务逻辑。对象至少被一个强引用持有，除非对象创建时显示声明使用软引用、弱引用和虚引用。</li>
-<li>不可见阶段<br>当一个对象处于不可见阶段时，说明程序本身不再持有该对象的任何强引用，当然对象还是存在着的。</li>
-<li><p>不可达阶段<br>对象处于不可达阶段是指该对象不再被任何强引用所持有。GC会发现对象已不可达</p>
-</li>
-<li><p>收集阶段<br>当垃圾回收器发现该对象已经处于“不可达阶段”并且垃圾回收器已经对该对象的内存空间重新分配做好准备时，则对象进入了“收集阶段”。</p>
-</li>
-<li><p>终结阶段<br>当对象执行完finalize()方法后仍然处于不可达状态时，则该对象进入终结阶段。在该阶段，等待垃圾回收器对该对象空间进行回收。</p>
-</li>
-<li><p>对象空间重新分配阶段<br>若垃圾回收器对该对象的所占用的内存空间进行回收或者再分配，则该对象彻底消失，这个阶段称之为“对象空间重新分配阶段”。</p>
-<p>以上是Java对象生命周期的简要介绍，要保证内存顺利回收，正确使用Java对象生命周期很重要，如果不能及时回收，我们就称之为“发生了内存泄露”。</p>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>在不可见阶段，程序本身不再持有对象强引用，但对象仍可能被JVM等系统下的某些已装载的静态变量或线程或JNI等强引用持有着，这些特殊的强引用被称为”GC root”。存在着这些GC root会导致对象的内存泄露情况，无法被回收。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-ef7e7496b8a9cd2e.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="垃圾回收.jpeg"></p>
-<p>图中灰色的孤立无援的对象对于GC Roots来说不可达，会被回收。知道了内存泄露会影响回收，下面说下哪些方面会导致内存泄露</p>
-<ul>
-<li><p>引起内存泄露的情况</p>
-<ul>
-<li>资源没有适时关闭<br>sqlite的cursor、读写文件使用的File文件流等在使用完后没有及时关闭。虽然cursor会在系统回收时自动关闭，但是这样效率较低。对于资源对象使用还是应该养成良好习惯，使用完毕close并置空。</li>
-<li>注册对象未注销<br>在Android中主要是指注册的广播在Activity销毁时反注销。<br>在Activity中如果有使用的观察者模式在生命周期发生变化时根据需求注销。<br>在Activity中使用的各类传感器(光线、重力等)在页面销毁时及时注销，否则不光导致内存泄露还会因为传感器频繁的采样导致耗电及cpu的占用。</li>
-<li><p>使用static修饰变量<br>这里只说一点，被static修饰的变量可以认为是直接被GC Roots引用了，那你就知道其生命周期有多长了。这时候你如果用static 修饰Bitmap、View、Context和Activity等后果有多严重了吧。</p>
-</li>
-<li><p>非静态内部类的静态实例</p>
-<p>   先看几行代码：</p>
-   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">public static People people;</div><div class="line"> 		 @Override</div><div class="line">  		protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">     		 super.onCreate(savedInstanceState);</div><div class="line">     		 setContentView(R.layout.activity_main);</div><div class="line">     		 people = new People();</div><div class="line">  		&#125;</div><div class="line"> 		 class  People&#123;</div><div class="line">     		 int age ;</div><div class="line">     		 String name ;</div><div class="line">  		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>   非静态内部类People持有外部类即当前Activity的引用，而该非静态内部类实例又是static修饰        的，导致Activity一直被持有而不得释放，最终导致Activity所包含的view不能释放，如果view         tree中包含多图片，那泄露的内存是很大的。</p>
-</li>
-<li><p>Handler</p>
-<p>   众所周知handler用来发送和处理消息回调的。<br>handler导致泄露主要是handler实例是作为非静态匿名内部类方式创建，并且MessageQueue队列中有未处理消息，这时如果退出Activity，MessageQueue中还有Message，而Message持有handler实例，handler实例作为非静态内部类持有Activity引用，最终的连锁反应导致Activity泄露。</p>
-<blockquote>
-<p>handler引起的内存泄露一般是临时性的，因为消息队列里的Message在延时到时间或者某一情况激活后还是会执行的，除非你是故意搞事情。创建handler时最好使用静态内部类，同时在Activity退出时执行 handler.removeCallbacksAndMessages(null);清空队列消息</p>
-</blockquote>
-</li>
-<li><p>Webview</p>
-<p>   webview的使用总是会莫名的出现各种问题或泄露。最好的办法就是把web页面放在一个独立的进程，如果需要交互使用aidl。</p>
-</li>
-</ul>
-<ul>
-<li><p>容器中的对象未清理对象</p>
-<pre><code>Android中使用的容器最多的就是List和Map。用来存储对象集合，如果对象集合和页面相关，那么在退出页面时注意清空集合。同时不要使用static修饰集合。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<h4 id="如何尽量小的申请内存？"><a href="#如何尽量小的申请内存？" class="headerlink" title="如何尽量小的申请内存？"></a>如何尽量小的申请内存？</h4><p>上面说完了如何保证GC顺利回收，现在来讲讲要最小使用内存应该怎么做：</p>
-<ul>
-<li><p>慎用自动封装</p>
-<p>  来几行代码尝尝：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Integer num=0;</div><div class="line">for (int i=0;i&lt;100;i++) &#123;</div><div class="line">    num+=i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>  Java基本数据类型是有自动装箱机制的。每次执行循环都会发生一次装箱操作创建一个Integer对象，造成内存消耗。包括其他基本数据类型都有可能造成这种情况。</p>
-</li>
-<li><p>内存复用</p>
-<ul>
-<li><p>视图复用</p>
-<pre><code>在ListView中使用ViewHolder复用item组件，一方面节省内存，一方面提高滑动流畅性。都用过不多介绍。
-</code></pre></li>
-<li><p>使用对象池</p>
-<pre><code>看过Handler、Looper、Message、MessageQueue这一套消息循环源码的同志应该知道里面的Message使用了对象池模式。
-</code></pre><blockquote>
-<p>对象池类似线程池， 首先初始化一个固定大小池子，每次创建对象时候先去池子中找有没有，如果有直接取出，如果没有new出来使用后还到池子里。这样便可达到对象复用的目的。<br>对象池模式适用于那些频繁使用创建的对象，比如一个聊天app，里面对象最多的恐怕就是聊天信息(每条聊天信息对应一个信息对象)。都知道对象的创建是很耗费时间和内存的，没事不要new着玩。如果每条消息都创建一个对象，那可想而知该APP的性能。</p>
-</blockquote>
-<pre><code>对象池的使用也很简单，少量代码即可完成：
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class People &#123;</div><div class="line">     			private static final Pools.SynchronizedPool&lt;People&gt; sPool = new Pools.SynchronizedPool&lt;People&gt;(</div><div class="line">        		   	  20);//需要维持对象的数量</div><div class="line">     			int age;</div><div class="line">    			String name;</div><div class="line">   </div><div class="line">     			public static People obtain() &#123;</div><div class="line">       			  People instance = sPool.acquire();</div><div class="line">       			  return (instance != null) ? instance : new People();</div><div class="line">     			&#125;</div><div class="line">     			public void recycle() &#123;</div><div class="line">       			  sPool.release(this);</div><div class="line">    		 	&#125;</div><div class="line"> 			&#125;</div></pre></td></tr></table></figure>
-
-&gt;注意：对象申请(obtain)和释放(recycle)成对出现，使用一个对象后一定要释放还给对象池。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>- Bitmap复用
-
-    如果设置了options.inBitmap属性，以后再使用带有该options参数的decode方法加载图片资源时        ，decode会尝试重用已存在的位图内存，这样节省了加载和分配的时间，同时也节省了内存空间
-
-    &gt;该属性从3.0开始引进，低版本不支持inBitmap，4.4系统之前只能重用大小相同的内存区域，4.4以后可以重用任何比所需内存小的区域。具体使用可参考[官网](https://developer.android.com/topic/performance/graphics/manage-memory.html)。
-</code></pre><ul>
-<li><p>纯色规则形状背景用Color Res代替图片</p>
-<pre><code>经常遇到一些按钮背景是纯色显示，比如选中状态背景变为纯灰，但是设计已经发来了切图用还是不用？大声say NO！如果背景使用图片来显示，那背景每个像素都要绘制。
-
-假设一个分辨率为100x100的图片，占用4通道。那该图片内存占用就是100x100x4 =4万Byte≈40KB；但是如果使用<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">- 选择合适数据类型</div><div class="line"></div><div class="line">   - 使用ArrayMap替换HashMap</div><div class="line"></div><div class="line">		先看一下HashMap模型和ArrayMap模型：</div><div class="line">![hashmap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-3e3049cb811341c1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line">![arraymap模型.jpg](http://upload-images.jianshu.io/upload_images/1796052-0d979501c5d1358f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"></div><div class="line">&gt;HashMap是一个散列链表，稀疏阵列导致内存稍大，而ArrayMap提供了和HashMap一样的功能，但是避免了内存过度开销。在执行插入或删除操作时，从性能上看ArrayMap比HashMap稍差，但是如果对象数很小，比如1000以内不用担心性能问题。如果想深入了解这2个的原理请自行搜索，这里不过多阐述。</div><div class="line"></div><div class="line"></div><div class="line">  - 枚举替身来了</div><div class="line">      JDK1.5就支持了枚举类型，使用Enum关键字定义。使用枚举类型很多时候出于参数类型安全迫不得已作出的选择。</div></pre></td></tr></table></figure>
-</code></pre><p>public String  getValue(int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    default:
-        throw new IllegalArgumentException(&quot;不合法参数&quot;);
-}
-</code></pre><p>return “”;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> 试想一下如果一个函数的参数为int type，函数处理时只用到了1，2，3三种值，如果是其他值就抛出异常，这无疑增加了程序的不稳定性，按以前此时最好的解决办法就是参数改为枚举类型，增加了限定也就提高了稳定性。但是枚举类型就是一把双刃剑，增加安全同时也大大增加了内存占用,尤其是在移动设备上，资源有限更应该注意内存节省。</div><div class="line"></div><div class="line">谷歌或许考虑到了这些问题，在提供的注解包里添加了注解方式检查类型安全，目前支持int和String两种，看下使用方式：</div></pre></td></tr></table></figure>
-<p>//1、先声明需要的类型常量值<br>public static final int TYPE_1 = 1;<br>public static final int TYPE_2 = 2;<br>//2、创建注解接口同时把上一步声明的常量囊括到这里<br>@IntDef({TYPE_1,TYPE_2})<br>@Retention(RetentionPolicy.SOURCE)<br>public @interface _TYPE{</p>
-<p>}<br>//3、在函数参数中增加 注解接口名称<br>public String getValue(@_TYPE int type){</p>
-<pre><code>switch (type) {
-    case 1:
-        break;
-    case 2:
-        break;
-}
-return &quot;&quot;;
-</code></pre><p>}<br>```</p>
-<p>   经过上面的步骤，再调用getValue()函数时如果传入其他int则报错编译不通过，这样通过注解就增加了安全性：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-62fa91a5486d42cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午7.13.32.png"></p>
-</li>
-</ul>
-<p>结语：基本上APP大部分内存还是被图片占用，处理好图片尤为重要，但是关于图片三级缓存及缩放，目前都使用第三方框架如ImageLoader，所以这里一笔带过。以上就是日常内存优化需要注意的地方，自己做个总结，也希望能对各位看官有所帮助。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/21/Android性能优化之内存优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
     </nav>
   
 

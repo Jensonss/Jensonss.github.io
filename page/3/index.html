@@ -180,6 +180,741 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">WireShark the capture session could not be initiated (you don&#39;t have permission to capture on that device)异常</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/" class="archive-article-date">
+  	<time datetime="2017-08-03T11:07:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>异常信息如下：<strong>the capture session could not be initiated (you don’t have permission to capture on that device)</strong></p>
+<p>在WireShark启动后，选择网卡设备时，出现这个异常。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>由于是Mac系统，所以直接终端窗口命令行解决：</p>
+<p><strong>sudo chmod 777 /dev/bpf*</strong>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">WireShakr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/WireShakr/" class="article-tag-list-link color5">WireShakr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Gradle和Gradle-Plugin之间对应关系" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/03/Gradle和Gradle-Plugin之间对应关系/">Gradle和Gradle Plugin之间对应关系</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/Gradle和Gradle-Plugin之间对应关系/" class="archive-article-date">
+  	<time datetime="2017-08-03T09:36:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>每次Android studio版本升级经常会造成Gradle和Gradle plugin版本不兼容问题。进而又会引发其他一些列问题，简直让人泪奔。搞得真的是想去转python的心都有了。</p>
+<p>说归说，遇到问题还是要解决。如果知道了Gradle和plugin版本对应兼容关系，那就少了很多麻烦。</p>
+<p>经过查找，就目前版本情况，对应关系已经找出来了。</p>
+<h1 id="对应关系"><a href="#对应关系" class="headerlink" title="对应关系"></a>对应关系</h1><table>
+<thead>
+<tr>
+<th>Plugin version</th>
+<th>Required Gradle version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0.0 - 1.1.3</td>
+<td>2.2.1 - 2.3</td>
+</tr>
+<tr>
+<td>1.2.0 - 1.3.1</td>
+<td>2.2.1 - 2.9</td>
+</tr>
+<tr>
+<td>1.5.0</td>
+<td>2.2.1 - 2.13</td>
+</tr>
+<tr>
+<td>2.0.0 - 2.1.2</td>
+<td>2.10 - 2.13</td>
+</tr>
+<tr>
+<td>2.1.3 - 2.2.3</td>
+<td>2.14.1+</td>
+</tr>
+<tr>
+<td>2.3.0+</td>
+<td>3.3+</td>
+</tr>
+</tbody>
+</table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/03/Gradle和Gradle-Plugin之间对应关系/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-关于Canvas的一些概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/03/关于Canvas的一些概念/">关于Canvas的一些概念</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/03/关于Canvas的一些概念/" class="archive-article-date">
+  	<time datetime="2017-08-03T06:46:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在Android开发中不管是图片的绘制还是控件的绘制都少不了<strong>Canvas</strong>的参与。</p>
+<p><strong>Canvas</strong>如此重要，对其多一些了解自然是对开发有益的。</p>
+<h1 id="获得对象"><a href="#获得对象" class="headerlink" title="获得对象"></a>获得对象</h1><p>有两种获得Canvas对象的方法：</p>
+<ul>
+<li>重写onDraw方法，使用参数中的Canvas</li>
+<li>直接创建Canvas对象</li>
+</ul>
+<h1 id="它有什么用"><a href="#它有什么用" class="headerlink" title="它有什么用"></a>它有什么用</h1><p>Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为Android开发中，Canvas不仅提供了动画特效还提供了常见图形绘制方法，比如圆形、矩形、扇形等。</p>
+<p>在进行绘制过程中，还需要借助Pain辅助，Paint可以理解为画笔。</p>
+<h1 id="绘制图形方法"><a href="#绘制图形方法" class="headerlink" title="绘制图形方法"></a>绘制图形方法</h1><ul>
+<li><p>绘制文字</p>
+<p><code>drawText(String text, float x, float y, Paint paint)</code></p>
+<p><code>drawText(char[] text, int index, int count, float x, float y, Paint paint)</code></p>
+<p><code>drawText(CharSequence text, int start, int end, float x, float y, Paint paint)</code></p>
+<p><strong>float x</strong>：文本开始的x轴位置</p>
+<p><strong>float y</strong>：文本开始的y轴位置</p>
+<p><strong>text</strong>：要绘制的文本</p>
+<p><strong>paint</strong>: 使用的画笔</p>
+<p><strong>start</strong>：文本开始的位置</p>
+<p><strong>end</strong>：文本结束的位置</p>
+<p>​</p>
+</li>
+<li><p>绘制圆形</p>
+<p><code>drawCircle(float cx, float cy, float radius, Paint paint)</code></p>
+<p><strong>float cx</strong>：圆心x轴坐标</p>
+<p><strong>float cy</strong>：圆心y轴坐标</p>
+<p><strong>float radius</strong>：圆半径</p>
+<p><strong>paint</strong>：画笔</p>
+<p>​</p>
+</li>
+<li><p>绘制线条</p>
+<p><code>drawLine(float startX, float startY, float stopX, float stopY, Paint paint)</code></p>
+<p><strong>float startX</strong>：起点x坐标</p>
+<p><strong>float startY</strong>：起点y坐标</p>
+<p><strong>float stopX</strong>：终点x坐标</p>
+<p><strong>float stopY</strong>：终点y坐标</p>
+<p>​</p>
+</li>
+<li><p>绘制椭圆</p>
+<p><code>drawOval(float left, float top, float right, float bottom, Paint paint)</code></p>
+<p><code>drawOval(RectF oval, Paint paint)</code></p>
+<p>这里的两个方法可以是一样的，因为绘制一个<strong>RectF</strong>也是需要方法一中的四个点。</p>
+<p><strong>float left</strong>：左下</p>
+<p><strong>float top</strong>：左上</p>
+<p><strong>float right</strong>：右上</p>
+<p><strong>float bottom</strong>：右下</p>
+<p>​</p>
+</li>
+<li><p>绘制弧度</p>
+<p><code>drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
+<p>​</p>
+<p><code>drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
+<p><strong>float startAngle</strong>：开始角度</p>
+<p><strong>float sweepAngle</strong>：扫过角度</p>
+<p><strong>boolean useCenter</strong>：是否和中心连线 </p>
+<p>​</p>
+</li>
+<li><p>绘制矩形</p>
+<p><code>drawRect(float left, float top, float right, float bottom, Paint paint)</code></p>
+<p><code>drawRect(Rect r, Paint paint)</code></p>
+<p>​</p>
+</li>
+<li><p>绘制多边形</p>
+<p>多边形绘制需要用到Path，路径类</p>
+<p>用到moveTo，lineTo等常用方法</p>
+<p><code>moveTo(float x, float y)</code></p>
+<p><code>lineTo(float x, float y)</code></p>
+<p>​</p>
+</li>
+<li><p>绘制赛贝尔曲线</p>
+<p>赛贝尔曲线的绘制也用到了Path。</p>
+<p><code>quadTo(float x1, float y1, float x2, float y2)</code></p>
+<p>​</p>
+</li>
+<li><p>绘制点</p>
+<p><code>drawPoint(float x, float y, Paint paint)</code></p>
+<p><code>drawPoints(float[] pts, Paint paint)</code></p>
+<p><strong>float x</strong>：点x轴坐标</p>
+<p><strong>float y</strong>：点y轴坐标</p>
+<p><strong>float pts</strong>：点数组，每两个值组合一个点，最后如果不够2个点则忽略。</p>
+<p>​</p>
+</li>
+<li><p>绘制图片</p>
+<p><code>drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)</code></p>
+<p>​</p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="动画方法"><a href="#动画方法" class="headerlink" title="动画方法"></a>动画方法</h1><ul>
+<li><p>位移</p>
+<p><code>translate(float dx, float dy)</code></p>
+<p><strong>float dx</strong>：x轴移动距离</p>
+<p><strong>float dy</strong>：y轴移动距离</p>
+<p>​</p>
+</li>
+<li><p>缩放</p>
+<p><code>scale(float sx, float sy)</code></p>
+<p><code>scale(float sx, float sy, float px, float py)</code></p>
+<p><strong>float sx</strong>：x轴放大倍数</p>
+<p><strong>float sy</strong>：y轴放大倍数</p>
+<p><strong>float px, float py</strong>：以该点为中心缩放</p>
+</li>
+<li><p>旋转</p>
+<p><code>rotate(float degrees)</code></p>
+<p><code>rotate(float degrees, float px, float py)</code></p>
+<p><strong>float degrees</strong>：旋转角度</p>
+<p><strong>float px, float py</strong>：以px，py组成的点为中心旋转degrees角度</p>
+</li>
+</ul>
+<h1 id="save和restore"><a href="#save和restore" class="headerlink" title="save和restore"></a>save和restore</h1><ul>
+<li><p>save保存画布</p>
+<p>把save之前的数据保存起来，以便后续的操作在一个新的图层。</p>
+</li>
+<li><p>restore合并图层</p>
+<p>把save之前和之后的多个图层进行合并</p>
+<p>​</p>
+<p>​</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/03/关于Canvas的一些概念/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python爬虫爬取简书首页文章-二" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/02/Python爬虫爬取简书首页文章-二/">Python爬虫爬取简书首页文章(二)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/02/Python爬虫爬取简书首页文章-二/" class="archive-article-date">
+  	<time datetime="2017-08-02T03:44:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月02日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在 <a href="http://www.jensondev.me/2017/08/02/Python%E7%88%AC%E8%99%AB%E7%88%AC%E5%8F%96%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%96%87%E7%AB%A0-%E4%B8%80/" target="_blank" rel="external">Python爬虫爬取简书首页文章(一)</a> 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。</p>
+<p>但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。</p>
+<p>要实现分页爬取，首先要知道网站如何分页的</p>
+<h1 id="网站如何分页"><a href="#网站如何分页" class="headerlink" title="网站如何分页"></a>网站如何分页</h1><p>这里以简书为例，要想知道简书首页文章如何实现分页，首先打开官网和抓包工具进行监听。</p>
+<p>这里的抓包工具我使用的时<strong>Wireshark</strong>。刚开始时数据流是空的：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%A9%BAWireshark.png" alt="空"></p>
+<p>现在开始滑动简书官网，直到页面底部出现<strong>阅读更多</strong>按钮，这滑动期间竟然也发生了两次网络请求：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%BB%91%E5%8A%A8%E4%B8%A4%E6%AC%A1%E8%AF%B7%E6%B1%82.png" alt="滑动期间的两次请求"></p>
+<p>GET请求的url是这样子的：</p>
+<p>/?seen_snote_ids%5B%5D=15296134&amp;seen_snote_ids%5B%5D=15306523&amp;seen_snote_ids%5B%5D=15298503&amp;seen_snote_ids%5B%5D=15240154&amp;seen_snote_ids%5B%5D=15274107&amp;seen_snote_ids%5B%5D=15256726&amp;seen_snote_ids%5B%5D=15290950&amp;seen_snote_ids%5B%5D=15301177&amp;seen_snote_ids%5B%5D=15275389&amp;seen_snote_ids%5B%5D=15266115&amp;seen_snote_ids%5B%5D=15293985&amp;seen_snote_ids%5B%5D=15289824&amp;seen_snote_ids%5B%5D=15276555&amp;seen_snote_ids%5B%5D=15269012&amp;seen_snote_ids%5B%5D=15268330&amp;seen_snote_ids%5B%5D=15285079&amp;seen_snote_ids%5B%5D=15292494&amp;seen_snote_ids%5B%5D=15284369&amp;seen_snote_ids%5B%5D=15299782&amp;seen_snote_ids%5B%5D=15011765&amp;seen_snote_ids%5B%5D=15304980&amp;seen_snote_ids%5B%5D=15287206&amp;seen_snote_ids%5B%5D=15273113&amp;seen_snote_ids%5B%5D=15268608&amp;seen_snote_ids%5B%5D=15220769&amp;seen_snote_ids%5B%5D=15152802&amp;seen_snote_ids%5B%5D=15280804&amp;seen_snote_ids%5B%5D=15229091&amp;seen_snote_ids%5B%5D=15288809&amp;seen_snote_ids%5B%5D=15267285&amp;seen_snote_ids%5B%5D=14630860&amp;seen_snote_ids%5B%5D=15290958&amp;seen_snote_ids%5B%5D=15262258&amp;seen_snote_ids%5B%5D=15299674&amp;seen_snote_ids%5B%5D=15294416&amp;seen_snote_ids%5B%5D=15262595&amp;seen_snote_ids%5B%5D=15271868&amp;seen_snote_ids%5B%5D=15184645&amp;seen_snote_ids%5B%5D=14818734&amp;seen_snote_ids%5B%5D=15254172&amp;page=3</p>
+<p>当我点击<strong>阅读更多</strong>时候的请求url是这样子的：</p>
+<p>/?page=4&amp;seen_snote_ids%5B%5D=15296134&amp;seen_snote_ids%5B%5D=15306523&amp;seen_snote_ids%5B%5D=15298503&amp;seen_snote_ids%5B%5D=15240154&amp;seen_snote_ids%5B%5D=15274107&amp;seen_snote_ids%5B%5D=15256726&amp;seen_snote_ids%5B%5D=15290950&amp;seen_snote_ids%5B%5D=15301177&amp;seen_snote_ids%5B%5D=15275389&amp;seen_snote_ids%5B%5D=15266115&amp;seen_snote_ids%5B%5D=15293985&amp;seen_snote_ids%5B%5D=15289824&amp;seen_snote_ids%5B%5D=15276555&amp;seen_snote_ids%5B%5D=15269012&amp;seen_snote_ids%5B%5D=15268330&amp;seen_snote_ids%5B%5D=15285079&amp;seen_snote_ids%5B%5D=15292494&amp;seen_snote_ids%5B%5D=15284369&amp;seen_snote_ids%5B%5D=15299782&amp;seen_snote_ids%5B%5D=15011765&amp;seen_snote_ids%5B%5D=15304980&amp;seen_snote_ids%5B%5D=15287206&amp;seen_snote_ids%5B%5D=15273113&amp;seen_snote_ids%5B%5D=15268608&amp;seen_snote_ids%5B%5D=15220769&amp;seen_snote_ids%5B%5D=15152802&amp;seen_snote_ids%5B%5D=15280804&amp;seen_snote_ids%5B%5D=15229091&amp;seen_snote_ids%5B%5D=15288809&amp;seen_snote_ids%5B%5D=15267285&amp;seen_snote_ids%5B%5D=14630860&amp;seen_snote_ids%5B%5D=15290958&amp;seen_snote_ids%5B%5D=15262258&amp;seen_snote_ids%5B%5D=15299674&amp;seen_snote_ids%5B%5D=15294416&amp;seen_snote_ids%5B%5D=15262595&amp;seen_snote_ids%5B%5D=15271868&amp;seen_snote_ids%5B%5D=15184645&amp;seen_snote_ids%5B%5D=14818734&amp;seen_snote_ids%5B%5D=15254172&amp;seen_snote_ids%5B%5D=15272682&amp;seen_snote_ids%5B%5D=15302506&amp;seen_snote_ids%5B%5D=15238434&amp;seen_snote_ids%5B%5D=15302851&amp;seen_snote_ids%5B%5D=15256354&amp;seen_snote_ids%5B%5D=15297896&amp;seen_snote_ids%5B%5D=15246028&amp;seen_snote_ids%5B%5D=15292615&amp;seen_snote_ids%5B%5D=15215522&amp;seen_snote_ids%5B%5D=15295152&amp;seen_snote_ids%5B%5D=15246711&amp;seen_snote_ids%5B%5D=15276820&amp;seen_snote_ids%5B%5D=15274436&amp;seen_snote_ids%5B%5D=15300621&amp;seen_snote_ids%5B%5D=15296525&amp;seen_snote_ids%5B%5D=15297151&amp;seen_snote_ids%5B%5D=15298014&amp;seen_snote_ids%5B%5D=11621895&amp;seen_snote_ids%5B%5D=15268868&amp;seen_snote_ids%5B%5D=15280076</p>
+<p>通过这两个url可以看到每次都携带一个page参数，应该是表示请求页数了，</p>
+<p>所以可以知道目前简书的分页是这样的：第一次打开时加载几条，在下滑过程中会产生两次请求，分别是page=2和page=3，然后再次滑动到底部时出现<strong>阅读更多</strong>按钮，后面的分页靠按钮点击实现。</p>
+<p>综合来讲，简书的分页是下滑和点击共同实现的。</p>
+<p>分析完了简书如何分页，下面分析爬虫如何分页抓取数据。</p>
+<h1 id="爬虫如何分页"><a href="#爬虫如何分页" class="headerlink" title="爬虫如何分页"></a>爬虫如何分页</h1><p>一般来说爬虫分页有2种实现方式：①找到网址分页所须参数，通过发起网络请求对应的页数。②模拟人类对浏览器下滑、点击等操作实现分页。</p>
+<p>对于简书官网，我最先使用了第一种方法，每次请求携带page和seen_snote_ids参数，但是仍然返回数据有问题。可能服务器还对其他首部信息做了校验。</p>
+<p>看下请求信息：</p>
+<pre><code> [truncated]GET /?seen_snote_ids%5B%5D=15296134&amp;seen_snote_ids%5B%5D=15306523&amp;seen_snote_ids%5B%5D=15298503&amp;seen_snote_ids%5B%5D=15240154&amp;seen_snote_ids%5B%5D=15274107&amp;seen_snote_ids%5B%5D=15256726&amp;seen_snote_ids%5B%5D=15290950&amp;seen_snote_
+Host: www.jianshu.com\r\n
+Connection: keep-alive\r\n
+Accept: text/html, */*; q=0.01\r\n
+X-CSRF-Token: jrzSqMWq+Gqjm66lMiTJQQYSKEZKUYAYV9oOPghKMdJiJs9Oij1Q/bhsdugAnKKEjhsAokQqiog7MnW9ojznxQ==\r\n
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36\r\n
+X-Requested-With: XMLHttpRequest\r\n
+X-INFINITESCROLL: true\r\n
+Referer: http://www.jianshu.com/\r\n
+Accept-Encoding: gzip, deflate\r\n
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6\r\n
+ [truncated]Cookie: signin_redirect=http%3A%2F%2Fwww.jianshu.com%2F; _ga=GA1.2.508983344.1500518688; _gid=GA1.2.101137453.1501499488; _gat=1; _session_id=NjJQQWdSSEl2cWdtSEc0bmRTQnZXQTVQenNDbTV1V0Z5M2N5OGpxbnhyell5Tnl5UHp6UHZJSncvVzNSeGlEU
+If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
+\r\n
+[Full request URI [truncated]: http://www.jianshu.com/?seen_snote_ids%5B%5D=15296134&amp;seen_snote_ids%5B%5D=15306523&amp;seen_snote_ids%5B%5D=15298503&amp;seen_snote_ids%5B%5D=15240154&amp;seen_snote_ids%5B%5D=15274107&amp;seen_snote_ids%5B%5D=15256726&amp;seen_]
+[HTTP request 1/2]
+[Next request in frame: 28]
+</code></pre><p>由于请求信息太多，分析起来比较困难，所以决定采用方法②模拟行为。</p>
+<p>要模拟人类下滑、点击浏览器行为需要使用自动化测试库<strong>selenium</strong>。</p>
+<h1 id="Selenium使用"><a href="#Selenium使用" class="headerlink" title="Selenium使用"></a>Selenium使用</h1><p>继续上篇文章的创建的项目，创建JSSpider.py文件</p>
+<p>该文件中测试selenium库</p>
+<p>我这里使用Chrome浏览器，需要安装ChromeDriver，具体方法见：<a href="http://www.jensondev.me/2017/08/02/Selenium-ChromeDriver%E5%AE%89%E8%A3%85/" target="_blank" rel="external">Selenium ChromeDriver安装</a>。</p>
+<p>用selenium实现分页，可以分为三步：</p>
+<p>①导入所需类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"><span class="keyword">from</span> selenium.webdriver.remote.webelement <span class="keyword">import</span> WebElement</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> EC</div><div class="line"><span class="keyword">from</span> selenium.webdriver.support.wait <span class="keyword">import</span> WebDriverWait <span class="keyword">as</span> wait</div><div class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</div></pre></td></tr></table></figure>
+<p>②实现窗口下滑：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/jenson/Downloads/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"http://www.jianshu.com"</span>)</div><div class="line">browser.maximize_window()</div><div class="line">time.sleep(<span class="number">3</span>)</div><div class="line">browser.execute_script(<span class="string">"window.scrollTo(0, document.body.scrollHeight);"</span>)</div><div class="line">time.sleep(<span class="number">3</span>)</div><div class="line">browser.execute_script(<span class="string">"window.scrollTo(0, document.body.scrollHeight);"</span>)</div><div class="line"><span class="comment"># 前三页都已经出来了</span></div></pre></td></tr></table></figure>
+<p>通过两次调用<code>browser.execute_script</code>，导致窗口两次自动下滑，会自动请求服务器。</p>
+<p>③等待阅读更多按钮显示后模拟点击：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">    loadMoreEle = wait(browser, <span class="number">10</span>).until(</div><div class="line">        EC.presence_of_element_located((By.CLASS_NAME, <span class="string">"load-more"</span>))</div><div class="line">    )</div><div class="line"><span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</div><div class="line">    print(e)</div><div class="line"><span class="comment"># loadMoreEle = browser.find_element_by_class_name("load-more")</span></div><div class="line"><span class="keyword">assert</span> isinstance(loadMoreEle, WebElement)</div><div class="line"><span class="comment"># time.sleep(5)</span></div><div class="line">is_displayed = loadMoreEle.is_displayed()</div><div class="line">print(is_displayed)</div><div class="line">time.sleep(<span class="number">5</span>)</div><div class="line"><span class="keyword">if</span> is_displayed:</div><div class="line">    loadMoreEle.click()</div></pre></td></tr></table></figure>
+<p>插播一条消息：如果selenium启动Chrome浏览器，会有这样一条提示信息：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/selenium%E6%8E%A7%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%90%E7%A4%BA.png" alt="selenium控制浏览器提示"></p>
+<p>如果上面都已经实现且执行成功，那么可以开始把两个部分代码进行合并了。</p>
+<h1 id="实现分页"><a href="#实现分页" class="headerlink" title="实现分页"></a>实现分页</h1><p>这里的实现分页只要把上一篇的代码和本节代码合并，基本就可以完成简书首页文章的抓取，下面看下具体实现：</p>
+<h2 id="首先实现下滑分页爬取部分"><a href="#首先实现下滑分页爬取部分" class="headerlink" title="首先实现下滑分页爬取部分"></a>首先实现下滑分页爬取部分</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"><span class="keyword">from</span> selenium.webdriver.remote.webelement <span class="keyword">import</span> WebElement</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> EC</div><div class="line"><span class="keyword">from</span> selenium.webdriver.support.wait <span class="keyword">import</span> WebDriverWait <span class="keyword">as</span> wait</div><div class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</div><div class="line"><span class="keyword">import</span> main.JS <span class="keyword">as</span> JS</div><div class="line"></div><div class="line">url_str = <span class="string">"http://www.jianshu.com"</span></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/jenson/Downloads/chromedriver"</span>)</div><div class="line">browser.get(url_str)</div><div class="line">browser.maximize_window()</div><div class="line">time.sleep(<span class="number">3</span>)</div><div class="line">browser.execute_script(<span class="string">"window.scrollTo(0, document.body.scrollHeight);"</span>)</div><div class="line">time.sleep(<span class="number">3</span>)</div><div class="line">browser.execute_script(<span class="string">"window.scrollTo(0, document.body.scrollHeight);"</span>)</div><div class="line"><span class="comment"># 前三页都已经出来了,</span></div><div class="line"></div><div class="line"><span class="comment"># 获取前三页内容</span></div><div class="line">time.sleep(<span class="number">3</span>)</div><div class="line">list = JS.getArticles(browser, <span class="keyword">False</span>)</div><div class="line">JS.saveCSV(list, <span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>上一篇中写的<code>getArticles</code>方法添加了2个参数，<strong>browser</strong>和<strong>isClick</strong>，去掉了<strong>url</strong>参数。因为内容都已经在<strong>browser</strong>这个selenium启动的浏览器中了，所以不需要在使用<strong>urllib</strong>进行网络请求，也不再使用<strong>bs4</strong>来进行DOM解析，一切都交由<strong>browser</strong>完成。<strong>isClick</strong>为TRUE表示点击翻页，否则表示滑动翻页。</p>
+<p>看下目前<code>getArticles</code>的实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getArticles</span><span class="params">(browser, isClick=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    根据url获取当前页面文章列表</div><div class="line">    :param url:</div><div class="line">    :param isClick:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line"></div><div class="line">    article_list = []</div><div class="line">    <span class="keyword">assert</span> isinstance(browser, webdriver.Chrome)</div><div class="line">    ulEle = browser.find_element_by_class_name(<span class="string">"note-list"</span>)</div><div class="line">    <span class="keyword">assert</span> isinstance(ulEle, WebElement)</div><div class="line">    eles = ulEle.find_elements_by_xpath(<span class="string">"//li[@id]"</span>)</div><div class="line">    print(len(eles))</div><div class="line">    <span class="keyword">if</span> isClick:</div><div class="line">        <span class="keyword">return</span> iteratorEle(eles, article_list, len(eles) - <span class="number">20</span>, len(eles))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> iteratorEle(eles, article_list, <span class="number">0</span>, len(eles))</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">iteratorEle</span><span class="params">(eles, article_list, start, end)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    :param eles:</div><div class="line">    :param article_list:</div><div class="line">    :param start:</div><div class="line">    :param end:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(start, end):</div><div class="line">        item = eles[index]</div><div class="line">        <span class="keyword">assert</span> isinstance(item, WebElement)</div><div class="line">        article = Article()</div><div class="line">        article.author = item.find_element_by_class_name(<span class="string">"blue-link"</span>).text</div><div class="line">        titleEle = item.find_element_by_class_name(<span class="string">"title"</span>)</div><div class="line">        <span class="keyword">assert</span> isinstance(titleEle, WebElement)</div><div class="line">        article.title = titleEle.text</div><div class="line">        article.url = titleEle.get_attribute(<span class="string">"href"</span>)</div><div class="line">        article_list.append(article)</div><div class="line">    <span class="keyword">return</span> article_list</div></pre></td></tr></table></figure>
+<p>另外保存csv文件的方法<code>saveCSV</code>也有改动，添加了一个<strong>setTag</strong>参数。为True表示设置首行的标记。方法实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">saveCSV</span><span class="params">(articles, setTag=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    保存到csv文件</div><div class="line">    :param articles:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    csvFile = open(<span class="string">"/Users/jenson/Downloads/js.csv"</span>, <span class="string">'a'</span>)</div><div class="line">    csv_writer = csv.writer(csvFile)</div><div class="line">    <span class="comment"># print(type(csv_writer))</span></div><div class="line">    <span class="comment"># assert isinstance(csv_writer, csv.DictWriter)</span></div><div class="line">    <span class="keyword">if</span> setTag:</div><div class="line">        csv_writer.writerow([<span class="string">"作者"</span>, <span class="string">"标题"</span>, <span class="string">"链接"</span>])</div><div class="line">    <span class="keyword">for</span> article <span class="keyword">in</span> articles:</div><div class="line">        csv_writer.writerow(</div><div class="line">            [article.author, article.title, article.url])</div></pre></td></tr></table></figure>
+<h2 id="其次实现点击分页爬取部分"><a href="#其次实现点击分页爬取部分" class="headerlink" title="其次实现点击分页爬取部分"></a>其次实现点击分页爬取部分</h2><p>模拟点击翻页中使用while循环检测<strong>阅读更多</strong>按钮是否可见，如果可见则每次模拟点击实现翻页，代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 模拟点击翻页</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    loadMoreEle = wait(browser, <span class="number">10</span>).until(</div><div class="line">        EC.presence_of_element_located((By.CLASS_NAME, <span class="string">"load-more"</span>))</div><div class="line">    )</div><div class="line"><span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</div><div class="line">    print(e)</div><div class="line"><span class="comment"># loadMoreEle = browser.find_element_by_class_name("load-more")</span></div><div class="line"><span class="keyword">assert</span> isinstance(loadMoreEle, WebElement)</div><div class="line"><span class="comment"># time.sleep(5)</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">while</span> loadMoreEle.is_displayed():</div><div class="line">        loadMoreEle.click()</div><div class="line">        time.sleep(<span class="number">3</span>)</div><div class="line">        list = JS.getArticles(browser, <span class="keyword">True</span>)</div><div class="line">        JS.saveCSV(list)</div><div class="line"><span class="keyword">except</span> RuntimeError <span class="keyword">as</span> err:</div><div class="line">    print(err)</div></pre></td></tr></table></figure>
+<p>经过以上步骤，翻页爬取简书首页文章就已经完成了，最终爬取结果如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%9C%AB%E5%B0%BE%E6%96%87%E7%AB%A0%E7%88%AC%E5%8F%96%E7%BB%93%E6%9D%9F.png" alt="简书首页文章爬取到末尾"></p>
+<p>可以看到文章末尾已经没有了<strong>阅读更多</strong>字样，说明已经翻到底儿了。而CSV文件中内容最后一条也刚好符合简书网站最后一条。可见抓取成功。</p>
+<blockquote>
+<p>注意：一旦使用了selenium，后面的DOM解析都要使用对应的浏览器Driver进行解析，如果还是使用bs4是获取不到新内容的。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">自己写爬虫</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/自己写爬虫/" class="article-tag-list-link color1">自己写爬虫</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/02/Python爬虫爬取简书首页文章-二/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python爬虫爬取简书首页文章-一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/02/Python爬虫爬取简书首页文章-一/">Python爬虫爬取简书首页文章(一)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/02/Python爬虫爬取简书首页文章-一/" class="archive-article-date">
+  	<time datetime="2017-08-02T03:42:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月02日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近对Python兴趣很大，因为觉得这门语言很好玩。学了些东西就总得做点什么出来吧。</p>
+<p><strong>虽然兴趣是最好的老师，但是毕竟实践才是检验真理的唯一标准</strong></p>
+<p>首先想到的就是写个爬虫试试，专门针对特定网站的mini爬虫。</p>
+<p>那就采集<a href="www.jianshu.com">简书</a>首页文章吧。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在开始代码前先做好准备工作：安装所需库。</p>
+<p>这里的数据存储在csv文件中，而不是存储在数据库，因为数据流并不大,使用<code>csv</code>库。</p>
+<p>网络请求库使用<code>urllib</code>。</p>
+<p>Dom解析库使用<code>BeautifulSoup4</code>。</p>
+<p>如果本地没有的库可以使用<code>pip3 install xxx</code>命令安装。</p>
+<p>准备工作做完了就开始编码了吗？NO~，接下来要分析网页，分析要爬取网页的内容。</p>
+<h1 id="网页分析"><a href="#网页分析" class="headerlink" title="网页分析"></a>网页分析</h1><p>分析简书首页文章列表，找到共通的规则，才能让后面的采集有迹可循。</p>
+<ul>
+<li><p>打开简书首页，复制一个文章标题</p>
+<p>应该是这样子的：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%A0%87%E9%A2%98%E5%A4%8D%E5%88%B6.png" alt="简书首页标题复制"></p>
+</li>
+<li><p>查看网页源码，在源码中查找复制的标题</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%BA%90%E7%A0%81%E6%98%BE%E7%A4%BA%E6%A0%87%E9%A2%98%E5%8C%BA%E5%9F%9F.png" alt="源码中标题区域"></p>
+<p>从标题逐步扩散式查找，最终定位到标签<code>li</code>。就是说每个首页文章区域部分就是一个<code>li</code>标签显示的。而且这些标签的<strong>id</strong>属性都是以<strong>note-</strong>开头的。</p>
+</li>
+<li><p>查找父元素</p>
+<p>既然每个文章是一个<code>li</code>标签，那么父元素应该是<code>ul</code>标签。顺藤摸瓜发现了</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 文章列表模块 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"note-list"</span> <span class="attr">infinite-scroll-url</span>=<span class="string">"/"</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>所以Dom解析时查找<strong>class</strong>为<strong>note-list</strong>子元素即可</p>
+</li>
+</ul>
+<p><strong>这里首页文章基本理清规则了，其他网站可能复杂性会高，但是只要耐心点，基本都能找到规律</strong></p>
+<p>下面开始创建项目：</p>
+<h1 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h1><p>我这里使用Pycharm IDE，创建一个项目名称为<code>JianShuSpider</code>。</p>
+<p>创建main文件夹，同时在其下创建JS.py文件，该文件主要写逻辑。</p>
+<p>创建Article文件，其中创建Article类，用来存储爬取的文章信息。</p>
+<h1 id="开始实现"><a href="#开始实现" class="headerlink" title="开始实现"></a>开始实现</h1><h2 id="确定爬取内容"><a href="#确定爬取内容" class="headerlink" title="确定爬取内容"></a>确定爬取内容</h2><p>因为这里只是个练习爬虫，不想存储太多内容，所以只爬取文章标题、作者、链接</p>
+<p>完善Article类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">        文章信息类</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.title = <span class="string">''</span></div><div class="line">        self.author = <span class="string">''</span></div><div class="line">        self.url = <span class="string">''</span></div></pre></td></tr></table></figure>
+<h2 id="逻辑实现"><a href="#逻辑实现" class="headerlink" title="逻辑实现"></a>逻辑实现</h2><p>总体逻辑大概分成三个方法：</p>
+<p>①定义<code>def getArticles(url):</code>方法获取文章列表</p>
+<p>②定义<code>def saveCSV(articles):</code>方法存储获取的文章列表信息</p>
+<p>③定义<code>def wrapper():</code>包装上述两个方法以便在让工作线程执行</p>
+<p>下面按次序一次实现</p>
+<h3 id="获取文章列表"><a href="#获取文章列表" class="headerlink" title="获取文章列表"></a>获取文章列表</h3><p>获取文章列表又细分为4个小步骤：</p>
+<p>①定义一个空列表用来后面存储文章信息：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">article_list = []</div></pre></td></tr></table></figure>
+<p>②发起网络请求读取网页源码，为后面DOM解析做准备，如果出现异常返回空列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> error, request</div><div class="line"> <span class="keyword">try</span>:                                      </div><div class="line">     req = request.urlopen(url=url)        </div><div class="line">     content = req.read()                  </div><div class="line"> <span class="keyword">except</span> error.HTTPError <span class="keyword">as</span>  err:           </div><div class="line">     print(err)                            </div><div class="line">     <span class="keyword">return</span> article_list</div></pre></td></tr></table></figure>
+<p>③根据步骤②提供的content DOM树和上面分析li标签规则，通过正则表达式查找当前页所有文章标签li：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> bs4</div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">bsobj = bs4.BeautifulSoup(content, <span class="string">"html.parser"</span>)</div><div class="line">   list = bsobj.find_all(name=<span class="string">"li"</span>,</div><div class="line">                         attrs=&#123;<span class="string">"id"</span>: re.compile(<span class="string">"^(note-)[0-9]+$"</span>)&#125;)</div></pre></td></tr></table></figure>
+<p>④根据步骤③返回的li标签列表，对li列表标签进行遍历查找子标签中标题、作者和链接信息，赋值给Article对象，并添加到步骤①创建的<strong>article_list</strong>列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> item <span class="keyword">in</span> list:                                                                 </div><div class="line">    <span class="keyword">assert</span> isinstance(item, bs4.Tag)                                              </div><div class="line">    article = Article()                                                           </div><div class="line">    article.author = item.find(name=<span class="string">'a'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'blue-link'</span>&#125;).get_text() </div><div class="line">    titleTag = item.find(name=<span class="string">'a'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;)                      </div><div class="line">    <span class="keyword">assert</span> isinstance(titleTag, bs4.Tag)                                          </div><div class="line">    article.title = titleTag.get_text()                                           </div><div class="line">    article.url = url + titleTag.attrs[<span class="string">'href'</span>]                                    </div><div class="line">    article_list.append(article)</div></pre></td></tr></table></figure>
+<p>经过上面一些列步骤已经得到了文章列表信息，下面要把文章列表存储到csv文件中</p>
+<h3 id="存储文章列表"><a href="#存储文章列表" class="headerlink" title="存储文章列表"></a>存储文章列表</h3><p><strong>注意：csv是按逗号分隔的文件，每一行代表一条完整信息，所以写入信息时是逐行写入。</strong></p>
+<p>存储文章可以分为3个小步骤：</p>
+<p>①根据path打开或创建一个csv文件，同时获取writer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> csv</div><div class="line"> csvFile = open(<span class="string">"/Users/jenson/Downloads/js.csv"</span>, <span class="string">'w+'</span>)    </div><div class="line"> csv_writer = csv.writer(csvFile)</div></pre></td></tr></table></figure>
+<p>②向文件写入头行，用来说明每个被逗号隔断的数据表示的意义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">csv_writer.writerow([<span class="string">"作者"</span>, <span class="string">"标题"</span>, <span class="string">"链接"</span>])</div></pre></td></tr></table></figure>
+<p>③遍历文章列表存储</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> article <span class="keyword">in</span> articles:                               </div><div class="line">    csv_writer.writerow(                               </div><div class="line">        [article.author, article.title, article.url])</div></pre></td></tr></table></figure>
+<h3 id="包装方法"><a href="#包装方法" class="headerlink" title="包装方法"></a>包装方法</h3><p>包装方法就简单了，直接上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">()</span>:</span>    </div><div class="line">    <span class="string">"""           </span></div><div class="line">    包装方法          </div><div class="line">    :return:      </div><div class="line">    """           </div><div class="line">    list = getArti</div><div class="line">    saveCSV(list)</div></pre></td></tr></table></figure>
+<h3 id="线程调用"><a href="#线程调用" class="headerlink" title="线程调用"></a>线程调用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">threading.Thread(target=wrapper).start()</div></pre></td></tr></table></figure>
+<h1 id="爬取结果"><a href="#爬取结果" class="headerlink" title="爬取结果"></a>爬取结果</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E7%AC%AC%E4%B8%80%E9%A1%B5%E6%96%87%E7%AB%A0%E7%88%AC%E5%8F%96%E7%BB%93%E6%9E%9C.png" alt="爬取结果"></p>
+<p>通过上面的图片可以看到文章信息已经存储到csv文件中。</p>
+<p>目前为止，一个mini爬虫已经初步完成。当然目前只是爬取第一页信息。</p>
+<p>后面文章会完成分页爬取，请参考<strong>Python爬虫爬取简书首页文章(二)</strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">自己写爬虫</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/自己写爬虫/" class="article-tag-list-link color1">自己写爬虫</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/02/Python爬虫爬取简书首页文章-一/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Selenium-ChromeDriver安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -767,494 +1502,9 @@
 
 
   
-    <article id="post-typeerror-module-init-takes-at-most-2-arguments-3-given" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">typeerror module.__init__() takes at most 2 arguments (3 given)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/" class="archive-article-date">
-  	<time datetime="2017-07-31T12:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月31日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> spiders , item</div><div class="line"><span class="keyword">from</span> scrapy.utils <span class="keyword">import</span> response</div><div class="line"></div><div class="line"><span class="keyword">from</span> daobanSpider.items <span class="keyword">import</span> Article</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">articleSpider</span><span class="params">(spiders)</span>:</span></div><div class="line">    name = <span class="string">"article"</span></div><div class="line">    allowed_domains = [<span class="string">"en.wikipedia.org"</span>]</div><div class="line">    start_urls = [<span class="string">"http://en.wikipedia.org/wiki/Main_Page"</span>,</div><div class="line">                  <span class="string">"http://en.wikipedia.org/wiki/Python_%28programming_language%29"</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    item = Article()</div><div class="line">    title = response.xpath(<span class="string">'//h1/text()'</span>)[<span class="number">0</span>].extract()</div><div class="line">    print(<span class="string">"Title is: "</span> + title)</div><div class="line">    item[<span class="string">'title'</span>] = title</div><div class="line">    <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p><code>class articleSpider(spiders):</code>这一行出现异常，信息如下：</p>
-<p>TypeError: module.<strong>init</strong>() takes at most 2 arguments (3 given)</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>我这是定义的一个class继承spider。但是这里提示类型错误，竟然还出现了module.<strong>init</strong>() 。。</p>
-<p>查找后才明白过来<code>from scrapy import spiders</code>导入的spiders不是类，而是从scrapy框架导入spiders模块，如要使用某些类，需要再通过module.class格式引入</p>
-<p>所以异常的那一行改为：<code>class articleSpider(spiders.CrawlSpider):</code>。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/">Python读取文件出现UnicodeDecodeError: &#39;utf-8&#39; codec can&#39;t decode byte 0xc9 in position 0: invalid continuation byte异常</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/" class="archive-article-date">
-  	<time datetime="2017-07-29T11:00:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在用python读取文本时出现了如下异常：</p>
-<p><code>UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte</code>。</p>
-<p>在读取的时候注意统一编码，因为文本文档设置的时GBK，</p>
-<p>所以读取的时候也要设置GBK，而没有设置时默认使用的UTF-8。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">text_from_file_with_apath = open(<span class="string">'/Users/jenson/Downloads/炮灰修仙记事.txt'</span>,encoding=<span class="string">'GBK'</span>).read()</div></pre></td></tr></table></figure>
-<p><strong>读取时设置统一编码即可</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-WordCloud不显示中文只显示方框问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/29/WordCloud不显示中文只显示方框问题/">WordCloud不显示中文只显示方框问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/29/WordCloud不显示中文只显示方框问题/" class="archive-article-date">
-  	<time datetime="2017-07-29T10:59:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在用词云展示时，发现其他能正常运行，但是启动后的图像中都是方框，后来查找到原因是因为词云默认只支持英文。</p>
-<p>如果要支持中文需要自己设置支持中文的字体</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_wordcloud = WordCloud(font_path=<span class="string">'/Library/Fonts/Songti.ttc'</span>).generate(wl_space_split)</div></pre></td></tr></table></figure>
-<p>手动设置宋体字体，最终就能正常显示了</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">WordCloud</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/WordCloud/" class="article-tag-list-link color5">WordCloud</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/29/WordCloud不显示中文只显示方框问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Mac系统下载文本都是打开都是乱码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/29/Mac系统下载文本都是打开都是乱码/">Mac系统下载文本都是打开都是乱码</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/29/Mac系统下载文本都是打开都是乱码/" class="archive-article-date">
-  	<time datetime="2017-07-29T10:58:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>系统升级后出现个问题，就是所有下载的文本文档打开时都出现了异常：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%96%87%E6%9C%AC%E6%89%93%E5%BC%80%E5%BC%82%E5%B8%B8.png" alt="文本打开异常"></p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>在文本编辑的偏好中进行设置即可：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%96%87%E6%9C%AC%E7%BC%96%E7%A0%81%E8%AE%BE%E7%BD%AE.png" alt="文本编辑偏好设置"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">MAC</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/MAC/" class="article-tag-list-link color4">MAC</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/29/Mac系统下载文本都是打开都是乱码/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-求解1到n中1的个数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/28/求解1到n中1的个数/">求解1到n中1的个数</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/28/求解1到n中1的个数/" class="archive-article-date">
-  	<time datetime="2017-07-27T16:11:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月28日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>注意一点的是不管有几位数，每位都要检查是否为1.</p>
-<h1 id="0x01-暴力实现"><a href="#0x01-暴力实现" class="headerlink" title="0x01 暴力实现"></a>0x01 暴力实现</h1><p>最简单暴力的方法就是直接遍历判断：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 暴力求解1-n中有多少个1</div><div class="line"> * </div><div class="line"> * <span class="doctag">@param</span> value</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOne</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= value; i++) &#123;</div><div class="line">		<span class="keyword">int</span> val = i;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			result += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>打印<code>System.out.println(getOne(11));</code>结果为4。正确</p>
-<h1 id="0x02-递归实现"><a href="#0x02-递归实现" class="headerlink" title="0x02 递归实现"></a>0x02 递归实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOnes</span><span class="params">(<span class="keyword">int</span> value, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (value == <span class="number">1</span>) &#123;</div><div class="line">		<span class="keyword">return</span> ++count;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// 计算当前数不为1时，所有位包含1的个数。</span></div><div class="line">		<span class="keyword">int</span> val = value;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			count += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> getOnes(--value, count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="0x003-其他思想"><a href="#0x003-其他思想" class="headerlink" title="0x003 其他思想"></a>0x003 其他思想</h1><p>本段内容来自<a href="http://www.jianshu.com/p/ce709a24bd22" target="_blank" rel="external">简书</a>：</p>
-<ol>
-<li>此位大于1，这一位上1的个数有 ([n / 10 ^ (b + 1) ] + 1) * 10^b</li>
-<li>此位等于0，为 ([n / 10^(b+1) ] ) * 10^b</li>
-<li>此位等于1，在0的基础上加上n mod 10^b + 1</li>
-</ol>
-<p>举个例子，我们来分析 N=30143 的情况：</p>
-<ol>
-<li>由于3&gt;1,则个位上出现1的次数为(3014+1)*1</li>
-<li>由于4&gt;1,则十位上出现1的次数为(301+1)*10</li>
-<li>由于1=1，则百位上出现1次数为30*100+(43+1)</li>
-<li>由于千位为0，则千位上出现1次数为3*1000</li>
-</ol>
-<p>仔细观察，不难明白其中的道理。以百位为例：100到199共有100个1，而除以100以后位30，所以共有30个100到199，这就构成了300 <em> 100。最后，当对于千位和万位为0的情况，还有100到143这44个数，所以总共为30</em>100 + 43 + 1。同样，不难理解，对于十位，有10到19共10个1，共有301个百位以上不为0的情况，最后加上百位以上都是0的情况，则为 （301+1）* 10。</p>
-<p>至于代码按规律如何实现，暂时没有思考</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/28/求解1到n中1的个数/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 

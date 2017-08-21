@@ -180,6 +180,491 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-typeerror-module-init-takes-at-most-2-arguments-3-given" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">typeerror module.__init__() takes at most 2 arguments (3 given)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/" class="archive-article-date">
+  	<time datetime="2017-07-31T12:21:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月31日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> spiders , item</div><div class="line"><span class="keyword">from</span> scrapy.utils <span class="keyword">import</span> response</div><div class="line"></div><div class="line"><span class="keyword">from</span> daobanSpider.items <span class="keyword">import</span> Article</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">articleSpider</span><span class="params">(spiders)</span>:</span></div><div class="line">    name = <span class="string">"article"</span></div><div class="line">    allowed_domains = [<span class="string">"en.wikipedia.org"</span>]</div><div class="line">    start_urls = [<span class="string">"http://en.wikipedia.org/wiki/Main_Page"</span>,</div><div class="line">                  <span class="string">"http://en.wikipedia.org/wiki/Python_%28programming_language%29"</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    item = Article()</div><div class="line">    title = response.xpath(<span class="string">'//h1/text()'</span>)[<span class="number">0</span>].extract()</div><div class="line">    print(<span class="string">"Title is: "</span> + title)</div><div class="line">    item[<span class="string">'title'</span>] = title</div><div class="line">    <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<p><code>class articleSpider(spiders):</code>这一行出现异常，信息如下：</p>
+<p>TypeError: module.<strong>init</strong>() takes at most 2 arguments (3 given)</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>我这是定义的一个class继承spider。但是这里提示类型错误，竟然还出现了module.<strong>init</strong>() 。。</p>
+<p>查找后才明白过来<code>from scrapy import spiders</code>导入的spiders不是类，而是从scrapy框架导入spiders模块，如要使用某些类，需要再通过module.class格式引入</p>
+<p>所以异常的那一行改为：<code>class articleSpider(spiders.CrawlSpider):</code>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/31/typeerror-module-init-takes-at-most-2-arguments-3-given/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/">Python读取文件出现UnicodeDecodeError: &#39;utf-8&#39; codec can&#39;t decode byte 0xc9 in position 0: invalid continuation byte异常</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/" class="archive-article-date">
+  	<time datetime="2017-07-29T11:00:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在用python读取文本时出现了如下异常：</p>
+<p><code>UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte</code>。</p>
+<p>在读取的时候注意统一编码，因为文本文档设置的时GBK，</p>
+<p>所以读取的时候也要设置GBK，而没有设置时默认使用的UTF-8。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">text_from_file_with_apath = open(<span class="string">'/Users/jenson/Downloads/炮灰修仙记事.txt'</span>,encoding=<span class="string">'GBK'</span>).read()</div></pre></td></tr></table></figure>
+<p><strong>读取时设置统一编码即可</strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/29/Python读取文件出现UnicodeDecodeError-utf-8-codec-can-t-decode-byte-0xc9-in-position-0-invalid-continuation-byte异常/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-WordCloud不显示中文只显示方框问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/29/WordCloud不显示中文只显示方框问题/">WordCloud不显示中文只显示方框问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/29/WordCloud不显示中文只显示方框问题/" class="archive-article-date">
+  	<time datetime="2017-07-29T10:59:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在用词云展示时，发现其他能正常运行，但是启动后的图像中都是方框，后来查找到原因是因为词云默认只支持英文。</p>
+<p>如果要支持中文需要自己设置支持中文的字体</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_wordcloud = WordCloud(font_path=<span class="string">'/Library/Fonts/Songti.ttc'</span>).generate(wl_space_split)</div></pre></td></tr></table></figure>
+<p>手动设置宋体字体，最终就能正常显示了</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">WordCloud</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/WordCloud/" class="article-tag-list-link color5">WordCloud</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/29/WordCloud不显示中文只显示方框问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Mac系统下载文本都是打开都是乱码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/29/Mac系统下载文本都是打开都是乱码/">Mac系统下载文本都是打开都是乱码</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/29/Mac系统下载文本都是打开都是乱码/" class="archive-article-date">
+  	<time datetime="2017-07-29T10:58:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月29日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>系统升级后出现个问题，就是所有下载的文本文档打开时都出现了异常：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%96%87%E6%9C%AC%E6%89%93%E5%BC%80%E5%BC%82%E5%B8%B8.png" alt="文本打开异常"></p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>在文本编辑的偏好中进行设置即可：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%96%87%E6%9C%AC%E7%BC%96%E7%A0%81%E8%AE%BE%E7%BD%AE.png" alt="文本编辑偏好设置"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">MAC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/MAC/" class="article-tag-list-link color4">MAC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/29/Mac系统下载文本都是打开都是乱码/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-求解1到n中1的个数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/28/求解1到n中1的个数/">求解1到n中1的个数</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/28/求解1到n中1的个数/" class="archive-article-date">
+  	<time datetime="2017-07-27T16:11:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月28日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>注意一点的是不管有几位数，每位都要检查是否为1.</p>
+<h1 id="0x01-暴力实现"><a href="#0x01-暴力实现" class="headerlink" title="0x01 暴力实现"></a>0x01 暴力实现</h1><p>最简单暴力的方法就是直接遍历判断：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 暴力求解1-n中有多少个1</div><div class="line"> * </div><div class="line"> * <span class="doctag">@param</span> value</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOne</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= value; i++) &#123;</div><div class="line">		<span class="keyword">int</span> val = i;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			result += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印<code>System.out.println(getOne(11));</code>结果为4。正确</p>
+<h1 id="0x02-递归实现"><a href="#0x02-递归实现" class="headerlink" title="0x02 递归实现"></a>0x02 递归实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getOnes</span><span class="params">(<span class="keyword">int</span> value, <span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (value == <span class="number">1</span>) &#123;</div><div class="line">		<span class="keyword">return</span> ++count;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="comment">// 计算当前数不为1时，所有位包含1的个数。</span></div><div class="line">		<span class="keyword">int</span> val = value;</div><div class="line">		<span class="keyword">while</span> (val == <span class="number">1</span> || val &gt;= <span class="number">10</span>) &#123;</div><div class="line">			count += val % <span class="number">10</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;</div><div class="line">			val /= <span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> getOnes(--value, count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="0x003-其他思想"><a href="#0x003-其他思想" class="headerlink" title="0x003 其他思想"></a>0x003 其他思想</h1><p>本段内容来自<a href="http://www.jianshu.com/p/ce709a24bd22" target="_blank" rel="external">简书</a>：</p>
+<ol>
+<li>此位大于1，这一位上1的个数有 ([n / 10 ^ (b + 1) ] + 1) * 10^b</li>
+<li>此位等于0，为 ([n / 10^(b+1) ] ) * 10^b</li>
+<li>此位等于1，在0的基础上加上n mod 10^b + 1</li>
+</ol>
+<p>举个例子，我们来分析 N=30143 的情况：</p>
+<ol>
+<li>由于3&gt;1,则个位上出现1的次数为(3014+1)*1</li>
+<li>由于4&gt;1,则十位上出现1的次数为(301+1)*10</li>
+<li>由于1=1，则百位上出现1次数为30*100+(43+1)</li>
+<li>由于千位为0，则千位上出现1次数为3*1000</li>
+</ol>
+<p>仔细观察，不难明白其中的道理。以百位为例：100到199共有100个1，而除以100以后位30，所以共有30个100到199，这就构成了300 <em> 100。最后，当对于千位和万位为0的情况，还有100到143这44个数，所以总共为30</em>100 + 43 + 1。同样，不难理解，对于十位，有10到19共10个1，共有301个百位以上不为0的情况，最后加上百位以上都是0的情况，则为 （301+1）* 10。</p>
+<p>至于代码按规律如何实现，暂时没有思考</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/28/求解1到n中1的个数/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-反转字符串" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -900,639 +1385,9 @@
 
 
   
-    <article id="post-Java-wait，notify和notifyAll使用分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">Java wait，notify和notifyAll使用分析</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/21/Java-wait，notify和notifyAll使用分析/" class="archive-article-date">
-  	<time datetime="2017-07-21T05:00:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>提起多线程想当然的就会想到<code>synchronized</code> 。但是<code>synchronized</code>只能用于线程同步，如果是线程交替执行(生产者/消费者)，<code>synchronized</code>也无能为力了。这时wait，notify和notifyAll派上用场了。</p>
-<h1 id="0x01-它们只是Object里的方法"><a href="#0x01-它们只是Object里的方法" class="headerlink" title="0x01 它们只是Object里的方法"></a>0x01 它们只是Object里的方法</h1><p>点开源码发现这三个方法只是object里面的方法，和多线程有神马关系呢？我相信不止我一个人曾经有过这个疑问。</p>
-<p>不只是object里的方法，而且还都是native方法。这是Java有意为之。因为Java设计之初就是要每个对象都有一个监控锁(Monitor)。而wait，notify和notifyAll三个方法也必须要在当前线程已经持有监控锁状态下才能执行，否则就会报<code>java.lang.IllegalMonitorStateException</code>。</p>
-<h1 id="0x02-怎么知道线程是否持有状态锁"><a href="#0x02-怎么知道线程是否持有状态锁" class="headerlink" title="0x02 怎么知道线程是否持有状态锁"></a>0x02 怎么知道线程是否持有状态锁</h1><p>线程同步原理就是利用了锁的互斥，所以在<code>synchronized</code>代码块内能确定是持有锁的。也就是说wait，notify和notifyAll方法需要在<code>synchronized</code>代码块内使用。</p>
-<p>具体来说有三种方式：</p>
-<ul>
-<li><p>同步对象方法持有锁</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sync_1</span><span class="params">()</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>同步静态方法持有锁</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sync_2</span><span class="params">()</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>同步代码块持有锁</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">sync_3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span>(lock)&#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h1 id="0x03-三个方法都有什么用"><a href="#0x03-三个方法都有什么用" class="headerlink" title="0x03 三个方法都有什么用"></a>0x03 三个方法都有什么用</h1><ul>
-<li><p>wait后会让当前线程处于阻塞状态</p>
-<p>能调用wait是因为当前线程持有Monitor，但是调用wait后，当前线程会释放锁，给予其他线程执行的机会。</p>
-</li>
-<li><p>notify会唤醒一个因为该对象阻塞的线程</p>
-<p>同样notify能正常调用是因为当前线程持有锁，当notify执行后会唤醒其他阻塞线程，但是那些阻塞线程并不会立即执行，因为Monitor被notify线程持有。被唤醒的线程要等<code>synchronized</code>代码块执行完毕释放Monitor后才能执行。</p>
-</li>
-<li><p>notifyAll会唤醒所有因为该对象阻塞的线程</p>
-<p>同notify。</p>
-</li>
-</ul>
-<h1 id="0x04-使用示例"><a href="#0x04-使用示例" class="headerlink" title="0x04 使用示例"></a>0x04 使用示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"start-t1"</span>);</div><div class="line">			<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					System.out.println(<span class="string">"t1等待唤醒"</span>);</div><div class="line">					lock.wait();</div><div class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				System.out.println(<span class="string">"t1被唤醒持有锁"</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line"></div><div class="line">	Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"start-t2"</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">3000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e1) &#123;</div><div class="line">				e1.printStackTrace();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">				lock.notify();<span class="comment">// 唤醒</span></div><div class="line">				System.out.println(<span class="string">"t2持有锁，唤醒t1"</span>);</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					Thread.currentThread().sleep(<span class="number">3000</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				System.out.println(<span class="string">"t2休眠3s"</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	t1.start();</div><div class="line">	t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>执行结果如下：</p>
-<p>start-t2<br>start-t1<br>t1等待唤醒<br>t2持有锁，唤醒t1<br>t2休眠3s<br>t1被唤醒持有锁</p>
-<p>在t2中调用notify唤醒t1后，t2又休眠了3s钟，期间t1仍然没有执行，可见确实如上所说，唤醒的线程要在notify线程释放Monitor后才能执行。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/多线程/" class="article-tag-list-link color4">多线程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">浅谈Android性能优化系列(1)之安装包大小优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/" class="archive-article-date">
-  	<time datetime="2017-07-21T03:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！</p>
-<p>这样来说吧，优化有多方面好处的：</p>
-<p>①节省用户流量</p>
-<p>②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少</p>
-<p>③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。</p>
-<p>所以，安装包优化还是有必要的。</p>
-<h1 id="0x01-安装包构成"><a href="#0x01-安装包构成" class="headerlink" title="0x01 安装包构成"></a>0x01 安装包构成</h1><p>要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：</p>
-<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png" alt="安装包构成"></p>
-<p>目录中com和org两个文件夹是第三方包信息，不用管着两个。</p>
-<ul>
-<li>assets可以存放资源和配置等各种文件，但是这里的资源文件不会像res中那样生成ID，而是通过AssetManager获取</li>
-<li>dex是Java文件编程成class文件后又经过虚拟机优化压缩形成的</li>
-<li>lib中存放native类库，根据不同CPU架构有四种类型：armeabi，armeabi-v7a，x86，mips。</li>
-<li>META-INF保存了app签名信息</li>
-<li>res中存放了资源文件</li>
-<li>resources.arsc 记录资源文件和资源ID映射。可以根据ID查找资源</li>
-<li>AndroidManifest.xml是app配置文件注册四大组件，声明权限等。</li>
-</ul>
-<p>知道了各个部分作用就大概知道了该从哪方面入手了：代码和资源，因为包中这两个部分占了很大一部分。</p>
-<h1 id="0x02-代码优化"><a href="#0x02-代码优化" class="headerlink" title="0x02 代码优化"></a>0x02 代码优化</h1><p>代码优化其实包含了Java代码和Native代码，但是因为Native代码涉及了C和C++，这里不做阐述，但是说下lib库还是有必要的</p>
-<h2 id="lib库"><a href="#lib库" class="headerlink" title="lib库"></a>lib库</h2><p>根据cpu架构lib中分为四种类型，但是目前大部分移动设备都是基于arm和arm-v7a的。x86和mips较少。而且据说x86兼容arm指令集，所以适配库优先考虑arm和arm-v7a两种即可。</p>
-<h2 id="Java代码优化：使用ProGuard代码混淆"><a href="#Java代码优化：使用ProGuard代码混淆" class="headerlink" title="Java代码优化：使用ProGuard代码混淆"></a>Java代码优化：使用ProGuard代码混淆</h2><p>ProGuard具有压缩(移除无效类、方法、属性)、优化、混淆功能。</p>
-<ul>
-<li><p>开启混淆</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">    release &#123;</div><div class="line">        minifyEnabled <span class="literal">true</span><span class="comment">//开启混淆</span></div><div class="line">        proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span> <span class="comment">//混淆文件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>压缩</p>
-<p>压缩功能是默认开启的，如果对某个或某些文件不想压缩可以使用：</p>
-<p><code>-dontshrink class * extends android.app.Activity</code>。</p>
-</li>
-<li><p>优化</p>
-<p>优化optimization默认开启，如果不开启可以使用：</p>
-<p><code>-dontoptimize</code>。一些相对复杂的方法时，压缩后可能会抛出errors，这时可以不压缩。</p>
-</li>
-<li><p>混淆</p>
-<p>混淆也是默认开启,如果对某些文件不想混淆可以使用：</p>
-<p><code>-dontobfuscate</code>。</p>
-</li>
-<li><p>保留</p>
-<p>如果想保留某些类、成员等不被混淆可以使用：</p>
-<p><code>-kepp</code>。</p>
-<p>​</p>
-<p>关于proguard更多使用方法可参考：</p>
-<p><a href="http://hanhailong.com/2015/12/28/Android%E8%BF%9B%E9%98%B6%E4%B9%8BProGuard%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/" target="_blank" rel="external">Android进阶之ProGuard代码混淆</a></p>
-<p><a href="https://my.oschina.net/u/659658/blog/71976" target="_blank" rel="external">Jean同学的Proguard私房物语</a></p>
-<p>​</p>
-</li>
-</ul>
-<h1 id="0x03-资源优化"><a href="#0x03-资源优化" class="headerlink" title="0x03 资源优化"></a>0x03 资源优化</h1><p>这里的资源优化主要是Res资源。</p>
-<h2 id="删除无用资源"><a href="#删除无用资源" class="headerlink" title="删除无用资源"></a>删除无用资源</h2><p>因为需求变更，版本更新等因素，很多研发只是一味的把新的资源文件让res下面扔，却没哟及时的把不用的文件给清理掉，长此以往导致res越来越臃肿。</p>
-<p>res资源的定时清理是很有必要的，但是资源那么多如何快速清理呢？</p>
-<p>Android提供了非常好用的工具Lint快速检测res中未使用的资源并给出提示。</p>
-<p>运行Analyze—&gt;Run Inspection By Name ，弹窗输入：</p>
-<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint.png" alt="lint"></p>
-<p>执行结果如下：</p>
-<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png" alt="lint_result"></p>
-<p>其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。</p>
-<h2 id="资源图片最少化"><a href="#资源图片最少化" class="headerlink" title="资源图片最少化"></a>资源图片最少化</h2><p>这里最少化有2个参考原则：</p>
-<p>①简单的图片shape画</p>
-<p>②多状态的图片filter画</p>
-<p>下面分别说说这两个原则都是什么意思</p>
-<ul>
-<li><p>简单的图片shape画</p>
-<p>这里的简单是图形简单，颜色简单，比如矩形、圆角等纯色能用shape方便绘制出来的。</p>
-</li>
-<li><p>多状态的图片filter画</p>
-<p>这里的filter是colorFilter。</p>
-<p>比如一些按钮都有默认背景色和选中背景色。这时设计一般会提供两套图片，如果使用colorFilter，我们只要一套就可以了。</p>
-</li>
-</ul>
-<h2 id="图片再压缩"><a href="#图片再压缩" class="headerlink" title="图片再压缩"></a>图片再压缩</h2><p>在app打包时，aapt会对图片进行压缩处理，但是这种压缩比较有限。因此我们可以再拿到设计给的图片后，使用一些工具进行二次压缩，比如Zopfli，这时谷歌开源项目。再比如PNGoo。</p>
-<h1 id="0x04-其他优化"><a href="#0x04-其他优化" class="headerlink" title="0x04 其他优化"></a>0x04 其他优化</h1><ul>
-<li><p>使用webp代替png</p>
-<p>webp从4.0开始支持，但是这时不支持透明度。较好地支持从4.2.2开始。</p>
-</li>
-<li><p>精简第三方库</p>
-<p>很多时候可能只需要第三方库的一部分功能，这时可以根据公司业务需求进行精简，这样会有个问题就是后期的库版本更新会是个问题。</p>
-</li>
-<li><p>插件化</p>
-<p>把一些使用率不高的业务模块再需要的时候从服务器下载，动态加载。</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/性能优化/" class="article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-用Python提取excel中有用数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/21/用Python提取excel中有用数据/">用Python提取excel中有用数据</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/21/用Python提取excel中有用数据/" class="archive-article-date">
-  	<time datetime="2017-07-21T02:06:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。</p>
-<h1 id="0x01-第三方模块引入"><a href="#0x01-第三方模块引入" class="headerlink" title="0x01 第三方模块引入"></a>0x01 第三方模块引入</h1><p>在Python中</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel</span></div><div class="line"><span class="comment"># 针对 03版excel（xls结尾的），我们可以使用xlrd读，xlwt包来写</span></div><div class="line"><span class="comment"># 针对 doc文档，我们可以使用docx操作</span></div></pre></td></tr></table></figure>
-<p>知道需要哪些模块了，接下来就是安装所需模块。</p>
-<p>网上很多都是先下载包，解压后本地执行<code>python setup.py install</code>。这显得很麻烦，我直接使用pip命令进行安装了。终端执行<code>pip install xlrd</code>，同样使用该方式安装其他所需库即可。</p>
-<blockquote>
-<p>无须下载，简单快捷。</p>
-</blockquote>
-<h1 id="0x02-开始编程"><a href="#0x02-开始编程" class="headerlink" title="0x02 开始编程"></a>0x02 开始编程</h1><h2 id="创建项目并把excel拷贝到项目根目录"><a href="#创建项目并把excel拷贝到项目根目录" class="headerlink" title="创建项目并把excel拷贝到项目根目录"></a>创建项目并把excel拷贝到项目根目录</h2><p><img src="/2017/07/21/用Python提取excel中有用数据/创建项目.png" alt="创建项目"></p>
-<h2 id="导入刚才安装的模块"><a href="#导入刚才安装的模块" class="headerlink" title="导入刚才安装的模块"></a>导入刚才安装的模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> xlrd</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> docx</div></pre></td></tr></table></figure>
-<p><code>threading</code>是Python自带的线程模块</p>
-<h2 id="读取excel"><a href="#读取excel" class="headerlink" title="读取excel"></a>读取excel</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_xls</span><span class="params">(path, find=<span class="string">''</span>, row=<span class="number">-1</span>, col=<span class="number">-1</span>)</span>:</span></div><div class="line">    <span class="string">"""接收xls文件并读取指定内容返回</span></div><div class="line">    *path* 接收xls路径</div><div class="line">    *find* 要查找的内容，为列表格式</div><div class="line">    *row* 行数，-1说明没有指定，查找所有行</div><div class="line">    *col* 列数，-1说明没有指定，查找所有列</div><div class="line">    """</div><div class="line">    xls = xlrd.open_workbook(path)</div><div class="line">    names = xls.sheet_names()</div><div class="line">    print(names)</div><div class="line">    sheet = xls.sheet_by_name(names[<span class="number">0</span>])</div><div class="line">    row = int(row)</div><div class="line">    col = int(col)</div><div class="line">    python_books = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, sheet.nrows):</div><div class="line">        <span class="keyword">if</span> <span class="number">-1</span> != row:  <span class="comment"># 指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    <span class="keyword">for</span> j <span class="keyword">in</span> sheet.ncols:</div><div class="line">                        <span class="keyword">if</span> j == col:</div><div class="line">                            text = sheet.cell_value(i, j)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    text = sheet.row_values(i)</div><div class="line">        <span class="keyword">else</span>:  <span class="comment"># 没指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                text = sheet.cell_value(i, col)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                text = sheet.cell_value(i, <span class="number">4</span>)</div><div class="line">        <span class="keyword">if</span> find != <span class="string">""</span>:</div><div class="line">            <span class="keyword">for</span> content <span class="keyword">in</span> find:</div><div class="line">                <span class="keyword">if</span> content <span class="keyword">in</span> text:</div><div class="line">                    print(text + <span class="string">'\n'</span>)</div><div class="line">                    python_books.append(text)</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(text + <span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> python_books</div></pre></td></tr></table></figure>
-<p>虽然只是个简单的数据提取，但是为了提高程序灵活性，文件路径、行列及搜索值仍然通过传参方式。</p>
-<p><code>read_xls</code>实现了读取excel中指定的相关内容到列表，下面要实现存储内容到doc文档。</p>
-<h2 id="保存内容到doc文档"><a href="#保存内容到doc文档" class="headerlink" title="保存内容到doc文档"></a>保存内容到doc文档</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_doc</span><span class="params">(name, contents, create_new=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    *param name* doc文档名称</div><div class="line">    *param contents* 文档内容，为列表格式</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc = docx.Document()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc = docx.Document(name)</div><div class="line">    <span class="keyword">for</span> pb <span class="keyword">in</span> contents:</div><div class="line">        doc.add_paragraph(pb)</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc.save(name + <span class="string">'.docx'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc.save(name)</div></pre></td></tr></table></figure>
-<p>该方法实现的是，如果create_new为true则直接创建一个doc文档存储内容，并将文档命名为name。如果为false则直接打开一个名称为name的文档进行存储。</p>
-<p>因为这些都是IO操作，应该在工作线程执行。但是这是两个独立的方法，所以还需进行一次包装。</p>
-<h2 id="2个方法封装"><a href="#2个方法封装" class="headerlink" title="2个方法封装"></a>2个方法封装</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(path, find, row, col)</span>:</span></div><div class="line">    <span class="string">"""包装类，封装读取xls文件方法和保存到doc文档方法</span></div><div class="line">    *param path*</div><div class="line">    *param find*</div><div class="line">    *param row*</div><div class="line">    *param col*</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    python_books = read_xls(path, find, row, col)</div><div class="line">    save_doc(name=path, contents=python_books, create_new=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<h2 id="开启2个工作线程读取并存储内容"><a href="#开启2个工作线程读取并存储内容" class="headerlink" title="开启2个工作线程读取并存储内容"></a>开启2个工作线程读取并存储内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">find = [<span class="string">'python'</span>, <span class="string">'PYTHON'</span>, <span class="string">'Python'</span>]</div><div class="line">thread1 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook1.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread1.start()</div><div class="line"></div><div class="line">thread2 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook2.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread2.start()</div></pre></td></tr></table></figure>
-<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>执行后会在项目根目录生成2个对应的doc文档：</p>
-<p><img src="/2017/07/21/用Python提取excel中有用数据/项目结果.png" alt="项目结果"></p>
-<p>打开doc文档看看具体内容吧：</p>
-<p><img src="/2017/07/21/用Python提取excel中有用数据/doc文档内容.png" alt="doc文档内容"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">excel</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">xlrd</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/excel/" class="article-tag-list-link color1">excel</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/xlrd/" class="article-tag-list-link color5">xlrd</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/21/用Python提取excel中有用数据/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">浅谈Android性能优化系列(0)之为什么需要性能优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/" class="archive-article-date">
-  	<time datetime="2017-07-19T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
-<p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
-<p>为什么性能优化是我们绕不开的话题呢？</p>
-<h1 id="0x01-为什么需要性能优化"><a href="#0x01-为什么需要性能优化" class="headerlink" title="0x01 为什么需要性能优化"></a>0x01 为什么需要性能优化</h1><p>关于为什么需要性能优化这个问题，我想很多人都会即时作答：“为用户提供更好的体验”。</p>
-<p>既然说到为用户提供更好体验，设想一下，假如用户并不在意所谓的体验，只要功能完成就行了。那么这时公司还会考虑做性能优化吗？</p>
-<p>我想大多数公司都不会去做”这样一件无意义的事“了。公司是以盈利为目的，怎么会在用户不care的点上花费大量人力物力财力呢？</p>
-<p>然而现实恰恰相反的，随着科技发展，用户对产品体验要求越来越高，加上当前产品同质化严重，特色功能只能吸引用户，而良好的用户体验才是留住用户的关键。</p>
-<h1 id="0x02-从哪些方面入手性能优化"><a href="#0x02-从哪些方面入手性能优化" class="headerlink" title="0x02 从哪些方面入手性能优化"></a>0x02 从哪些方面入手性能优化</h1><p>只说性能优化太过笼统，为了提供良好用户体验，应该从哪些方面着手呢？</p>
-<p>换句话说，在产品体验上，用户会通过感知哪些方面来评价产品好坏？这样一说答案就很明显了，就是平常我们自己使用程序都会唠叨的那几个方面：点几下就崩溃、玩一会就没电、没多久流量就超了、打开页面很卡、安装包太大、占了300兆内存~</p>
-<blockquote>
-<p>把上面几个方面归纳下就是：程序稳定性优化、耗电检测优化、网络优化、UI渲染优化、安装包优化和内存优化 6个方面。</p>
-</blockquote>
-<h1 id="0x03-结束语"><a href="#0x03-结束语" class="headerlink" title="0x03 结束语"></a>0x03 结束语</h1><p>这是本系列开篇，从为什么要性能优化发散到优化入手的6各方面，为后续章节做铺垫。</p>
-<p>目前预计未来会写6篇关于具体方面优化和6篇相关方面工具使用，共计12篇。希望通过这12篇让自己当然希望也能帮助别人对Android整体性能优化有个了解，最终形成自己的知识脉络。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-为什么相对布局比线性布局性能低" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/为什么相对布局比线性布局性能低/">为什么相对布局比线性布局性能低</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/为什么相对布局比线性布局性能低/" class="archive-article-date">
-  	<time datetime="2017-07-19T02:53:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。</p>
-<p>经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。</p>
-<h1 id="0x01-View绘制流程简述"><a href="#0x01-View绘制流程简述" class="headerlink" title="0x01 View绘制流程简述"></a>0x01 View绘制流程简述</h1><p>看过源码的应该知道，View的绘制是从<code>ViewRootImpl.performTraversals()</code>方法开始的。</p>
-<p>先后经历<code>performMeasure</code>、<code>performLayout</code>和<code>performDraw</code>三个阶段，就是常说的测量、布局和绘制。</p>
-<ul>
-<li>performMeasure会调用根View的measure，进而调用onMeasure方法</li>
-<li>performLayout调用根View的layout，进而调用onLayout方法</li>
-<li>performDraw调用根View的draw，进而调用onDraw方法</li>
-</ul>
-<p>鉴于两个都是ViewGroup，所以可以忽略onDraw</p>
-<p>有对比才有伤害，要比较这两个布局性能，要先看看这两个布局分别在onMeasure，onLayout都做了什么。</p>
-<h1 id="0x02-LinearLayout分析"><a href="#0x02-LinearLayout分析" class="headerlink" title="0x02 LinearLayout分析"></a>0x02 LinearLayout分析</h1><p>LinearLayout的onMeasure方法内容很简单，就是判断方向然后分别调用:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (mOrientation == VERTICAL) &#123;</div><div class="line">         measureVertical(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         measureHorizontal(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>那就随便看看<code>measureVertical</code>方法里面干了些什么：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See how tall everyone is. Also remember max width.</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">    <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</div><div class="line">        mTotalLength += measureNullChild(i);</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child.getVisibility() == View.GONE) &#123;</div><div class="line">       i += getChildrenSkipCount(child, i);</div><div class="line">       <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (hasDividerBeforeChildAt(i)) &#123;</div><div class="line">        mTotalLength += mDividerHeight;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">    totalWeight += lp.weight;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY &amp;&amp; lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// Optimization: don't bother measuring children who are going to use</span></div><div class="line">        <span class="comment">// leftover space. These views will get measured again down below if</span></div><div class="line">        <span class="comment">// there is any leftover space.</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + lp.topMargin + lp.bottomMargin);</div><div class="line">        skippedMeasure = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">int</span> oldHeight = Integer.MIN_VALUE;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// heightMode is either UNSPECIFIED or AT_MOST, and this</span></div><div class="line">            <span class="comment">// child wanted to stretch to fill available space.</span></div><div class="line">            <span class="comment">// Translate that to WRAP_CONTENT so that it does not end up</span></div><div class="line">            <span class="comment">// with a height of 0</span></div><div class="line">            oldHeight = <span class="number">0</span>;</div><div class="line">            lp.height = LayoutParams.WRAP_CONTENT;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Determine how big this child would like to be. If this or</span></div><div class="line">        <span class="comment">// previous children have given a weight, then we allow it to</span></div><div class="line">        <span class="comment">// use all available space (and we will shrink things later</span></div><div class="line">        <span class="comment">// if needed).</span></div><div class="line">        measureChildBeforeLayout(</div><div class="line">               child, i, widthMeasureSpec, <span class="number">0</span>, heightMeasureSpec,</div><div class="line">               totalWeight == <span class="number">0</span> ? mTotalLength : <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldHeight != Integer.MIN_VALUE) &#123;</div><div class="line">           lp.height = oldHeight;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> childHeight = child.getMeasuredHeight();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + childHeight + lp.topMargin +</div><div class="line">               lp.bottomMargin + getNextLocationOffset(child));</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (useLargestChild) &#123;</div><div class="line">            largestChildHeight = Math.max(childHeight, largestChildHeight);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * If applicable, compute the additional offset to the child's baseline</div><div class="line">     * we'll need later when asked &#123;<span class="doctag">@link</span> #getBaseline&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> ((baselineChildIndex &gt;= <span class="number">0</span>) &amp;&amp; (baselineChildIndex == i + <span class="number">1</span>)) &#123;</div><div class="line">       mBaselineChildTop = mTotalLength;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// if we are trying to use a child index for our baseline, the above</span></div><div class="line">    <span class="comment">// book keeping only works if there are no children above it with</span></div><div class="line">    <span class="comment">// weight.  fail fast to aid the developer.</span></div><div class="line">    <span class="keyword">if</span> (i &lt; baselineChildIndex &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"A child of LinearLayout with index "</span></div><div class="line">                + <span class="string">"less than mBaselineAlignedChildIndex has weight &gt; 0, which "</span></div><div class="line">                + <span class="string">"won't work.  Either remove the weight, or don't set "</span></div><div class="line">                + <span class="string">"mBaselineAlignedChildIndex."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> matchWidthLocally = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">if</span> (widthMode != MeasureSpec.EXACTLY &amp;&amp; lp.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">        <span class="comment">// The width of the linear layout will scale, and at least one</span></div><div class="line">        <span class="comment">// child said it wanted to match our width. Set a flag</span></div><div class="line">        <span class="comment">// indicating that we need to remeasure at least that view when</span></div><div class="line">        <span class="comment">// we know our width.</span></div><div class="line">        matchWidth = <span class="keyword">true</span>;</div><div class="line">        matchWidthLocally = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> margin = lp.leftMargin + lp.rightMargin;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> measuredWidth = child.getMeasuredWidth() + margin;</div><div class="line">    maxWidth = Math.max(maxWidth, measuredWidth);</div><div class="line">    childState = combineMeasuredStates(childState, child.getMeasuredState());</div><div class="line"></div><div class="line">    allFillParent = allFillParent &amp;&amp; lp.width == LayoutParams.MATCH_PARENT;</div><div class="line">    <span class="keyword">if</span> (lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * Widths of weighted Views are bogus if we end up</div><div class="line">         * remeasuring, so keep them separate.</div><div class="line">         */</div><div class="line">        weightedMaxWidth = Math.max(weightedMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alternativeMaxWidth = Math.max(alternativeMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    i += getChildrenSkipCount(child, i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个方法主要是for循环中通过<code>measureChildBeforeLayout</code>测量子View高度，把每次测量的高度都累加到<code>mTotalLength</code>。</p>
-<h1 id="0x03-RelativeLayout分析"><a href="#0x03-RelativeLayout分析" class="headerlink" title="0x03 RelativeLayout分析"></a>0x03 RelativeLayout分析</h1><p>看看RelativeLayout的onMeasure方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">View[] views = mSortedHorizontalChildren;</div><div class="line"> <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">         applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">         measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">             offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> views = mSortedVerticalChildren;</div><div class="line"> count = views.length;</div><div class="line"> <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         </div><div class="line">         applyVerticalSizeRules(params, myHeight);</div><div class="line">         measureChild(child, params, myWidth, myHeight);</div><div class="line">         <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">             offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">             <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, params.mRight);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">             <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                 height = Math.max(height, params.mBottom);</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">             left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">             top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">             right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">             bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>第一个for循环中<code>measureChildHorizontal</code>方法实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">           params.mRight, params.width,</div><div class="line">           params.leftMargin, params.rightMargin,</div><div class="line">           mPaddingLeft, mPaddingRight,</div><div class="line">           myWidth);</div><div class="line">   <span class="keyword">int</span> maxHeight = myHeight;</div><div class="line">   <span class="keyword">if</span> (mMeasureVerticalWithPaddingMargin) &#123;</div><div class="line">       maxHeight = Math.max(<span class="number">0</span>, myHeight - mPaddingTop - mPaddingBottom -</div><div class="line">               params.topMargin - params.bottomMargin);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">int</span> childHeightMeasureSpec;</div><div class="line">   <span class="keyword">if</span> (myHeight &lt; <span class="number">0</span> &amp;&amp; !mAllowBrokenMeasureSpecs) &#123;</div><div class="line">       <span class="keyword">if</span> (params.height &gt;= <span class="number">0</span>) &#123;</div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(</div><div class="line">                   params.height, MeasureSpec.EXACTLY);</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="comment">// Negative values in a mySize/myWidth/myWidth value in RelativeLayout measurement</span></div><div class="line">           <span class="comment">// is code for, "we got an unspecified mode in the RelativeLayout's measurespec."</span></div><div class="line">           <span class="comment">// Carry it forward.</span></div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">0</span>, MeasureSpec.UNSPECIFIED);</div><div class="line">       &#125;</div><div class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span> (params.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY);</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);</div><div class="line">   &#125;</div><div class="line">   child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
-<p>第二个for循环中<code>measureChild</code>实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">                params.mRight, params.width,</div><div class="line">                params.leftMargin, params.rightMargin,</div><div class="line">                mPaddingLeft, mPaddingRight,</div><div class="line">                myWidth);</div><div class="line">        <span class="keyword">int</span> childHeightMeasureSpec = getChildMeasureSpec(params.mTop,</div><div class="line">                params.mBottom, params.height,</div><div class="line">                params.topMargin, params.bottomMargin,</div><div class="line">                mPaddingTop, mPaddingBottom,</div><div class="line">                myHeight);</div><div class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
-<p>两个for循环中都执行了<code>child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</code>这意味着子View测量执行了两遍。</p>
-<p>为什么RelativeLayout要测量两遍？</p>
-<blockquote>
-<p>因为RelativeLayout并不像LinearLayout那样有着方向单一性。RelativeLayout的灵活性就在于允许纵横双向的，这样view直接不仅横向依赖，还有纵向依赖，每个方向都要测量一遍。导致性能略差。</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/为什么相对布局比线性布局性能低/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
     </nav>
   
 
