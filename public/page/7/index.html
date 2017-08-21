@@ -180,6 +180,771 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-数学归纳法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/16/数学归纳法/">数学归纳法</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/16/数学归纳法/" class="archive-article-date">
+  	<time datetime="2017-05-16T06:08:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月16日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="什么是数学归纳法"><a href="#什么是数学归纳法" class="headerlink" title="什么是数学归纳法"></a>什么是数学归纳法</h1><p>数学归纳法就是证明一个命题在自然数范围内成立</p>
+<p>这里命题也可以当成是断言。</p>
+<p>比如断言自然数n，nx2为偶数。</p>
+<h1 id="求储蓄罐里的钱"><a href="#求储蓄罐里的钱" class="headerlink" title="求储蓄罐里的钱"></a>求储蓄罐里的钱</h1><p>有一个空储蓄罐，</p>
+<p>第一天，往里面存1元钱；</p>
+<p>第二天，往里面存2元钱；</p>
+<p>第三天，往里面存3元钱；</p>
+<p>第四天，往里面存4元钱；</p>
+<p>。</p>
+<p>。</p>
+<p>。</p>
+<p>每天都存钱，第一百天时储蓄罐里一共有多少钱？</p>
+<p>这个问题如何求解呢？其实最直接的方法就是从1开始加，一直加到100，但是这种暴力求解效率极差。</p>
+<p> 德国9岁孩子高斯也遇到了同样问题，但是他却马上得出了答案。</p>
+<p>他是这么考虑的：</p>
+<p>1+2+3…+100顺序计算结果和100+99+98…+1这样的逆序结果是一样的。</p>
+<p>这样的话，顺序的1+逆序的100，顺序的2+逆序的99，顺序的3+逆序的98，这样最后结果是100个101相加 = 100x101 = 10100 。因为逆序和顺序相等，所以这个和是2倍的顺序，所以顺序的和为10100/2 =5050。最终得出1加到100的和为5050。</p>
+<p>高斯据此得出以下公式：</p>
+<p>1+2+3…+100 = （100+1）x100/2；</p>
+<p>当然上面只是求1到100的和，那如果要求1到1000，到10000呢，公式是不是仍然成立？</p>
+<p>高斯断言：对于任意自然数n：1+2+3…+n = （n+1)xn/2都成立；</p>
+<p>接下来要证明高斯的断言是否成立。</p>
+<h1 id="数学归纳法证明"><a href="#数学归纳法证明" class="headerlink" title="数学归纳法证明"></a>数学归纳法证明</h1><p>最简单的数学归纳法是证明当n等于任意一个自然数时断言成立，证明包括两步：</p>
+<p>1.证明n=1时，断言p(1)成立</p>
+<p>2.证明n=k为任何自然数时，若p(k)成立，则p(k+1)也成立。</p>
+<p>由此，关于高斯公式的证明如下：</p>
+<p>1.当n=1时， 1 = （1+1）x1/2 = 1，高斯公式成立；</p>
+<p>2.当n=k时，1+2+…+k = (k+1)xk/2 成立;</p>
+<p>3.当n=k+1时，证明1+2+…+k+(k+1) = ((k+1)+1)x(k+1)/2成立；</p>
+<p>因为2成立，所以3中公式代入后：</p>
+<p> (k+1)xk/2+（k+1） = ((k+1)+1)x(k+1)/2</p>
+<p>（k+1）x（k+2）/2 =  （k+1）x（k+2）/2 </p>
+<p>左右两边相等，</p>
+<p>得出结论：对于自然数n，断言p(n)都成立。</p>
+<h1 id="为什么数学归纳法只证明两步就成立了"><a href="#为什么数学归纳法只证明两步就成立了" class="headerlink" title="为什么数学归纳法只证明两步就成立了"></a>为什么数学归纳法只证明两步就成立了</h1><p>1.证明断言p(1)成立，也就是n=1成立；</p>
+<p>2.通过p(m)成立推导出p(m+1)也成立。</p>
+<p>3.根据上面结论，p(1+1)也就是p(2)成立；</p>
+<p>4.p(2+1)也就是p(3)成立；</p>
+<p>5.p(3+1)也就是p(4)成立；</p>
+<p>6.循环推导，最终推导出值为n时p(n)成立。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">程序员的数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/程序员的数学/" class="article-tag-list-link color2">程序员的数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/16/数学归纳法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-为什么每一个IT人员应该有一把人体工学电脑椅" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/">为什么每一个IT人员应该有一把人体工学电脑椅</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/" class="archive-article-date">
+  	<time datetime="2017-05-15T09:32:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月15日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>工欲善其事，必先利其器。可能也有强迫症的原因，上班时总是会想尽办法提高工作效率，同时给自己创造一个愉悦的工作状态。对于能提高效率的硬件因素自然不能放过。什么罗技鼠标、机械键盘宿舍公司各一套。为了方便显示器调整，又买了乐哥支架，这样能随时调整角度，避免一个姿势容易疲劳。但是最近又出现了一个问题：一个姿势坐半个小时就浑身不自在，脖子僵硬大脑供血不足，严重时候还有恶心呕吐现象。其实不用说也猜到了—颈椎病，如果置之不理以后腰椎可能也会出现病症。毕竟这是很多IT从业人员的通病，如何缓解病况才不致于影响工作效率呢？个人感觉一把人体工学电脑椅是必须的。</p>
+<h1 id="什么是人体工学电脑椅"><a href="#什么是人体工学电脑椅" class="headerlink" title="什么是人体工学电脑椅"></a>什么是人体工学电脑椅</h1><p>看下<a href="http://baike.baidu.com/link?url=DtpSA5XKbKnq0i8zuufuO3XadcstS54-xa_Yy1tgbhl2P962gqvxcBdlTMD9X38dAhw9THJrNJ4LvH3v_LrY34E1ENL3-2sLwtmJapNyawT3y9q8Q6rki5jdqYXnD9XahJADbgkPqYscZxNB0ImSqnqI62tEybnCUKPugI6sPRi" target="_blank" rel="external">百度百科</a> 对人体工学电脑椅的定义：人体工学电脑椅也称人体工学椅、人体工学办公椅，它是以“人体工程学”理论为基础，通过对人们在使用电脑椅的过程中的各个数据进行统计汇总，并根据最终统计的数据而设计研发的电脑椅。</p>
+<p>我们日常坐的椅子都是批量生产，都有固定的规格，并不能适应所有人，所以人体工学椅子和普通椅子一个明显区别就是：可调节！可调节的手托、可调节的坐垫高度、可调节的坐垫前后深度、可调节的枕托、可调节的背靠、可调节的腰托等。</p>
+<h1 id="一把质量差的电脑椅"><a href="#一把质量差的电脑椅" class="headerlink" title="一把质量差的电脑椅"></a>一把质量差的电脑椅</h1><p>质量差的电脑椅能有咋的，顶多坏了摔一跤？还是看图最直观：</p>
+<p><img src="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/1918606_151944_1.gif" alt="1918606_151944_1"></p>
+<p>上图的爆炸是气压棒爆炸引起的。</p>
+<p>电脑椅升降功能大都是靠气压棒来实现的。那么什么是气压棒呢？</p>
+<p>看下<a href="http://baike.baidu.com/item/%E6%B0%94%E5%8E%8B%E6%A3%92" target="_blank" rel="external">百度百科</a> 对气压棒的定义，其实说白了气压棒就是靠对棒内气体压缩和释放来达到升降电脑椅的。正品气压棒里面是高纯度氮气填充，并不会爆炸，而一些无良厂商为了节省成本，往往会以价格更为低廉的氧气作为填充物。氧气易燃，遇明火极易产生爆炸，酿成不可挽回的事故。</p>
+<h1 id="一个气压棒引起的事故"><a href="#一个气压棒引起的事故" class="headerlink" title="一个气压棒引起的事故"></a>一个气压棒引起的事故</h1><ul>
+<li><p>1.2007年4月20日晚，浙江省舟山市定海区，一位娄女士坐的椅子发生爆炸，座椅被炸穿，娄女士穿的裤子被炸了个大洞，硬塑料、木屑、海绵、布料、密封圈等大量碎片崩进娄女士体内达十厘米。</p>
+</li>
+<li><p>2.2007年11月26日晚，烟台开发区68岁的吴老先生所坐的气压升降椅发生爆炸，臀部、腿部、直肠肛管和小肠受伤严重。</p>
+</li>
+<li><p>3.2008年3月26日晚，江西赣州市，一位林先生家中的电脑椅突然发生爆炸，林先生背上、手上等处受伤，一根大约15厘米长的小铁棍炸飞到天花板上。</p>
+</li>
+<li><p>4.2009年1月14日，山东胶州14岁少年小刚(化名)独自在家上网，在调节气压椅升降时，突然发生爆炸，顶杆从臀部顶进小刚体内，伤及多条血管，后因失血过多，抢救无效死亡。</p>
+</li>
+<li><p>5.2010.5.12晚上9点半左右，厦门湖里殿前一户出租屋传出巨响。一名女子被突然发生爆裂的升降椅击伤。升降旋转椅突然爆炸，产生的冲击力将椅子里的螺丝小垫片等零件像子弹一样从臀部射入人体内。升降椅的气压杆插入伤者的肛门。女子当场晕倒在地。所幸经过5个多小时的手术，射入体内的椅子零件全被取出，刘小姐无生命危险。</p>
+</li>
+<li><p>6.2010年5月，福建一女子因气压升降椅爆炸伤势严重当场昏迷，臀部被炸伤，直肠被撕裂了一个口子，阴道也穿了一个孔。后检查椅子的购物单据，没有任何厂名、厂址、电话之类信息。</p>
+</li>
+<li><p>7.24岁的小林坐在升降旋转椅上吹头发，椅子爆炸，螺丝钉从她肛门边上穿进去，从子宫直肠陷凹处穿出。经过手术，医生从她的体内和臀部取出大量的螺丝钉和塑料碎片。医生说，还算幸运，穿过体内的螺丝钉没有伤及重要的脏器，手术后小林已脱离生命危险。</p>
+<blockquote>
+<p>请务必一定要提醒你的家人和朋友注意：</p>
+<p>1、务必购买正规厂家生产的升降椅，切勿贪图便宜，购买劣质货。</p>
+<p>2、椅子在使用时，不要反复升降，不要滑来滑去，更不要猛地一下子坐上去。这易造成气压杆受力不均，长时间产生不均衡磨损，易爆炸。据模拟测算，爆炸会产生24个左右大气压，其威力至少能击穿6块密度板，顷刻能洞穿血肉之躯!</p>
+<p>3、如果不是专业人士，不要拆开气缸，也不要让椅子靠近太热的东西，比如烤火炉或烤箱。</p>
+<p>4、使用一段时间后，应该及时让专业人员检查，一旦发现裂痕、松动迹象，应及时维修更换。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="如何挑选人体工学电脑椅"><a href="#如何挑选人体工学电脑椅" class="headerlink" title="如何挑选人体工学电脑椅"></a>如何挑选人体工学电脑椅</h1><h2 id="价格"><a href="#价格" class="headerlink" title="价格"></a>价格</h2><p>从价格上来说，和其他商品一样，往往都是一分钱一分货，一块钱二分货。</p>
+<p>国际品牌有欧美的Herman Miller、日本的岗村，这些高端系列普遍价格过万或者近万元，当然也有三五千的，但是可选性比较少。</p>
+<p>国内品牌有ergonor、ergomax以及黑白调、西昊等。国产价位3000以上就算是高端了，譬如金豪+e、l和ergomax旗舰版。</p>
+<p>个人感觉如果要买人体工学电脑椅，还是要舍得投资的，毕竟这投资的是自己的健康。建议起步买2k-3k的。毕竟这个价位在国内属于高端，国外品牌也能买到。这个价位的各方面功能齐全，可以都体验下，为以后的挑选打下基础。</p>
+<h2 id="网布"><a href="#网布" class="headerlink" title="网布"></a>网布</h2><p>坐垫和椅背的材质有皮质、网布和海绵坐垫，我更喜欢全网布的，夏天透气性更好，但是也有个问题：如果网布质量不好，可能坐一段时间后网布就失去弹性，变得松垮。</p>
+<p>高端电脑椅网布大都进口，进口网布主要是美国matrex，韩国wintex次之，其他基本就是国产的。</p>
+<p><strong>进口网和国产网的差别：</strong></p>
+<p>价格：进口的美国Matrex网最贵，韩国Wintex网次之，国产网价格最便宜网，而且进口网涉及空运报关原因，货期长。</p>
+<p>耐用性：在厂家的垂直堕下机械测试中，进口Matrex网和Wintex网可以通过10万次强力冲击，国产网在按不同牌子在6-8万次之间会出现爆裂!</p>
+<p>材质：美国Matrex网和Wintex网材质柔软，弹力强，国产网比较硬，弹力及恢复力差。</p>
+<p>Matrex表面反光呈黏手手感，Wintex网表面反光呈光滑手感，国产网按不同牌子部分表面光滑，部分表面粗糙。</p>
+<p>据Matrex网和Wintex网国内代理商的说法，国内厂商用进口网布的并不多，内销产品基本都不会使用进口网，进口网一般都是外国客户指定要求才用的，原因在于进口网不仅更贵，而且在订购数量方面有要求，由于涉及空运报关因素，邮寄周期也比较长，这样就限制了小厂家的采购，掌柜曾经在网上看过一些网店几百产品也宣称使用Matrex网，那是不可能的，进口网，基本上只出现在2K以上的产品。</p>
+<p><strong>Matrex和wintex网布都是有吊牌的，如果商家真的采用这两种品牌，一定会拿出来当噱头显摆一番的，而不是轻描淡写的一句采用进口网布草草了事。网上那些说进口网布，但又不敢指明具体品牌的，就当时国产就行了或者不要买，毕竟涉嫌欺诈。</strong></p>
+<h2 id="气压棒"><a href="#气压棒" class="headerlink" title="气压棒"></a>气压棒</h2><p>气压棒是有分级的，目前是共有四级：普遍使用的时三级，少数所谓高端使用四级。</p>
+<p>常用气压棒品牌：国内知名的有：安徽莱特，安德福，常州巨威，安吉斯诺尔，等还有一些进口的：韩国KGS，韩国三弘，德国SUS棒，台湾MID棒等等。</p>
+<p><strong>买回来后看气压棒有没有钢印，查看钢印信息是否和商家描述一致，如果有问题即时质疑。</strong></p>
+<h2 id="底座"><a href="#底座" class="headerlink" title="底座"></a>底座</h2><p>一般来说都有底座防爆措施，但是价格越高底座用料越实，甚至是全铝合金底盘。我的2k 的gavee整个椅子70多斤重，厚重的材质更容易给人以安全感。</p>
+<p><strong>我对铝合金椅身有特殊好感，或许害怕塑料椅身不结实，也或许铝合金抛光后看起来更高端也更敦实。</strong></p>
+<p>这是我的电脑椅样式：</p>
+<p><img src="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/58f074a8N70fcfb6a.jpg" alt="58f074a8N70fcfb6a"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">职场杂谈</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/职场杂谈/" class="article-tag-list-link color5">职场杂谈</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-四个人过桥问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/11/四个人过桥问题/">四个人过桥问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/11/四个人过桥问题/" class="archive-article-date">
+  	<time datetime="2017-05-11T07:55:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月11日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>有甲乙丙丁4个人要过桥，他们都在桥一端，他们只有17分钟时间过桥。时间在晚上，过桥需要用到手电筒，而且手电筒必须来回都用到且手电筒不能扔来扔去，一次只能有2个人同时过桥。每个人走路速度不同，甲过桥需要1分钟，乙过桥需要2分钟，丙过桥需要5分钟，丁过桥需要10分钟。两个人一起走路，速度决定于走的慢的那个。请你给这四人规划合适的搭配过桥。</p>
+<p>看到这道题脑子第一想法是：5和10分钟不能分开，如果分开，这俩人就占了15分钟。然而刚让这俩一起过桥，然后就让5分钟的哥们拿着手电筒回来了~~~一脸懵逼试了好几种都没有通过。后来发现我又被自己看问题角度给局限住了，每2个人过桥后，就一直一门心思的让刚过来的2个人中的一个人送手电筒返回，其实送手电筒的这个人只要在同一岸边的就行。说到这里，答案以及开始浮出水面了：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①甲和乙一起过河，花费2分钟</td>
+<td>丙丁</td>
+<td>甲乙</td>
+</tr>
+<tr>
+<td>②甲带手电筒返回，花费1分钟</td>
+<td>甲丙丁</td>
+<td>乙</td>
+</tr>
+<tr>
+<td>③丙和丁一起过河，花费10分钟</td>
+<td>甲</td>
+<td>乙丙丁</td>
+</tr>
+<tr>
+<td>④乙带手电筒返回，花费2分钟</td>
+<td>甲乙</td>
+<td>丙丁</td>
+</tr>
+<tr>
+<td>⑤甲和乙一起过河，花费2分钟</td>
+<td></td>
+<td>甲乙丙丁</td>
+</tr>
+</tbody>
+</table>
+<p>上面5个步骤刚好四人全部过桥，花费时间17分钟，当然②中也可以由乙带手电筒返回，不过④要由甲带手电筒。这样也是17分钟，其他时间应该是大于17分钟的。</p>
+<blockquote>
+<p>其实这道题和农夫过河一样，都不难，只要看问题时，眼界要能钻进问题角落深入分析，又能抽出眼界，站在一定高度俯视问题全局。</p>
+</blockquote>
+<p>网上据说这道题在西雅图一个有名软件公司的考官面试时也出过这道题，怎么样你答对了吗？</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/11/四个人过桥问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-农夫带着狼、羊和白菜过河问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/10/农夫带着狼、羊和白菜过河问题/">农夫带着狼、羊和白菜过河问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/10/农夫带着狼、羊和白菜过河问题/" class="archive-article-date">
+  	<time datetime="2017-05-10T09:55:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一个农夫带着一只狼，一只羊和一棵白菜来到河边要过河，船只狭小，一次农夫只能带一样物品过河，如果农夫不在场，狼会吃羊，羊也会吃白菜。那么农夫如何才能过河或者证明出无解。</p>
+<p>这是一道自古有之的谜题，但是一些公司也有把这作为笔试题…</p>
+<p>看到这个题我的第一个想法就是船上系一根绳，把狼和白菜一起放船上，待漂到对岸后再用绳子拉过来，然后农夫抱着羊过河。不过这太投机取巧了啊哈哈。还是来点务实的吧：</p>
+<p>务实的想法就是要农夫一直和船一起。毕竟不能指望顺风船自动漂对岸然后狼羊白菜自动下船吧。</p>
+<p>食物链是这样的：狼&gt;羊&gt;白菜</p>
+<p>农夫只要离开，食物链就会发生吞食，所以要让食物链隔开。</p>
+<p>那么第一步做法就明白了：必须带羊过河~~</p>
+<p>我们假设A为现在所在岸边，B为目的岸边</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①农夫带着羊过河</td>
+<td>狼和白菜</td>
+<td>羊</td>
+</tr>
+<tr>
+<td>②农夫独自返回A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>③农夫带着白菜过河</td>
+<td>狼</td>
+<td>羊和白菜</td>
+</tr>
+<tr>
+<td>④农夫带着羊返回</td>
+<td>羊和狼</td>
+<td>白菜</td>
+</tr>
+<tr>
+<td>⑤农夫带着狼过河</td>
+<td>羊</td>
+<td>白菜和狼</td>
+</tr>
+<tr>
+<td>⑥农夫独自返回A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>⑦农夫带着羊过河</td>
+<td></td>
+<td>白菜、狼和羊</td>
+</tr>
+</tbody>
+</table>
+<p>其实这个解法不是唯一的。</p>
+<p>虽然第一步都是要带着羊过河，但是第三步带着白菜和带狼都是可以的。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>③农夫带着狼过河</td>
+<td>白菜</td>
+<td>羊和狼</td>
+</tr>
+<tr>
+<td>④农夫带着羊返回A</td>
+<td>白菜和羊</td>
+<td>狼</td>
+</tr>
+<tr>
+<td>⑤农夫带着白菜过河</td>
+<td>羊</td>
+<td>狼和白菜</td>
+</tr>
+<tr>
+<td>⑥农夫独自返回A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>⑦农夫带着羊过河</td>
+<td></td>
+<td>狼、白菜和羊</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/10/农夫带着狼、羊和白菜过河问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-详解设计模式之责任链模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/10/详解设计模式之责任链模式/">详解设计模式之责任链模式</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/10/详解设计模式之责任链模式/" class="archive-article-date">
+  	<time datetime="2017-05-10T04:36:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。</p>
+<h1 id="面试流程分析"><a href="#面试流程分析" class="headerlink" title="面试流程分析"></a>面试流程分析</h1><p>作为技术人员离职再就业少不了要面试的，那么我们就拿面试流程来细说。假设面试流程分为三步：组长面试，CTO面试，HR终面，一共三面。</p>
+<h2 id="不考虑其他任何方面的优化，一个人的面试如何实现？"><a href="#不考虑其他任何方面的优化，一个人的面试如何实现？" class="headerlink" title="不考虑其他任何方面的优化，一个人的面试如何实现？"></a>不考虑其他任何方面的优化，一个人的面试如何实现？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//面试类</div><div class="line">static class Viewer &#123;</div><div class="line">	public void interview(int level) &#123;</div><div class="line"></div><div class="line">		if (0 == level) &#123;// 组长面试</div><div class="line">			// TODO</div><div class="line">		&#125; else if (1 == level) &#123;// CTO面试</div><div class="line">			// TODO</div><div class="line">		&#125; else if (2 == level) &#123;// HR终面</div><div class="line">			// TODO</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//客户端</div><div class="line">public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">	Viewer viewer = new Viewer();</div><div class="line">	viewer.interview(0);</div><div class="line">	viewer.interview(1);</div><div class="line">	viewer.interview(2);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面实现方式可以看出，面试方法，如果要面试三次，那么客户端要调用三次，面试方法interview中对level判断，不同级别有不同人面试，如果以后增加四面，那么就要修改interview方法。</p>
+<p>另外每次的面试 <code>viewer.interview</code> 都在客户端调用，但是按照正常流程组长面试完，如果觉得可以，应该流程传递到CTO哪里了，CTO谈完了觉得技术良好，最后交给HR谈待遇，流程抽象提取后是这样：</p>
+<p><img src="/2017/05/10/详解设计模式之责任链模式/屏幕快照 2017-05-10 下午4.21.27.png" alt="屏幕快照 2017-05-10 下午4.21.27"></p>
+<p>这不就是开头说的“链”吗？</p>
+<h2 id="下面看看用链如何实现面试的："><a href="#下面看看用链如何实现面试的：" class="headerlink" title="下面看看用链如何实现面试的："></a>下面看看用链如何实现面试的：</h2><p>先定义一个链接口来控制面试流程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public interface Chain &#123;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 面试方法</div><div class="line">	 * </div><div class="line">	 * @param level</div><div class="line">	 */</div><div class="line">	void interview();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 是否通过</div><div class="line">	 * </div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	boolean isCross();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 下一个面试官</div><div class="line">	 * </div><div class="line">	 * @param chain</div><div class="line">	 */</div><div class="line">	void next(Chain chain);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后定义组长Grouper、CTO、HR三个面试官类实现Chain接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line">static class Grouper implements Chain &#123;</div><div class="line">	private Chain next = null;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void interview() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">		if (isCross() &amp;&amp; next != null) &#123;</div><div class="line">			System.out.println(&quot;组长面试通过&quot;);</div><div class="line">			next.interview();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean isCross() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		return true;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void next(Chain chain) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		this.next = chain;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">static class CTO implements Chain &#123;</div><div class="line">	private Chain next = null;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void interview() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		if (isCross() &amp;&amp; next != null) &#123;</div><div class="line">			System.out.println(&quot;CTO面试通过&quot;);</div><div class="line">			next.interview();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean isCross() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		return true;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void next(Chain chain) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		this.next = chain;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">static class HR implements Chain &#123;</div><div class="line">	private Chain next = null;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void interview() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;HR面试通过&quot;);</div><div class="line">		if (isCross() &amp;&amp; next != null) &#123;</div><div class="line">			next.interview();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean isCross() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		return true;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void next(Chain chain) &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后看看客户端调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) &#123;</div><div class="line">	Grouper grouper = new Grouper();</div><div class="line">	CTO cto = new CTO();</div><div class="line">	HR hr = new HR();</div><div class="line">	grouper.next(cto);</div><div class="line">	cto.next(hr);</div><div class="line">	grouper.interview();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过<code>grouper.next(cto);</code>和<code>cto.next(hr);</code> 设置完链式关系，最后只要通过<code>grouper.interview();</code> 调用一次面试就可以了。因为grouper最为链首，其中存储了下一个链元素next。只要条件达成（本次面试通过），则自动执行下一个任务，这就是任务链的好处。</p>
+<p>可能还有一个疑问：<code>grouper.next(cto);</code> 等流程还是在客户端设置的，这无疑要增加了客户端对底层这些类的认知度。</p>
+<p>其实完全可以把这些细节隐藏在底层的。比如我们把流程在Grouper构造方法中设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Grouper() &#123;</div><div class="line">	CTO cto = new CTO();</div><div class="line">	HR hr = new HR();</div><div class="line">	next(cto);</div><div class="line">	cto.next(hr);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这时客户端是如此的简洁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) &#123;</div><div class="line">	Grouper grouper = new Grouper();</div><div class="line">	grouper.interview();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实上面的一般方法还有其他的实现方法，但是无疑常见的实现要么耦合性较强，要么需要客户端对底层认知度高。</p>
+<p>说了半天，现在来步入主题看看到底什么是责任链</p>
+<h1 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h1><ul>
+<li><p>模式出现意图</p>
+<p>让多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象串成一条链，并沿着链传递请求，直到有一个对象处理它或者处理完毕为止。</p>
+</li>
+</ul>
+<ul>
+<li>责任链uml图</li>
+</ul>
+<p><img src="/2017/05/10/详解设计模式之责任链模式/屏幕快照 2017-05-10 下午5.17.19.png" alt="屏幕快照 2017-05-10 下午5.17.19"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/10/详解设计模式之责任链模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-详解设计模式之建造者模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/10/详解设计模式之建造者模式/">详解设计模式之建造者模式</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/10/详解设计模式之建造者模式/" class="archive-article-date">
+  	<time datetime="2017-05-10T04:28:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/10/详解设计模式之建造者模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android网络框架执行流程分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -613,655 +1378,9 @@
 
 
   
-    <article id="post-算法排序之交换排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/03/算法排序之交换排序/">算法排序之交换排序</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/03/算法排序之交换排序/" class="archive-article-date">
-  	<time datetime="2017-05-03T13:04:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过交换排序，使得数组最终按非递减顺序排列。</p>
-<p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
-<p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
-<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><ul>
-<li><p>说明</p>
-<p>希望数组按非递减顺序排列，我们可以得到两点消息：1、数组中可能会有重复的元素，所以才说是非递减。2、排序后第一个元素是最小值 ，最后一个元素是最大值。</p>
-</li>
-<li><p>阐述实现</p>
-<p>第一轮，第一个元素分别与后面的每个元素比较，如果大于后面的元素则进行交换，把较小值交换到第一个元素位置，本轮结束后的第一个元素就是数组中最小值。</p>
-<p>第二轮，由于第一轮的第一个元素已经求出了最小值，所以第二轮从第二个元素开始，与后面的每个元素分别比较，如果大于后面的元素则进行交换，把较小值交换到第二个元素位置，本轮结束后的第二个元素就是数组中倒数第二小的值。</p>
-<p>以此类推，进行n-1轮比较，n为数组长度。之所以是n-1轮而不是n轮，是因为第i轮的i个元素要和后面的元素进行比较，如果是n轮，它本身就是最后的元素，不需要比较了。</p>
-</li>
-<li><p>阐述转换通用代码</p>
-<p>交换方法提取：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">void swap(int[] arr, int i,int j)&#123;</div><div class="line">  int tmp = arr[i];</div><div class="line">  arr[i] = arr[j];</div><div class="line">  arr[j] = tmp ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第一轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=0；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第二轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int i=1；</div><div class="line">for(int j=i+1;j&lt;n;j++)&#123;</div><div class="line">  if(arr[i]&gt;arr[j])&#123;</div><div class="line">    swap(arr,i,j);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>每轮遍历出一个当前未排序中最小值，以此类推，遍历n-1轮：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for(int i=0;i&lt;n-1;i++)&#123;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static void swapSort(int[] arr) &#123;</div><div class="line">	int length = arr.length;</div><div class="line">	for (int i = 0; i &lt; length-1 ; i++) &#123;</div><div class="line">		for (int j = i + 1; j &lt; length; j++) &#123;</div><div class="line">			if (arr[i] &gt;  arr[j]) &#123;</div><div class="line">				int tmp = arr[i];</div><div class="line">				arr[i] = arr[j];</div><div class="line">				arr[j] = tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/03/算法排序之交换排序/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java字符串压缩去重" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/03/Java字符串压缩去重/">Java字符串压缩去重</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/03/Java字符串压缩去重/" class="archive-article-date">
-  	<time datetime="2017-05-03T09:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>去一家公司面试，开始就一道笔试题，做对了就继续，做不对就不用往下面了。内容是读取文件内容并压缩内容去重，压缩去重意思是如果内容为ABBCCCCAA压缩后字符串显示为A1B2C3A2。以此类推。其实这道题不难，但是我脑子转悠慢，读取文件和遍历字符做出来了，但是其余的没有做出了，或者说大概思路对了，但是卡在某一个点。总之有点废物就是了。。</p>
-<h1 id="我的做法"><a href="#我的做法" class="headerlink" title="我的做法"></a>我的做法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public static String compress(String str)&#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	//我这里是从0开始的</div><div class="line">	int count = 0;</div><div class="line">	//而这也是初始为0，这样的设置导致下面判断时候一直</div><div class="line">	//无所适从，对于何时该给count++，</div><div class="line">	//何时该给mystr.append有点混乱</div><div class="line">	char last = 0;</div><div class="line">	int length = str.length();</div><div class="line">	for(int i=0;i&lt;length;i++)&#123;</div><div class="line">		char c = str.charAt(i);</div><div class="line">		if(last!=c)&#123;</div><div class="line">			last = c;</div><div class="line">			count++;</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">		&#125;else&#123;</div><div class="line">			count++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="正确地做法"><a href="#正确地做法" class="headerlink" title="正确地做法"></a>正确地做法</h1><ul>
-<li><p>直接使用string做法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public String compressBad (String str)  </div><div class="line">&#123;  </div><div class="line">    String mystr = &quot; &quot;;  </div><div class="line">    int count = 1;  </div><div class="line">    char last = str.charAt(0);  </div><div class="line">    for (int i = 1; i &lt; str.length(); i++)  </div><div class="line">    &#123;  </div><div class="line">        if (last == str.charAt(i))  </div><div class="line">        &#123;  </div><div class="line">            count++;  </div><div class="line">        &#125;  </div><div class="line">        else  </div><div class="line">        &#123;  </div><div class="line">            mystr += last + count;  </div><div class="line">            last = str.charAt(i);  </div><div class="line">            count = 1;                </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    return mystr += last + count;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<ul>
-<li><p>使用StringBuffer</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public static  String compressBetter(String str) &#123;</div><div class="line">	StringBuffer mystr = new StringBuffer();</div><div class="line">	int count = 1;</div><div class="line">	//取出第一个字符作为比较字符</div><div class="line">	char last = str.charAt(0);</div><div class="line">	for (int i = 1; i &lt; str.length(); i++) &#123;</div><div class="line">		//如果当前字符和之前的字符相同，说明是重复的，</div><div class="line">		//直接在数量值+1；</div><div class="line">		if (last == str.charAt(i)) &#123;</div><div class="line">			count++;</div><div class="line">		&#125; else &#123;</div><div class="line">			//如果不相同，说明开始了一个新的字符，</div><div class="line">			//这时要做的只有两件事：</div><div class="line">			//1、结束上格字符计数并添加字符串，</div><div class="line">			mystr.append(last);</div><div class="line">			mystr.append(count);</div><div class="line">			//2、2、开始新的字符计数</div><div class="line">			last = str.charAt(i);</div><div class="line">			count = 1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	//最后一个字符计数并显示</div><div class="line">	mystr.append(last);</div><div class="line">	mystr.append(count);</div><div class="line">	return mystr.toString();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>作为IT从业者，大部分时间都在写业务逻辑，很多基本功已经近乎荒废了，这是非常不可取的。眼光放长远些，我们的技术不应该局限于某一种语言，而应该把重心放在跨语言的那些通用技术。比如：操作系统、算法和数据结构、网络及设计模式重构思想等，这些东西在任何语言中都会用到而且也会是重点。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/03/Java字符串压缩去重/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hexo博客换电脑后怎么办" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/02/hexo博客换电脑后怎么办/">hexo网站换电脑后怎么办</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/02/hexo博客换电脑后怎么办/" class="archive-article-date">
-  	<time datetime="2017-05-02T08:31:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月02日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>这两天遇到个问题，在自己的电脑上面搭建的搭建环境发布了几个文章，后来换了个电脑，这个电脑也有环境和几个老的文章，但是我执行了hexo d -g 后，网站中新的文章都被删除了。所以现在的问题是，换电脑后如何保证hexo环境文件的同步。</p>
-<h1 id="加入版本控制"><a href="#加入版本控制" class="headerlink" title="加入版本控制"></a>加入版本控制</h1><p>作为一名开发，实现同步，首先就想到版本控制，而网站又是hexo+github实现的。所以就打算把hexo环境及文章都纳入Git版本控制。</p>
-<p>当前项目的master分支中被发布后的静态页面占用，所以要么单独开一个项目，要么新建一个分支，最终采用新建分支办法。</p>
-<p>在hexo目录下执行<code>git init</code>初始化</p>
-<p>然后<code>git add .</code>把当前目录及子文件都添加到暂存区</p>
-<p>然后 <code>git commit -m &quot;message&quot;</code>提交到本地库</p>
-<p>最后执行<code>git push origin branch</code>推送到分支中。这样以后发布文章后随时push，在其他电脑中把分支内容pull到本地库即可。 </p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/hexo/" class="article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/博客/" class="article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/02/hexo博客换电脑后怎么办/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android进程和线程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/27/Android进程和线程/">Android进程和线程</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/27/Android进程和线程/" class="archive-article-date">
-  	<time datetime="2017-04-27T12:36:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>一般情况下，进程是应用程序的单元，一个应用对应一个进程同时对应一个主线程。但是通过设置 <code>android:process</code>，可以使原本一个应用中的组件运行在多个进程中。</p>
-<blockquote>
-<p>如果进程名称设置为“:remote”，那么这个进程的名字是包名+设置的名字，以冒号开头的进程属于私有进程，其他应用的组件不能和它跑在一个进程。如果进程名设置是完整的(“非冒号开头”)，则属于全局进程，其他应用可以通过shareUID方式和它共享一个进程。</p>
-</blockquote>
-<h1 id="进程优先级分类"><a href="#进程优先级分类" class="headerlink" title="进程优先级分类"></a>进程优先级分类</h1><p>根据进程的优先级可以分为五级，</p>
-<ul>
-<li><p>前台进程</p>
-<p>用户当前操作所必需的进程。如果一个进程满足以下任一条件，即视为前台进程：<br>​    托管用户正在交互的 Activity（已调用 Activity 的 onResume() 方法）<br>​    托管某个 Service，后者绑定到用户正在交互的 Activity<br>​    托管正在“前台”运行的 Service（服务已调用 startForeground()）<br>​    托管正执行一个生命周期回调的 Service（onCreate()、onStart() 或 onDestroy()）<br>​    托管正执行其 onReceive() 方法的 BroadcastReceiver<br>通常，在任意给定时间前台进程都为数不多。只有在内存不足以支持它们同时继续运行这一万不得已的情况下，系统才会终止它们。 此时，设备往往已达到内存分页状态，因此需要终止一些前台进程来确保用户界面正常响应。</p>
-</li>
-<li><p>可见进程</p>
-<p>没有任何前台组件、但仍会影响用户在屏幕上所见内容的进程。 如果一个进程满足以下任一条件，即视为可见进程：<br>​    托管不在前台、但仍对用户可见的 Activity（已调用其 onPause() 方法）。例如，如果前台 Activity 启动了一个对话框，允许在其后显示上一 Activity，则有可能会发生这种情况。<br>​    托管绑定到可见（或前台）Activity 的 Service。<br>可见进程被视为是极其重要的进程，除非为了维持所有前台进程同时运行而必须终止，否则系统不会终止这些进程。</p>
-</li>
-<li><p>服务进程</p>
-<p>正在运行已使用 startService() 方法启动的服务且不属于上述两个更高类别进程的进程。尽管服务进程与用户所见内容没有直接关联，但是它们通常在执行一些用户关心的操作（例如，在后台播放音乐或从网络下载数据）。因此，除非内存不足以维持所有前台进程和可见进程同时运行，否则系统会让服务进程保持运行状态。</p>
-</li>
-<li><p>后台进程</p>
-<p>包含目前对用户不可见的 Activity 的进程（已调用 Activity 的 onStop() 方法）。这些进程对用户体验没有直接影响，系统可能随时终止它们，以回收内存供前台进程、可见进程或服务进程使用。 通常会有很多后台进程在运行，因此它们会保存在 LRU （最近最少使用）列表中，以确保包含用户最近查看的 Activity 的进程最后一个被终止。如果某个 Activity 正确实现了生命周期方法，并保存了其当前状态，则终止其进程不会对用户体验产生明显影响，因为当用户导航回该 Activity 时，Activity 会恢复其所有可见状态。 有关保存和恢复状态的信息，请参阅 Activity文档。</p>
-</li>
-<li><p>空进程</p>
-<p>不含任何活动应用组件的进程。保留这种进程的的唯一目的是用作缓存，以缩短下次在其中运行组件所需的启动时间。 为使总体系统资源在进程缓存和底层内核缓存之间保持平衡，系统往往会终止这些进程。</p>
-</li>
-</ul>
-<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>线程可以看作是一个轻量级的进程，在Android中启动应用时系统会为APP创建一个UI线程，Android UI是非线程安全的。</p>
-<p>在Android开发中注意两点：</p>
-<p>①不能在UI线程以外的其他线程操作UI，否则异常。</p>
-<p>②不能阻塞UI线程，否则ANR。</p>
-<p>当然在某些特殊条件下，非UI线程操作 UI没有报错，参考我的[<a href="http://www.jensondev.me/2017/04/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E5%88%B7%E6%96%B0UI%E6%B2%A1%E6%8A%A5%E9%94%99/" target="_blank" rel="external">为什么我在工作线程刷新UI没报错？</a>] 。</p>
-<p>Android 提供了几种途径来从其他线程访问 UI 线程。 以下列出了几种有用的方法：</p>
-<p>Activity.runOnUiThread(Runnable)<br>View.post(Runnable)<br>View.postDelayed(Runnable, long)</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/27/Android进程和线程/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android内存分析工具之MAT详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/27/Android内存分析工具之MAT详解/">Android内存分析工具之MAT详解</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/27/Android内存分析工具之MAT详解/" class="archive-article-date">
-  	<time datetime="2017-04-27T05:07:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月27日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>关于Android内存优化可参见我的另一篇文章[<a href="http://www.jensondev.me/2017/04/21/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/" target="_blank" rel="external">Android性能优化之内存优化</a>]。Android性能优化中内存优化可谓重中之重，而内存泄露又是Android内存优化的重灾区。重灾区就要重拳出击，整治内存泄露，Mat是必备的利器。</p>
-<h1 id="关于Mat"><a href="#关于Mat" class="headerlink" title="关于Mat"></a>关于Mat</h1><p>Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat是由eclipse社区维护，所以如果使用Android studio开发的话，需要单独下载，<a href="http://www.eclipse.org/mat/downloads.php" target="_blank" rel="external">官方通道</a>。我用的是mac版，后面也会使用mac版来分析。</p>
-<h1 id="Mat使用"><a href="#Mat使用" class="headerlink" title="Mat使用"></a>Mat使用</h1><p>注意：我的测试app包名为：com.example.jenson.myapplication</p>
-<p>在eclipse中集成了Mat，可以直接拿来使用，而使用Android studio时。这两个是分开的，所以我们要先导出dump文件。</p>
-<h2 id="Android-studio导出dump文件"><a href="#Android-studio导出dump文件" class="headerlink" title="Android studio导出dump文件"></a>Android studio导出dump文件</h2><p>打开Android Monitor窗口，<img src="/2017/04/27/Android内存分析工具之MAT详解/0B8D42B7-E5A5-431D-9658-2A99C923CF4E.png" alt="0B8D42B7-E5A5-431D-9658-2A99C923CF4E"></p>
-<p>点击圆圈中的按钮，过几秒中会自动生成一个dump文件，然后自动打开如下图的窗口：<img src="/2017/04/27/Android内存分析工具之MAT详解/1A94CD89-1BE9-46BC-9449-8B55EE34D741.png" alt="1A94CD89-1BE9-46BC-9449-8B55EE34D741"></p>
-<p>在Heap Snapshot下的几个文件就是自动生成的dump文件，但是这不是标准的dump文件，所以需要选择文件右键导出标准dump文件，保存到一个目录下：</p>
-<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午1.49.26.png" alt="屏幕快照 2017-04-27 下午1.49.26"></p>
-<h2 id="Mat打开标准dump文件"><a href="#Mat打开标准dump文件" class="headerlink" title="Mat打开标准dump文件"></a>Mat打开标准dump文件</h2><p>使用Mat，菜单open File选择刚才导出的dump文件，经过分析后回显示如下所示的项目：</p>
-<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午2.08.27.png" alt="屏幕快照 2017-04-27 下午2.08.27"></p>
-<p>Mat从多角度提供了内存分析，其中包括Histogram、Dominator Tree、Leak Suspects和Top consumers等。</p>
-<p>overview是一个概况图，把内存的消耗以饼状图形式显示出来，鼠标在每个饼块区域划过或者点击，就会在Inspector栏目显示这块区域的相关信息。</p>
-<p>Leak Suspectss是一个关于内存泄露猜想的饼图，Problem Suspect 1是泄露猜想的描述。看我这里说的像是字节数组，这么大的数组难不成是图片，要知道图片在内存中就是以字节数组形式存在的。</p>
-<p>平常内存分析比较常用的还是Histogram、Dominator Tree。</p>
-<h2 id="开始分析内存"><a href="#开始分析内存" class="headerlink" title="开始分析内存"></a>开始分析内存</h2><p>这里我们使用Histogram进行分析，切换到Histogram页面。这个页面主要有4个列，Class Name、Objects、Shallow Heap和Retained Heap。其中Class Name是全类名，Objects是这个类的对象实例个数。Shallow Heap是对象本身占用内存大小，非数组的常规对象，本身内存占用很小，所以这个对泄露分析作用不大。Retained Heap指当前对象大小和当前对象能直接或间接引用的对象大小的总和。这个栏目是分析重点。</p>
-<p>内存分析是分析的整个系统的内存泄露，而我们只要查找我们APP的内存泄露情况。这无疑增加了很多工作，不过幸亏Histogram支持正则表达式查找，在Regex中输入我们的包名进行过滤，直奔和我们APP有关的内存泄露：</p>
-<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.11.33.png" alt="屏幕快照 2017-04-27 下午3.11.33"></p>
-<p>过滤后就显示了我们APP相关内存信息，按Retained Heap大小排列下，发现Student和MainActivity这两个类问题比较大。但是MainActivity的Objects数量为1，而Student的为130，看起来Student问题更严重，所以先从Student入手：</p>
-<p>首先看下是哪里的引用导致了Student不能被GC回收。<img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.19.06.png" alt="屏幕快照 2017-04-27 下午3.19.06"></p>
-<p>右键使用Merge Shortest Paths to GC Roots显示距GC Root最短路径，当然选择过程中要排除软引用和弱引用，因为这些标记的一般都是可以被回收的。进入结果页查看：</p>
-<p><img src="/2017/04/27/Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.22.23.png" alt="屏幕快照 2017-04-27 下午3.22.23"></p>
-<p>啧啧，原来Student不能被回收竟然就是这个MainActivity搞的鬼，可以看到这个类里面有个students集合里面存放的正式不能回收的Student对象。</p>
-<p>看代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">static List&lt;Student&gt; students=new ArrayList&lt;&gt;();</div><div class="line">static final String tag=&quot;MainActivity&quot;;</div><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">    sample_text = (TextView) findViewById(R.id.sample_text);</div><div class="line">    TestNative testNative = new TestNative();</div><div class="line">    sample_text.setText(testNative.stringFromJNI());</div><div class="line">    for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line"></div><div class="line">        Student student = new Student(&quot;jenson&quot; + i, i);</div><div class="line">        students.add(student);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>原来不能被回收是因为用static修饰了students集合。这导致其生命周期边长，在Activity销毁时，仍然存在。问题找到了，去掉static完成内存泄露修复。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/27/Android内存分析工具之MAT详解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2016公司清明节坝上草原" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/25/2016公司清明节坝上草原/">2016公司清明节坝上草原</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/25/2016公司清明节坝上草原/" class="archive-article-date">
-  	<time datetime="2017-04-25T09:35:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>公司应承了很久的出游终于兑现了。不过讲真公司还是比较抠门，两年一次的出游只有两天时间，其中赶路时间就占了一半。</p>
-<p>目的：丰宁坝上草原</p>
-<p>人物：公司同事</p>
-<p>在草原玩的照片基本没有拍，当天到那就下午三四点。而后又阴天下雨了，基本没有怎么玩，拍的比较多的是行宫和湖边。</p>
-<h1 id="上图"><a href="#上图" class="headerlink" title="上图"></a>上图</h1><p>到了行宫，看到骑兵都忍不住上前合影：</p>
-<p>小鱼同志，身高不够，蹦起来够~</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075354_IMG_6200.JPG" alt="20160610075354_IMG_6200"></p>
-<p>我就刚刚好了。</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075557_IMG_6209.JPG" alt="20160610075557_IMG_6209"></p>
-<p>主任幸福的一家~</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610075842_IMG_6219.JPG" alt="20160610075842_IMG_6219"></p>
-<p>进入行宫大门不久后需要经过的南天门：</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610080912_IMG_6235.JPG" alt="20160610080912_IMG_6235"></p>
-<p>回顾行宫大门，白云压顶，壮观~</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610081259_IMG_6245.JPG" alt="20160610081259_IMG_6245"></p>
-<p>这好似是一个古代官员的蒙古包~</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610082906_IMG_6261.JPG" alt="20160610082906_IMG_6261"></p>
-<p>嗯~没错，三贱客哈哈</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610083541_IMG_6276.JPG" alt="20160610083541_IMG_6276"></p>
-<p>从小迷宫走出来时，工作人员给的哈达~妥妥的披上。</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610084538_IMG_6283.JPG" alt="20160610084538_IMG_6283"></p>
-<p>蓝天白云南天门，怎一个美字了得！</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610091441_IMG_6323.JPG" alt="20160610091441_IMG_6323"></p>
-<p>湿地大门口留念。小鱼、佳姐和李博。</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610100357_IMG_6326.JPG" alt="20160610100357_IMG_6326"></p>
-<p>老李的风采，感觉要立地成佛。</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101211_IMG_6337.JPG" alt="20160610101211_IMG_6337"></p>
-<p>小末哥看起来好厉害的样子，这样子回公司会不会挨收拾？</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101300_IMG_6342.JPG" alt="20160610101300_IMG_6342"></p>
-<p>主任家的公子套上小鱼的衣服。可爱，那么小就那么帅，长大了还了得</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610101355_IMG_6343.JPG" alt="20160610101355_IMG_6343"></p>
-<p>远处的白云、草浪</p>
-<p><img src="/2017/04/25/2016公司清明节坝上草原/20160610102213_IMG_6353.JPG" alt="20160610102213_IMG_6353"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/生活/" class="article-tag-list-link color3">生活</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/25/2016公司清明节坝上草原/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
     </nav>
   
 

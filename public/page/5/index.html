@@ -180,6 +180,830 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Android事件传递机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/24/浅谈Android事件传递机制/">浅谈Android事件传递机制</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/24/浅谈Android事件传递机制/" class="archive-article-date">
+  	<time datetime="2017-07-24T09:34:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月24日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>为什么点下屏幕某个位置时候，系统会找到正确地控件来响应？</p>
+<p>为什么按下按下返回键系统会让当前窗口页面关闭而不是下面的那个页面？</p>
+<p>很多时候多问自己个为什么就发现自己会的其实还很少。</p>
+<h1 id="0x01-冯诺依曼模型回顾"><a href="#0x01-冯诺依曼模型回顾" class="headerlink" title="0x01 冯诺依曼模型回顾"></a>0x01 冯诺依曼模型回顾</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼模型"></p>
+<p>讲事件传递为什么把冯诺依曼模型带进来了？</p>
+<p>事件传递的事件来自哪里？</p>
+<p>基本的事件来自按键、屏幕，属于输入设备，而最终事件的结果要显示在屏幕上(输出设备)，这样才算完成一次交互。其实这里屏幕同时兼顾输入和输出。</p>
+<p>有了输入设备，系统是如何从中采集数据的呢？</p>
+<h1 id="0x02-设备节点到ViewRootImpl"><a href="#0x02-设备节点到ViewRootImpl" class="headerlink" title="0x02 设备节点到ViewRootImpl"></a>0x02 设备节点到ViewRootImpl</h1><h2 id="Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。"><a href="#Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。" class="headerlink" title="Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。"></a>Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。</h2><p>当发现输入设备可用时，Linux内核会在/dev/input/目录下创建名称为event0~n的设备节点。当设备不可用时则删除对应节点。</p>
+<p><em>如果刚才的不好理解，那么可以理解windows这种情况：当我们新买的鼠标插入USB口时，右下角一般弹窗正在安装USB驱动，而最终会在设备管理中多出一个USBHub设备节点，拔掉USB时就会消失</em></p>
+<p>输入设备准备就绪，当有事件发生时，Linux内核收到硬件中断，然后把中断加工成原始输入事件存入对应设备节点中。</p>
+<p>输入事件已经有了，用户空间只要读取事件信息就可以了。</p>
+<h2 id="在用户空间这块输入事件的负责人是谁呢？"><a href="#在用户空间这块输入事件的负责人是谁呢？" class="headerlink" title="在用户空间这块输入事件的负责人是谁呢？"></a>在用户空间这块输入事件的负责人是谁呢？</h2><p>Android系统为我们指定好了负责人：InputManagerService(后面直接称：IMS)。</p>
+<p>IMS和WMS，AMS一样都属于系统服务，在系统启动时由SystemServer统一启动。所以只要看看源码才能知道具体情况如何。</p>
+<p>首先看下<code>SystemServer</code>启动情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">/**</span></div><div class="line">     * The main entry point from zygote.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">new</span> SystemServer().run();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="comment">// Start services.</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            startBootstrapServices();</div><div class="line">            startCoreServices();</div><div class="line">            startOtherServices();</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable ex) &#123;</div><div class="line">            Slog.e(<span class="string">"System"</span>, 	<span class="string">"******************************************"</span>);</div><div class="line">            Slog.e(<span class="string">"System"</span>, <span class="string">"************ Failure starting system services"</span>, ex);</div><div class="line">            <span class="keyword">throw</span> ex;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过源码发现<code>SystemServer</code>通过main方法直接启动的。当然这里run方法代码只是关键的一部分，如果都粘贴上来会影响分析。</p>
+<p>那么IMS在哪启动的呢？其实IMS通过<code>startOtherServices</code>方法启动。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startOtherServices</span><span class="params">()</span> </span>&#123;</div><div class="line">        WindowManagerService wm = <span class="keyword">null</span>;</div><div class="line">       InputManagerService inputManager = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">	 wm = WindowManagerService.main(context, inputManager,</div><div class="line">                   mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,</div><div class="line">                   !mFirstBoot, mOnlyCore);</div><div class="line">           ServiceManager.addService(Context.WINDOW_SERVICE, wm);</div><div class="line">           ServiceManager.addService(Context.INPUT_SERVICE, inputManager);</div><div class="line"></div><div class="line">           inputManager = <span class="keyword">new</span> InputManagerService(context);</div><div class="line">          inputManager.setWindowManagerCallbacks(wm.getInputMonitor());</div><div class="line">           inputManager.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里不仅启动了IMS，还有WMS，还给IMS设置了一个<code>wm.getInputMonitor()</code>，这个设置有什么用先不用管。最后调用了start方法。</p>
+<p>目前只只知道IMS是用户空间的输入事件负责人，具体如何负责还要继续看，IMS的start方法调用了<code>nativeStart(mPtr);</code>，看的出来这是要进入C层实现了。</p>
+<p>找到Java层IMS对应的C层实现，打开文件找到<code>nativeStart</code>实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">nativeStart</span><span class="params">(JNIEnv* env, jclass clazz, jlong ptr)</span> </span>&#123;</div><div class="line">    NativeInputManager* im = <span class="keyword">reinterpret_cast</span>&lt;NativeInputManager*&gt;(ptr);</div><div class="line"></div><div class="line">    <span class="keyword">status_t</span> result = im-&gt;getInputManager()-&gt;start();</div><div class="line">    <span class="keyword">if</span> (result) &#123;</div><div class="line">        jniThrowRuntimeException(env, <span class="string">"Input manager could not be started."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方法如此简单，又是个躯壳，仅仅调用了其他类的方法。</p>
+<p>下面看看<code>start()</code>里面干了什么，</p>
+<p>注意一点：这里显示的是<code>NativeInputManager</code>，但其实找到的是<code>InputManager</code>,多态特性。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">status_t</span> InputManager::start() &#123;    </div><div class="line">    <span class="keyword">status_t</span> result = mDispatcherThread-&gt;run(<span class="string">"InputDispatcher"</span>, PRIORITY_URGENT_DISPLAY);</div><div class="line">    <span class="keyword">if</span> (result) &#123;</div><div class="line">        ALOGE(<span class="string">"Could not start InputDispatcher thread due to error %d."</span>, result);</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    result = mReaderThread-&gt;run(<span class="string">"InputReader"</span>, PRIORITY_URGENT_DISPLAY);</div><div class="line">    <span class="keyword">if</span> (result) &#123;</div><div class="line">        ALOGE(<span class="string">"Could not start InputReader thread due to error %d."</span>, result);</div><div class="line"></div><div class="line">        mDispatcherThread-&gt;requestExit();</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这次真的是全部代码，没有精简，看的出来好像start就启动了两个线程。</p>
+<p>mDispatcherThread对应<code>InputDispatcherThread</code>类，负责事件分发</p>
+<p>mReaderThread对应<code>InputReaderThread</code>类，负责事件读取</p>
+<p>现在我们基本可以猜到，一个线程读取事件，读取后把事件信息传递给分发线程，由分发线程继续处理。</p>
+<p>当然这还都只是猜测，实践是检验真理的唯一标准。</p>
+<h2 id="看看InputReaderThread干了什么"><a href="#看看InputReaderThread干了什么" class="headerlink" title="看看InputReaderThread干了什么"></a>看看InputReaderThread干了什么</h2><p>首先看看<code>InputReaderThread</code>源码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Reads raw events from the event hub and processes them, endlessly. */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">InputReaderThread</span> :</span> <span class="keyword">public</span> Thread &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    InputReaderThread(<span class="keyword">const</span> sp&lt;InputReaderInterface&gt;&amp; reader);</div><div class="line">    <span class="keyword">virtual</span> ~InputReaderThread();</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    sp&lt;InputReaderInterface&gt; mReader;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">threadLoop</span><span class="params">()</span></span>;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><code>InputReaderThread</code>继承了Thread，在执行run方法时会回调<code>threadLoop</code>。从<code>virtual</code>知道这是一个虚函数，来看看具体实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">bool</span> InputReaderThread::threadLoop() &#123;</div><div class="line">    mReader-&gt;loopOnce();</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>mReader对应<code>InputReader</code>类，看下<code>loopOnce</code>方法实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">void</span> InputReader::loopOnce() &#123;</div><div class="line">    <span class="keyword">int32_t</span> oldGeneration;</div><div class="line">    <span class="keyword">int32_t</span> timeoutMillis;</div><div class="line">    <span class="keyword">bool</span> inputDevicesChanged = <span class="literal">false</span>;</div><div class="line">    Vector&lt;InputDeviceInfo&gt; inputDevices;</div><div class="line">    &#123; <span class="comment">// acquire lock</span></div><div class="line">        AutoMutex _l(mLock);</div><div class="line"></div><div class="line">        oldGeneration = mGeneration;</div><div class="line">        timeoutMillis = <span class="number">-1</span>;</div><div class="line"></div><div class="line">        <span class="keyword">uint32_t</span> changes = mConfigurationChangesToRefresh;</div><div class="line">        <span class="keyword">if</span> (changes) &#123;</div><div class="line">            mConfigurationChangesToRefresh = <span class="number">0</span>;</div><div class="line">            timeoutMillis = <span class="number">0</span>;</div><div class="line">            refreshConfigurationLocked(changes);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mNextTimeout != LLONG_MAX) &#123;</div><div class="line">            <span class="keyword">nsecs_t</span> now = systemTime(SYSTEM_TIME_MONOTONIC);</div><div class="line">            timeoutMillis = toMillisecondTimeoutDelay(now, mNextTimeout);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="comment">// release lock</span></div><div class="line">    <span class="comment">//这里就是我们开始说的从设备节点读取输入事件的函数了。</span></div><div class="line">    <span class="keyword">size_t</span> count = mEventHub-&gt;getEvents(timeoutMillis, mEventBuffer, EVENT_BUFFER_SIZE);</div><div class="line"></div><div class="line">    &#123; <span class="comment">// acquire lock</span></div><div class="line">        AutoMutex _l(mLock);</div><div class="line">        mReaderIsAliveCondition.broadcast();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (count) &#123;</div><div class="line">          <span class="comment">//处理事件</span></div><div class="line">            processEventsLocked(mEventBuffer, count);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (mNextTimeout != LLONG_MAX) &#123;</div><div class="line">            <span class="keyword">nsecs_t</span> now = systemTime(SYSTEM_TIME_MONOTONIC);</div><div class="line">            <span class="keyword">if</span> (now &gt;= mNextTimeout) &#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> DEBUG_RAW_EVENTS</span></div><div class="line">                ALOGD(<span class="string">"Timeout expired, latency=%0.3fms"</span>, (now - mNextTimeout) * <span class="number">0.000001f</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">                mNextTimeout = LLONG_MAX;</div><div class="line">                timeoutExpiredLocked(now);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldGeneration != mGeneration) &#123;</div><div class="line">            inputDevicesChanged = <span class="literal">true</span>;</div><div class="line">            getInputDevicesLocked(inputDevices);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="comment">// release lock</span></div><div class="line"></div><div class="line">    <span class="comment">// Send out a message that the describes the changed input devices.</span></div><div class="line">    <span class="keyword">if</span> (inputDevicesChanged) &#123;</div><div class="line">        mPolicy-&gt;notifyInputDevicesChanged(inputDevices);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Flush queued events out to the listener.</span></div><div class="line">    <span class="comment">// This must happen outside of the lock because the listener could potentially call</span></div><div class="line">    <span class="comment">// back into the InputReader's methods, such as getScanCodeState, or become blocked</span></div><div class="line">    <span class="comment">// on another thread similarly waiting to acquire the InputReader lock thereby</span></div><div class="line">    <span class="comment">// resulting in a deadlock.  This situation is actually quite plausible because the</span></div><div class="line">    <span class="comment">// listener is actually the input dispatcher, which calls into the window manager,</span></div><div class="line">    <span class="comment">// which occasionally calls into the input reader.</span></div><div class="line">    mQueuedListener-&gt;flush();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面方法主要执行了三个流程：</p>
+<p>①通过<code>mEventHub-&gt;getEvents</code>读取事件</p>
+<p>​    这里不再继续深入，重点理解②③</p>
+<p>②通过<code>processEventsLocked</code>处理事件</p>
+<p>这方法里面有<code>processEventsForDeviceLocked</code>方法，这是处理一般事件的方法。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> InputReader::processEventsForDeviceLocked(<span class="keyword">int32_t</span> deviceId,</div><div class="line">        <span class="keyword">const</span> RawEvent* rawEvents, <span class="keyword">size_t</span> count) &#123;</div><div class="line">    <span class="keyword">ssize_t</span> deviceIndex = mDevices.indexOfKey(deviceId);</div><div class="line">    <span class="keyword">if</span> (deviceIndex &lt; <span class="number">0</span>) &#123;</div><div class="line">        ALOGW(<span class="string">"Discarding event for unknown deviceId %d."</span>, deviceId);</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    InputDevice* device = mDevices.valueAt(deviceIndex);</div><div class="line">    <span class="keyword">if</span> (device-&gt;isIgnored()) &#123;</div><div class="line">        <span class="comment">//ALOGD("Discarding event for ignored deviceId %d.", deviceId);</span></div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    device-&gt;process(rawEvents, count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里根据<code>deviceId</code>生成<code>InputDevice</code>。进而调用<code>device-&gt;process</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; numMappers; i++) &#123;</div><div class="line">               InputMapper* mapper = mMappers[i];</div><div class="line">               mapper-&gt;process(rawEvent);</div><div class="line">           &#125;</div></pre></td></tr></table></figure>
+<p>最终引出了<code>InputMapper</code>，这是一个基类，而对于触摸事件会调用<code>TouchInputMapper</code>类的<code>process</code>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> TouchInputMapper::process(<span class="keyword">const</span> RawEvent* rawEvent) &#123;</div><div class="line">    mCursorButtonAccumulator.process(rawEvent);</div><div class="line">    mCursorScrollAccumulator.process(rawEvent);</div><div class="line">    mTouchButtonAccumulator.process(rawEvent);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (rawEvent-&gt;type == EV_SYN &amp;&amp; rawEvent-&gt;code == SYN_REPORT) &#123;</div><div class="line">        sync(rawEvent-&gt;when);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>后面经过一系列方法调用，事件信息封装到<code>NotifyMotionArgs args</code>，通过<code>getListener()-&gt;notifyMotion(&amp;args)</code>方法把事件加入到队列中。然后开始③过程。</p>
+<p>③通过<code>mQueuedListener-&gt;flush()</code>事件转移到<code>InputDispatcherThread</code>。</p>
+<p>看看<code>flush</code>源码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> QueuedInputListener::flush() &#123;</div><div class="line">    <span class="keyword">size_t</span> count = mArgsQueue.size();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">        NotifyArgs* args = mArgsQueue[i];</div><div class="line">        args-&gt;notify(mInnerListener);</div><div class="line">        <span class="keyword">delete</span> args;</div><div class="line">    &#125;</div><div class="line">    mArgsQueue.clear();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法遍历事件，同时执行<code>notify</code>，然后从队列删除消息，</p>
+<p><code>NotifyArgs</code>也是基类，有多种子类，其中触摸事件为<code>NotifyMotionArgs</code>，其<code>notify</code>方法如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> NotifyMotionArgs::notify(<span class="keyword">const</span> sp&lt;InputListenerInterface&gt;&amp; listener) <span class="keyword">const</span> &#123;</div><div class="line">    listener-&gt;notifyMotion(<span class="keyword">this</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>listener</code>指向<code>InputDispatcher</code>，而<code>InputDispatcher</code>隶属于<code>InputDispatcherThread</code> ，下一节继续</p>
+<h2 id="看看InputDispatcherThread干了什么"><a href="#看看InputDispatcherThread干了什么" class="headerlink" title="看看InputDispatcherThread干了什么"></a>看看InputDispatcherThread干了什么</h2><p><code>InputDispatcherThread</code>执行的时候调用了<code>threadLoop</code>然后调用了<code>mDispatcher-&gt;dispatchOnce();</code>。经过一些列调用会转战到<code>InputChannel::sendMessage</code>。</p>
+<p>继续上一节，看看<code>InputDispatcher</code>中<code>notifyMotion</code>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> InputDispatcher::notifyMotion(<span class="keyword">const</span> NotifyMotionArgs* args) &#123;</div><div class="line"></div><div class="line">	needWake = enqueueInboundEventLocked(newEntry);</div><div class="line">     <span class="keyword">if</span> (needWake) &#123;</div><div class="line">      mLooper-&gt;wake();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方法主要做了这两件事：</p>
+<p>①事件再次加入队列</p>
+<p>​    其中还执行了<code>findTouchedWindowAtLocked</code>查找当前活动窗口并拿到句柄。</p>
+<p>②唤醒looper。</p>
+<blockquote>
+<p>这里疑惑的一点是：事件加入队列，唤醒looper，接下来应该是looper循环读取消息队列进行事件分发，但是这里没有找到和dispatchOnce想关联的地方。可能有疏漏地方。以后发现问题会及时更新上。这里直接继续InputChannel::sendMessage来说。</p>
+</blockquote>
+<p><code>InputChannel</code>是负责与app窗口进行通信的，通过WMS找到对应的窗口。那么<code>InputChannel</code>到底是怎么找到窗口的？</p>
+<p>在WMS的<code>addWindow</code>方法中有这样几行代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">addWindow</span><span class="params">(Session session, IWindow client, <span class="keyword">int</span> seq,</span></span></div><div class="line">            WindowManager.LayoutParams attrs, <span class="keyword">int</span> viewVisibility, <span class="keyword">int</span> displayId,</div><div class="line">            Rect outContentInsets, Rect outStableInsets, InputChannel outInputChannel) &#123;</div><div class="line">            </div><div class="line">                </div><div class="line">                String name = win.makeInputChannelName();</div><div class="line">                InputChannel[] inputChannels = InputChannel.openInputChannelPair(name);</div><div class="line">                win.setInputChannel(inputChannels[<span class="number">0</span>]);</div><div class="line">                inputChannels[<span class="number">1</span>].transferTo(outInputChannel);</div><div class="line"></div><div class="line">                mInputManager.registerInputChannel(win.mInputChannel, win.mInputWindowHandle);</div><div class="line">            </div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>这里是在Activity初始化时想WMS添加的窗口的调用方法，其中在添加窗口时候就已经给这个窗口设置了通信通道。</p>
+<p>然后看下<code>InputChannel.openInputChannelPair</code>里面做了什么：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">status_t</span> InputChannel::openInputChannelPair(<span class="keyword">const</span> String8&amp; name,</div><div class="line">        sp&lt;InputChannel&gt;&amp; outServerChannel, sp&lt;InputChannel&gt;&amp; outClientChannel) &#123;</div><div class="line">    <span class="keyword">int</span> sockets[<span class="number">2</span>];</div><div class="line">    <span class="keyword">if</span> (socketpair(AF_UNIX, SOCK_SEQPACKET, <span class="number">0</span>, sockets)) &#123;</div><div class="line">        <span class="keyword">status_t</span> result = -errno;</div><div class="line">        ALOGE(<span class="string">"channel '%s' ~ Could not create socket pair.  errno=%d"</span>,</div><div class="line">                name.<span class="built_in">string</span>(), errno);</div><div class="line">        outServerChannel.clear();</div><div class="line">        outClientChannel.clear();</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> bufferSize = SOCKET_BUFFER_SIZE;</div><div class="line">    setsockopt(sockets[<span class="number">0</span>], SOL_SOCKET, SO_SNDBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line">    setsockopt(sockets[<span class="number">0</span>], SOL_SOCKET, SO_RCVBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line">    setsockopt(sockets[<span class="number">1</span>], SOL_SOCKET, SO_SNDBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line">    setsockopt(sockets[<span class="number">1</span>], SOL_SOCKET, SO_RCVBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line"></div><div class="line">    String8 serverChannelName = name;</div><div class="line">    serverChannelName.append(<span class="string">" (server)"</span>);</div><div class="line">    outServerChannel = <span class="keyword">new</span> InputChannel(serverChannelName, sockets[<span class="number">0</span>]);</div><div class="line"></div><div class="line">    String8 clientChannelName = name;</div><div class="line">    clientChannelName.append(<span class="string">" (client)"</span>);</div><div class="line">    outClientChannel = <span class="keyword">new</span> InputChannel(clientChannelName, sockets[<span class="number">1</span>]);</div><div class="line">    <span class="keyword">return</span> OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里主要创建了两个<code>InputChannel</code>，一个服务端一个客户端，这里的的<code>InputChannel</code>是基于socket的，这个socket不是网络的socket而是Unix特有的关于文件的Unix domain socket。</p>
+<h2 id="WMS和ViewRootImpl"><a href="#WMS和ViewRootImpl" class="headerlink" title="WMS和ViewRootImpl"></a>WMS和ViewRootImpl</h2><p>经过一些列的调转，最终会回调到<code>InputEventReceiver</code>的<code>dispatchInputEvent</code>方法。</p>
+<p>这个方法是C++通过JNi回调的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Called from native code.</span></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unused"</span>)</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dispatchInputEvent</span><span class="params">(<span class="keyword">int</span> seq, InputEvent event)</span> </span>&#123;</div><div class="line">    mSeqMap.put(event.getSequenceNumber(), seq);</div><div class="line">    onInputEvent(event);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的<code>InputEventReceiver</code> 对象其实是<code>WindowInputEventReceiver</code> 的引用，所以<code>onInputEvent</code>其实调用的<code>WindowInputEventReceiver</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onInputEvent</span><span class="params">(InputEvent event)</span> </span>&#123;</div><div class="line">          enqueueInputEvent(event, <span class="keyword">this</span>, <span class="number">0</span>, <span class="keyword">true</span>);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<p><code>enqueueInputEvent</code>通过连续调用，跳转到<code>deliverInputEvent</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">deliverInputEvent</span><span class="params">(QueuedInputEvent q)</span> </span>&#123;</div><div class="line">    Trace.asyncTraceBegin(Trace.TRACE_TAG_VIEW, <span class="string">"deliverInputEvent"</span>,</div><div class="line">            q.mEvent.getSequenceNumber());</div><div class="line">    <span class="keyword">if</span> (mInputEventConsistencyVerifier != <span class="keyword">null</span>) &#123;</div><div class="line">        mInputEventConsistencyVerifier.onInputEvent(q.mEvent, <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    InputStage stage;</div><div class="line">    <span class="keyword">if</span> (q.shouldSendToSynthesizer()) &#123;</div><div class="line">        stage = mSyntheticInputStage;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        stage = q.shouldSkipIme() ? mFirstPostImeInputStage : mFirstInputStage;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (stage != <span class="keyword">null</span>) &#123;</div><div class="line">        stage.deliver(q);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        finishInputEvent(q);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>stage</code>是多态形式，但是最终会调用<code>ViewPostImeInputStage</code>的<code>onProcess</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">onProcess</span><span class="params">(QueuedInputEvent q)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (q.mEvent <span class="keyword">instanceof</span> KeyEvent) &#123;</div><div class="line">         <span class="keyword">return</span> processKeyEvent(q);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         <span class="comment">// If delivering a new non-key event, make sure the window is</span></div><div class="line">         <span class="comment">// now allowed to start updating.</span></div><div class="line">         handleDispatchDoneAnimating();</div><div class="line">         <span class="keyword">final</span> <span class="keyword">int</span> source = q.mEvent.getSource();</div><div class="line">         <span class="keyword">if</span> ((source &amp; InputDevice.SOURCE_CLASS_POINTER) != <span class="number">0</span>) &#123;</div><div class="line">             <span class="keyword">return</span> processPointerEvent(q);</div><div class="line">         &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((source &amp; InputDevice.SOURCE_CLASS_TRACKBALL) != <span class="number">0</span>) &#123;</div><div class="line">             <span class="keyword">return</span> processTrackballEvent(q);</div><div class="line">         &#125; <span class="keyword">else</span> &#123;</div><div class="line">             <span class="keyword">return</span> processGenericMotionEvent(q);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>由于是触摸事件，所以会执行<code>processPointerEvent</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">processPointerEvent</span><span class="params">(QueuedInputEvent q)</span> </span>&#123;</div><div class="line">     <span class="keyword">final</span> MotionEvent event = (MotionEvent)q.mEvent;</div><div class="line"></div><div class="line">     mAttachInfo.mUnbufferedDispatchRequested = <span class="keyword">false</span>;</div><div class="line">     <span class="keyword">boolean</span> handled = mView.dispatchPointerEvent(event);</div><div class="line">     <span class="keyword">if</span> (mAttachInfo.mUnbufferedDispatchRequested &amp;&amp; !mUnbufferedInputDispatch) &#123;</div><div class="line">         mUnbufferedInputDispatch = <span class="keyword">true</span>;</div><div class="line">         <span class="keyword">if</span> (mConsumeBatchedInputScheduled) &#123;</div><div class="line">             scheduleConsumeBatchedInputImmediately();</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> handled ? FINISH_HANDLED : FORWARD;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>发现有<code>boolean handled = mView.dispatchPointerEvent(event);</code>这么一句话，看来现在已经开始向view分发事件了。</p>
+<p>这里的<code>mView</code>是指向<code>DecorView</code>，剩下的内容下节继续</p>
+<h1 id="0x03-ViewRootImpl到View"><a href="#0x03-ViewRootImpl到View" class="headerlink" title="0x03 ViewRootImpl到View"></a>0x03 ViewRootImpl到View</h1><p>通过View的<code>dispatchPointerEvent</code>调用了<code>dispatchTouchEvent</code>，</p>
+<p>因为<code>DecorView</code>重写了<code>dispatchTouchEvent</code>方法，看下这个内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">          <span class="keyword">final</span> Callback cb = getCallback();</div><div class="line">          <span class="keyword">return</span> cb != <span class="keyword">null</span> &amp;&amp; !isDestroyed() &amp;&amp; mFeatureId &lt; <span class="number">0</span> ? cb.dispatchTouchEvent(ev)</div><div class="line">                  : <span class="keyword">super</span>.dispatchTouchEvent(ev);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>getCallback</code>返回的是Activity引用，如果Activity没有销毁，则调用Activity的<code>dispatchTouchEvent</code>方法。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</div><div class="line">        onUserInteraction();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> onTouchEvent(ev);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里注意一点，如果<code>getWindow().superDispatchTouchEvent(ev)</code>返回true，则不继续执行Activity的<code>onTouchEvent</code>。</p>
+<p>这里的getWinddow就是PhoneWindow，而PhoneWindow的<code>superDispatchTouchEvent</code>直接引用了DecorView的<code>superDispatchTouchEvent</code>，接着调用了<code>super.dispatchTouchEvent(event)</code>，这里的super是ViewGroup，这里主要做了两件事：①判断当前ViewGroup是否拦截事件，如果拦截则执行<code>onInterceptTouchEvent</code>。②如果不拦截，事件也没取消，则事件向子View分发。在向子View分发前会先判断子View是否接受事件及事件是否在子View范围内。如果都为true了则调用<code>dispatchTransformedTouchEvent</code>。这里面调用了子View的<code>dispatchTouchEvent</code>。</p>
+<p>子View的<code>dispatchTouchEvent</code>里面会判断<code>touchListener.onTouch</code>方法和<code>onTouchEvent</code>方法。</p>
+<h1 id="0x04-事件传递须知"><a href="#0x04-事件传递须知" class="headerlink" title="0x04 事件传递须知"></a>0x04 事件传递须知</h1><p> ①如果DecorView的<code>dispatchPointerEvent</code>方法返回true表示事件消费成功。</p>
+<p>②如果Activity没有销毁，则回调Activity的<code>dispatchTouchEvent</code>,如果phone window的<code>superDispatchTouchEvent</code>返回true表示被DecorView或其子View消耗了事件，则不执行Activity的onTouchEvent方法。</p>
+<p>③如果ViewGroup执行dispatchTouchEvent方法，先判断是否需要拦截事件：</p>
+<p>如果需要拦截则执行onInterceptTouchEvent方法。</p>
+<p>如果拦截返回true，则不继续事件传递，如果返回false，则继续，首先判断子View是否接受事件及是否在范围内，如果都符合则传递给子View。</p>
+<p>④如果子View执行dispatchTouchEvent方法，会先判断是否设置onTouchListener，</p>
+<p>如果设置了则执行onTouch方法。如果该方法返回true，则不继续执行子View 的onTouchEvent方法，否则继续执行ouTouchEvent方法。</p>
+<p>⑤如果ouTouchEvent方法执行，actionDown时检查长按事件，actionUp时检查onClick事件。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码解析</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/源码解析/" class="article-tag-list-link color5">源码解析</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/24/浅谈Android事件传递机制/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java-wait，notify和notifyAll使用分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">Java wait，notify和notifyAll使用分析</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/Java-wait，notify和notifyAll使用分析/" class="archive-article-date">
+  	<time datetime="2017-07-21T05:00:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>提起多线程想当然的就会想到<code>synchronized</code> 。但是<code>synchronized</code>只能用于线程同步，如果是线程交替执行(生产者/消费者)，<code>synchronized</code>也无能为力了。这时wait，notify和notifyAll派上用场了。</p>
+<h1 id="0x01-它们只是Object里的方法"><a href="#0x01-它们只是Object里的方法" class="headerlink" title="0x01 它们只是Object里的方法"></a>0x01 它们只是Object里的方法</h1><p>点开源码发现这三个方法只是object里面的方法，和多线程有神马关系呢？我相信不止我一个人曾经有过这个疑问。</p>
+<p>不只是object里的方法，而且还都是native方法。这是Java有意为之。因为Java设计之初就是要每个对象都有一个监控锁(Monitor)。而wait，notify和notifyAll三个方法也必须要在当前线程已经持有监控锁状态下才能执行，否则就会报<code>java.lang.IllegalMonitorStateException</code>。</p>
+<h1 id="0x02-怎么知道线程是否持有状态锁"><a href="#0x02-怎么知道线程是否持有状态锁" class="headerlink" title="0x02 怎么知道线程是否持有状态锁"></a>0x02 怎么知道线程是否持有状态锁</h1><p>线程同步原理就是利用了锁的互斥，所以在<code>synchronized</code>代码块内能确定是持有锁的。也就是说wait，notify和notifyAll方法需要在<code>synchronized</code>代码块内使用。</p>
+<p>具体来说有三种方式：</p>
+<ul>
+<li><p>同步对象方法持有锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sync_1</span><span class="params">()</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>同步静态方法持有锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sync_2</span><span class="params">()</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>同步代码块持有锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">sync_3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span>(lock)&#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="0x03-三个方法都有什么用"><a href="#0x03-三个方法都有什么用" class="headerlink" title="0x03 三个方法都有什么用"></a>0x03 三个方法都有什么用</h1><ul>
+<li><p>wait后会让当前线程处于阻塞状态</p>
+<p>能调用wait是因为当前线程持有Monitor，但是调用wait后，当前线程会释放锁，给予其他线程执行的机会。</p>
+</li>
+<li><p>notify会唤醒一个因为该对象阻塞的线程</p>
+<p>同样notify能正常调用是因为当前线程持有锁，当notify执行后会唤醒其他阻塞线程，但是那些阻塞线程并不会立即执行，因为Monitor被notify线程持有。被唤醒的线程要等<code>synchronized</code>代码块执行完毕释放Monitor后才能执行。</p>
+</li>
+<li><p>notifyAll会唤醒所有因为该对象阻塞的线程</p>
+<p>同notify。</p>
+</li>
+</ul>
+<h1 id="0x04-使用示例"><a href="#0x04-使用示例" class="headerlink" title="0x04 使用示例"></a>0x04 使用示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"start-t1"</span>);</div><div class="line">			<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					System.out.println(<span class="string">"t1等待唤醒"</span>);</div><div class="line">					lock.wait();</div><div class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				System.out.println(<span class="string">"t1被唤醒持有锁"</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line"></div><div class="line">	Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"start-t2"</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">3000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e1) &#123;</div><div class="line">				e1.printStackTrace();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">				lock.notify();<span class="comment">// 唤醒</span></div><div class="line">				System.out.println(<span class="string">"t2持有锁，唤醒t1"</span>);</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					Thread.currentThread().sleep(<span class="number">3000</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">				System.out.println(<span class="string">"t2休眠3s"</span>);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	t1.start();</div><div class="line">	t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<p>start-t2<br>start-t1<br>t1等待唤醒<br>t2持有锁，唤醒t1<br>t2休眠3s<br>t1被唤醒持有锁</p>
+<p>在t2中调用notify唤醒t1后，t2又休眠了3s钟，期间t1仍然没有执行，可见确实如上所说，唤醒的线程要在notify线程释放Monitor后才能执行。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/多线程/" class="article-tag-list-link color4">多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/Java-wait，notify和notifyAll使用分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">浅谈Android性能优化系列(1)之安装包大小优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/" class="archive-article-date">
+  	<time datetime="2017-07-21T03:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！</p>
+<p>这样来说吧，优化有多方面好处的：</p>
+<p>①节省用户流量</p>
+<p>②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少</p>
+<p>③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。</p>
+<p>所以，安装包优化还是有必要的。</p>
+<h1 id="0x01-安装包构成"><a href="#0x01-安装包构成" class="headerlink" title="0x01 安装包构成"></a>0x01 安装包构成</h1><p>要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png" alt="安装包构成"></p>
+<p>目录中com和org两个文件夹是第三方包信息，不用管着两个。</p>
+<ul>
+<li>assets可以存放资源和配置等各种文件，但是这里的资源文件不会像res中那样生成ID，而是通过AssetManager获取</li>
+<li>dex是Java文件编程成class文件后又经过虚拟机优化压缩形成的</li>
+<li>lib中存放native类库，根据不同CPU架构有四种类型：armeabi，armeabi-v7a，x86，mips。</li>
+<li>META-INF保存了app签名信息</li>
+<li>res中存放了资源文件</li>
+<li>resources.arsc 记录资源文件和资源ID映射。可以根据ID查找资源</li>
+<li>AndroidManifest.xml是app配置文件注册四大组件，声明权限等。</li>
+</ul>
+<p>知道了各个部分作用就大概知道了该从哪方面入手了：代码和资源，因为包中这两个部分占了很大一部分。</p>
+<h1 id="0x02-代码优化"><a href="#0x02-代码优化" class="headerlink" title="0x02 代码优化"></a>0x02 代码优化</h1><p>代码优化其实包含了Java代码和Native代码，但是因为Native代码涉及了C和C++，这里不做阐述，但是说下lib库还是有必要的</p>
+<h2 id="lib库"><a href="#lib库" class="headerlink" title="lib库"></a>lib库</h2><p>根据cpu架构lib中分为四种类型，但是目前大部分移动设备都是基于arm和arm-v7a的。x86和mips较少。而且据说x86兼容arm指令集，所以适配库优先考虑arm和arm-v7a两种即可。</p>
+<h2 id="Java代码优化：使用ProGuard代码混淆"><a href="#Java代码优化：使用ProGuard代码混淆" class="headerlink" title="Java代码优化：使用ProGuard代码混淆"></a>Java代码优化：使用ProGuard代码混淆</h2><p>ProGuard具有压缩(移除无效类、方法、属性)、优化、混淆功能。</p>
+<ul>
+<li><p>开启混淆</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">    release &#123;</div><div class="line">        minifyEnabled <span class="literal">true</span><span class="comment">//开启混淆</span></div><div class="line">        proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span> <span class="comment">//混淆文件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>压缩</p>
+<p>压缩功能是默认开启的，如果对某个或某些文件不想压缩可以使用：</p>
+<p><code>-dontshrink class * extends android.app.Activity</code>。</p>
+</li>
+<li><p>优化</p>
+<p>优化optimization默认开启，如果不开启可以使用：</p>
+<p><code>-dontoptimize</code>。一些相对复杂的方法时，压缩后可能会抛出errors，这时可以不压缩。</p>
+</li>
+<li><p>混淆</p>
+<p>混淆也是默认开启,如果对某些文件不想混淆可以使用：</p>
+<p><code>-dontobfuscate</code>。</p>
+</li>
+<li><p>保留</p>
+<p>如果想保留某些类、成员等不被混淆可以使用：</p>
+<p><code>-kepp</code>。</p>
+<p>​</p>
+<p>关于proguard更多使用方法可参考：</p>
+<p><a href="http://hanhailong.com/2015/12/28/Android%E8%BF%9B%E9%98%B6%E4%B9%8BProGuard%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/" target="_blank" rel="external">Android进阶之ProGuard代码混淆</a></p>
+<p><a href="https://my.oschina.net/u/659658/blog/71976" target="_blank" rel="external">Jean同学的Proguard私房物语</a></p>
+<p>​</p>
+</li>
+</ul>
+<h1 id="0x03-资源优化"><a href="#0x03-资源优化" class="headerlink" title="0x03 资源优化"></a>0x03 资源优化</h1><p>这里的资源优化主要是Res资源。</p>
+<h2 id="删除无用资源"><a href="#删除无用资源" class="headerlink" title="删除无用资源"></a>删除无用资源</h2><p>因为需求变更，版本更新等因素，很多研发只是一味的把新的资源文件让res下面扔，却没哟及时的把不用的文件给清理掉，长此以往导致res越来越臃肿。</p>
+<p>res资源的定时清理是很有必要的，但是资源那么多如何快速清理呢？</p>
+<p>Android提供了非常好用的工具Lint快速检测res中未使用的资源并给出提示。</p>
+<p>运行Analyze—&gt;Run Inspection By Name ，弹窗输入：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint.png" alt="lint"></p>
+<p>执行结果如下：</p>
+<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png" alt="lint_result"></p>
+<p>其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。</p>
+<h2 id="资源图片最少化"><a href="#资源图片最少化" class="headerlink" title="资源图片最少化"></a>资源图片最少化</h2><p>这里最少化有2个参考原则：</p>
+<p>①简单的图片shape画</p>
+<p>②多状态的图片filter画</p>
+<p>下面分别说说这两个原则都是什么意思</p>
+<ul>
+<li><p>简单的图片shape画</p>
+<p>这里的简单是图形简单，颜色简单，比如矩形、圆角等纯色能用shape方便绘制出来的。</p>
+</li>
+<li><p>多状态的图片filter画</p>
+<p>这里的filter是colorFilter。</p>
+<p>比如一些按钮都有默认背景色和选中背景色。这时设计一般会提供两套图片，如果使用colorFilter，我们只要一套就可以了。</p>
+</li>
+</ul>
+<h2 id="图片再压缩"><a href="#图片再压缩" class="headerlink" title="图片再压缩"></a>图片再压缩</h2><p>在app打包时，aapt会对图片进行压缩处理，但是这种压缩比较有限。因此我们可以再拿到设计给的图片后，使用一些工具进行二次压缩，比如Zopfli，这时谷歌开源项目。再比如PNGoo。</p>
+<h1 id="0x04-其他优化"><a href="#0x04-其他优化" class="headerlink" title="0x04 其他优化"></a>0x04 其他优化</h1><ul>
+<li><p>使用webp代替png</p>
+<p>webp从4.0开始支持，但是这时不支持透明度。较好地支持从4.2.2开始。</p>
+</li>
+<li><p>精简第三方库</p>
+<p>很多时候可能只需要第三方库的一部分功能，这时可以根据公司业务需求进行精简，这样会有个问题就是后期的库版本更新会是个问题。</p>
+</li>
+<li><p>插件化</p>
+<p>把一些使用率不高的业务模块再需要的时候从服务器下载，动态加载。</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/性能优化/" class="article-tag-list-link color5">性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-用Python提取excel中有用数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/用Python提取excel中有用数据/">用Python提取excel中有用数据</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/用Python提取excel中有用数据/" class="archive-article-date">
+  	<time datetime="2017-07-21T02:06:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。</p>
+<h1 id="0x01-第三方模块引入"><a href="#0x01-第三方模块引入" class="headerlink" title="0x01 第三方模块引入"></a>0x01 第三方模块引入</h1><p>在Python中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel</span></div><div class="line"><span class="comment"># 针对 03版excel（xls结尾的），我们可以使用xlrd读，xlwt包来写</span></div><div class="line"><span class="comment"># 针对 doc文档，我们可以使用docx操作</span></div></pre></td></tr></table></figure>
+<p>知道需要哪些模块了，接下来就是安装所需模块。</p>
+<p>网上很多都是先下载包，解压后本地执行<code>python setup.py install</code>。这显得很麻烦，我直接使用pip命令进行安装了。终端执行<code>pip install xlrd</code>，同样使用该方式安装其他所需库即可。</p>
+<blockquote>
+<p>无须下载，简单快捷。</p>
+</blockquote>
+<h1 id="0x02-开始编程"><a href="#0x02-开始编程" class="headerlink" title="0x02 开始编程"></a>0x02 开始编程</h1><h2 id="创建项目并把excel拷贝到项目根目录"><a href="#创建项目并把excel拷贝到项目根目录" class="headerlink" title="创建项目并把excel拷贝到项目根目录"></a>创建项目并把excel拷贝到项目根目录</h2><p><img src="/2017/07/21/用Python提取excel中有用数据/创建项目.png" alt="创建项目"></p>
+<h2 id="导入刚才安装的模块"><a href="#导入刚才安装的模块" class="headerlink" title="导入刚才安装的模块"></a>导入刚才安装的模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> xlrd</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> docx</div></pre></td></tr></table></figure>
+<p><code>threading</code>是Python自带的线程模块</p>
+<h2 id="读取excel"><a href="#读取excel" class="headerlink" title="读取excel"></a>读取excel</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_xls</span><span class="params">(path, find=<span class="string">''</span>, row=<span class="number">-1</span>, col=<span class="number">-1</span>)</span>:</span></div><div class="line">    <span class="string">"""接收xls文件并读取指定内容返回</span></div><div class="line">    *path* 接收xls路径</div><div class="line">    *find* 要查找的内容，为列表格式</div><div class="line">    *row* 行数，-1说明没有指定，查找所有行</div><div class="line">    *col* 列数，-1说明没有指定，查找所有列</div><div class="line">    """</div><div class="line">    xls = xlrd.open_workbook(path)</div><div class="line">    names = xls.sheet_names()</div><div class="line">    print(names)</div><div class="line">    sheet = xls.sheet_by_name(names[<span class="number">0</span>])</div><div class="line">    row = int(row)</div><div class="line">    col = int(col)</div><div class="line">    python_books = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, sheet.nrows):</div><div class="line">        <span class="keyword">if</span> <span class="number">-1</span> != row:  <span class="comment"># 指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    <span class="keyword">for</span> j <span class="keyword">in</span> sheet.ncols:</div><div class="line">                        <span class="keyword">if</span> j == col:</div><div class="line">                            text = sheet.cell_value(i, j)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    text = sheet.row_values(i)</div><div class="line">        <span class="keyword">else</span>:  <span class="comment"># 没指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                text = sheet.cell_value(i, col)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                text = sheet.cell_value(i, <span class="number">4</span>)</div><div class="line">        <span class="keyword">if</span> find != <span class="string">""</span>:</div><div class="line">            <span class="keyword">for</span> content <span class="keyword">in</span> find:</div><div class="line">                <span class="keyword">if</span> content <span class="keyword">in</span> text:</div><div class="line">                    print(text + <span class="string">'\n'</span>)</div><div class="line">                    python_books.append(text)</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(text + <span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> python_books</div></pre></td></tr></table></figure>
+<p>虽然只是个简单的数据提取，但是为了提高程序灵活性，文件路径、行列及搜索值仍然通过传参方式。</p>
+<p><code>read_xls</code>实现了读取excel中指定的相关内容到列表，下面要实现存储内容到doc文档。</p>
+<h2 id="保存内容到doc文档"><a href="#保存内容到doc文档" class="headerlink" title="保存内容到doc文档"></a>保存内容到doc文档</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_doc</span><span class="params">(name, contents, create_new=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    *param name* doc文档名称</div><div class="line">    *param contents* 文档内容，为列表格式</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc = docx.Document()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc = docx.Document(name)</div><div class="line">    <span class="keyword">for</span> pb <span class="keyword">in</span> contents:</div><div class="line">        doc.add_paragraph(pb)</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc.save(name + <span class="string">'.docx'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc.save(name)</div></pre></td></tr></table></figure>
+<p>该方法实现的是，如果create_new为true则直接创建一个doc文档存储内容，并将文档命名为name。如果为false则直接打开一个名称为name的文档进行存储。</p>
+<p>因为这些都是IO操作，应该在工作线程执行。但是这是两个独立的方法，所以还需进行一次包装。</p>
+<h2 id="2个方法封装"><a href="#2个方法封装" class="headerlink" title="2个方法封装"></a>2个方法封装</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(path, find, row, col)</span>:</span></div><div class="line">    <span class="string">"""包装类，封装读取xls文件方法和保存到doc文档方法</span></div><div class="line">    *param path*</div><div class="line">    *param find*</div><div class="line">    *param row*</div><div class="line">    *param col*</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    python_books = read_xls(path, find, row, col)</div><div class="line">    save_doc(name=path, contents=python_books, create_new=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<h2 id="开启2个工作线程读取并存储内容"><a href="#开启2个工作线程读取并存储内容" class="headerlink" title="开启2个工作线程读取并存储内容"></a>开启2个工作线程读取并存储内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">find = [<span class="string">'python'</span>, <span class="string">'PYTHON'</span>, <span class="string">'Python'</span>]</div><div class="line">thread1 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook1.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread1.start()</div><div class="line"></div><div class="line">thread2 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook2.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread2.start()</div></pre></td></tr></table></figure>
+<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>执行后会在项目根目录生成2个对应的doc文档：</p>
+<p><img src="/2017/07/21/用Python提取excel中有用数据/项目结果.png" alt="项目结果"></p>
+<p>打开doc文档看看具体内容吧：</p>
+<p><img src="/2017/07/21/用Python提取excel中有用数据/doc文档内容.png" alt="doc文档内容"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">excel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">xlrd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/excel/" class="article-tag-list-link color1">excel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/xlrd/" class="article-tag-list-link color5">xlrd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/用Python提取excel中有用数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">浅谈Android性能优化系列(0)之为什么需要性能优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/" class="archive-article-date">
+  	<time datetime="2017-07-19T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
+<p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
+<p>为什么性能优化是我们绕不开的话题呢？</p>
+<h1 id="0x01-为什么需要性能优化"><a href="#0x01-为什么需要性能优化" class="headerlink" title="0x01 为什么需要性能优化"></a>0x01 为什么需要性能优化</h1><p>关于为什么需要性能优化这个问题，我想很多人都会即时作答：“为用户提供更好的体验”。</p>
+<p>既然说到为用户提供更好体验，设想一下，假如用户并不在意所谓的体验，只要功能完成就行了。那么这时公司还会考虑做性能优化吗？</p>
+<p>我想大多数公司都不会去做”这样一件无意义的事“了。公司是以盈利为目的，怎么会在用户不care的点上花费大量人力物力财力呢？</p>
+<p>然而现实恰恰相反的，随着科技发展，用户对产品体验要求越来越高，加上当前产品同质化严重，特色功能只能吸引用户，而良好的用户体验才是留住用户的关键。</p>
+<h1 id="0x02-从哪些方面入手性能优化"><a href="#0x02-从哪些方面入手性能优化" class="headerlink" title="0x02 从哪些方面入手性能优化"></a>0x02 从哪些方面入手性能优化</h1><p>只说性能优化太过笼统，为了提供良好用户体验，应该从哪些方面着手呢？</p>
+<p>换句话说，在产品体验上，用户会通过感知哪些方面来评价产品好坏？这样一说答案就很明显了，就是平常我们自己使用程序都会唠叨的那几个方面：点几下就崩溃、玩一会就没电、没多久流量就超了、打开页面很卡、安装包太大、占了300兆内存~</p>
+<blockquote>
+<p>把上面几个方面归纳下就是：程序稳定性优化、耗电检测优化、网络优化、UI渲染优化、安装包优化和内存优化 6个方面。</p>
+</blockquote>
+<h1 id="0x03-结束语"><a href="#0x03-结束语" class="headerlink" title="0x03 结束语"></a>0x03 结束语</h1><p>这是本系列开篇，从为什么要性能优化发散到优化入手的6各方面，为后续章节做铺垫。</p>
+<p>目前预计未来会写6篇关于具体方面优化和6篇相关方面工具使用，共计12篇。希望通过这12篇让自己当然希望也能帮助别人对Android整体性能优化有个了解，最终形成自己的知识脉络。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-为什么相对布局比线性布局性能低" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/19/为什么相对布局比线性布局性能低/">为什么相对布局比线性布局性能低</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/19/为什么相对布局比线性布局性能低/" class="archive-article-date">
+  	<time datetime="2017-07-19T02:53:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。</p>
+<p>经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。</p>
+<h1 id="0x01-View绘制流程简述"><a href="#0x01-View绘制流程简述" class="headerlink" title="0x01 View绘制流程简述"></a>0x01 View绘制流程简述</h1><p>看过源码的应该知道，View的绘制是从<code>ViewRootImpl.performTraversals()</code>方法开始的。</p>
+<p>先后经历<code>performMeasure</code>、<code>performLayout</code>和<code>performDraw</code>三个阶段，就是常说的测量、布局和绘制。</p>
+<ul>
+<li>performMeasure会调用根View的measure，进而调用onMeasure方法</li>
+<li>performLayout调用根View的layout，进而调用onLayout方法</li>
+<li>performDraw调用根View的draw，进而调用onDraw方法</li>
+</ul>
+<p>鉴于两个都是ViewGroup，所以可以忽略onDraw</p>
+<p>有对比才有伤害，要比较这两个布局性能，要先看看这两个布局分别在onMeasure，onLayout都做了什么。</p>
+<h1 id="0x02-LinearLayout分析"><a href="#0x02-LinearLayout分析" class="headerlink" title="0x02 LinearLayout分析"></a>0x02 LinearLayout分析</h1><p>LinearLayout的onMeasure方法内容很简单，就是判断方向然后分别调用:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (mOrientation == VERTICAL) &#123;</div><div class="line">         measureVertical(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         measureHorizontal(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>那就随便看看<code>measureVertical</code>方法里面干了些什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See how tall everyone is. Also remember max width.</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">    <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</div><div class="line">        mTotalLength += measureNullChild(i);</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child.getVisibility() == View.GONE) &#123;</div><div class="line">       i += getChildrenSkipCount(child, i);</div><div class="line">       <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (hasDividerBeforeChildAt(i)) &#123;</div><div class="line">        mTotalLength += mDividerHeight;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">    totalWeight += lp.weight;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY &amp;&amp; lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// Optimization: don't bother measuring children who are going to use</span></div><div class="line">        <span class="comment">// leftover space. These views will get measured again down below if</span></div><div class="line">        <span class="comment">// there is any leftover space.</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + lp.topMargin + lp.bottomMargin);</div><div class="line">        skippedMeasure = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">int</span> oldHeight = Integer.MIN_VALUE;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// heightMode is either UNSPECIFIED or AT_MOST, and this</span></div><div class="line">            <span class="comment">// child wanted to stretch to fill available space.</span></div><div class="line">            <span class="comment">// Translate that to WRAP_CONTENT so that it does not end up</span></div><div class="line">            <span class="comment">// with a height of 0</span></div><div class="line">            oldHeight = <span class="number">0</span>;</div><div class="line">            lp.height = LayoutParams.WRAP_CONTENT;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Determine how big this child would like to be. If this or</span></div><div class="line">        <span class="comment">// previous children have given a weight, then we allow it to</span></div><div class="line">        <span class="comment">// use all available space (and we will shrink things later</span></div><div class="line">        <span class="comment">// if needed).</span></div><div class="line">        measureChildBeforeLayout(</div><div class="line">               child, i, widthMeasureSpec, <span class="number">0</span>, heightMeasureSpec,</div><div class="line">               totalWeight == <span class="number">0</span> ? mTotalLength : <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldHeight != Integer.MIN_VALUE) &#123;</div><div class="line">           lp.height = oldHeight;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> childHeight = child.getMeasuredHeight();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + childHeight + lp.topMargin +</div><div class="line">               lp.bottomMargin + getNextLocationOffset(child));</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (useLargestChild) &#123;</div><div class="line">            largestChildHeight = Math.max(childHeight, largestChildHeight);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * If applicable, compute the additional offset to the child's baseline</div><div class="line">     * we'll need later when asked &#123;<span class="doctag">@link</span> #getBaseline&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> ((baselineChildIndex &gt;= <span class="number">0</span>) &amp;&amp; (baselineChildIndex == i + <span class="number">1</span>)) &#123;</div><div class="line">       mBaselineChildTop = mTotalLength;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// if we are trying to use a child index for our baseline, the above</span></div><div class="line">    <span class="comment">// book keeping only works if there are no children above it with</span></div><div class="line">    <span class="comment">// weight.  fail fast to aid the developer.</span></div><div class="line">    <span class="keyword">if</span> (i &lt; baselineChildIndex &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"A child of LinearLayout with index "</span></div><div class="line">                + <span class="string">"less than mBaselineAlignedChildIndex has weight &gt; 0, which "</span></div><div class="line">                + <span class="string">"won't work.  Either remove the weight, or don't set "</span></div><div class="line">                + <span class="string">"mBaselineAlignedChildIndex."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> matchWidthLocally = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">if</span> (widthMode != MeasureSpec.EXACTLY &amp;&amp; lp.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">        <span class="comment">// The width of the linear layout will scale, and at least one</span></div><div class="line">        <span class="comment">// child said it wanted to match our width. Set a flag</span></div><div class="line">        <span class="comment">// indicating that we need to remeasure at least that view when</span></div><div class="line">        <span class="comment">// we know our width.</span></div><div class="line">        matchWidth = <span class="keyword">true</span>;</div><div class="line">        matchWidthLocally = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> margin = lp.leftMargin + lp.rightMargin;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> measuredWidth = child.getMeasuredWidth() + margin;</div><div class="line">    maxWidth = Math.max(maxWidth, measuredWidth);</div><div class="line">    childState = combineMeasuredStates(childState, child.getMeasuredState());</div><div class="line"></div><div class="line">    allFillParent = allFillParent &amp;&amp; lp.width == LayoutParams.MATCH_PARENT;</div><div class="line">    <span class="keyword">if</span> (lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * Widths of weighted Views are bogus if we end up</div><div class="line">         * remeasuring, so keep them separate.</div><div class="line">         */</div><div class="line">        weightedMaxWidth = Math.max(weightedMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alternativeMaxWidth = Math.max(alternativeMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    i += getChildrenSkipCount(child, i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法主要是for循环中通过<code>measureChildBeforeLayout</code>测量子View高度，把每次测量的高度都累加到<code>mTotalLength</code>。</p>
+<h1 id="0x03-RelativeLayout分析"><a href="#0x03-RelativeLayout分析" class="headerlink" title="0x03 RelativeLayout分析"></a>0x03 RelativeLayout分析</h1><p>看看RelativeLayout的onMeasure方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">View[] views = mSortedHorizontalChildren;</div><div class="line"> <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">         applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">         measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">             offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> views = mSortedVerticalChildren;</div><div class="line"> count = views.length;</div><div class="line"> <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         </div><div class="line">         applyVerticalSizeRules(params, myHeight);</div><div class="line">         measureChild(child, params, myWidth, myHeight);</div><div class="line">         <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">             offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">             <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, params.mRight);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">             <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                 height = Math.max(height, params.mBottom);</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">             left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">             top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">             right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">             bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>第一个for循环中<code>measureChildHorizontal</code>方法实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">           params.mRight, params.width,</div><div class="line">           params.leftMargin, params.rightMargin,</div><div class="line">           mPaddingLeft, mPaddingRight,</div><div class="line">           myWidth);</div><div class="line">   <span class="keyword">int</span> maxHeight = myHeight;</div><div class="line">   <span class="keyword">if</span> (mMeasureVerticalWithPaddingMargin) &#123;</div><div class="line">       maxHeight = Math.max(<span class="number">0</span>, myHeight - mPaddingTop - mPaddingBottom -</div><div class="line">               params.topMargin - params.bottomMargin);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">int</span> childHeightMeasureSpec;</div><div class="line">   <span class="keyword">if</span> (myHeight &lt; <span class="number">0</span> &amp;&amp; !mAllowBrokenMeasureSpecs) &#123;</div><div class="line">       <span class="keyword">if</span> (params.height &gt;= <span class="number">0</span>) &#123;</div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(</div><div class="line">                   params.height, MeasureSpec.EXACTLY);</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="comment">// Negative values in a mySize/myWidth/myWidth value in RelativeLayout measurement</span></div><div class="line">           <span class="comment">// is code for, "we got an unspecified mode in the RelativeLayout's measurespec."</span></div><div class="line">           <span class="comment">// Carry it forward.</span></div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">0</span>, MeasureSpec.UNSPECIFIED);</div><div class="line">       &#125;</div><div class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span> (params.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY);</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);</div><div class="line">   &#125;</div><div class="line">   child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
+<p>第二个for循环中<code>measureChild</code>实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">                params.mRight, params.width,</div><div class="line">                params.leftMargin, params.rightMargin,</div><div class="line">                mPaddingLeft, mPaddingRight,</div><div class="line">                myWidth);</div><div class="line">        <span class="keyword">int</span> childHeightMeasureSpec = getChildMeasureSpec(params.mTop,</div><div class="line">                params.mBottom, params.height,</div><div class="line">                params.topMargin, params.bottomMargin,</div><div class="line">                mPaddingTop, mPaddingBottom,</div><div class="line">                myHeight);</div><div class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
+<p>两个for循环中都执行了<code>child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</code>这意味着子View测量执行了两遍。</p>
+<p>为什么RelativeLayout要测量两遍？</p>
+<blockquote>
+<p>因为RelativeLayout并不像LinearLayout那样有着方向单一性。RelativeLayout的灵活性就在于允许纵横双向的，这样view直接不仅横向依赖，还有纵向依赖，每个方向都要测量一遍。导致性能略差。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/19/为什么相对布局比线性布局性能低/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-为什么Android中很多int常量使用十六进制表示" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -733,605 +1557,9 @@
 
 
   
-    <article id="post-Mac下配置adb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/13/Mac下配置adb/">Mac下配置adb</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/13/Mac下配置adb/" class="archive-article-date">
-  	<time datetime="2017-07-13T13:10:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月13日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Mac和windows一样，如果要在终端命令行全局使用非系统命令，需要手动把命令环境配置到指定文件中，具体操作就是把命令文件所属路径配置到.bash_profile里面。</p>
-<h1 id="0x01-分别找到双方路径"><a href="#0x01-分别找到双方路径" class="headerlink" title="0x01 分别找到双方路径"></a>0x01 分别找到双方路径</h1><h2 id="找到adb"><a href="#找到adb" class="headerlink" title="找到adb"></a>找到adb</h2><p>我是通过Android studio中的idk location找到SDK位置<code>/Users/jenson/Library/Android/sdk</code> .</p>
-<h2 id="找到-bash-profile"><a href="#找到-bash-profile" class="headerlink" title="找到.bash_profile"></a>找到.bash_profile</h2><ul>
-<li><p>使用命令行<code>cd $home</code> 进入home路径下，</p>
-</li>
-<li><p>因为mac下以点开头的文件为隐藏文件，所以使用<code>ls -al</code> 查看所有文件，查看列表是否有.bash_profile文件，</p>
-</li>
-<li><p>如果没有，使用<code>touch .bash_profile</code> 创建，如果有则执行命令<code>open -e .bash_profile</code> 使用文本编辑器打开文件，</p>
-</li>
-<li><p>在下面按格式添加SDK路径：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export PATH=/Users/jenson/Library/Android/sdk/platform-tools:$PATH</div><div class="line">export PATH=/Users/jenson/Library/Android/sdk/tools:$PATH</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h2 id="open-e-bash-profile提示open命令不存在"><a href="#open-e-bash-profile提示open命令不存在" class="headerlink" title="open -e .bash_profile提示open命令不存在"></a>open -e .bash_profile提示open命令不存在</h2><p>通过Finder根据路径找到.bash_profile文件，编辑添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export PATH=&quot;/usr/bin:/bin:/usr/sbin:/sbin&quot;</div><div class="line">export PATH=&quot;/usr/local/bin:/usr/local/sbin:$PATH&quot;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/13/Mac下配置adb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hexo文章tags添加多标签" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/hexo文章tags添加多标签/">hexo文章tags添加多标签</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/hexo文章tags添加多标签/" class="archive-article-date">
-  	<time datetime="2017-07-01T05:52:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>hexo博客在给文章添加标签tags时，如果只添加一个，冒号后面空格跟上标签名称即可，</p>
-<p>但是如果想要添加多个标签，需要使用[tag1,tag2]格式来表示，</p>
-<p>categories也同理。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/hexo/" class="article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/博客/" class="article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/hexo文章tags添加多标签/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Mac终端光标变成粗体" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/01/Mac终端光标变成粗体/">Mac终端光标变成粗体</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/01/Mac终端光标变成粗体/" class="archive-article-date">
-  	<time datetime="2017-07-01T05:46:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>打开终端偏好设置，勾选 竖条，闪动光标</p>
-<p><img src="/2017/07/01/Mac终端光标变成粗体/设置光标.png" alt="设置光标"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/Mac终端光标变成粗体/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/30/Java知识点/">Java知识点</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/30/Java知识点/" class="archive-article-date">
-  	<time datetime="2017-06-30T10:51:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月30日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>1、==对基本数据类型来说比较的是值是否相等，但对于引用类型来说，其和equals医院，比较的都是对象地址，前提是equals没有被重写。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s1 == s3);<span class="comment">//false</span></div><div class="line">System.out.println(s2 == s3);<span class="comment">//true</span></div></pre></td></tr></table></figure>
-<p>根据Java编译时优化方案，s2中加号的三个值都为固定常量，所以s2在编译时也被认为是常量，即编译期就确定了s2的值，并且和s3一样，所以打印true</p>
-<p>在s1中，a和b的值是常量，但是c属于局部变量，而且也没有谁指定c这个值是不可变的。既然是可变量，导致s1也被编译期认为是不确定值，</p>
-<p>接下来s0，a和b不用说了都是常量，而c1虽然和c一样也是局部变量，但是c1有finla修饰，明确告诉编译器明面上我是一个局部变量，但是同时我的值是不可变的，final修饰了，现在不变，将来也不会改变，所以编译器在编译期确定了s0 的值。所以把s0也作为常量和s3一样，都在常量池</p>
-<p><strong><em>编译器优化要在编译期能确定的值得情况下进行，而能确定值的只能是在常量池中的内容。</em></strong></p>
-<p>2、string.intern()，当字符串调用这个方法时，都会拿着当前字符串的值去常量池中找，如果找到则返回常量池这个常量地址，否则在常量池创建一个常量并把字符串填进去，然后返回创建的地址。当然这是在JDK1.6情况下，在1.7及以后会有不同</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);</div><div class="line">System.out.println(s1.intern() == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s2 == s3);</div></pre></td></tr></table></figure>
-<p><strong><em>由于intern()需要去常量池中做字符串比较，而常量池又很可能有多个常量，所以一般来说intern()效率并不高</em></strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/30/Java知识点/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Django创建数据表时syncdb提示Unknown-command：‘syncdb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">Django创建数据表时syncdb提示Unknown command：‘syncdb&#39;</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/" class="archive-article-date">
-  	<time datetime="2017-06-27T08:32:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月27日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>异常信息如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdb</div><div class="line">Unknown command: &apos;syncdb&apos;</div><div class="line">Type &apos;manage.py help&apos; for usage.</div></pre></td></tr></table></figure>
-<p>主要是因为使用的版本太新，如果你安装的Django Version &gt;= 1.9就会出现这个问题</p>
-<p>解决方法就是把<code>python3 ./manage.py syncdb</code></p>
-<p>替换成<code>python3 ./manage.py migrate</code></p>
-<p>之后就会初始化数据表成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py migrate</div><div class="line">Operations to perform:</div><div class="line">  Apply all migrations: admin, auth, contenttypes, sessions</div><div class="line">Running migrations:</div><div class="line">  Applying contenttypes.0001_initial... OK</div><div class="line">  Applying auth.0001_initial... OK</div><div class="line">  Applying admin.0001_initial... OK</div><div class="line">  Applying admin.0002_logentry_remove_auto_add... OK</div><div class="line">  Applying contenttypes.0002_remove_content_type_name... OK</div><div class="line">  Applying auth.0002_alter_permission_name_max_length... OK</div><div class="line">  Applying auth.0003_alter_user_email_max_length... OK</div><div class="line">  Applying auth.0004_alter_user_username_opts... OK</div><div class="line">  Applying auth.0005_alter_user_last_login_null... OK</div><div class="line">  Applying auth.0006_require_contenttypes_0002... OK</div><div class="line">  Applying auth.0007_alter_validators_add_error_messages... OK</div><div class="line">  Applying auth.0008_alter_user_username_max_length... OK</div><div class="line">  Applying sessions.0001_initial... OK</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python入门系列-3-元组、列表和字典" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">Python入门系列(3):元组、列表和字典</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/26/Python入门系列-3-元组、列表和字典/" class="archive-article-date">
-  	<time datetime="2017-06-26T11:00:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月26日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。</p>
-<h1 id="0x01-列表"><a href="#0x01-列表" class="headerlink" title="0x01 列表"></a>0x01 列表</h1><h2 id="什么是列表？如何表示列表？"><a href="#什么是列表？如何表示列表？" class="headerlink" title="什么是列表？如何表示列表？"></a>什么是列表？如何表示列表？</h2><p>​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’, ‘dog’, ‘monkey’]</p>
-<h2 id="访问列表"><a href="#访问列表" class="headerlink" title="访问列表"></a>访问列表</h2><p>​    列表的访问通过索引下标来访问，索引和其他大多数语言一样从0开始。</p>
-<p>也就是说访问第一个元素为：animal[0]。而和其他语言不一样的是Python中索引可以为负值，如：animal[-1]实际为最后一个元素，以此类推。</p>
-<h2 id="列表增加元素"><a href="#列表增加元素" class="headerlink" title="列表增加元素"></a>列表增加元素</h2><p>​    元素的添加分为两种，列表末尾追加和任意位置添加</p>
-<ul>
-<li><p>末尾追加</p>
-<p>使用方法append，animal.append(’fox‘)</p>
-</li>
-<li><p>任意位置添加</p>
-<p>使用方法insert，animal.insert(1,’fox’)。第一个参数为索引值</p>
-</li>
-</ul>
-<h2 id="列表删除元素"><a href="#列表删除元素" class="headerlink" title="列表删除元素"></a>列表删除元素</h2><p>元素删除也可以通过四种方式实现：</p>
-<ul>
-<li><p>使用del</p>
-<p>如果知道元素所处列表位置，则使用del  animal[ i ]</p>
-</li>
-<li><p>使用pop</p>
-<p>如果只需删除了列表末尾元素，则直接使用animal.pop方法。类似出栈</p>
-</li>
-<li><p>使用pop</p>
-<p>如果要删除任意位置元素，使用animal.pop（i)，参数为索引值</p>
-</li>
-<li><p>使用remove</p>
-<p>如果知道元素值而不知道位置，则使用animal.remove（value），参数为元素值</p>
-</li>
-</ul>
-<h2 id="列表修改元素"><a href="#列表修改元素" class="headerlink" title="列表修改元素"></a>列表修改元素</h2><p>​    修改列表元素的语法与访问列表元素的语法类似，如果要进行元素修改只要拿到元素后对其进行从新赋值即可：animal[1] = ‘bird’。</p>
-<h2 id="列表元素遍历"><a href="#列表元素遍历" class="headerlink" title="列表元素遍历"></a>列表元素遍历</h2><p>列表遍历使用循环即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ani <span class="keyword">in</span> animal:</div><div class="line">	print(ani)</div></pre></td></tr></table></figure>
-<h1 id="0x02-元组"><a href="#0x02-元组" class="headerlink" title="0x02 元组"></a>0x02 元组</h1><p>元组使用小括号，列表使用方括号。<br>元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可。</p>
-<ul>
-<li>Python 的元组与列表类似，不同之处在于元组的元素不能修改。</li>
-</ul>
-<ul>
-<li><p>元组中只包含一个元素时，需要在元素后面添加逗号</p>
-<p>​    tup1 = (10,)</p>
-</li>
-<li><p>元组中的元素值是不允许删除的，但我们可以使用del语句来删除整个元组</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>,<span class="string">'dm'</span>)</div><div class="line">print(cats)</div><div class="line"><span class="keyword">del</span> cats</div><div class="line">print(cats)<span class="comment">#打印异常</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>元组中的元素值是不允许修改的，但我们可以对元组进行连接组合</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>, <span class="string">'dm'</span>)</div><div class="line">cat1 = (<span class="string">'mm'</span>,)</div><div class="line">allCat = cats + cat1</div><div class="line">print(allCat)<span class="comment">#('xm', 'dm', 'mm')</span></div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="0x03-字典"><a href="#0x03-字典" class="headerlink" title="0x03 字典"></a>0x03 字典</h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 
