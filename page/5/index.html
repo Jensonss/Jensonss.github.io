@@ -180,6 +180,200 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Android事件传递机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/24/浅谈Android事件传递机制/">浅谈Android事件传递机制</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/24/浅谈Android事件传递机制/" class="archive-article-date">
+  	<time datetime="2017-07-24T09:34:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月24日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>为什么点下屏幕某个位置时候，系统会找到正确地控件来响应？</p>
+<p>为什么按下按下返回键系统会让当前窗口页面关闭而不是下面的那个页面？</p>
+<p>很多时候多问自己个为什么就发现自己会的其实还很少。</p>
+<h1 id="0x01-冯诺依曼模型回顾"><a href="#0x01-冯诺依曼模型回顾" class="headerlink" title="0x01 冯诺依曼模型回顾"></a>0x01 冯诺依曼模型回顾</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼模型"></p>
+<p>讲事件传递为什么把冯诺依曼模型带进来了？</p>
+<p>事件传递的事件来自哪里？</p>
+<p>基本的事件来自按键、屏幕，属于输入设备，而最终事件的结果要显示在屏幕上(输出设备)，这样才算完成一次交互。其实这里屏幕同时兼顾输入和输出。</p>
+<p>有了输入设备，系统是如何从中采集数据的呢？</p>
+<h1 id="0x02-设备节点到ViewRootImpl"><a href="#0x02-设备节点到ViewRootImpl" class="headerlink" title="0x02 设备节点到ViewRootImpl"></a>0x02 设备节点到ViewRootImpl</h1><h2 id="Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。"><a href="#Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。" class="headerlink" title="Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。"></a>Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。</h2><p>当发现输入设备可用时，Linux内核会在/dev/input/目录下创建名称为event0~n的设备节点。当设备不可用时则删除对应节点。</p>
+<p><em>如果刚才的不好理解，那么可以理解windows这种情况：当我们新买的鼠标插入USB口时，右下角一般弹窗正在安装USB驱动，而最终会在设备管理中多出一个USBHub设备节点，拔掉USB时就会消失</em></p>
+<p>输入设备准备就绪，当有事件发生时，Linux内核收到硬件中断，然后把中断加工成原始输入事件存入对应设备节点中。</p>
+<p>输入事件已经有了，用户空间只要读取事件信息就可以了。</p>
+<h2 id="在用户空间这块输入事件的负责人是谁呢？"><a href="#在用户空间这块输入事件的负责人是谁呢？" class="headerlink" title="在用户空间这块输入事件的负责人是谁呢？"></a>在用户空间这块输入事件的负责人是谁呢？</h2><p>Android系统为我们指定好了负责人：InputManagerService(后面直接称：IMS)。</p>
+<p>IMS和WMS，AMS一样都属于系统服务，在系统启动时由SystemServer统一启动。所以只要看看源码才能知道具体情况如何。</p>
+<p>首先看下<code>SystemServer</code>启动情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">/**</span></div><div class="line">     * The main entry point from zygote.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">new</span> SystemServer().run();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="comment">// Start services.</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            startBootstrapServices();</div><div class="line">            startCoreServices();</div><div class="line">            startOtherServices();</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable ex) &#123;</div><div class="line">            Slog.e(<span class="string">"System"</span>, 	<span class="string">"******************************************"</span>);</div><div class="line">            Slog.e(<span class="string">"System"</span>, <span class="string">"************ Failure starting system services"</span>, ex);</div><div class="line">            <span class="keyword">throw</span> ex;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过源码发现<code>SystemServer</code>通过main方法直接启动的。当然这里run方法代码只是关键的一部分，如果都粘贴上来会影响分析。</p>
+<p>那么IMS在哪启动的呢？其实IMS通过<code>startOtherServices</code>方法启动。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startOtherServices</span><span class="params">()</span> </span>&#123;</div><div class="line">        WindowManagerService wm = <span class="keyword">null</span>;</div><div class="line">       InputManagerService inputManager = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">	 wm = WindowManagerService.main(context, inputManager,</div><div class="line">                   mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,</div><div class="line">                   !mFirstBoot, mOnlyCore);</div><div class="line">           ServiceManager.addService(Context.WINDOW_SERVICE, wm);</div><div class="line">           ServiceManager.addService(Context.INPUT_SERVICE, inputManager);</div><div class="line"></div><div class="line">           inputManager = <span class="keyword">new</span> InputManagerService(context);</div><div class="line">          inputManager.setWindowManagerCallbacks(wm.getInputMonitor());</div><div class="line">           inputManager.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里不仅启动了IMS，还有WMS，还给IMS设置了一个<code>wm.getInputMonitor()</code>，这个设置有什么用先不用管。最后调用了start方法。</p>
+<p>目前只只知道IMS是用户空间的输入事件负责人，具体如何负责还要继续看，IMS的start方法调用了<code>nativeStart(mPtr);</code>，看的出来这是要进入C层实现了。</p>
+<p>找到Java层IMS对应的C层实现，打开文件找到<code>nativeStart</code>实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">nativeStart</span><span class="params">(JNIEnv* env, jclass clazz, jlong ptr)</span> </span>&#123;</div><div class="line">    NativeInputManager* im = <span class="keyword">reinterpret_cast</span>&lt;NativeInputManager*&gt;(ptr);</div><div class="line"></div><div class="line">    <span class="keyword">status_t</span> result = im-&gt;getInputManager()-&gt;start();</div><div class="line">    <span class="keyword">if</span> (result) &#123;</div><div class="line">        jniThrowRuntimeException(env, <span class="string">"Input manager could not be started."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方法如此简单，又是个躯壳，仅仅调用了其他类的方法。</p>
+<p>下面看看<code>start()</code>里面干了什么，</p>
+<p>注意一点：这里显示的是<code>NativeInputManager</code>，但其实找到的是<code>InputManager</code>,多态特性。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">status_t</span> InputManager::start() &#123;    </div><div class="line">    <span class="keyword">status_t</span> result = mDispatcherThread-&gt;run(<span class="string">"InputDispatcher"</span>, PRIORITY_URGENT_DISPLAY);</div><div class="line">    <span class="keyword">if</span> (result) &#123;</div><div class="line">        ALOGE(<span class="string">"Could not start InputDispatcher thread due to error %d."</span>, result);</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    result = mReaderThread-&gt;run(<span class="string">"InputReader"</span>, PRIORITY_URGENT_DISPLAY);</div><div class="line">    <span class="keyword">if</span> (result) &#123;</div><div class="line">        ALOGE(<span class="string">"Could not start InputReader thread due to error %d."</span>, result);</div><div class="line"></div><div class="line">        mDispatcherThread-&gt;requestExit();</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这次真的是全部代码，没有精简，看的出来好像start就启动了两个线程。</p>
+<p>mDispatcherThread对应<code>InputDispatcherThread</code>类，负责事件分发</p>
+<p>mReaderThread对应<code>InputReaderThread</code>类，负责事件读取</p>
+<p>现在我们基本可以猜到，一个线程读取事件，读取后把事件信息传递给分发线程，由分发线程继续处理。</p>
+<p>当然这还都只是猜测，实践是检验真理的唯一标准。</p>
+<h2 id="看看InputReaderThread干了什么"><a href="#看看InputReaderThread干了什么" class="headerlink" title="看看InputReaderThread干了什么"></a>看看InputReaderThread干了什么</h2><p>首先看看<code>InputReaderThread</code>源码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Reads raw events from the event hub and processes them, endlessly. */</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">InputReaderThread</span> :</span> <span class="keyword">public</span> Thread &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    InputReaderThread(<span class="keyword">const</span> sp&lt;InputReaderInterface&gt;&amp; reader);</div><div class="line">    <span class="keyword">virtual</span> ~InputReaderThread();</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    sp&lt;InputReaderInterface&gt; mReader;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">threadLoop</span><span class="params">()</span></span>;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><code>InputReaderThread</code>继承了Thread，在执行run方法时会回调<code>threadLoop</code>。从<code>virtual</code>知道这是一个虚函数，来看看具体实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">bool</span> InputReaderThread::threadLoop() &#123;</div><div class="line">    mReader-&gt;loopOnce();</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>mReader对应<code>InputReader</code>类，看下<code>loopOnce</code>方法实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">void</span> InputReader::loopOnce() &#123;</div><div class="line">    <span class="keyword">int32_t</span> oldGeneration;</div><div class="line">    <span class="keyword">int32_t</span> timeoutMillis;</div><div class="line">    <span class="keyword">bool</span> inputDevicesChanged = <span class="literal">false</span>;</div><div class="line">    Vector&lt;InputDeviceInfo&gt; inputDevices;</div><div class="line">    &#123; <span class="comment">// acquire lock</span></div><div class="line">        AutoMutex _l(mLock);</div><div class="line"></div><div class="line">        oldGeneration = mGeneration;</div><div class="line">        timeoutMillis = <span class="number">-1</span>;</div><div class="line"></div><div class="line">        <span class="keyword">uint32_t</span> changes = mConfigurationChangesToRefresh;</div><div class="line">        <span class="keyword">if</span> (changes) &#123;</div><div class="line">            mConfigurationChangesToRefresh = <span class="number">0</span>;</div><div class="line">            timeoutMillis = <span class="number">0</span>;</div><div class="line">            refreshConfigurationLocked(changes);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mNextTimeout != LLONG_MAX) &#123;</div><div class="line">            <span class="keyword">nsecs_t</span> now = systemTime(SYSTEM_TIME_MONOTONIC);</div><div class="line">            timeoutMillis = toMillisecondTimeoutDelay(now, mNextTimeout);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="comment">// release lock</span></div><div class="line">    <span class="comment">//这里就是我们开始说的从设备节点读取输入事件的函数了。</span></div><div class="line">    <span class="keyword">size_t</span> count = mEventHub-&gt;getEvents(timeoutMillis, mEventBuffer, EVENT_BUFFER_SIZE);</div><div class="line"></div><div class="line">    &#123; <span class="comment">// acquire lock</span></div><div class="line">        AutoMutex _l(mLock);</div><div class="line">        mReaderIsAliveCondition.broadcast();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (count) &#123;</div><div class="line">          <span class="comment">//处理事件</span></div><div class="line">            processEventsLocked(mEventBuffer, count);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (mNextTimeout != LLONG_MAX) &#123;</div><div class="line">            <span class="keyword">nsecs_t</span> now = systemTime(SYSTEM_TIME_MONOTONIC);</div><div class="line">            <span class="keyword">if</span> (now &gt;= mNextTimeout) &#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> DEBUG_RAW_EVENTS</span></div><div class="line">                ALOGD(<span class="string">"Timeout expired, latency=%0.3fms"</span>, (now - mNextTimeout) * <span class="number">0.000001f</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">                mNextTimeout = LLONG_MAX;</div><div class="line">                timeoutExpiredLocked(now);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldGeneration != mGeneration) &#123;</div><div class="line">            inputDevicesChanged = <span class="literal">true</span>;</div><div class="line">            getInputDevicesLocked(inputDevices);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="comment">// release lock</span></div><div class="line"></div><div class="line">    <span class="comment">// Send out a message that the describes the changed input devices.</span></div><div class="line">    <span class="keyword">if</span> (inputDevicesChanged) &#123;</div><div class="line">        mPolicy-&gt;notifyInputDevicesChanged(inputDevices);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Flush queued events out to the listener.</span></div><div class="line">    <span class="comment">// This must happen outside of the lock because the listener could potentially call</span></div><div class="line">    <span class="comment">// back into the InputReader's methods, such as getScanCodeState, or become blocked</span></div><div class="line">    <span class="comment">// on another thread similarly waiting to acquire the InputReader lock thereby</span></div><div class="line">    <span class="comment">// resulting in a deadlock.  This situation is actually quite plausible because the</span></div><div class="line">    <span class="comment">// listener is actually the input dispatcher, which calls into the window manager,</span></div><div class="line">    <span class="comment">// which occasionally calls into the input reader.</span></div><div class="line">    mQueuedListener-&gt;flush();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面方法主要执行了三个流程：</p>
+<p>①通过<code>mEventHub-&gt;getEvents</code>读取事件</p>
+<p>​    这里不再继续深入，重点理解②③</p>
+<p>②通过<code>processEventsLocked</code>处理事件</p>
+<p>这方法里面有<code>processEventsForDeviceLocked</code>方法，这是处理一般事件的方法。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> InputReader::processEventsForDeviceLocked(<span class="keyword">int32_t</span> deviceId,</div><div class="line">        <span class="keyword">const</span> RawEvent* rawEvents, <span class="keyword">size_t</span> count) &#123;</div><div class="line">    <span class="keyword">ssize_t</span> deviceIndex = mDevices.indexOfKey(deviceId);</div><div class="line">    <span class="keyword">if</span> (deviceIndex &lt; <span class="number">0</span>) &#123;</div><div class="line">        ALOGW(<span class="string">"Discarding event for unknown deviceId %d."</span>, deviceId);</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    InputDevice* device = mDevices.valueAt(deviceIndex);</div><div class="line">    <span class="keyword">if</span> (device-&gt;isIgnored()) &#123;</div><div class="line">        <span class="comment">//ALOGD("Discarding event for ignored deviceId %d.", deviceId);</span></div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    device-&gt;process(rawEvents, count);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里根据<code>deviceId</code>生成<code>InputDevice</code>。进而调用<code>device-&gt;process</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; numMappers; i++) &#123;</div><div class="line">               InputMapper* mapper = mMappers[i];</div><div class="line">               mapper-&gt;process(rawEvent);</div><div class="line">           &#125;</div></pre></td></tr></table></figure>
+<p>最终引出了<code>InputMapper</code>，这是一个基类，而对于触摸事件会调用<code>TouchInputMapper</code>类的<code>process</code>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> TouchInputMapper::process(<span class="keyword">const</span> RawEvent* rawEvent) &#123;</div><div class="line">    mCursorButtonAccumulator.process(rawEvent);</div><div class="line">    mCursorScrollAccumulator.process(rawEvent);</div><div class="line">    mTouchButtonAccumulator.process(rawEvent);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (rawEvent-&gt;type == EV_SYN &amp;&amp; rawEvent-&gt;code == SYN_REPORT) &#123;</div><div class="line">        sync(rawEvent-&gt;when);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>后面经过一系列方法调用，事件信息封装到<code>NotifyMotionArgs args</code>，通过<code>getListener()-&gt;notifyMotion(&amp;args)</code>方法把事件加入到队列中。然后开始③过程。</p>
+<p>③通过<code>mQueuedListener-&gt;flush()</code>事件转移到<code>InputDispatcherThread</code>。</p>
+<p>看看<code>flush</code>源码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> QueuedInputListener::flush() &#123;</div><div class="line">    <span class="keyword">size_t</span> count = mArgsQueue.size();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">        NotifyArgs* args = mArgsQueue[i];</div><div class="line">        args-&gt;notify(mInnerListener);</div><div class="line">        <span class="keyword">delete</span> args;</div><div class="line">    &#125;</div><div class="line">    mArgsQueue.clear();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法遍历事件，同时执行<code>notify</code>，然后从队列删除消息，</p>
+<p><code>NotifyArgs</code>也是基类，有多种子类，其中触摸事件为<code>NotifyMotionArgs</code>，其<code>notify</code>方法如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> NotifyMotionArgs::notify(<span class="keyword">const</span> sp&lt;InputListenerInterface&gt;&amp; listener) <span class="keyword">const</span> &#123;</div><div class="line">    listener-&gt;notifyMotion(<span class="keyword">this</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>listener</code>指向<code>InputDispatcher</code>，而<code>InputDispatcher</code>隶属于<code>InputDispatcherThread</code> ，下一节继续</p>
+<h2 id="看看InputDispatcherThread干了什么"><a href="#看看InputDispatcherThread干了什么" class="headerlink" title="看看InputDispatcherThread干了什么"></a>看看InputDispatcherThread干了什么</h2><p><code>InputDispatcherThread</code>执行的时候调用了<code>threadLoop</code>然后调用了<code>mDispatcher-&gt;dispatchOnce();</code>。经过一些列调用会转战到<code>InputChannel::sendMessage</code>。</p>
+<p>继续上一节，看看<code>InputDispatcher</code>中<code>notifyMotion</code>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> InputDispatcher::notifyMotion(<span class="keyword">const</span> NotifyMotionArgs* args) &#123;</div><div class="line"></div><div class="line">	needWake = enqueueInboundEventLocked(newEntry);</div><div class="line">     <span class="keyword">if</span> (needWake) &#123;</div><div class="line">      mLooper-&gt;wake();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方法主要做了这两件事：</p>
+<p>①事件再次加入队列</p>
+<p>​    其中还执行了<code>findTouchedWindowAtLocked</code>查找当前活动窗口并拿到句柄。</p>
+<p>②唤醒looper。</p>
+<blockquote>
+<p>这里疑惑的一点是：事件加入队列，唤醒looper，接下来应该是looper循环读取消息队列进行事件分发，但是这里没有找到和dispatchOnce想关联的地方。可能有疏漏地方。以后发现问题会及时更新上。这里直接继续InputChannel::sendMessage来说。</p>
+</blockquote>
+<p><code>InputChannel</code>是负责与app窗口进行通信的，通过WMS找到对应的窗口。那么<code>InputChannel</code>到底是怎么找到窗口的？</p>
+<p>在WMS的<code>addWindow</code>方法中有这样几行代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">addWindow</span><span class="params">(Session session, IWindow client, <span class="keyword">int</span> seq,</span></span></div><div class="line">            WindowManager.LayoutParams attrs, <span class="keyword">int</span> viewVisibility, <span class="keyword">int</span> displayId,</div><div class="line">            Rect outContentInsets, Rect outStableInsets, InputChannel outInputChannel) &#123;</div><div class="line">            </div><div class="line">                </div><div class="line">                String name = win.makeInputChannelName();</div><div class="line">                InputChannel[] inputChannels = InputChannel.openInputChannelPair(name);</div><div class="line">                win.setInputChannel(inputChannels[<span class="number">0</span>]);</div><div class="line">                inputChannels[<span class="number">1</span>].transferTo(outInputChannel);</div><div class="line"></div><div class="line">                mInputManager.registerInputChannel(win.mInputChannel, win.mInputWindowHandle);</div><div class="line">            </div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>这里是在Activity初始化时想WMS添加的窗口的调用方法，其中在添加窗口时候就已经给这个窗口设置了通信通道。</p>
+<p>然后看下<code>InputChannel.openInputChannelPair</code>里面做了什么：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">status_t</span> InputChannel::openInputChannelPair(<span class="keyword">const</span> String8&amp; name,</div><div class="line">        sp&lt;InputChannel&gt;&amp; outServerChannel, sp&lt;InputChannel&gt;&amp; outClientChannel) &#123;</div><div class="line">    <span class="keyword">int</span> sockets[<span class="number">2</span>];</div><div class="line">    <span class="keyword">if</span> (socketpair(AF_UNIX, SOCK_SEQPACKET, <span class="number">0</span>, sockets)) &#123;</div><div class="line">        <span class="keyword">status_t</span> result = -errno;</div><div class="line">        ALOGE(<span class="string">"channel '%s' ~ Could not create socket pair.  errno=%d"</span>,</div><div class="line">                name.<span class="built_in">string</span>(), errno);</div><div class="line">        outServerChannel.clear();</div><div class="line">        outClientChannel.clear();</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> bufferSize = SOCKET_BUFFER_SIZE;</div><div class="line">    setsockopt(sockets[<span class="number">0</span>], SOL_SOCKET, SO_SNDBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line">    setsockopt(sockets[<span class="number">0</span>], SOL_SOCKET, SO_RCVBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line">    setsockopt(sockets[<span class="number">1</span>], SOL_SOCKET, SO_SNDBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line">    setsockopt(sockets[<span class="number">1</span>], SOL_SOCKET, SO_RCVBUF, &amp;bufferSize, <span class="keyword">sizeof</span>(bufferSize));</div><div class="line"></div><div class="line">    String8 serverChannelName = name;</div><div class="line">    serverChannelName.append(<span class="string">" (server)"</span>);</div><div class="line">    outServerChannel = <span class="keyword">new</span> InputChannel(serverChannelName, sockets[<span class="number">0</span>]);</div><div class="line"></div><div class="line">    String8 clientChannelName = name;</div><div class="line">    clientChannelName.append(<span class="string">" (client)"</span>);</div><div class="line">    outClientChannel = <span class="keyword">new</span> InputChannel(clientChannelName, sockets[<span class="number">1</span>]);</div><div class="line">    <span class="keyword">return</span> OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里主要创建了两个<code>InputChannel</code>，一个服务端一个客户端，这里的的<code>InputChannel</code>是基于socket的，这个socket不是网络的socket而是Unix特有的关于文件的Unix domain socket。</p>
+<h2 id="WMS和ViewRootImpl"><a href="#WMS和ViewRootImpl" class="headerlink" title="WMS和ViewRootImpl"></a>WMS和ViewRootImpl</h2><p>经过一些列的调转，最终会回调到<code>InputEventReceiver</code>的<code>dispatchInputEvent</code>方法。</p>
+<p>这个方法是C++通过JNi回调的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Called from native code.</span></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unused"</span>)</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dispatchInputEvent</span><span class="params">(<span class="keyword">int</span> seq, InputEvent event)</span> </span>&#123;</div><div class="line">    mSeqMap.put(event.getSequenceNumber(), seq);</div><div class="line">    onInputEvent(event);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的<code>InputEventReceiver</code> 对象其实是<code>WindowInputEventReceiver</code> 的引用，所以<code>onInputEvent</code>其实调用的<code>WindowInputEventReceiver</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onInputEvent</span><span class="params">(InputEvent event)</span> </span>&#123;</div><div class="line">          enqueueInputEvent(event, <span class="keyword">this</span>, <span class="number">0</span>, <span class="keyword">true</span>);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<p><code>enqueueInputEvent</code>通过连续调用，跳转到<code>deliverInputEvent</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">deliverInputEvent</span><span class="params">(QueuedInputEvent q)</span> </span>&#123;</div><div class="line">    Trace.asyncTraceBegin(Trace.TRACE_TAG_VIEW, <span class="string">"deliverInputEvent"</span>,</div><div class="line">            q.mEvent.getSequenceNumber());</div><div class="line">    <span class="keyword">if</span> (mInputEventConsistencyVerifier != <span class="keyword">null</span>) &#123;</div><div class="line">        mInputEventConsistencyVerifier.onInputEvent(q.mEvent, <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    InputStage stage;</div><div class="line">    <span class="keyword">if</span> (q.shouldSendToSynthesizer()) &#123;</div><div class="line">        stage = mSyntheticInputStage;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        stage = q.shouldSkipIme() ? mFirstPostImeInputStage : mFirstInputStage;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (stage != <span class="keyword">null</span>) &#123;</div><div class="line">        stage.deliver(q);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        finishInputEvent(q);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>stage</code>是多态形式，但是最终会调用<code>ViewPostImeInputStage</code>的<code>onProcess</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">onProcess</span><span class="params">(QueuedInputEvent q)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (q.mEvent <span class="keyword">instanceof</span> KeyEvent) &#123;</div><div class="line">         <span class="keyword">return</span> processKeyEvent(q);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         <span class="comment">// If delivering a new non-key event, make sure the window is</span></div><div class="line">         <span class="comment">// now allowed to start updating.</span></div><div class="line">         handleDispatchDoneAnimating();</div><div class="line">         <span class="keyword">final</span> <span class="keyword">int</span> source = q.mEvent.getSource();</div><div class="line">         <span class="keyword">if</span> ((source &amp; InputDevice.SOURCE_CLASS_POINTER) != <span class="number">0</span>) &#123;</div><div class="line">             <span class="keyword">return</span> processPointerEvent(q);</div><div class="line">         &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((source &amp; InputDevice.SOURCE_CLASS_TRACKBALL) != <span class="number">0</span>) &#123;</div><div class="line">             <span class="keyword">return</span> processTrackballEvent(q);</div><div class="line">         &#125; <span class="keyword">else</span> &#123;</div><div class="line">             <span class="keyword">return</span> processGenericMotionEvent(q);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>由于是触摸事件，所以会执行<code>processPointerEvent</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">processPointerEvent</span><span class="params">(QueuedInputEvent q)</span> </span>&#123;</div><div class="line">     <span class="keyword">final</span> MotionEvent event = (MotionEvent)q.mEvent;</div><div class="line"></div><div class="line">     mAttachInfo.mUnbufferedDispatchRequested = <span class="keyword">false</span>;</div><div class="line">     <span class="keyword">boolean</span> handled = mView.dispatchPointerEvent(event);</div><div class="line">     <span class="keyword">if</span> (mAttachInfo.mUnbufferedDispatchRequested &amp;&amp; !mUnbufferedInputDispatch) &#123;</div><div class="line">         mUnbufferedInputDispatch = <span class="keyword">true</span>;</div><div class="line">         <span class="keyword">if</span> (mConsumeBatchedInputScheduled) &#123;</div><div class="line">             scheduleConsumeBatchedInputImmediately();</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> handled ? FINISH_HANDLED : FORWARD;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>发现有<code>boolean handled = mView.dispatchPointerEvent(event);</code>这么一句话，看来现在已经开始向view分发事件了。</p>
+<p>这里的<code>mView</code>是指向<code>DecorView</code>，剩下的内容下节继续</p>
+<h1 id="0x03-ViewRootImpl到View"><a href="#0x03-ViewRootImpl到View" class="headerlink" title="0x03 ViewRootImpl到View"></a>0x03 ViewRootImpl到View</h1><p>通过View的<code>dispatchPointerEvent</code>调用了<code>dispatchTouchEvent</code>，</p>
+<p>因为<code>DecorView</code>重写了<code>dispatchTouchEvent</code>方法，看下这个内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">          <span class="keyword">final</span> Callback cb = getCallback();</div><div class="line">          <span class="keyword">return</span> cb != <span class="keyword">null</span> &amp;&amp; !isDestroyed() &amp;&amp; mFeatureId &lt; <span class="number">0</span> ? cb.dispatchTouchEvent(ev)</div><div class="line">                  : <span class="keyword">super</span>.dispatchTouchEvent(ev);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>getCallback</code>返回的是Activity引用，如果Activity没有销毁，则调用Activity的<code>dispatchTouchEvent</code>方法。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</div><div class="line">        onUserInteraction();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> onTouchEvent(ev);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里注意一点，如果<code>getWindow().superDispatchTouchEvent(ev)</code>返回true，则不继续执行Activity的<code>onTouchEvent</code>。</p>
+<p>这里的getWinddow就是PhoneWindow，而PhoneWindow的<code>superDispatchTouchEvent</code>直接引用了DecorView的<code>superDispatchTouchEvent</code>，接着调用了<code>super.dispatchTouchEvent(event)</code>，这里的super是ViewGroup，这里主要做了两件事：①判断当前ViewGroup是否拦截事件，如果拦截则执行<code>onInterceptTouchEvent</code>。②如果不拦截，事件也没取消，则事件向子View分发。在向子View分发前会先判断子View是否接受事件及事件是否在子View范围内。如果都为true了则调用<code>dispatchTransformedTouchEvent</code>。这里面调用了子View的<code>dispatchTouchEvent</code>。</p>
+<p>子View的<code>dispatchTouchEvent</code>里面会判断<code>touchListener.onTouch</code>方法和<code>onTouchEvent</code>方法。</p>
+<h1 id="0x04-事件传递须知"><a href="#0x04-事件传递须知" class="headerlink" title="0x04 事件传递须知"></a>0x04 事件传递须知</h1><p> ①如果DecorView的<code>dispatchPointerEvent</code>方法返回true表示事件消费成功。</p>
+<p>②如果Activity没有销毁，则回调Activity的<code>dispatchTouchEvent</code>,如果phone window的<code>superDispatchTouchEvent</code>返回true表示被DecorView或其子View消耗了事件，则不执行Activity的onTouchEvent方法。</p>
+<p>③如果ViewGroup执行dispatchTouchEvent方法，先判断是否需要拦截事件：</p>
+<p>如果需要拦截则执行onInterceptTouchEvent方法。</p>
+<p>如果拦截返回true，则不继续事件传递，如果返回false，则继续，首先判断子View是否接受事件及是否在范围内，如果都符合则传递给子View。</p>
+<p>④如果子View执行dispatchTouchEvent方法，会先判断是否设置onTouchListener，</p>
+<p>如果设置了则执行onTouch方法。如果该方法返回true，则不继续执行子View 的onTouchEvent方法，否则继续执行ouTouchEvent方法。</p>
+<p>⑤如果ouTouchEvent方法执行，actionDown时检查长按事件，actionUp时检查onClick事件。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码解析</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/源码解析/" class="article-tag-list-link color5">源码解析</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/24/浅谈Android事件传递机制/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java-wait，notify和notifyAll使用分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1334,106 +1528,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/07/14/hexo更换主题及配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Mac下配置adb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/13/Mac下配置adb/">Mac下配置adb</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/13/Mac下配置adb/" class="archive-article-date">
-  	<time datetime="2017-07-13T13:10:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月13日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Mac和windows一样，如果要在终端命令行全局使用非系统命令，需要手动把命令环境配置到指定文件中，具体操作就是把命令文件所属路径配置到.bash_profile里面。</p>
-<h1 id="0x01-分别找到双方路径"><a href="#0x01-分别找到双方路径" class="headerlink" title="0x01 分别找到双方路径"></a>0x01 分别找到双方路径</h1><h2 id="找到adb"><a href="#找到adb" class="headerlink" title="找到adb"></a>找到adb</h2><p>我是通过Android studio中的idk location找到SDK位置<code>/Users/jenson/Library/Android/sdk</code> .</p>
-<h2 id="找到-bash-profile"><a href="#找到-bash-profile" class="headerlink" title="找到.bash_profile"></a>找到.bash_profile</h2><ul>
-<li><p>使用命令行<code>cd $home</code> 进入home路径下，</p>
-</li>
-<li><p>因为mac下以点开头的文件为隐藏文件，所以使用<code>ls -al</code> 查看所有文件，查看列表是否有.bash_profile文件，</p>
-</li>
-<li><p>如果没有，使用<code>touch .bash_profile</code> 创建，如果有则执行命令<code>open -e .bash_profile</code> 使用文本编辑器打开文件，</p>
-</li>
-<li><p>在下面按格式添加SDK路径：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export PATH=/Users/jenson/Library/Android/sdk/platform-tools:$PATH</div><div class="line">export PATH=/Users/jenson/Library/Android/sdk/tools:$PATH</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h2 id="open-e-bash-profile提示open命令不存在"><a href="#open-e-bash-profile提示open命令不存在" class="headerlink" title="open -e .bash_profile提示open命令不存在"></a>open -e .bash_profile提示open命令不存在</h2><p>通过Finder根据路径找到.bash_profile文件，编辑添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export PATH=&quot;/usr/bin:/bin:/usr/sbin:/sbin&quot;</div><div class="line">export PATH=&quot;/usr/local/bin:/usr/local/sbin:$PATH&quot;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/13/Mac下配置adb/">展开全文 >></a>
         </p>
       
 
