@@ -180,6 +180,202 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-如何在Pycharm中运行Scrapy爬虫" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/">如何在Pycharm中运行Scrapy爬虫</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/" class="archive-article-date">
+  	<time datetime="2017-08-17T12:24:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>学爬虫就绕不过Scrapy，但是发现每次运行爬虫都要使用shell命令，</p>
+<p>但是在终端窗口看log着实让人难受，想着如何能让Scrapy在Pycharm执行。</p>
+<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>办法总比问题多，没有找到直接运行项目的方法点。但是曲线救国也未尝不可。</p>
+<p>既然关于Scrapy的教程运行爬虫时都是shell命令，那就让python文件中执行这个shell命令。</p>
+<p>命令是<code>comm=&#39;scrapy crawl name&#39;</code></p>
+<p>那如何让python运行shell命令呢？参考<a href="http://www.jensondev.me/2017/08/17/Python%E4%B8%AD%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/" target="_blank" rel="external">Python中执行shell命令</a></p>
+<p>在项目下创建main.py文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">comm = <span class="string">'scrapy crawl jianshu'</span></div><div class="line">res = os.popen(comm).read()</div><div class="line">print(res)</div></pre></td></tr></table></figure>
+<p>这样每次执行这个python文件就可以启动爬虫项目了，然后在pycharm控制台查看打印消息即可。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python中执行shell命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/17/Python中执行shell命令/">Python中执行shell命令</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/17/Python中执行shell命令/" class="archive-article-date">
+  	<time datetime="2017-08-17T12:07:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式</p>
+<h1 id="0x01-方式"><a href="#0x01-方式" class="headerlink" title="0x01 方式"></a>0x01 方式</h1><h2 id="os模块"><a href="#os模块" class="headerlink" title="os模块"></a>os模块</h2><ul>
+<li><p>os.system(‘ls’)</p>
+<p>这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。</p>
+<p><strong>该方法没有返回值</strong></p>
+</li>
+</ul>
+<ul>
+<li><p>os.popen(‘ls’)</p>
+<p>popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。</p>
+</li>
+</ul>
+<h2 id="commands模块"><a href="#commands模块" class="headerlink" title="commands模块"></a>commands模块</h2><p>​    根据你需要的不同，commands模块有三个方法可供选择。getstatusoutput, getoutput, getstatus。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import commands</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;ls /bin/ls&apos;)</div><div class="line">(0, &apos;/bin/ls&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;cat /bin/junk&apos;)</div><div class="line">(256, &apos;cat: /bin/junk: No such file or directory&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;/bin/junk&apos;)</div><div class="line">(256, &apos;sh: /bin/junk: not found&apos;)</div><div class="line">&gt;&gt;&gt; commands.getoutput(&apos;ls /bin/ls&apos;)</div><div class="line">&apos;/bin/ls&apos;</div><div class="line">&gt;&gt;&gt; commands.getstatus(&apos;/bin/ls&apos;)</div><div class="line">&apos;-rwxr-xr-x  1 root        13352 Oct 14  1994 /bin/ls&apos;</div></pre></td></tr></table></figure>
+<p><strong>该模块在python3.6中已经不存在，不知道具体从哪个版本移除了，所以这部分代码来自网友分析</strong></p>
+<h2 id="subprocess模块"><a href="#subprocess模块" class="headerlink" title="subprocess模块"></a>subprocess模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>shell=True表示命令最终在shell中运行。Python文档中出于安全考虑，不建议使用shell=True。建议使用Python库来代替shell命令，或使用pipe的一些功能做一些转义。</p>
+<p>如果是多条命令可以使用‘&amp;&amp;’</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls&amp;&amp;pwd'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/17/Python中执行shell命令/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python分布式实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1081,241 +1277,6 @@
 
 
   
-    <article id="post-Python中-和-有什么意义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/08/Python中-和-有什么意义/">Python中_和__有什么意义?</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/08/Python中-和-有什么意义/" class="archive-article-date">
-  	<time datetime="2017-08-08T14:35:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月08日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>python中很多源码都是由单下划线和双下划线开头的函数、变量、模块。</p>
-<p>但是一直不太明白这表示什么意思。然后因为好奇就查了下资料才才明白怎么回事。</p>
-<h1 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h1><h2 id="单下划线（-）"><a href="#单下划线（-）" class="headerlink" title="单下划线（_）"></a>单下划线（_）</h2><p>以<strong>单下划线</strong>开头的名字都应该是内部实现.</p>
-<p>函数以单下划线开头说明这是一个特殊函数或者认为是一个隐藏函数，作为一个内部方法，只能被本模块代码使用。</p>
-<p>Python没有强制依赖于语言特性去达到封装数据目的，而是通过归约。而这里的下划线就是归约。</p>
-<blockquote>
-<p>Python 并不会真的阻止别人访问内部名称。但是如果你这么做肯定是不好的，可能会导致脆弱的代码。同时还要注意到，使用下划线开头的约定同样适用于模块名和模块级别函数。</p>
-</blockquote>
-<h2 id="双下划线（-）"><a href="#双下划线（-）" class="headerlink" title="双下划线（__）"></a>双下划线（__）</h2><p>使用双下划线开始会导致访问名称变成其他形式。这种以双下划线开头的函数不会被通过类继承覆盖。</p>
-<p>Python文档指出，“<strong>spam”这种形式（至少两个前导下划线，最多一个后续下划线）的任何标识符将会被“_classname</strong>spam”这种形式原文取代，在这里“classname”是去掉前导下划线的当前类名。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'b___private_method'</span>)</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">public_method</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private_method()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(B)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super().__init__()</div><div class="line">        self.__private = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'c___private_method'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"></div><div class="line">c = C()</div><div class="line">c.public_method()</div><div class="line"><span class="comment"># print(c.getPrivateValue())</span></div></pre></td></tr></table></figure>
-<p>上面代码执行后结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b___private_method</div><div class="line"></div><div class="line">Process finished with exit code 0</div></pre></td></tr></table></figure>
-<p>可以看到打印的时B类中方法，而不是C类方法，说明虽然这两个方法方法名一样，但是没有被重写。</p>
-<h2 id="前后双下划线"><a href="#前后双下划线" class="headerlink" title="前后双下划线"></a>前后双下划线</h2><p>这种用法表示Python中特殊的方法名。其实，这只是一种惯例，对Python系统来说，这将确保不会与用户自定义的名称冲突。通常，你将会覆写这些方法，并在里面实现你所需要的功能，以便Python调用它们。例如，当定义一个类时，你经常会覆写“<strong>init</strong>”方法。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/08/Python中-和-有什么意义/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python入门系列(4)文件IO" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/06/Python入门系列(4)文件IO/">Python入门系列(4):文件IO</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/06/Python入门系列(4)文件IO/" class="archive-article-date">
-  	<time datetime="2017-08-06T09:25:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月06日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。</p>
-<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="mode"><a href="#mode" class="headerlink" title="mode"></a>mode</h2><p>不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？</p>
-<p>什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？</p>
-<p>下面表格列出了mode值及含义：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">值</th>
-<th style="text-align:center">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">‘r’</td>
-<td style="text-align:center">读模式</td>
-</tr>
-<tr>
-<td style="text-align:center">‘w’</td>
-<td style="text-align:center">写模式</td>
-</tr>
-<tr>
-<td style="text-align:center">‘a’</td>
-<td style="text-align:center">追加模式</td>
-</tr>
-<tr>
-<td style="text-align:center">‘b’</td>
-<td style="text-align:center">二进制模式</td>
-</tr>
-<tr>
-<td style="text-align:center">‘+’</td>
-<td style="text-align:center">读/写模式</td>
-</tr>
-</tbody>
-</table>
-<p><strong>其中b和+可以和前面模式混用</strong>。</p>
-<p>打开文件使用<strong>open*</strong>函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file= open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>open函数中第三个可选参数buffering控制着⽂件的缓冲。 如果参数是0， I/O操作就是⽆缓冲的， 直接<br>将数据写到硬盘上； 如果参数是1， I/O操作就是有缓冲的， 数据先写到内存⾥， 只有使⽤flush函数或者<br>close函数才会将数据更新到硬盘； 如果参数为⼤于1的数字则代表缓冲区的⼤⼩（单位是字节） ， -1（或者<br>是任何负数） 代表使⽤默认缓冲区的⼤⼩。 </p>
-</blockquote>
-<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><p>文件读取使用read方法。可以一次读取全部、读取一行、读取指定长度</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(file.read())</div><div class="line">print(file.readline())</div><div class="line">print(file.read(<span class="number">3</span>))</div></pre></td></tr></table></figure>
-<h2 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h2><p>写文件使用write方法。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">file.write(<span class="string">'\ntoday is sunday'</span>)</div><div class="line">str=[<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>]</div><div class="line">file.writelines(str)</div></pre></td></tr></table></figure>
-<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>IO操作完成后都要有一个关闭操作对于文件来说，不使用时要关闭：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file.close()</div></pre></td></tr></table></figure>
-<p>但是IO操作难免出现异常，如果在文件操作期间出现异常可能会导致无法关闭文件。这时需要异常处理机制：<code>try except</code></p>
-<p>但是异常处理机制又略显繁琐，so这里推荐使用<strong>with</strong>语法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span>  open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>) <span class="keyword">as</span> file_object:</div><div class="line">contents = file_object.read()</div><div class="line">print(contents)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>关键字with在不再需要访问文件后将其关闭。在这个程序中，注意到我们调用了open()，但<br>没有调用close()；你也可以调用open()和close()来打开和关闭文件，但这样做时，如果程序存<br>在bug，导致close()语句未执行，文件将不会关闭。这看似微不足道，但未妥善地关闭文件可能<br>会导致数据丢失或受损。如果在程序中过早地调用close()，你会发现需要使用文件时它已关闭<br>（无法访问），这会导致更多的错误。并非在任何情况下都能轻松确定关闭文件的恰当时机，但通<br>过使用前面所示的结构，可让Python去确定：你只管打开文件，并在需要时使用它， Python自会<br>在合适的时候自动将其关闭 </p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/06/Python入门系列(4)文件IO/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1446,10 +1407,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -1458,7 +1415,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1466,11 +1423,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1479,6 +1436,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">

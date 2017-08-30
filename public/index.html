@@ -180,6 +180,369 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-编程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/30/编程/">编程</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/30/编程/" class="archive-article-date">
+  	<time datetime="2017-08-30T04:07:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月30日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/30/编程/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-了解Http" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/30/了解Http/">了解Http</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/30/了解Http/" class="archive-article-date">
+  	<time datetime="2017-08-30T03:57:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月30日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>只要是编程，无论学哪种语言，网络就是逃不开的话题，而Http又是网络上层协议应用最广泛的一种。</p>
+<p>那么该如何学习Http？下图是个人总结的学习Http比较容易让人记忆的思维导图。下面的介绍也是按照该四维导图来说明。</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%BA%86%E8%A7%A3http.png" alt="了解Http"></p>
+<h1 id="0x01-Http历史"><a href="#0x01-Http历史" class="headerlink" title="0x01 Http历史"></a>0x01 Http历史</h1><h2 id="一次web请求"><a href="#一次web请求" class="headerlink" title="一次web请求"></a>一次web请求</h2><p>当我们在浏览器URL窗口输入www.jensondev.me时，就会看到我们需要的内容。这期间发生了什么？</p>
+<p>懂一点的人会说浏览器收到URL请求，发送给服务器，然后接收服务器内容并显示。</p>
+<p>更懂一点的人会说浏览器收到URL进行DNS解析，发送给服务器，然后接收服务器内容并显示</p>
+<p>那么什么是DNS，什么又是URL，又都有什么用？</p>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>DNS，全名Domain Name System，域名解析系统。</p>
+<p>域名的出现是为了方便记忆，但是通过网络定位到对应服务器需要的是IP，DNS就是提供域名到IP得解析服务。</p>
+<h2 id="URL和URI"><a href="#URL和URI" class="headerlink" title="URL和URI"></a>URL和URI</h2><p>URL，Uniform Resource Locator，统一资源定位符，URL就是浏览器访问页面输入的网址。</p>
+<p>URI，Uniform Resource Identifier ，统一资源标识符，</p>
+<p>URI表示互联网中某一资源，而URL表示资源的地点。URL是URI子集。</p>
+<p>URI格式如图：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/URI%E6%A0%BC%E5%BC%8F.png" alt="URI格式"></p>
+<h2 id="Http诞生"><a href="#Http诞生" class="headerlink" title="Http诞生"></a>Http诞生</h2><p>1989年CERN的Tim Berners-Lee提出让身处两地的研究者进行交流和知识共享的设想。</p>
+<p>当时的理念很简单很纯粹：就是借助多文档相互关联形成一个超文本，形成可以相互参阅的WWW。</p>
+<p>这一理念的实现需要三个技术共同支撑：指定文档地址的URL，标记文本的语言HTML，传输文档的协议Http。</p>
+<p>1990年CERN研发世界第一台Web服务器和浏览器。同年Http协议诞生，但是没有作为标准被建立，所以这个时候版本是1.0以前，被称为Http0.9。</p>
+<p>1995年6月Http标准被公布，正式命名为Http1.0</p>
+<p>1997年1月Http1.1公布，也是目前的主流版本。</p>
+<h2 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h2><p>上面介绍了Http的历史信息，但是Http是基于TCPIP的，要了解Http还要了解下TCPIP。</p>
+<p>电脑之间如何通信？</p>
+<p>要实现电脑之间通信要适用不同的硬件、不同的语言、不同的系统。而这需要一个通用的协议。</p>
+<p>TCPIP就是在这基础上诞生的，TCPIP从上至下分为4层：应用层、传输层、网络层和数据链路层。</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/TCPIP%E5%88%86%E5%B1%82.png" alt="TCPIP分层"></p>
+<p>把 TCP/IP 层次化是有好处的。比如，如果互联网只由一个协议统筹，某个地方需要改变设计时，就必须把所有部分整体替换掉。而分层之后只需把变动的层替换掉即可。把各层之间的接口部分规划好之后，每个层次内部的设计就能够自由改动了。</p>
+<p>数据流每经过一层都会添加当前层首部信息：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/TCPIP%E5%88%86%E5%B1%82%E9%A6%96%E9%83%A8.png" alt="tcpip首部"></p>
+<h1 id="0x02-初涉Http"><a href="#0x02-初涉Http" class="headerlink" title="0x02 初涉Http"></a>0x02 初涉Http</h1><h2 id="无状态"><a href="#无状态" class="headerlink" title="无状态"></a>无状态</h2><p>Http协议设计简洁，仅仅实现数据交互，所以也是无状态协议。HTTP 协议自身不对请求和响应之间的通信状态进行保存。也就是说在 HTTP 这个级别，协议对于发送过的请求或响应都不做持久化处理。</p>
+<p>但是随着web的发展，很多网站需要状态保存，所以引入了cookie技术。</p>
+<h2 id="请求方法"><a href="#请求方法" class="headerlink" title="请求方法"></a>请求方法</h2><p>Http协议通过请求和响应进行通信交互，在请求时不同的方法有不同的应用场景。</p>
+<p>先看下方法分类：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>支持版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>获取资源</td>
+<td>1.0、1.1</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>传输实体主体</td>
+<td>1.0、1.1</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>传输文件</td>
+<td>1.0、1.1</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>获得报文首部</td>
+<td>1.0、1.1</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>删除文件</td>
+<td>1.0、1.1</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>询问支持的方法</td>
+<td>1.1</td>
+</tr>
+<tr>
+<td>TRACE</td>
+<td>追踪路径</td>
+<td>1.1</td>
+</tr>
+<tr>
+<td>CONNECT</td>
+<td>要求用隧道协议连接代理</td>
+<td>1.1</td>
+</tr>
+<tr>
+<td>LINK</td>
+<td>建立和资源之间的联系</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>UNLINK</td>
+<td>断开连接关系</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>GET：获取资源</li>
+<li>POST：传输实体主体</li>
+<li>PUT：传输文件</li>
+<li>HEAD：获得报文首部</li>
+<li>DELETE：删除文件</li>
+<li>OPTIONS：询问支持的方法</li>
+<li>TRACE：追踪路径</li>
+<li>CONNECT：要求用隧道协议连接代理</li>
+</ul>
+<h2 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h2><p>HTTP 协议的初始版本中，每进行一次 HTTP 通信就要断开一次TCP 连接，这种情况在早期传输的都是小型文本消息时性能上不显优劣。但是随着近年互联网的发展，通信数据愈来愈大，每次通信都要新建和断开连接，耗费时间增加的同时也增加了通信开销。</p>
+<p>为了解决TCP这个问题，HTTP/1.1 和一部分的 HTTP/1.0 想出了持久连接（HTTP Persistent Connections，也称为 HTTP keep-alive 或HTTP connection reuse）的方法。</p>
+<p>持久连接的特点是，只要任意一端没有明确提出断开连接，则保持 TCP 连接状态。</p>
+<p>持久连接的好处在于减少了 TCP 连接的重复建立和断开所造成的额外开销，减轻了服务器端的负载。另外，减少开销的那部分时间，使HTTP 请求和响应能够更早地结束，这样 Web 页面的显示速度也就相应提高了。<br>在 HTTP/1.1 中，所有的连接默认都是持久连接，但在 HTTP/1.0 内并未标准化，可以通过首部的<strong>connection = keep-alive</strong>属性实现持久连接。</p>
+<h1 id="0x03-报文"><a href="#0x03-报文" class="headerlink" title="0x03 报文"></a>0x03 报文</h1><p>用于 HTTP 协议交互的信息被称为 HTTP 报文，所以在Http中分为请求报文和响应报文两种。</p>
+<p>而 报文又分为报文首部和报文主体两块。</p>
+<h2 id="首部"><a href="#首部" class="headerlink" title="首部"></a>首部</h2><p><strong>根据请求报文和相应报文，首部也分为请求首部和响应首部。</strong></p>
+<p><strong>请求首部</strong>包括请求行、请求首部字段、通用首部字段、实体首部字段</p>
+<p><strong>响应首部</strong>包括状态行、响应首部字段、通用首部字段、实体首部字段</p>
+<p>请求报文和响应报文结构如图：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E5%92%8C%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E7%BB%93%E6%9E%84.png" alt="请求报文和响应报文结构"></p>
+<p>请求报文和响应报文结构实例如图：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E5%92%8C%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B.png" alt="请求报文和响应报文结构实例"></p>
+<h2 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h2><p>状态码的任务就是对返回结果的描述。</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%8A%B6%E6%80%81%E7%A0%81.png" alt="状态码"></p>
+<p>通过状态码我们可以知道服务器是否正确处理了我们的请求，如果出错了，那原因是什么。</p>
+<p>状态码以3位数字和短语组成，数字第一位指定响应类别，响应类别主要有5种：</p>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>名称</th>
+<th>原因短语</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1XX</td>
+<td>Informational（信息性状态码）</td>
+<td>接收的请求正在处理</td>
+</tr>
+<tr>
+<td>2XX</td>
+<td>Success（成功状态码）</td>
+<td>请求正常处理完毕</td>
+</tr>
+<tr>
+<td>3XX</td>
+<td>Redirection（重定向状态码）</td>
+<td>需要进行附加操作以完成请求</td>
+</tr>
+<tr>
+<td>4XX</td>
+<td>Client Error（客户端错误状态码）</td>
+<td>服务器无法处理请求</td>
+</tr>
+<tr>
+<td>5XX</td>
+<td>Server Error（服务器错误状态码）</td>
+<td>服务器处理请求出错</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2XX"><a href="#2XX" class="headerlink" title="2XX"></a>2XX</h3><ul>
+<li><p>200 OK </p>
+<p>表示从客户端发来的请求在服务器端被正常处理了</p>
+</li>
+<li><p>204 NoContent</p>
+<p>该状态码代表服务器接收的请求已成功处理，但在返回的响应报文中不含实体的主体部分。另外，也不允许返回任何实体的主体。比如，当从浏览器发出请求处理后，返回 204 响应，那么浏览器显示的页面不发生更新</p>
+</li>
+<li><p>206 PartialContent</p>
+<p>该状态码表示客户端进行了范围请求，而服务器成功执行了这部分的 GET 请求。响应报文中包含由 Content-Range 指定范围的实体内容。</p>
+</li>
+</ul>
+<h3 id="3XX"><a href="#3XX" class="headerlink" title="3XX"></a>3XX</h3><ul>
+<li><p>301 MovedPermanently</p>
+<p>永久性重定向。该状态码表示请求的资源已被分配了新的 URI，以后应使用资源现在所指的 URI。也就是说，如果已经把资源对应的 URI保存为书签了，这时应该按 Location 首部字段提示的 URI 重新保存。像下方给出的请求 URI，当指定资源路径的最后忘记添加斜杠“ /”，就会产生 301 状态码</p>
+</li>
+<li><p>302 Found</p>
+<p>临时性重定向。该状态码表示请求的资源已被分配了新的 URI，希望用户（本次）能使用新的 URI 访问。</p>
+<p>和 301 Moved Permanently 状态码相似，但 302 状态码代表的资源不是被永久移动，只是临时性质的。换句话说，已移动的资源对应的URI 将来还有可能发生改变。比如，用户把 URI 保存成书签，但不会像301 状态码出现时那样去更新书签，而是仍旧保留返回 302 状态码的页面对应的 URI。</p>
+</li>
+<li><p>303 SeeOther</p>
+<p>该状态码表示由于请求对应的资源存在着另一个 URI，应使用 GET方法定向获取请求的资源。<br>303 状态码和 302 Found 状态码有着相同的功能，但 303 状态码明确表示客户端应当采用 GET 方法获取资源，这点与 302 状态码有区别。比如，当使用 POST 方法访问 CGI 程序，其执行后的处理结果是希望客户端能以 GET 方法重定向到另一个 URI 上去时，返回 303 状态码。虽然 302 Found 状态码也可以实现相同的功能，但这里使用 303 状态码是最理想的。 </p>
+</li>
+<li><p>304 NotModified</p>
+<p>该状态码表示客户端发送附带条件的请求 A 时，服务器端允许请求访问资源，但因发生请求未满足条件的情况后，直接返回 304 NotModified（服务器端资源未改变，可直接使用客户端未过期的缓存）。<br>304 状态码返回时，不包含任何响应的主体部分。 <strong>304 虽然被划分在3XX 类别中，但是和重定向没有关系</strong></p>
+</li>
+<li><p>307 TemporaryRedirect</p>
+<p>临时重定向。该状态码与 302 Found 有着相同的含义。尽管 302 标准禁止 POST 变换成 GET，但实际使用时大家并不遵守。307 会遵照浏览器标准，不会从 POST 变成 GET。但是，对于处理<br>响应时的行为，每种浏览器有可能出现不同的情况。</p>
+</li>
+</ul>
+<h3 id="4XX"><a href="#4XX" class="headerlink" title="4XX"></a>4XX</h3><ul>
+<li><p>400 BadRequest</p>
+<p>该状态码表示请求报文中存在语法错误。当错误发生时，需修改请求的内容后再次发送请求。另外，浏览器会像 200 OK 一样对待该状态码</p>
+</li>
+<li><p>401 Unauthorized</p>
+<p>该状态码表示发送的请求需要有通过 HTTP 认证（BASIC 认证、DIGEST 认证）的认证信息。另外若之前已进行过 1 次请求，则表示用户认证失败。返回含有 401 的响应必须包含一个适用于被请求资源的WWWAuthenticate 首部用以质询（challenge）用户信息。当浏览器初次接收到 401 响应，会弹出认证用的对话窗口。</p>
+</li>
+<li><p>403 Forbidden</p>
+<p>该状态码表明对请求资源的访问被服务器拒绝了。服务器端没有必要给出拒绝的详细理由，但如果想作说明的话，可以在实体的主体部分对原因进行描述，这样就能让用户看到了。未获得文件系统的访问授权，访问权限出现某些问题（从未授权的发送源 IP 地址试图访问）等列举的情况都可能是发生 403 的原因。</p>
+</li>
+<li><p>404 NotFound</p>
+<p>该状态码表明服务器上无法找到请求的资源。除此之外，也可以在服务器端拒绝请求且不想说明理由时使用</p>
+</li>
+</ul>
+<h3 id="5XX"><a href="#5XX" class="headerlink" title="5XX"></a>5XX</h3><ul>
+<li><p>500 InternalServerError</p>
+<p>该状态码表明服务器端在执行请求时发生了错误。也有可能是 Web应用存在的 bug 或某些临时的故障</p>
+</li>
+<li><p>503 ServiceUnavailable</p>
+<p>该状态码表明服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。如果事先得知解除以上状况需要的时间，最好写入 RetryAfter 首部字段再返回给客户端</p>
+</li>
+</ul>
+<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><p>认证有什么用？</p>
+<p>用来限制某些页面只想让特定人查看，为此，认证就是必不可少的功能。</p>
+<p>Http1.1中使用的认证方式有：</p>
+<ul>
+<li>BASIC 认证（基本认证）</li>
+<li>DIGEST 认证（摘要认证）</li>
+<li>SSL 客户端认证</li>
+<li>FormBase 认证（基于表单认证）</li>
+</ul>
+<p>未完待续。。。。</p>
+<h2 id="Https"><a href="#Https" class="headerlink" title="Https"></a>Https</h2><h1 id="0x04-其他"><a href="#0x04-其他" class="headerlink" title="0x04 其他"></a>0x04 其他</h1><h2 id="web内容"><a href="#web内容" class="headerlink" title="web内容"></a>web内容</h2><h2 id="web攻击"><a href="#web攻击" class="headerlink" title="web攻击"></a>web攻击</h2><h2 id="其他功能"><a href="#其他功能" class="headerlink" title="其他功能"></a>其他功能</h2><h3 id="Http2-0"><a href="#Http2-0" class="headerlink" title="Http2.0"></a>Http2.0</h3><h3 id="SPDY"><a href="#SPDY" class="headerlink" title="SPDY"></a>SPDY</h3><h3 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h3>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/30/了解Http/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android-studio-Git提示Push-rejected-Push-to-origin-master-was-rejected" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -358,96 +721,6 @@
 
 
   
-    <article id="post-PhantomJS运行提示 executable needs to be in PATH？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">PhantomJS运行提示：Message &#39;phantomjs&#39; executable needs to be in PATH？</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/" class="archive-article-date">
-  	<time datetime="2017-08-20T03:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月20日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>使用selenuim调用PhantomJS时一直提示异常：</p>
-<p>Message ‘phantomjs’ executable needs to be in PATH？</p>
-<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>调用代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin"</span>)</div></pre></td></tr></table></figure>
-<p>路径只写到bin是不行的，要具体到文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin\phantomjs.exe"</span>)</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-python去除字符串中间空格的方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -518,6 +791,96 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/08/20/python去除字符串中间空格的方法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-PhantomJS运行提示 executable needs to be in PATH？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">PhantomJS运行提示：Message &#39;phantomjs&#39; executable needs to be in PATH？</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/" class="archive-article-date">
+  	<time datetime="2017-08-20T03:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月20日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>使用selenuim调用PhantomJS时一直提示异常：</p>
+<p>Message ‘phantomjs’ executable needs to be in PATH？</p>
+<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>调用代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin"</span>)</div></pre></td></tr></table></figure>
+<p>路径只写到bin是不行的，要具体到文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin\phantomjs.exe"</span>)</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">展开全文 >></a>
         </p>
       
 
@@ -917,202 +1280,6 @@
 
 
   
-    <article id="post-如何在Pycharm中运行Scrapy爬虫" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/">如何在Pycharm中运行Scrapy爬虫</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/" class="archive-article-date">
-  	<time datetime="2017-08-17T12:24:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>学爬虫就绕不过Scrapy，但是发现每次运行爬虫都要使用shell命令，</p>
-<p>但是在终端窗口看log着实让人难受，想着如何能让Scrapy在Pycharm执行。</p>
-<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>办法总比问题多，没有找到直接运行项目的方法点。但是曲线救国也未尝不可。</p>
-<p>既然关于Scrapy的教程运行爬虫时都是shell命令，那就让python文件中执行这个shell命令。</p>
-<p>命令是<code>comm=&#39;scrapy crawl name&#39;</code></p>
-<p>那如何让python运行shell命令呢？参考<a href="http://www.jensondev.me/2017/08/17/Python%E4%B8%AD%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/" target="_blank" rel="external">Python中执行shell命令</a></p>
-<p>在项目下创建main.py文件：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">comm = <span class="string">'scrapy crawl jianshu'</span></div><div class="line">res = os.popen(comm).read()</div><div class="line">print(res)</div></pre></td></tr></table></figure>
-<p>这样每次执行这个python文件就可以启动爬虫项目了，然后在pycharm控制台查看打印消息即可。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python中执行shell命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/17/Python中执行shell命令/">Python中执行shell命令</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/17/Python中执行shell命令/" class="archive-article-date">
-  	<time datetime="2017-08-17T12:07:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月17日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式</p>
-<h1 id="0x01-方式"><a href="#0x01-方式" class="headerlink" title="0x01 方式"></a>0x01 方式</h1><h2 id="os模块"><a href="#os模块" class="headerlink" title="os模块"></a>os模块</h2><ul>
-<li><p>os.system(‘ls’)</p>
-<p>这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。</p>
-<p><strong>该方法没有返回值</strong></p>
-</li>
-</ul>
-<ul>
-<li><p>os.popen(‘ls’)</p>
-<p>popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。</p>
-</li>
-</ul>
-<h2 id="commands模块"><a href="#commands模块" class="headerlink" title="commands模块"></a>commands模块</h2><p>​    根据你需要的不同，commands模块有三个方法可供选择。getstatusoutput, getoutput, getstatus。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import commands</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;ls /bin/ls&apos;)</div><div class="line">(0, &apos;/bin/ls&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;cat /bin/junk&apos;)</div><div class="line">(256, &apos;cat: /bin/junk: No such file or directory&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;/bin/junk&apos;)</div><div class="line">(256, &apos;sh: /bin/junk: not found&apos;)</div><div class="line">&gt;&gt;&gt; commands.getoutput(&apos;ls /bin/ls&apos;)</div><div class="line">&apos;/bin/ls&apos;</div><div class="line">&gt;&gt;&gt; commands.getstatus(&apos;/bin/ls&apos;)</div><div class="line">&apos;-rwxr-xr-x  1 root        13352 Oct 14  1994 /bin/ls&apos;</div></pre></td></tr></table></figure>
-<p><strong>该模块在python3.6中已经不存在，不知道具体从哪个版本移除了，所以这部分代码来自网友分析</strong></p>
-<h2 id="subprocess模块"><a href="#subprocess模块" class="headerlink" title="subprocess模块"></a>subprocess模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<p>shell=True表示命令最终在shell中运行。Python文档中出于安全考虑，不建议使用shell=True。建议使用Python库来代替shell命令，或使用pipe的一些功能做一些转义。</p>
-<p>如果是多条命令可以使用‘&amp;&amp;’</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls&amp;&amp;pwd'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/Python中执行shell命令/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1243,10 +1410,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -1255,7 +1418,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1263,11 +1426,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1276,6 +1439,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">

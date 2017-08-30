@@ -180,6 +180,241 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python中-和-有什么意义" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/08/Python中-和-有什么意义/">Python中_和__有什么意义?</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/08/Python中-和-有什么意义/" class="archive-article-date">
+  	<time datetime="2017-08-08T14:35:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月08日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>python中很多源码都是由单下划线和双下划线开头的函数、变量、模块。</p>
+<p>但是一直不太明白这表示什么意思。然后因为好奇就查了下资料才才明白怎么回事。</p>
+<h1 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h1><h2 id="单下划线（-）"><a href="#单下划线（-）" class="headerlink" title="单下划线（_）"></a>单下划线（_）</h2><p>以<strong>单下划线</strong>开头的名字都应该是内部实现.</p>
+<p>函数以单下划线开头说明这是一个特殊函数或者认为是一个隐藏函数，作为一个内部方法，只能被本模块代码使用。</p>
+<p>Python没有强制依赖于语言特性去达到封装数据目的，而是通过归约。而这里的下划线就是归约。</p>
+<blockquote>
+<p>Python 并不会真的阻止别人访问内部名称。但是如果你这么做肯定是不好的，可能会导致脆弱的代码。同时还要注意到，使用下划线开头的约定同样适用于模块名和模块级别函数。</p>
+</blockquote>
+<h2 id="双下划线（-）"><a href="#双下划线（-）" class="headerlink" title="双下划线（__）"></a>双下划线（__）</h2><p>使用双下划线开始会导致访问名称变成其他形式。这种以双下划线开头的函数不会被通过类继承覆盖。</p>
+<p>Python文档指出，“<strong>spam”这种形式（至少两个前导下划线，最多一个后续下划线）的任何标识符将会被“_classname</strong>spam”这种形式原文取代，在这里“classname”是去掉前导下划线的当前类名。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'b___private_method'</span>)</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">public_method</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private_method()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(B)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super().__init__()</div><div class="line">        self.__private = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'c___private_method'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"></div><div class="line">c = C()</div><div class="line">c.public_method()</div><div class="line"><span class="comment"># print(c.getPrivateValue())</span></div></pre></td></tr></table></figure>
+<p>上面代码执行后结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b___private_method</div><div class="line"></div><div class="line">Process finished with exit code 0</div></pre></td></tr></table></figure>
+<p>可以看到打印的时B类中方法，而不是C类方法，说明虽然这两个方法方法名一样，但是没有被重写。</p>
+<h2 id="前后双下划线"><a href="#前后双下划线" class="headerlink" title="前后双下划线"></a>前后双下划线</h2><p>这种用法表示Python中特殊的方法名。其实，这只是一种惯例，对Python系统来说，这将确保不会与用户自定义的名称冲突。通常，你将会覆写这些方法，并在里面实现你所需要的功能，以便Python调用它们。例如，当定义一个类时，你经常会覆写“<strong>init</strong>”方法。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/08/Python中-和-有什么意义/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python入门系列(4)文件IO" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/06/Python入门系列(4)文件IO/">Python入门系列(4):文件IO</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/06/Python入门系列(4)文件IO/" class="archive-article-date">
+  	<time datetime="2017-08-06T09:25:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月06日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。</p>
+<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="mode"><a href="#mode" class="headerlink" title="mode"></a>mode</h2><p>不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？</p>
+<p>什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？</p>
+<p>下面表格列出了mode值及含义：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">值</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">‘r’</td>
+<td style="text-align:center">读模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘w’</td>
+<td style="text-align:center">写模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘a’</td>
+<td style="text-align:center">追加模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘b’</td>
+<td style="text-align:center">二进制模式</td>
+</tr>
+<tr>
+<td style="text-align:center">‘+’</td>
+<td style="text-align:center">读/写模式</td>
+</tr>
+</tbody>
+</table>
+<p><strong>其中b和+可以和前面模式混用</strong>。</p>
+<p>打开文件使用<strong>open*</strong>函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file= open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>open函数中第三个可选参数buffering控制着⽂件的缓冲。 如果参数是0， I/O操作就是⽆缓冲的， 直接<br>将数据写到硬盘上； 如果参数是1， I/O操作就是有缓冲的， 数据先写到内存⾥， 只有使⽤flush函数或者<br>close函数才会将数据更新到硬盘； 如果参数为⼤于1的数字则代表缓冲区的⼤⼩（单位是字节） ， -1（或者<br>是任何负数） 代表使⽤默认缓冲区的⼤⼩。 </p>
+</blockquote>
+<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><p>文件读取使用read方法。可以一次读取全部、读取一行、读取指定长度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(file.read())</div><div class="line">print(file.readline())</div><div class="line">print(file.read(<span class="number">3</span>))</div></pre></td></tr></table></figure>
+<h2 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h2><p>写文件使用write方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">file.write(<span class="string">'\ntoday is sunday'</span>)</div><div class="line">str=[<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>]</div><div class="line">file.writelines(str)</div></pre></td></tr></table></figure>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>IO操作完成后都要有一个关闭操作对于文件来说，不使用时要关闭：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file.close()</div></pre></td></tr></table></figure>
+<p>但是IO操作难免出现异常，如果在文件操作期间出现异常可能会导致无法关闭文件。这时需要异常处理机制：<code>try except</code></p>
+<p>但是异常处理机制又略显繁琐，so这里推荐使用<strong>with</strong>语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span>  open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>) <span class="keyword">as</span> file_object:</div><div class="line">contents = file_object.read()</div><div class="line">print(contents)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>关键字with在不再需要访问文件后将其关闭。在这个程序中，注意到我们调用了open()，但<br>没有调用close()；你也可以调用open()和close()来打开和关闭文件，但这样做时，如果程序存<br>在bug，导致close()语句未执行，文件将不会关闭。这看似微不足道，但未妥善地关闭文件可能<br>会导致数据丢失或受损。如果在程序中过早地调用close()，你会发现需要使用文件时它已关闭<br>（无法访问），这会导致更多的错误。并非在任何情况下都能轻松确定关闭文件的恰当时机，但通<br>过使用前面所示的结构，可让Python去确定：你只管打开文件，并在需要时使用它， Python自会<br>在合适的时候自动将其关闭 </p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/06/Python入门系列(4)文件IO/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-字符串前的r和u" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1237,289 +1472,6 @@ If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
 
 
   
-    <article id="post-Android屏幕适配" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/Android屏幕适配/">Android屏幕适配</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/Android屏幕适配/" class="archive-article-date">
-  	<time datetime="2017-08-01T05:23:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于Android手机尺寸、分辨率碎片化严重，在Android应用开发中屏幕适配需求也变得越来越重要。</p>
-<h1 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h1><p><strong>屏幕尺寸</strong>指屏幕对角线的长度，以英寸为单位，1英寸=2.54厘米。<br><strong>屏幕分辨率</strong>指在横纵向上的像素点数，单位是px，1px=1像素点，一般是纵向像素x横向像素，如1280×720。<br><strong>屏幕像素密度</strong>是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写，像素密度和屏幕尺寸和屏幕分辨率有关，像素密度也叫dpi。</p>
-<p><strong>dp，也是dip：</strong>Density Independent Pixels的缩写。以<strong>160dpi</strong>为基准，1dp=1px，密度无关像素<br><strong>dpi：</strong>屏幕像素密度的单位，“dot per inch”的缩写</p>
-<p><strong>px：</strong>像素，物理上的绝对单位</p>
-<p><strong>sp：</strong>Scale-Independent Pixels的缩写，可以根据系统自动进行缩放。通常可以使用12sp，14sp，18sp，22sp，为了避免精度失真一般不使用奇数和小数。</p>
-<p>不同密度区分：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>密度范围</th>
-<th>图片大小</th>
-<th>比例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>mdpi</td>
-<td>120dp~160dp</td>
-<td>48×48px</td>
-<td>2</td>
-</tr>
-<tr>
-<td>hdpi</td>
-<td>160dp~240dp</td>
-<td>72×72px</td>
-<td>3</td>
-</tr>
-<tr>
-<td>xhdpi</td>
-<td>240dp~320dp</td>
-<td>96×96px</td>
-<td>4</td>
-</tr>
-<tr>
-<td>xxhdpi</td>
-<td>320dp~480dp</td>
-<td>144×144px</td>
-<td>6</td>
-</tr>
-<tr>
-<td>xxxhdpi</td>
-<td>480dp~640dp</td>
-<td>192×192px</td>
-<td>8</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td>12</td>
-</tr>
-</tbody>
-</table>
-<p><strong>如果只想出一套图片优先出xxhdpi，这样在低于这个密度下的系统会压缩图片进行显示，不至于会模糊，同时由于xxxhdpi还没有流行起来，用户数量少。</strong></p>
-<h1 id="适配方法"><a href="#适配方法" class="headerlink" title="适配方法"></a>适配方法</h1><h2 id="适配尺寸"><a href="#适配尺寸" class="headerlink" title="适配尺寸"></a>适配尺寸</h2><ul>
-<li><p>优先使用wrap_content，matc_parent，weight</p>
-</li>
-<li><p>使用相对布局，禁止使用绝对布局</p>
-</li>
-<li><p>使用限定符</p>
-<ul>
-<li><p>尺寸限定符，如layout-large</p>
-<p>3.2系统以前有用，</p>
-<p>3.2版本后又退出了最小宽度限定符如layout-sw600dp</p>
-<p>sw=small width 最小宽度。</p>
-<p>如果要维护全系统版本，需要维护的布局太多，应该抽取共同布局</p>
-<p>创建<code>res/layout/main.xml</code>布局文件。</p>
-<p>默认布局<code>res/values/layout.xml</code>。内容为：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>创建<code>res/layout/main_twopanels.xml</code>布局文件。</p>
-<p>给3.2之前版本创建<code>res/values-large/layout.xml</code>文件，内容为：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main_twopanels</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>给3.2之后的版本创建<code>res/values-sw600dp/layout.xml</code>文件，内容为：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main_twopanels</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>屏幕方向限定符：-land，-port</p>
-</li>
-</ul>
-</li>
-<li><p>使用点九位图</p>
-<p>左上控制拉伸区域，右下控制间隔区域</p>
-</li>
-</ul>
-<h2 id="适配密度"><a href="#适配密度" class="headerlink" title="适配密度"></a>适配密度</h2><ul>
-<li><p>使用非密度制约像素  如dp，sp</p>
-<p>​</p>
-</li>
-<li><p>多种位图</p>
-<p><strong>如果只提供一种高分辨率图，将其放在对应的密度drawable下没有问题。但是如果将其放入低于当前密度的drawable下，会造成图片按比例放大，导致内存倍数增加</strong></p>
-<p>比如把一个1920x1080的xxhdpi的图片放在mdpi下，内存占用会增加9倍。</p>
-<p>按照图片比例的2：3：4：6：8计算出来。</p>
-<p>​</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/Android屏幕适配/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python爬虫应该掌握哪些知识" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/Python爬虫应该掌握哪些知识/">Python爬虫应该掌握哪些知识</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/01/Python爬虫应该掌握哪些知识/" class="archive-article-date">
-  	<time datetime="2017-08-01T02:24:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>其实对某些网站有针对性的爬取需要的内容并不是很难，只要缕清自己的需求。从0到需求实现须要哪些步骤给列出来，然后各个实现最后组合在一起就基本完成了一个简单的爬虫。</p>
-<h1 id="整体流程分析"><a href="#整体流程分析" class="headerlink" title="整体流程分析"></a>整体流程分析</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%88%AC%E8%99%AB%E6%B5%81%E7%A8%8B.png" alt="爬虫整体流程"></p>
-<p>如图，我们爬取数据最终都是要展示出来看的，所以基本的一个自己的小型爬虫流程可以分为数据采集、数据存储、数据清洗、数据展示四大流程。</p>
-<p><strong>兵法云:”分而治之，各个击破”</strong>，下面把四个步骤涉及到得知识分别说一下。</p>
-<h1 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h1><p>爬虫爬取过程就是采集过程，既然要爬取别人的网站数据，首先要处理网络请求这就是离不开网络库，通常使用<code>urllib</code>就可以。</p>
-<p>爬到的页面都是html源码形式的，习惯称为DOM树，要通过DOM树获取需要的信息，需要使用解析库，这里推荐<code>BeautifulSoup4</code>。</p>
-<p>因为要找到内容的规律才能进行顺利爬取，期间免不了涉及到正则表达式。所以这也是必须要掌握的。</p>
-<p>这样基本能完成简单的爬取了。</p>
-<blockquote>
-<p>如果涉及到透过表单和登陆窗口后面的爬取或者爬取内容和实际显示不一样，这些涉及深入爬取暂时不做讨论。</p>
-</blockquote>
-<h1 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h1><p>爬取到得数据总在内存中存放是个问题。所以爬取后的内容需要及时进行存储以防丢失。</p>
-<p>存储一般分为文件存储和数据库存储，Android中也是如此。</p>
-<p>而数据处理的文件存储一般式CVS格式，so使用<code>cvs</code>库可以方便进行数据读写，</p>
-<p>数据库存储可以自由选择所熟悉的数据库类型。</p>
-<p>很多时候个人爬虫到这步基本已经完成了。后面两步主要在数据分析时才会用到</p>
-<h1 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h1><p>如果爬取到得数据本身就是很符合规范的话那就省心了，否则需要对采集的数据进行清洗。</p>
-<p>由于错误的标点符号、大小写字母不一致、断行和拼写错误等问题，零乱的数据是网络中的大问题。而数据清洗就是清除这些问题，让数据标准化。</p>
-<h1 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h1><p>数据展示即数据可视化，可以使用<code>matplotlib</code>库生成各种统计图</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/Python爬虫应该掌握哪些知识/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1650,10 +1602,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -1662,7 +1610,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1670,11 +1618,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1683,6 +1631,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
