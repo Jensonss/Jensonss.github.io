@@ -180,6 +180,289 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Android屏幕适配" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/01/Android屏幕适配/">Android屏幕适配</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/01/Android屏幕适配/" class="archive-article-date">
+  	<time datetime="2017-08-01T05:23:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于Android手机尺寸、分辨率碎片化严重，在Android应用开发中屏幕适配需求也变得越来越重要。</p>
+<h1 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h1><p><strong>屏幕尺寸</strong>指屏幕对角线的长度，以英寸为单位，1英寸=2.54厘米。<br><strong>屏幕分辨率</strong>指在横纵向上的像素点数，单位是px，1px=1像素点，一般是纵向像素x横向像素，如1280×720。<br><strong>屏幕像素密度</strong>是指每英寸上的像素点数，单位是dpi，即“dot per inch”的缩写，像素密度和屏幕尺寸和屏幕分辨率有关，像素密度也叫dpi。</p>
+<p><strong>dp，也是dip：</strong>Density Independent Pixels的缩写。以<strong>160dpi</strong>为基准，1dp=1px，密度无关像素<br><strong>dpi：</strong>屏幕像素密度的单位，“dot per inch”的缩写</p>
+<p><strong>px：</strong>像素，物理上的绝对单位</p>
+<p><strong>sp：</strong>Scale-Independent Pixels的缩写，可以根据系统自动进行缩放。通常可以使用12sp，14sp，18sp，22sp，为了避免精度失真一般不使用奇数和小数。</p>
+<p>不同密度区分：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>密度范围</th>
+<th>图片大小</th>
+<th>比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mdpi</td>
+<td>120dp~160dp</td>
+<td>48×48px</td>
+<td>2</td>
+</tr>
+<tr>
+<td>hdpi</td>
+<td>160dp~240dp</td>
+<td>72×72px</td>
+<td>3</td>
+</tr>
+<tr>
+<td>xhdpi</td>
+<td>240dp~320dp</td>
+<td>96×96px</td>
+<td>4</td>
+</tr>
+<tr>
+<td>xxhdpi</td>
+<td>320dp~480dp</td>
+<td>144×144px</td>
+<td>6</td>
+</tr>
+<tr>
+<td>xxxhdpi</td>
+<td>480dp~640dp</td>
+<td>192×192px</td>
+<td>8</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p><strong>如果只想出一套图片优先出xxhdpi，这样在低于这个密度下的系统会压缩图片进行显示，不至于会模糊，同时由于xxxhdpi还没有流行起来，用户数量少。</strong></p>
+<h1 id="适配方法"><a href="#适配方法" class="headerlink" title="适配方法"></a>适配方法</h1><h2 id="适配尺寸"><a href="#适配尺寸" class="headerlink" title="适配尺寸"></a>适配尺寸</h2><ul>
+<li><p>优先使用wrap_content，matc_parent，weight</p>
+</li>
+<li><p>使用相对布局，禁止使用绝对布局</p>
+</li>
+<li><p>使用限定符</p>
+<ul>
+<li><p>尺寸限定符，如layout-large</p>
+<p>3.2系统以前有用，</p>
+<p>3.2版本后又退出了最小宽度限定符如layout-sw600dp</p>
+<p>sw=small width 最小宽度。</p>
+<p>如果要维护全系统版本，需要维护的布局太多，应该抽取共同布局</p>
+<p>创建<code>res/layout/main.xml</code>布局文件。</p>
+<p>默认布局<code>res/values/layout.xml</code>。内容为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>创建<code>res/layout/main_twopanels.xml</code>布局文件。</p>
+<p>给3.2之前版本创建<code>res/values-large/layout.xml</code>文件，内容为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main_twopanels</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>给3.2之后的版本创建<code>res/values-sw600dp/layout.xml</code>文件，内容为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"main"</span><span class="attr">type</span>=<span class="string">"layout"</span>&gt;</span></div><div class="line">      @layout/main_twopanels</div><div class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>屏幕方向限定符：-land，-port</p>
+</li>
+</ul>
+</li>
+<li><p>使用点九位图</p>
+<p>左上控制拉伸区域，右下控制间隔区域</p>
+</li>
+</ul>
+<h2 id="适配密度"><a href="#适配密度" class="headerlink" title="适配密度"></a>适配密度</h2><ul>
+<li><p>使用非密度制约像素  如dp，sp</p>
+<p>​</p>
+</li>
+<li><p>多种位图</p>
+<p><strong>如果只提供一种高分辨率图，将其放在对应的密度drawable下没有问题。但是如果将其放入低于当前密度的drawable下，会造成图片按比例放大，导致内存倍数增加</strong></p>
+<p>比如把一个1920x1080的xxhdpi的图片放在mdpi下，内存占用会增加9倍。</p>
+<p>按照图片比例的2：3：4：6：8计算出来。</p>
+<p>​</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/01/Android屏幕适配/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python爬虫应该掌握哪些知识" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/01/Python爬虫应该掌握哪些知识/">Python爬虫应该掌握哪些知识</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/01/Python爬虫应该掌握哪些知识/" class="archive-article-date">
+  	<time datetime="2017-08-01T02:24:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月01日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>其实对某些网站有针对性的爬取需要的内容并不是很难，只要缕清自己的需求。从0到需求实现须要哪些步骤给列出来，然后各个实现最后组合在一起就基本完成了一个简单的爬虫。</p>
+<h1 id="整体流程分析"><a href="#整体流程分析" class="headerlink" title="整体流程分析"></a>整体流程分析</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%88%AC%E8%99%AB%E6%B5%81%E7%A8%8B.png" alt="爬虫整体流程"></p>
+<p>如图，我们爬取数据最终都是要展示出来看的，所以基本的一个自己的小型爬虫流程可以分为数据采集、数据存储、数据清洗、数据展示四大流程。</p>
+<p><strong>兵法云:”分而治之，各个击破”</strong>，下面把四个步骤涉及到得知识分别说一下。</p>
+<h1 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h1><p>爬虫爬取过程就是采集过程，既然要爬取别人的网站数据，首先要处理网络请求这就是离不开网络库，通常使用<code>urllib</code>就可以。</p>
+<p>爬到的页面都是html源码形式的，习惯称为DOM树，要通过DOM树获取需要的信息，需要使用解析库，这里推荐<code>BeautifulSoup4</code>。</p>
+<p>因为要找到内容的规律才能进行顺利爬取，期间免不了涉及到正则表达式。所以这也是必须要掌握的。</p>
+<p>这样基本能完成简单的爬取了。</p>
+<blockquote>
+<p>如果涉及到透过表单和登陆窗口后面的爬取或者爬取内容和实际显示不一样，这些涉及深入爬取暂时不做讨论。</p>
+</blockquote>
+<h1 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h1><p>爬取到得数据总在内存中存放是个问题。所以爬取后的内容需要及时进行存储以防丢失。</p>
+<p>存储一般分为文件存储和数据库存储，Android中也是如此。</p>
+<p>而数据处理的文件存储一般式CVS格式，so使用<code>cvs</code>库可以方便进行数据读写，</p>
+<p>数据库存储可以自由选择所熟悉的数据库类型。</p>
+<p>很多时候个人爬虫到这步基本已经完成了。后面两步主要在数据分析时才会用到</p>
+<h1 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h1><p>如果爬取到得数据本身就是很符合规范的话那就省心了，否则需要对采集的数据进行清洗。</p>
+<p>由于错误的标点符号、大小写字母不一致、断行和拼写错误等问题，零乱的数据是网络中的大问题。而数据清洗就是清除这些问题，让数据标准化。</p>
+<h1 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h1><p>数据展示即数据可视化，可以使用<code>matplotlib</code>库生成各种统计图</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/01/Python爬虫应该掌握哪些知识/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Mac系统中希捷移动硬盘NTFS格式只能读" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -977,272 +1260,6 @@
 
 
   
-    <article id="post-垃圾回收机制-关于GC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/26/垃圾回收机制-关于GC/">垃圾回收机制~关于GC</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/26/垃圾回收机制-关于GC/" class="archive-article-date">
-  	<time datetime="2017-07-26T12:25:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。</p>
-<p>虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。</p>
-<p>说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就是标记-清除算法。</p>
-<p>如果是一门语言可以从基础语法学起，但是GC该如何学习呢？</p>
-<p><strong>其实问答形式就是最好的学习方式</strong></p>
-<h1 id="0x01-什么是GC"><a href="#0x01-什么是GC" class="headerlink" title="0x01 什么是GC"></a>0x01 什么是GC</h1><p>GC(垃圾回收)，通过查找无效对象释放空间达到自动管理内存的目的。</p>
-<h1 id="0x02-如何确定垃圾"><a href="#0x02-如何确定垃圾" class="headerlink" title="0x02 如何确定垃圾"></a>0x02 如何确定垃圾</h1><p>要查找垃圾对象，首先要知道什么样对象才算是垃圾对象才好对症下药。</p>
-<p><strong>在内存中，不再被引用的对象就称为垃圾对象</strong></p>
-<p>现在的问题又转到如何确定一个对象是否被引用？</p>
-<p>首先想到一种方法是给每个对象都添加一个计数器功能，这个计数器用例记录引用自己的指针数量，每多一个引用数量计数器就增加1，每减少一个引用数量计数器就减少1，如果计数器为0，说明没有其他对象引用当前对象，那么这个对象就是垃圾对象，可以被回收。这种方式叫做<strong>引用计数法</strong></p>
-<p>引用计数法虽然容易理解，但是因为缺点也很明显，所以不得不另寻它法。这时<strong>可达性分析法</strong>就登场了。</p>
-<p><strong>可达性分析法</strong>也可以称为<strong>跟踪收集器法</strong>，找一个对象作为GC的根节点(Root)，通过对对象的连续引用形成一条引用链，如果一个对象能够通过直接或间接的到达Root称为对象可达，否则称为对象不可达。对于不可达对象就可以判定为垃圾对象。</p>
-<h1 id="0x03-如何回收垃圾"><a href="#0x03-如何回收垃圾" class="headerlink" title="0x03 如何回收垃圾"></a>0x03 如何回收垃圾</h1><p>上一节知道了哪些对象是垃圾，现在该讨论有哪些方式能回收垃圾了。</p>
-<p>常用的GC算法有<strong>标记-清除算法</strong>、<strong>标记-整理算法</strong>、<strong>复制算法</strong>、<strong>分代GC</strong>、<strong>G1 GC</strong>。</p>
-<h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p><strong>标记-清除算法(Mark-Weep)</strong>看名字就知道分为标记和清除两个阶段。</p>
-<p><strong>注意一点这里的标记是指标记活着的对象，而非死对象。</strong></p>
-<p><strong>标记阶段</strong>从Root开始首先标记Root能直接访问的对象，然后递归通过指针能访问到得对象，同时把这些对象做标记。</p>
-<p><strong>清除阶段</strong>遍历堆内存，把未被标记的对象清除以达到垃圾回收目的。</p>
-<p>图片表示如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4.png" alt="标记清除"></p>
-<p>图中问题很明显：回收后会产生大量的内存碎片，不利于对内存连续要求的数据结构的使用，譬如数组。</p>
-<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p><strong>标记-整理算法也叫标记-压缩</strong>，这里的标记阶段和上面的标记-清除的标记阶段完全一样，不同的是整理阶段是对清除阶段的改进。</p>
-<p>整理阶段简单来说就是把活着的对象移动到一端，然后从边界处清除另一端所有空间。</p>
-<p>图片表示如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86.png" alt="标记整理"></p>
-<p>优点是有效利用堆，但又不会产生内存碎片。</p>
-<p>缺点是浪费时间，整理阶段要搜索三次堆内存，而标记-清除算法的清除阶段只搜索一次堆内存。</p>
-<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p><strong>复制算法</strong>是把堆内存分为两块空间标识为from和to。当from空间被占满时，GC把活着的对象复制到to空间，复制完成后把from和to标识互换，GC结束。为了保证from空间对象都能复制到to空间，须要保证from和to空间大小一致。</p>
-<p>图片表示如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95.png" alt="复制算法"></p>
-<p>复制算法吞吐量优秀，分配内存速度快，没有碎片，但是堆内存利用率低下</p>
-<h2 id="分代GC"><a href="#分代GC" class="headerlink" title="分代GC"></a>分代GC</h2><p>根据日常研发总结出一个经验“大部分对象在生成后不久就变成垃圾，很少能活的久”。据此经验，分代GC引入了“年龄”的概念。经历过一次GC后活下来的对象年龄+1。</p>
-<p><strong>分代GC</strong>把内存分为新生代和老年代，针对不同的年代使用不同的GC算法。刚生产的对象称为新生代对象，活到一定年龄的称为老年代对象。</p>
-<p>我们把对新对象执行的GC称为<strong>新生代GC(minor GC)</strong>， 把老年代对象执行的GC称为<strong>老年代GC(major GC)</strong>。</p>
-<p><strong>分代GC属于综合性GC，对上面GC算法的综合使用。</strong></p>
-<p>图片表示如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6.png" alt="分代GC"></p>
-<p>如图所示：<strong>新生代空间包括Eden，S0和S1三个区，老年代空间是Old区</strong></p>
-<p>其中新生代每次回收只有少数对象存活，可以使用复制算法，而老年代对象存活率高也没用额外空间，可以使用标记-整理和标记清除算法。</p>
-<p>刚开始时，Eden用来存放刚创建的对象，S0和S1为空，如果发生GC，Eden区幸存对象转移到S0区，如果S0区已有数据前提下再次进行GC时，会把Eden和S0区存活对象转移到S1区，同时清空Eden和S0，然后交换S0和S1标识。经过一定次数的GC仍然存活的对象转移到老年代。</p>
-<h2 id="G1-GC"><a href="#G1-GC" class="headerlink" title="G1 GC"></a>G1 GC</h2><h1 id="0x04-谁来回收垃圾"><a href="#0x04-谁来回收垃圾" class="headerlink" title="0x04 谁来回收垃圾"></a>0x04 谁来回收垃圾</h1><p>知道了哪些对象是垃圾，也知道了用哪些算法来回收垃圾，然后呢？直接满地调用算法回收垃圾吗？</p>
-<p>当然不是！GC要分时机且统一来回收垃圾，这里是由垃圾收集器来来根据时机统一回收垃圾对象。</p>
-<p>由于各方面需求原因，垃圾收集器也是有多种的。</p>
-<p>未完待续…….</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GC</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/GC/" class="article-tag-list-link color3">GC</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/26/垃圾回收机制-关于GC/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python自动化之hexo自动发布和提交源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/26/Python自动化之hexo自动发布和提交源码/">Python自动化之hexo自动发布和提交源码</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/26/Python自动化之hexo自动发布和提交源码/" class="archive-article-date">
-  	<time datetime="2017-07-26T08:43:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>现在的博客系统是使用hexo+github搭建的静态页面系统。</p>
-<p>博客文章页面和源码都由github托管。所以每次发布文章时要跳转到相应目录下，执行<code>hexo d -g</code>命令发布新文章。如果要同步源码方便其他机器也能写文章，那么还要使用<code>git add .</code>添加暂存，<code>git commit -m message</code>添加本地和<code>git push</code>推送远程分支。</p>
-<h1 id="0x01-自动化设想"><a href="#0x01-自动化设想" class="headerlink" title="0x01 自动化设想"></a>0x01 自动化设想</h1><p>开始因为新鲜感这些操作都还好，顺便练手。但是时间久了就觉得每次都操作这么多次太浪费时间了。</p>
-<p>这时候就萌生了自动化命令的想法，一步操作完成所有这些命令，该多省心！</p>
-<h1 id="0x02-自动化设计"><a href="#0x02-自动化设计" class="headerlink" title="0x02 自动化设计"></a>0x02 自动化设计</h1><p>实现自动化首先想到的是Python，而且最近也学了不久，练练手也刚好。</p>
-<p>由于都是终端命令，所以要先实现让Python执行终端命令的方法：</p>
-<p>①通过<code>os.system</code>方法</p>
-<p>②通过<code>subprocess.Popen</code>方法</p>
-<p>通过使用发现都可以执行命令，但是如果命令分开执行，命令之间的前后结果不会关联起来，比如我第一个命令执行<code>cd /jenson/</code>，再执行第二个命令<code>pwd</code>时时发现路径仍然是旧路径。</p>
-<p>所以现在面临新的问题：多个命令一起执行。如何一起执行呢？</p>
-<p>其实上面①和②都支持多命令一起，譬如：</p>
-<p>如果多个命令共同执行，不管前一个命令是否成功，都要执行后一个则使用<strong>&amp;&amp;</strong>连接命令：</p>
-<ul>
-<li><code>os.system(&#39;cmd1 &amp;&amp; cmd2&#39;)</code></li>
-<li><code>subprocess.Popen(&#39;cmd1 &amp;&amp; cmd2&#39;, shell=True)</code></li>
-</ul>
-<p>如果前一个命令执行成功才执行后一个命令，则使用<strong>;</strong>连接：</p>
-<ul>
-<li><code>os.system(&#39;cmd1 ; cmd2&#39;)</code></li>
-<li><code>subprocess.Popen(&#39;cmd1 ; cmd2&#39;, shell=True)</code></li>
-</ul>
-<p>接下来代码实现：</p>
-<h1 id="0x03-自动化实现"><a href="#0x03-自动化实现" class="headerlink" title="0x03 自动化实现"></a>0x03 自动化实现</h1><p>创建<code>AutoCommit.py</code>文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line"></div><div class="line"><span class="comment"># 跳转工作目录</span></div><div class="line">to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line"><span class="comment"># 发布命令</span></div><div class="line">to_deploy = <span class="string">'hexo d -g'</span></div><div class="line"><span class="comment"># git add命令</span></div><div class="line">to_add = <span class="string">'git add .'</span></div><div class="line"><span class="comment"># git commit命令</span></div><div class="line">to_commit = <span class="string">'git commit -m 新添加文章'</span> </div><div class="line"><span class="comment"># git push命令</span></div><div class="line">to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<p>这就算完成了，运行<code>python3 AutoCommit.py</code>时候也能正常提交。</p>
-<p>但是这样感觉还能再完善些，继续改造：</p>
-<h1 id="0x04-自动化优化"><a href="#0x04-自动化优化" class="headerlink" title="0x04 自动化优化"></a>0x04 自动化优化</h1><p>首先关于git commit的信息，我想实现自定义，而不是每次都固定这几个内容，这样不容易区分每次版本提交了哪些内容。</p>
-<p>现在的初步想法是在终端执行<code>python3 AutoCommit.py</code>命令时，同时接收命令行参数作为提交的内容，比如这样<code>python3 AutoCommit.py  message</code>。</p>
-<p>Python文件要接收命令行参数，需要使用<code>sys</code>模块，接收参数：</p>
-<p><code>message = sys.argv[1]</code>。</p>
-<p>这里argv[0]表示脚本名，argv[1]开始才表示后面的参数</p>
-<p>同时接收message后判断是否为空，如果为空在使用默认提交信息，所以封装一个方法</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isNullMessage</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    判断消息是否为空,如果为空赋默认值</div><div class="line">    :param message:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> len(message.strip()) == <span class="number">0</span>:</div><div class="line">        message = <span class="string">'提交新文章'</span></div><div class="line">    <span class="keyword">return</span> message</div></pre></td></tr></table></figure>
-<p>既然判断提交信息都封装到方法了，那么这一些列命令也应该封装到方法中：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deployAndGitPush</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    hexo静态页面发布和源码push git服务器</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="comment"># 跳转工作目录</span></div><div class="line">    to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line">    <span class="comment"># 发布命令</span></div><div class="line">    to_deploy = <span class="string">'hexo d -g'</span></div><div class="line">    <span class="comment"># git add命令</span></div><div class="line">    to_add = <span class="string">'git add .'</span></div><div class="line">    <span class="comment"># git commit命令</span></div><div class="line">    to_commit = <span class="string">'git commit -m '</span> + message</div><div class="line">    <span class="comment"># git push命令</span></div><div class="line">    to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">    tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<p>最终调用如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deployAndGitPush(message=isNullMessage(message=message))</div></pre></td></tr></table></figure>
-<p>OK，自动化优化完成。执行<code>python3 AutpCommit.py Android文章提交</code>。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">自动化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/自动化/" class="article-tag-list-link color4">自动化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/26/Python自动化之hexo自动发布和提交源码/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
@@ -1373,10 +1390,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -1385,7 +1398,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1393,11 +1406,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1406,6 +1419,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
