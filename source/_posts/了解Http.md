@@ -1,8 +1,8 @@
 ---
 title: 了解Http
 date: 2017-08-30 11:57:11
-tags: 网络
-categories: 网络
+tags: [网络,读书笔记]
+categories: [网络,读书笔记]
 ---
 
 # 0x00 前言
