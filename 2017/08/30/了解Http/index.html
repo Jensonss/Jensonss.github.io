@@ -22,7 +22,9 @@
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E5%92%8C%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%E5%92%8C%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E7%8A%B6%E6%80%81%E7%A0%81.png">
-<meta property="og:updated_time" content="2017-08-30T15:54:24.000Z">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E6%91%98%E8%A6%81%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B.png">
+<meta property="og:updated_time" content="2017-08-31T09:43:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="了解Http">
 <meta name="twitter:description" content="0x00 前言只要是编程，无论学哪种语言，网络就是逃不开的话题，而Http又是网络上层协议应用最广泛的一种。 那么该如何学习Http？下图是个人总结的学习Http比较容易让人记忆的思维导图。下面的介绍也是按照该四维导图来说明。  0x01 Http历史一次web请求当我们在浏览器URL窗口输入www.jensondev.me时，就会看到我们需要的内容。这期间发生了什么？ 懂一点的人会说浏览器收到U">
@@ -416,7 +418,7 @@
 </li>
 </ul>
 <h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><p>认证有什么用？</p>
-<p>用来限制某些页面只想让特定人查看，为此，认证就是必不可少的功能。</p>
+<p>用来限制某些页面只想让特定人查看，为此，服务器就要通过某种方式能知晓用户身份是否符合该特定人群来给出适合的响应。</p>
 <p>Http1.1中使用的认证方式有：</p>
 <ul>
 <li>BASIC 认证（基本认证）</li>
@@ -424,8 +426,22 @@
 <li>SSL 客户端认证</li>
 <li>FormBase 认证（基于表单认证）</li>
 </ul>
-<p>未完待续。。。。</p>
-<h2 id="Https"><a href="#Https" class="headerlink" title="Https"></a>Https</h2><h1 id="0x04-其他"><a href="#0x04-其他" class="headerlink" title="0x04 其他"></a>0x04 其他</h1><h2 id="web内容"><a href="#web内容" class="headerlink" title="web内容"></a>web内容</h2><h2 id="web攻击"><a href="#web攻击" class="headerlink" title="web攻击"></a>web攻击</h2><h2 id="其他功能"><a href="#其他功能" class="headerlink" title="其他功能"></a>其他功能</h2><h3 id="Http2-0"><a href="#Http2-0" class="headerlink" title="Http2.0"></a>Http2.0</h3><h3 id="SPDY"><a href="#SPDY" class="headerlink" title="SPDY"></a>SPDY</h3><h3 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h3>
+<p>这里主要讲下基本认证和摘要认证</p>
+<h3 id="BASIC-认证（基本认证）"><a href="#BASIC-认证（基本认证）" class="headerlink" title="BASIC 认证（基本认证）"></a>BASIC 认证（基本认证）</h3><p>BASIC认证是从Http1.0就定义的认证方式。</p>
+<p>首先看下基本认证流程：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B.png" alt="基本认证流程"></p>
+<p>从流程图很容易看出，操作a中直接向服务器请求图片时，由于服务器开启了基本认证，而客户端没有携带认证信息，这时操作b中给客户端返回了401，在上面状态码中我们了解到401Unauthorizeds是由于没有认证信息才出现的情况。</p>
+<p>那么如何添加Basic认证信息呢？看操作c，在请求头首部中添加<strong>Authorization: Basic YnJpYW4tdG90dHk6T3ch</strong>首部信息，其中YnJpYW4tdG90dHk6T3ch这个乱码为使用Base64编码后生成的字符串。一般来说参与编码的是用户名和密码，且用户名和密码之间使用冒号：隔开，即base64（username:pwd）==YnJpYW4tdG90dHk6T3ch。</p>
+<p>最后操作d接受基本认证信息，返回正确响应报文。</p>
+<p><strong>注意：基本认证简单但不安全，base64只是一直编码而非加密，很容易被有恶意的人通过解码得知用户名密码。所以通过基本认证发送的信息可以说是明文发送。为了保证数据安全最好配合SSL一起使用。</strong></p>
+<p>另外就算密码不被切取，一旦认证信息被拦截，第三者就可以凭借拿到的认证信息进行重放攻击，这时本该该用户看到的文档权限被第三者一览无余。</p>
+<h3 id="DIGEST-认证（摘要认证）"><a href="#DIGEST-认证（摘要认证）" class="headerlink" title="DIGEST 认证（摘要认证）"></a>DIGEST 认证（摘要认证）</h3><p>可以认为摘要认证是对基本认证的一个改进：</p>
+<p>永远不会以明文方式在网络上发送密码。<br>可以防止恶意用户捕获并重放认证的握手过程。<br>可以有选择地防止对报文内容的篡改。<br>防范其他几种常见的攻击方式。</p>
+<p>看下摘要认证流程图：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%91%98%E8%A6%81%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B.png" alt="摘要认证流程"></p>
+<p>摘要认证中传递的信息不是密码本身，而是通过一个算法取得的密码摘要部分内容。这样防止了密码被切取的风险。为了防止重放攻击，服务器会生成一个nonce随机数，客户端使用密码和随机数通过算法计算出摘要，这样每次请求的摘要都是不一样的。</p>
+<h2 id="Https"><a href="#Https" class="headerlink" title="Https"></a>Https</h2><p>未完待续。。。。</p>
+<h1 id="0x04-其他"><a href="#0x04-其他" class="headerlink" title="0x04 其他"></a>0x04 其他</h1><h2 id="web内容"><a href="#web内容" class="headerlink" title="web内容"></a>web内容</h2><h2 id="web攻击"><a href="#web攻击" class="headerlink" title="web攻击"></a>web攻击</h2><h2 id="其他功能"><a href="#其他功能" class="headerlink" title="其他功能"></a>其他功能</h2><h3 id="Http2-0"><a href="#Http2-0" class="headerlink" title="Http2.0"></a>Http2.0</h3><h3 id="SPDY"><a href="#SPDY" class="headerlink" title="SPDY"></a>SPDY</h3><h3 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h3>
       
 
       
