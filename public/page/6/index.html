@@ -180,6 +180,158 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-关于Intent那些事" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/17/关于Intent那些事/">关于Intent那些事</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/17/关于Intent那些事/" class="archive-article-date">
+  	<time datetime="2017-07-17T07:51:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月17日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Intent，译为“意图”。从汉语角度理解，意图是什么意思？意图谋反，就是想要谋反。所以意图可以通俗理解为想要做什么。当然这里的“想要做什么”是告诉Android系统的而不是别人。</p>
+<p>虽然想要做什么就告诉Android系统，但是并不是为所欲为的。通过Intent只能请求三大组件：Activity，Service，Broadcast。</p>
+<h1 id="0x01-抽象理解"><a href="#0x01-抽象理解" class="headerlink" title="0x01 抽象理解"></a>0x01 抽象理解</h1><p>因为涉及三个组件，这里不会单独讲每个组件和Intent。startActivity不要叫启动Activity，startService也不要叫启动服务，我们把他们抽象为一个请求。通过Intent向Android发出请求，Android去哪给你匹配呢？你不注册系统当然没地方找，所以我们要在AndroidManifest.xml中进行注册(广播可以动态注册)。注册的作用不光告诉系统可以从这找我，还告诉系统本组件只接收满足要求的请求。说到要求这就要提到IntentFilter了，每个IntentFilter代表一种要求，一个组件可以有多种要求即多个IntentFilter，但只要满足一种就能请求成功。系统所要做的就是把接收到得请求Intent和组件的要求IntentFilter进行匹配，如果匹配上了则牵手成功~</p>
+<p>这个流程抽象为：</p>
+<p><img src="/2017/07/17/关于Intent那些事/请求流程.png" alt="请求流程"></p>
+<h1 id="0x02-分类"><a href="#0x02-分类" class="headerlink" title="0x02 分类"></a>0x02 分类</h1><p>通过Intent告诉Android系统“我想要做什么”，可以有两种方式阐述，一种是直白的表述“我想要启动某个页面”，我们称之为显性，另一种是告诉系统“我想要一个满足我某些要求的页面”,至于是哪个或哪几个页面由系统决定，如果是多个可以返回列表给我，这种称之为隐性。</p>
+<blockquote>
+<p>Intent从请求性质上分为显性和隐性两种。</p>
+</blockquote>
+<p>由于显性Intent指定了具体的请求，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">intent.setClass(Context packageContext, Class&lt;?&gt; cls)</div></pre></td></tr></table></figure>
+<p>所以匹配并不会发生在显性Intent,显性组件注册时一般这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">".ThirdActivity"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<p>没有多余的要求。</p>
+<p>在抽象理解中，IntentFilter匹配只是为隐性准备的。</p>
+<p>下面要了解具体匹配规则如何：</p>
+<h1 id="0x03-匹配规则"><a href="#0x03-匹配规则" class="headerlink" title="0x03 匹配规则"></a>0x03 匹配规则</h1><p>要了解匹配规则是怎样的，首先要知道是从哪几方面入手匹配的，由于Android系统也是根据组件注册的要求进行匹配，所以看看注册时的IntentFilter有哪些属性就知道要匹配哪些方面了：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.CALL"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:mimeType</span>=<span class="string">"image/*"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"http"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>显然系统匹配也就是匹配category、action和data。</p>
+<p>下面分别来看看这三种是分别如何匹配的：</p>
+<p><strong>注意：下面将原理、源码、实例三管齐下</strong> </p>
+<ul>
+<li><p>category如何匹配</p>
+<blockquote>
+<p>匹配原理：</p>
+<p>①在请求的Intent中需要在IntentFilter找到匹配项才算匹配成功。</p>
+<p>②如果Intent没有添加任何category，那么系统会自动给你添加android.intent.category.DEFAULT，所以如果你的三大组件是为隐性启动准备的，那么你就要在注册时手动添加<category android:name="android.intent.category.DEFAULT">。</category></p>
+<p>③当然如果添加了其他值得category也可以不用添加default了。</p>
+</blockquote>
+<p>​</p>
+</li>
+</ul>
+<ul>
+<li><p>action如何匹配</p>
+<blockquote>
+<p>匹配原理：</p>
+<p>①IntentFilter如果没有声明action，则所有Intent都不能匹配成功。</p>
+<p>②若IntentFilter声明了action，而Intent没有不带任何action，则匹配通过。</p>
+<p>③若IntentFilter声明了action，Intent也声明了action，那么Intent中action必须是IntentFilter中action的子集才能匹配成功。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p>data如何匹配</p>
+<p>data分为两部分，MIME type和URI。</p>
+<ul>
+<li><p>MIME type就是表明数据格式类型，方便系统正确解析处理</p>
+<p>MIME type又分为两部分：主类型type和子类型subtype，以”/“分割。比如：</p>
+<p>video/mp4，image/jpeg。</p>
+</li>
+<li><p>URI 唯一资源标识符</p>
+<p>URI分为scheme、Authory和path三部分。</p>
+<p>scheme表示采用协议，既可以是http网络协议也可以是本地content和file协议。</p>
+<p>Authority由host和port组成。</p>
+<p>path表示文件在host中具体位置。</p>
+</li>
+</ul>
+<p>了解了data组成，下面说说data匹配原理</p>
+<blockquote>
+<p>匹配原理：</p>
+<p>①data只匹配IntentFilter中所拥有部分。</p>
+<p>②如果Intent中既没有MIME，也没用URI，那么IntentFilter中也都不能有才能通过。</p>
+<p>③若Intent没有指定类型，只指定了URI，那么IntentFilter必须没有指定类型。特殊情况下能根据URI推断出类型，这种情况按⑤情况算。</p>
+<p>④若Intent只指定了类型，没有URI。那么IntentFilter也必须没有指定URI</p>
+<p>⑤若Intent同时指定了类型和URI，那么必须都匹配上才能通过。</p>
+</blockquote>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/17/关于Intent那些事/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-hexo添加网易云音乐播放器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1140,94 +1292,6 @@
 
 
   
-    <article id="post-两个栈实现队列功能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/18/两个栈实现队列功能/">两个栈实现队列功能</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/18/两个栈实现队列功能/" class="archive-article-date">
-  	<time datetime="2017-05-18T08:28:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月18日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>用2个栈实现队列，首先要明白栈和队列的区别：栈是FILO，队列是FIFO。明白了这两点就比较容易实现了。</p>
-<h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>栈是一端开口，队列是两端开口，如果要让栈实现队列功能，需要2个栈一个负责进数据，一个负责出数据。为了保证出数据的顺序，在出数据栈不为空时，入数据的栈中数据不能往出数据的栈里存。</p>
-<h1 id="0x02-实现"><a href="#0x02-实现" class="headerlink" title="0x02 实现"></a>0x02 实现</h1><p>在2个栈数据都为空时注意抛出异常。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.Stack;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 两个栈实现队列功能</div><div class="line"> * @author jenson</div><div class="line"> */</div><div class="line">public class StackToQueue &#123;</div><div class="line">	private Stack&lt;Integer&gt; inStack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; outStack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 添加元素</div><div class="line">	 * @param value</div><div class="line">	 */</div><div class="line">	public void add(int value) &#123;</div><div class="line">		inStack.push(value);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 出队列</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	public int poll() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.pop();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 查看队列头的元素 &lt;/br&gt;</div><div class="line">	 * 注意一点：如果出栈队列为空，则把入栈数据倒入到处栈，然后从出栈取&lt;br&gt;</div><div class="line">	 * 如果两个栈都为空抛异常</div><div class="line">	 * </div><div class="line">	 */</div><div class="line">	public int peek() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.peek();</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 入栈数据倒入到出栈</div><div class="line">	 */</div><div class="line">	private void reverse() &#123;</div><div class="line">		while (!inStack.isEmpty()) &#123;</div><div class="line">			outStack.push(inStack.pop());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private void queueEmptyException() &#123;</div><div class="line">		throw new RuntimeException(&quot;队列为空&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackToQueue stackToQueue = new StackToQueue();</div><div class="line">		stackToQueue.add(9);</div><div class="line">		stackToQueue.add(5);</div><div class="line">		stackToQueue.add(2);</div><div class="line">		stackToQueue.add(7);</div><div class="line"></div><div class="line">		System.out.println(stackToQueue.peek());</div><div class="line">		System.out.println(stackToQueue.poll());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/18/两个栈实现队列功能/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -1346,10 +1410,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -1358,15 +1418,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1406,11 +1470,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1422,10 +1494,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
@@ -1434,15 +1502,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">excel</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
             
             <div class="clearfix"></div>
