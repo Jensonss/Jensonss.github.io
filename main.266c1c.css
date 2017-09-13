@@ -845,19 +845,32 @@ body {
   font-size: 14px;
   min-width: 300px;
   border-radius: 6px;
-  background: white;
   transition: background 0.3s ease-in-out;
 }
 
 .left-col #header .header-menu li a:focus,
 .left-col #header .header-menu li a:hover {
-  background: rgba(255, 255, 255, 0.2);
+  color: white;
+
+  background: RGBA(1, 122, 220, 0.6);
 
 }
 
 .left-col #header .header-smart-menu {
   font-size: 12px;
   margin-bottom: 20px
+}
+
+.left-col #header .header-smart-menu a {
+  border-radius: 6px;
+  padding: 2px 4px;
+
+}
+
+.left-col #header .header-smart-menu a:focus,
+.left-col #header .header-smart-menu a:hover {
+  color: white;
+  background: RGBA(1, 122, 220, 0.6);
 }
 
 .left-col #header .header-smart-menu a:after {
