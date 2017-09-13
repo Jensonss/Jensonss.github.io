@@ -841,10 +841,10 @@ body {
 }
 
 .left-col #header .header-menu li a {
+  padding: 2px 4px;
   font-size: 14px;
   min-width: 300px;
-  border-radius: 14px;
-  color: dodgerblue;
+  border-radius: 6px;
   background: white;
   transition: background 0.3s ease-in-out;
 }
