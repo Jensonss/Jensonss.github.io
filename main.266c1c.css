@@ -842,7 +842,15 @@ body {
 
 .left-col #header .header-menu li a {
   font-size: 14px;
-  min-width: 300px
+  min-width: 300px;
+  border-radius: 14px;
+  transition: background 0.3s ease-in-out;
+}
+
+.left-col #header .header-menu li a:focus,
+.left-col #header .header-menu li a:hover {
+  background: rgba(255, 255, 255, 0.2);
+
 }
 
 .left-col #header .header-smart-menu {
