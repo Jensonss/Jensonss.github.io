@@ -180,6 +180,109 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java参数到底是值传递还是引用传递" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/10/Java参数到底是值传递还是引用传递/">Java参数到底是值传递还是引用传递</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/10/Java参数到底是值传递还是引用传递/" class="archive-article-date">
+  	<time datetime="2017-08-10T05:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月10日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！</p>
+<p>然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。</p>
+<h1 id="0x01-说明"><a href="#0x01-说明" class="headerlink" title="0x01 说明"></a>0x01 说明</h1><p><strong>其实Java中参数的传递都是byValue方式传递</strong>。</p>
+<p>讲道理先通过虚拟机机制来说明下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E8%AE%B2%E9%81%93%E7%90%86.jpg" alt="讲道理"></p>
+<p>虚拟机在内存中有一块区域叫Java栈，也叫虚拟机栈。栈里面装的是什么？</p>
+<p>栈中存放的是栈帧，栈帧里面又装的是什么？是局部变量表、操作数栈和方法返回地址等信息。</p>
+<p>其实一个Java线程运行时就会产生一个Java栈，每次的方法调用就会产生一个栈帧入栈，方法执行完毕则出栈。其中栈帧中的局部变量表存储的是参数和局部变量信息。</p>
+<p>当方法执行完毕，栈帧出栈内存就会被释放，如果引用类型的参数是直接把函数外的引用直接传递过来，那么出栈时，岂不是连函数外的这个变量也一同给释放掉了吗？</p>
+<p>所以为了避免这种情况发生，<strong>引用类型的参数传递，只是对引用类型值的一个拷贝。</strong></p>
+<p>就是说<strong>函数外的变量和参数是两个不同的变量，只是它们指向的地址是一样的</strong>：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%8F%82%E6%95%B0%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E4%BC%A0%E9%80%92.png" alt="参数引用类型传递"></p>
+<p>说到底，引用类型也躲不过值传递的命运。</p>
+<p>下面用示例来验证下外部变量和参数是两个不同的变量：</p>
+<h1 id="0x02-示例"><a href="#0x02-示例" class="headerlink" title="0x02 示例"></a>0x02 示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReTest</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setStu</span><span class="params">(Student stu, <span class="keyword">int</span> x)</span> </span>&#123;</div><div class="line">      	System.out.println(<span class="string">"改变前stu变量："</span>+stu+<span class="string">"##x值："</span>+x);</div><div class="line">		stu = <span class="keyword">new</span> Student(<span class="string">"lisi"</span>, <span class="number">21</span>);</div><div class="line">		x=<span class="number">20</span>;</div><div class="line">		System.out.println(<span class="string">"stu变量："</span>+stu+<span class="string">"##x值："</span>+x);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Student p = <span class="keyword">new</span> Student(<span class="string">"jenson"</span>, <span class="number">10</span>);</div><div class="line">		<span class="keyword">int</span> i = <span class="number">10</span>;</div><div class="line">		System.out.println(<span class="string">"改变前p变量："</span>+p+<span class="string">"##i值："</span>+i);</div><div class="line">		setStu(p, i);</div><div class="line">		System.out.println(<span class="string">"改变后p变量："</span>+p+<span class="string">"##i值："</span>+i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> age;</div><div class="line">		String name;</div><div class="line"></div><div class="line">		Student(String name, <span class="keyword">int</span> age) &#123;</div><div class="line">			<span class="keyword">this</span>.age = age;</div><div class="line">			<span class="keyword">this</span>.name = name;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码很简单，打印结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">改变前p变量：thread.ReTest$Student@7852e922##i值：10</div><div class="line">改变前stu变量：thread.ReTest$Student@7852e922##x值：10</div><div class="line">stu变量：thread.ReTest$Student@4e25154f##x值：20</div><div class="line">改变后p变量：thread.ReTest$Student@7852e922##i值：10</div></pre></td></tr></table></figure>
+<p>参考打印结果可以发现：</p>
+<p><strong>基本类型是值传递，而引用类型为Student变量p和参数stu是两个不同的变量但指向同一块内存，在函数setStu中给参数stu从新赋值时，不影响变量p的引用。证明了参数stu是p变量的一个值拷贝。</strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/10/Java参数到底是值传递还是引用传递/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python用qq邮箱发邮件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1339,162 +1442,6 @@ If-None-Match: W/&quot;09cd78bd0d8a197d769d2c5b6b1e84e9&quot;\r\n
 
 
   
-    <article id="post-Python爬虫爬取简书首页文章-一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/02/Python爬虫爬取简书首页文章-一/">Python爬虫爬取简书首页文章(一)</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/02/Python爬虫爬取简书首页文章-一/" class="archive-article-date">
-  	<time datetime="2017-08-02T03:42:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月02日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近对Python兴趣很大，因为觉得这门语言很好玩。学了些东西就总得做点什么出来吧。</p>
-<p><strong>虽然兴趣是最好的老师，但是毕竟实践才是检验真理的唯一标准</strong></p>
-<p>首先想到的就是写个爬虫试试，专门针对特定网站的mini爬虫。</p>
-<p>那就采集<a href="www.jianshu.com">简书</a>首页文章吧。</p>
-<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在开始代码前先做好准备工作：安装所需库。</p>
-<p>这里的数据存储在csv文件中，而不是存储在数据库，因为数据流并不大,使用<code>csv</code>库。</p>
-<p>网络请求库使用<code>urllib</code>。</p>
-<p>Dom解析库使用<code>BeautifulSoup4</code>。</p>
-<p>如果本地没有的库可以使用<code>pip3 install xxx</code>命令安装。</p>
-<p>准备工作做完了就开始编码了吗？NO~，接下来要分析网页，分析要爬取网页的内容。</p>
-<h1 id="网页分析"><a href="#网页分析" class="headerlink" title="网页分析"></a>网页分析</h1><p>分析简书首页文章列表，找到共通的规则，才能让后面的采集有迹可循。</p>
-<ul>
-<li><p>打开简书首页，复制一个文章标题</p>
-<p>应该是这样子的：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%A0%87%E9%A2%98%E5%A4%8D%E5%88%B6.png" alt="简书首页标题复制"></p>
-</li>
-<li><p>查看网页源码，在源码中查找复制的标题</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%BA%90%E7%A0%81%E6%98%BE%E7%A4%BA%E6%A0%87%E9%A2%98%E5%8C%BA%E5%9F%9F.png" alt="源码中标题区域"></p>
-<p>从标题逐步扩散式查找，最终定位到标签<code>li</code>。就是说每个首页文章区域部分就是一个<code>li</code>标签显示的。而且这些标签的<strong>id</strong>属性都是以<strong>note-</strong>开头的。</p>
-</li>
-<li><p>查找父元素</p>
-<p>既然每个文章是一个<code>li</code>标签，那么父元素应该是<code>ul</code>标签。顺藤摸瓜发现了</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 文章列表模块 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"note-list"</span> <span class="attr">infinite-scroll-url</span>=<span class="string">"/"</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>所以Dom解析时查找<strong>class</strong>为<strong>note-list</strong>子元素即可</p>
-</li>
-</ul>
-<p><strong>这里首页文章基本理清规则了，其他网站可能复杂性会高，但是只要耐心点，基本都能找到规律</strong></p>
-<p>下面开始创建项目：</p>
-<h1 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h1><p>我这里使用Pycharm IDE，创建一个项目名称为<code>JianShuSpider</code>。</p>
-<p>创建main文件夹，同时在其下创建JS.py文件，该文件主要写逻辑。</p>
-<p>创建Article文件，其中创建Article类，用来存储爬取的文章信息。</p>
-<h1 id="开始实现"><a href="#开始实现" class="headerlink" title="开始实现"></a>开始实现</h1><h2 id="确定爬取内容"><a href="#确定爬取内容" class="headerlink" title="确定爬取内容"></a>确定爬取内容</h2><p>因为这里只是个练习爬虫，不想存储太多内容，所以只爬取文章标题、作者、链接</p>
-<p>完善Article类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Article</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">        文章信息类</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.title = <span class="string">''</span></div><div class="line">        self.author = <span class="string">''</span></div><div class="line">        self.url = <span class="string">''</span></div></pre></td></tr></table></figure>
-<h2 id="逻辑实现"><a href="#逻辑实现" class="headerlink" title="逻辑实现"></a>逻辑实现</h2><p>总体逻辑大概分成三个方法：</p>
-<p>①定义<code>def getArticles(url):</code>方法获取文章列表</p>
-<p>②定义<code>def saveCSV(articles):</code>方法存储获取的文章列表信息</p>
-<p>③定义<code>def wrapper():</code>包装上述两个方法以便在让工作线程执行</p>
-<p>下面按次序一次实现</p>
-<h3 id="获取文章列表"><a href="#获取文章列表" class="headerlink" title="获取文章列表"></a>获取文章列表</h3><p>获取文章列表又细分为4个小步骤：</p>
-<p>①定义一个空列表用来后面存储文章信息：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">article_list = []</div></pre></td></tr></table></figure>
-<p>②发起网络请求读取网页源码，为后面DOM解析做准备，如果出现异常返回空列表</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> error, request</div><div class="line"> <span class="keyword">try</span>:                                      </div><div class="line">     req = request.urlopen(url=url)        </div><div class="line">     content = req.read()                  </div><div class="line"> <span class="keyword">except</span> error.HTTPError <span class="keyword">as</span>  err:           </div><div class="line">     print(err)                            </div><div class="line">     <span class="keyword">return</span> article_list</div></pre></td></tr></table></figure>
-<p>③根据步骤②提供的content DOM树和上面分析li标签规则，通过正则表达式查找当前页所有文章标签li：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> bs4</div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">bsobj = bs4.BeautifulSoup(content, <span class="string">"html.parser"</span>)</div><div class="line">   list = bsobj.find_all(name=<span class="string">"li"</span>,</div><div class="line">                         attrs=&#123;<span class="string">"id"</span>: re.compile(<span class="string">"^(note-)[0-9]+$"</span>)&#125;)</div></pre></td></tr></table></figure>
-<p>④根据步骤③返回的li标签列表，对li列表标签进行遍历查找子标签中标题、作者和链接信息，赋值给Article对象，并添加到步骤①创建的<strong>article_list</strong>列表</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> item <span class="keyword">in</span> list:                                                                 </div><div class="line">    <span class="keyword">assert</span> isinstance(item, bs4.Tag)                                              </div><div class="line">    article = Article()                                                           </div><div class="line">    article.author = item.find(name=<span class="string">'a'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'blue-link'</span>&#125;).get_text() </div><div class="line">    titleTag = item.find(name=<span class="string">'a'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;)                      </div><div class="line">    <span class="keyword">assert</span> isinstance(titleTag, bs4.Tag)                                          </div><div class="line">    article.title = titleTag.get_text()                                           </div><div class="line">    article.url = url + titleTag.attrs[<span class="string">'href'</span>]                                    </div><div class="line">    article_list.append(article)</div></pre></td></tr></table></figure>
-<p>经过上面一些列步骤已经得到了文章列表信息，下面要把文章列表存储到csv文件中</p>
-<h3 id="存储文章列表"><a href="#存储文章列表" class="headerlink" title="存储文章列表"></a>存储文章列表</h3><p><strong>注意：csv是按逗号分隔的文件，每一行代表一条完整信息，所以写入信息时是逐行写入。</strong></p>
-<p>存储文章可以分为3个小步骤：</p>
-<p>①根据path打开或创建一个csv文件，同时获取writer</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> csv</div><div class="line"> csvFile = open(<span class="string">"/Users/jenson/Downloads/js.csv"</span>, <span class="string">'w+'</span>)    </div><div class="line"> csv_writer = csv.writer(csvFile)</div></pre></td></tr></table></figure>
-<p>②向文件写入头行，用来说明每个被逗号隔断的数据表示的意义</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">csv_writer.writerow([<span class="string">"作者"</span>, <span class="string">"标题"</span>, <span class="string">"链接"</span>])</div></pre></td></tr></table></figure>
-<p>③遍历文章列表存储</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> article <span class="keyword">in</span> articles:                               </div><div class="line">    csv_writer.writerow(                               </div><div class="line">        [article.author, article.title, article.url])</div></pre></td></tr></table></figure>
-<h3 id="包装方法"><a href="#包装方法" class="headerlink" title="包装方法"></a>包装方法</h3><p>包装方法就简单了，直接上代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">()</span>:</span>    </div><div class="line">    <span class="string">"""           </span></div><div class="line">    包装方法          </div><div class="line">    :return:      </div><div class="line">    """           </div><div class="line">    list = getArti</div><div class="line">    saveCSV(list)</div></pre></td></tr></table></figure>
-<h3 id="线程调用"><a href="#线程调用" class="headerlink" title="线程调用"></a>线程调用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">threading.Thread(target=wrapper).start()</div></pre></td></tr></table></figure>
-<h1 id="爬取结果"><a href="#爬取结果" class="headerlink" title="爬取结果"></a>爬取结果</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E7%AC%AC%E4%B8%80%E9%A1%B5%E6%96%87%E7%AB%A0%E7%88%AC%E5%8F%96%E7%BB%93%E6%9E%9C.png" alt="爬取结果"></p>
-<p>通过上面的图片可以看到文章信息已经存储到csv文件中。</p>
-<p>目前为止，一个mini爬虫已经初步完成。当然目前只是爬取第一页信息。</p>
-<p>后面文章会完成分页爬取，请参考<strong>Python爬虫爬取简书首页文章(二)</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">自己写爬虫</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/自己写爬虫/" class="article-tag-list-link color1">自己写爬虫</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/02/Python爬虫爬取简书首页文章-一/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1625,7 +1572,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1633,19 +1580,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1657,11 +1604,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1670,10 +1621,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
