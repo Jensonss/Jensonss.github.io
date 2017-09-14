@@ -180,6 +180,117 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-为什么相对布局比线性布局性能低" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/19/为什么相对布局比线性布局性能低/">为什么相对布局比线性布局性能低</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/19/为什么相对布局比线性布局性能低/" class="archive-article-date">
+  	<time datetime="2017-07-19T02:53:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。</p>
+<p>经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。</p>
+<h1 id="0x01-View绘制流程简述"><a href="#0x01-View绘制流程简述" class="headerlink" title="0x01 View绘制流程简述"></a>0x01 View绘制流程简述</h1><p>看过源码的应该知道，View的绘制是从<code>ViewRootImpl.performTraversals()</code>方法开始的。</p>
+<p>先后经历<code>performMeasure</code>、<code>performLayout</code>和<code>performDraw</code>三个阶段，就是常说的测量、布局和绘制。</p>
+<ul>
+<li>performMeasure会调用根View的measure，进而调用onMeasure方法</li>
+<li>performLayout调用根View的layout，进而调用onLayout方法</li>
+<li>performDraw调用根View的draw，进而调用onDraw方法</li>
+</ul>
+<p>鉴于两个都是ViewGroup，所以可以忽略onDraw</p>
+<p>有对比才有伤害，要比较这两个布局性能，要先看看这两个布局分别在onMeasure，onLayout都做了什么。</p>
+<h1 id="0x02-LinearLayout分析"><a href="#0x02-LinearLayout分析" class="headerlink" title="0x02 LinearLayout分析"></a>0x02 LinearLayout分析</h1><p>LinearLayout的onMeasure方法内容很简单，就是判断方向然后分别调用:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (mOrientation == VERTICAL) &#123;</div><div class="line">         measureVertical(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         measureHorizontal(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>那就随便看看<code>measureVertical</code>方法里面干了些什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See how tall everyone is. Also remember max width.</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">    <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</div><div class="line">        mTotalLength += measureNullChild(i);</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child.getVisibility() == View.GONE) &#123;</div><div class="line">       i += getChildrenSkipCount(child, i);</div><div class="line">       <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (hasDividerBeforeChildAt(i)) &#123;</div><div class="line">        mTotalLength += mDividerHeight;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">    totalWeight += lp.weight;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY &amp;&amp; lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// Optimization: don't bother measuring children who are going to use</span></div><div class="line">        <span class="comment">// leftover space. These views will get measured again down below if</span></div><div class="line">        <span class="comment">// there is any leftover space.</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + lp.topMargin + lp.bottomMargin);</div><div class="line">        skippedMeasure = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">int</span> oldHeight = Integer.MIN_VALUE;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// heightMode is either UNSPECIFIED or AT_MOST, and this</span></div><div class="line">            <span class="comment">// child wanted to stretch to fill available space.</span></div><div class="line">            <span class="comment">// Translate that to WRAP_CONTENT so that it does not end up</span></div><div class="line">            <span class="comment">// with a height of 0</span></div><div class="line">            oldHeight = <span class="number">0</span>;</div><div class="line">            lp.height = LayoutParams.WRAP_CONTENT;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Determine how big this child would like to be. If this or</span></div><div class="line">        <span class="comment">// previous children have given a weight, then we allow it to</span></div><div class="line">        <span class="comment">// use all available space (and we will shrink things later</span></div><div class="line">        <span class="comment">// if needed).</span></div><div class="line">        measureChildBeforeLayout(</div><div class="line">               child, i, widthMeasureSpec, <span class="number">0</span>, heightMeasureSpec,</div><div class="line">               totalWeight == <span class="number">0</span> ? mTotalLength : <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldHeight != Integer.MIN_VALUE) &#123;</div><div class="line">           lp.height = oldHeight;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> childHeight = child.getMeasuredHeight();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + childHeight + lp.topMargin +</div><div class="line">               lp.bottomMargin + getNextLocationOffset(child));</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (useLargestChild) &#123;</div><div class="line">            largestChildHeight = Math.max(childHeight, largestChildHeight);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * If applicable, compute the additional offset to the child's baseline</div><div class="line">     * we'll need later when asked &#123;<span class="doctag">@link</span> #getBaseline&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> ((baselineChildIndex &gt;= <span class="number">0</span>) &amp;&amp; (baselineChildIndex == i + <span class="number">1</span>)) &#123;</div><div class="line">       mBaselineChildTop = mTotalLength;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// if we are trying to use a child index for our baseline, the above</span></div><div class="line">    <span class="comment">// book keeping only works if there are no children above it with</span></div><div class="line">    <span class="comment">// weight.  fail fast to aid the developer.</span></div><div class="line">    <span class="keyword">if</span> (i &lt; baselineChildIndex &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"A child of LinearLayout with index "</span></div><div class="line">                + <span class="string">"less than mBaselineAlignedChildIndex has weight &gt; 0, which "</span></div><div class="line">                + <span class="string">"won't work.  Either remove the weight, or don't set "</span></div><div class="line">                + <span class="string">"mBaselineAlignedChildIndex."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> matchWidthLocally = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">if</span> (widthMode != MeasureSpec.EXACTLY &amp;&amp; lp.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">        <span class="comment">// The width of the linear layout will scale, and at least one</span></div><div class="line">        <span class="comment">// child said it wanted to match our width. Set a flag</span></div><div class="line">        <span class="comment">// indicating that we need to remeasure at least that view when</span></div><div class="line">        <span class="comment">// we know our width.</span></div><div class="line">        matchWidth = <span class="keyword">true</span>;</div><div class="line">        matchWidthLocally = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> margin = lp.leftMargin + lp.rightMargin;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> measuredWidth = child.getMeasuredWidth() + margin;</div><div class="line">    maxWidth = Math.max(maxWidth, measuredWidth);</div><div class="line">    childState = combineMeasuredStates(childState, child.getMeasuredState());</div><div class="line"></div><div class="line">    allFillParent = allFillParent &amp;&amp; lp.width == LayoutParams.MATCH_PARENT;</div><div class="line">    <span class="keyword">if</span> (lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * Widths of weighted Views are bogus if we end up</div><div class="line">         * remeasuring, so keep them separate.</div><div class="line">         */</div><div class="line">        weightedMaxWidth = Math.max(weightedMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alternativeMaxWidth = Math.max(alternativeMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    i += getChildrenSkipCount(child, i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法主要是for循环中通过<code>measureChildBeforeLayout</code>测量子View高度，把每次测量的高度都累加到<code>mTotalLength</code>。</p>
+<h1 id="0x03-RelativeLayout分析"><a href="#0x03-RelativeLayout分析" class="headerlink" title="0x03 RelativeLayout分析"></a>0x03 RelativeLayout分析</h1><p>看看RelativeLayout的onMeasure方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">View[] views = mSortedHorizontalChildren;</div><div class="line"> <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">         applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">         measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">             offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> views = mSortedVerticalChildren;</div><div class="line"> count = views.length;</div><div class="line"> <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         </div><div class="line">         applyVerticalSizeRules(params, myHeight);</div><div class="line">         measureChild(child, params, myWidth, myHeight);</div><div class="line">         <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">             offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">             <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, params.mRight);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">             <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                 height = Math.max(height, params.mBottom);</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">             left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">             top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">             right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">             bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>第一个for循环中<code>measureChildHorizontal</code>方法实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">           params.mRight, params.width,</div><div class="line">           params.leftMargin, params.rightMargin,</div><div class="line">           mPaddingLeft, mPaddingRight,</div><div class="line">           myWidth);</div><div class="line">   <span class="keyword">int</span> maxHeight = myHeight;</div><div class="line">   <span class="keyword">if</span> (mMeasureVerticalWithPaddingMargin) &#123;</div><div class="line">       maxHeight = Math.max(<span class="number">0</span>, myHeight - mPaddingTop - mPaddingBottom -</div><div class="line">               params.topMargin - params.bottomMargin);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">int</span> childHeightMeasureSpec;</div><div class="line">   <span class="keyword">if</span> (myHeight &lt; <span class="number">0</span> &amp;&amp; !mAllowBrokenMeasureSpecs) &#123;</div><div class="line">       <span class="keyword">if</span> (params.height &gt;= <span class="number">0</span>) &#123;</div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(</div><div class="line">                   params.height, MeasureSpec.EXACTLY);</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="comment">// Negative values in a mySize/myWidth/myWidth value in RelativeLayout measurement</span></div><div class="line">           <span class="comment">// is code for, "we got an unspecified mode in the RelativeLayout's measurespec."</span></div><div class="line">           <span class="comment">// Carry it forward.</span></div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">0</span>, MeasureSpec.UNSPECIFIED);</div><div class="line">       &#125;</div><div class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span> (params.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY);</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);</div><div class="line">   &#125;</div><div class="line">   child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
+<p>第二个for循环中<code>measureChild</code>实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">                params.mRight, params.width,</div><div class="line">                params.leftMargin, params.rightMargin,</div><div class="line">                mPaddingLeft, mPaddingRight,</div><div class="line">                myWidth);</div><div class="line">        <span class="keyword">int</span> childHeightMeasureSpec = getChildMeasureSpec(params.mTop,</div><div class="line">                params.mBottom, params.height,</div><div class="line">                params.topMargin, params.bottomMargin,</div><div class="line">                mPaddingTop, mPaddingBottom,</div><div class="line">                myHeight);</div><div class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
+<p>两个for循环中都执行了<code>child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</code>这意味着子View测量执行了两遍。</p>
+<p>为什么RelativeLayout要测量两遍？</p>
+<blockquote>
+<p>因为RelativeLayout并不像LinearLayout那样有着方向单一性。RelativeLayout的灵活性就在于允许纵横双向的，这样view直接不仅横向依赖，还有纵向依赖，每个方向都要测量一遍。导致性能略差。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/19/为什么相对布局比线性布局性能低/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-为什么Android中很多int常量使用十六进制表示" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1198,137 +1309,6 @@
 
 
   
-    <article id="post-Python入门系列-3-元组、列表和字典" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">Python入门系列(3):元组、列表和字典</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/26/Python入门系列-3-元组、列表和字典/" class="archive-article-date">
-  	<time datetime="2017-06-26T11:00:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月26日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。</p>
-<h1 id="0x01-列表"><a href="#0x01-列表" class="headerlink" title="0x01 列表"></a>0x01 列表</h1><h2 id="什么是列表？如何表示列表？"><a href="#什么是列表？如何表示列表？" class="headerlink" title="什么是列表？如何表示列表？"></a>什么是列表？如何表示列表？</h2><p>​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’, ‘dog’, ‘monkey’]</p>
-<h2 id="访问列表"><a href="#访问列表" class="headerlink" title="访问列表"></a>访问列表</h2><p>​    列表的访问通过索引下标来访问，索引和其他大多数语言一样从0开始。</p>
-<p>也就是说访问第一个元素为：animal[0]。而和其他语言不一样的是Python中索引可以为负值，如：animal[-1]实际为最后一个元素，以此类推。</p>
-<h2 id="列表增加元素"><a href="#列表增加元素" class="headerlink" title="列表增加元素"></a>列表增加元素</h2><p>​    元素的添加分为两种，列表末尾追加和任意位置添加</p>
-<ul>
-<li><p>末尾追加</p>
-<p>使用方法append，animal.append(’fox‘)</p>
-</li>
-<li><p>任意位置添加</p>
-<p>使用方法insert，animal.insert(1,’fox’)。第一个参数为索引值</p>
-</li>
-</ul>
-<h2 id="列表删除元素"><a href="#列表删除元素" class="headerlink" title="列表删除元素"></a>列表删除元素</h2><p>元素删除也可以通过四种方式实现：</p>
-<ul>
-<li><p>使用del</p>
-<p>如果知道元素所处列表位置，则使用del  animal[ i ]</p>
-</li>
-<li><p>使用pop</p>
-<p>如果只需删除了列表末尾元素，则直接使用animal.pop方法。类似出栈</p>
-</li>
-<li><p>使用pop</p>
-<p>如果要删除任意位置元素，使用animal.pop（i)，参数为索引值</p>
-</li>
-<li><p>使用remove</p>
-<p>如果知道元素值而不知道位置，则使用animal.remove（value），参数为元素值</p>
-</li>
-</ul>
-<h2 id="列表修改元素"><a href="#列表修改元素" class="headerlink" title="列表修改元素"></a>列表修改元素</h2><p>​    修改列表元素的语法与访问列表元素的语法类似，如果要进行元素修改只要拿到元素后对其进行从新赋值即可：animal[1] = ‘bird’。</p>
-<h2 id="列表元素遍历"><a href="#列表元素遍历" class="headerlink" title="列表元素遍历"></a>列表元素遍历</h2><p>列表遍历使用循环即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ani <span class="keyword">in</span> animal:</div><div class="line">	print(ani)</div></pre></td></tr></table></figure>
-<h1 id="0x02-元组"><a href="#0x02-元组" class="headerlink" title="0x02 元组"></a>0x02 元组</h1><p>元组使用小括号，列表使用方括号。<br>元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可。</p>
-<ul>
-<li>Python 的元组与列表类似，不同之处在于元组的元素不能修改。</li>
-</ul>
-<ul>
-<li><p>元组中只包含一个元素时，需要在元素后面添加逗号</p>
-<p>​    tup1 = (10,)</p>
-</li>
-<li><p>元组中的元素值是不允许删除的，但我们可以使用del语句来删除整个元组</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>,<span class="string">'dm'</span>)</div><div class="line">print(cats)</div><div class="line"><span class="keyword">del</span> cats</div><div class="line">print(cats)<span class="comment">#打印异常</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>元组中的元素值是不允许修改的，但我们可以对元组进行连接组合</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>, <span class="string">'dm'</span>)</div><div class="line">cat1 = (<span class="string">'mm'</span>,)</div><div class="line">allCat = cats + cat1</div><div class="line">print(allCat)<span class="comment">#('xm', 'dm', 'mm')</span></div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="0x03-字典"><a href="#0x03-字典" class="headerlink" title="0x03 字典"></a>0x03 字典</h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -1459,7 +1439,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1467,19 +1447,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1491,11 +1471,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1504,10 +1488,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
