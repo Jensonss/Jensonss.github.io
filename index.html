@@ -180,6 +180,104 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-向上取整、向下取整和素数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/19/向上取整、向下取整和素数/">向上取整、向下取整和素数</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/19/向上取整、向下取整和素数/" class="archive-article-date">
+  	<time datetime="2017-09-19T09:09:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月19日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在看算法书时看到几个数学上的定义：向上取整、向下取整和素数。</p>
+<p>不知道这几个定义就难以理解文章意思。所以查了资料后做个记录，防止下次还不会。</p>
+<h1 id="0x01-解释"><a href="#0x01-解释" class="headerlink" title="0x01 解释"></a>0x01 解释</h1><ul>
+<li><p>素数</p>
+<p>这个在初高中时候就学过，因为素数就是质数的别称，质数就是只能被1和数字本身整除的数。</p>
+<p>​</p>
+</li>
+<li><p>向上取整、向下取整</p>
+<p>向上取整、向下取整的前提是要先有个基数整数</p>
+<p>比如数列1，3，4，6，7，9，11，以6为基数，其向下取整为4，向上取整为7</p>
+<p><strong>对基数x向下取整为小于等于x的最大整数，对基数x向上取整为大于等于x的最小整数</strong></p>
+<p>​</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/数学/" class="article-tag-list-link color3">数学</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/19/向上取整、向下取整和素数/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android本地广播" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -966,96 +1064,6 @@
 
 
   
-    <article id="post-PhantomJS运行提示 executable needs to be in PATH？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">PhantomJS运行提示：Message &#39;phantomjs&#39; executable needs to be in PATH？</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/" class="archive-article-date">
-  	<time datetime="2017-08-20T03:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月20日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>使用selenuim调用PhantomJS时一直提示异常：</p>
-<p>Message ‘phantomjs’ executable needs to be in PATH？</p>
-<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>调用代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin"</span>)</div></pre></td></tr></table></figure>
-<p>路径只写到bin是不行的，要具体到文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin\phantomjs.exe"</span>)</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-python去除字符串中间空格的方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1155,6 +1163,96 @@
 
 
   
+    <article id="post-PhantomJS运行提示 executable needs to be in PATH？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">PhantomJS运行提示：Message &#39;phantomjs&#39; executable needs to be in PATH？</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/" class="archive-article-date">
+  	<time datetime="2017-08-20T03:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月20日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>使用selenuim调用PhantomJS时一直提示异常：</p>
+<p>Message ‘phantomjs’ executable needs to be in PATH？</p>
+<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>调用代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin"</span>)</div></pre></td></tr></table></figure>
+<p>路径只写到bin是不行的，要具体到文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver = webdriver.PhantomJS(executable_path=<span class="string">"D:\jenson\phantomjs\\bin\phantomjs.exe"</span>)</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/20/PhantomJS运行提示 executable needs to be in PATH？/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ModuleNotFoundError No module named win32api" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1215,93 +1313,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/08/19/ModuleNotFoundError No module named win32api/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Python文件编码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/18/Python文件编码/">Python文件编码问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/18/Python文件编码/" class="archive-article-date">
-  	<time datetime="2017-08-18T09:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月18日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>python读取文件时提示”UnicodeDecodeError: ‘gbk’ codec can’t decode byte 0x80 in position 205: illegal multibyte sequence”</p>
-<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><h2 id="解决办法1"><a href="#解决办法1" class="headerlink" title="解决办法1."></a>解决办法1.</h2><p>FILE_OBJECT= open(‘order.log’,’r’, encoding=’UTF-8’)</p>
-<h2 id="解决办法2"><a href="#解决办法2" class="headerlink" title="解决办法2."></a>解决办法2.</h2><p>FILE_OBJECT= open(‘order.log’,’rb’)</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/18/Python文件编码/">展开全文 >></a>
         </p>
       
 
@@ -1465,15 +1476,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1489,19 +1500,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+                <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1510,6 +1513,14 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1529,6 +1540,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">数学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GC</a>
               </li>
              
@@ -1537,11 +1552,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
