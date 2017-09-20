@@ -180,6 +180,99 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/30/Java知识点/">Java知识点</a>
+    </h1>
+  
+
+        
+        <a href="/2017/06/30/Java知识点/" class="archive-article-date">
+  	<time datetime="2017-06-30T10:51:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月30日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>1、==对基本数据类型来说比较的是值是否相等，但对于引用类型来说，其和equals医院，比较的都是对象地址，前提是equals没有被重写。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s1 == s3);<span class="comment">//false</span></div><div class="line">System.out.println(s2 == s3);<span class="comment">//true</span></div></pre></td></tr></table></figure>
+<p>根据Java编译时优化方案，s2中加号的三个值都为固定常量，所以s2在编译时也被认为是常量，即编译期就确定了s2的值，并且和s3一样，所以打印true</p>
+<p>在s1中，a和b的值是常量，但是c属于局部变量，而且也没有谁指定c这个值是不可变的。既然是可变量，导致s1也被编译期认为是不确定值，</p>
+<p>接下来s0，a和b不用说了都是常量，而c1虽然和c一样也是局部变量，但是c1有finla修饰，明确告诉编译器明面上我是一个局部变量，但是同时我的值是不可变的，final修饰了，现在不变，将来也不会改变，所以编译器在编译期确定了s0 的值。所以把s0也作为常量和s3一样，都在常量池</p>
+<p><strong><em>编译器优化要在编译期能确定的值得情况下进行，而能确定值的只能是在常量池中的内容。</em></strong></p>
+<p>2、string.intern()，当字符串调用这个方法时，都会拿着当前字符串的值去常量池中找，如果找到则返回常量池这个常量地址，否则在常量池创建一个常量并把字符串填进去，然后返回创建的地址。当然这是在JDK1.6情况下，在1.7及以后会有不同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);</div><div class="line">System.out.println(s1.intern() == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s2 == s3);</div></pre></td></tr></table></figure>
+<p><strong><em>由于intern()需要去常量池中做字符串比较，而常量池又很可能有多个常量，所以一般来说intern()效率并不高</em></strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/06/30/Java知识点/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Django创建数据表时syncdb提示Unknown-command：‘syncdb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1149,186 +1242,6 @@
 
 
   
-    <article id="post-农夫带着狼、羊和白菜过河问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/10/农夫带着狼、羊和白菜过河问题/">农夫带着狼、羊和白菜过河问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/10/农夫带着狼、羊和白菜过河问题/" class="archive-article-date">
-  	<time datetime="2017-05-10T09:55:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一个农夫带着一只狼，一只羊和一棵白菜来到河边要过河，船只狭小，一次农夫只能带一样物品过河，如果农夫不在场，狼会吃羊，羊也会吃白菜。那么农夫如何才能过河或者证明出无解。</p>
-<p>这是一道自古有之的谜题，但是一些公司也有把这作为笔试题…</p>
-<p>看到这个题我的第一个想法就是船上系一根绳，把狼和白菜一起放船上，待漂到对岸后再用绳子拉过来，然后农夫抱着羊过河。不过这太投机取巧了啊哈哈。还是来点务实的吧：</p>
-<p>务实的想法就是要农夫一直和船一起。毕竟不能指望顺风船自动漂对岸然后狼羊白菜自动下船吧。</p>
-<p>食物链是这样的：狼&gt;羊&gt;白菜</p>
-<p>农夫只要离开，食物链就会发生吞食，所以要让食物链隔开。</p>
-<p>那么第一步做法就明白了：必须带羊过河~~</p>
-<p>我们假设A为现在所在岸边，B为目的岸边</p>
-<table>
-<thead>
-<tr>
-<th>步骤</th>
-<th>A</th>
-<th>B</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>①农夫带着羊过河</td>
-<td>狼和白菜</td>
-<td>羊</td>
-</tr>
-<tr>
-<td>②农夫独自返回A</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>③农夫带着白菜过河</td>
-<td>狼</td>
-<td>羊和白菜</td>
-</tr>
-<tr>
-<td>④农夫带着羊返回</td>
-<td>羊和狼</td>
-<td>白菜</td>
-</tr>
-<tr>
-<td>⑤农夫带着狼过河</td>
-<td>羊</td>
-<td>白菜和狼</td>
-</tr>
-<tr>
-<td>⑥农夫独自返回A</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>⑦农夫带着羊过河</td>
-<td></td>
-<td>白菜、狼和羊</td>
-</tr>
-</tbody>
-</table>
-<p>其实这个解法不是唯一的。</p>
-<p>虽然第一步都是要带着羊过河，但是第三步带着白菜和带狼都是可以的。</p>
-<table>
-<thead>
-<tr>
-<th>步骤</th>
-<th>A</th>
-<th>B</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>③农夫带着狼过河</td>
-<td>白菜</td>
-<td>羊和狼</td>
-</tr>
-<tr>
-<td>④农夫带着羊返回A</td>
-<td>白菜和羊</td>
-<td>狼</td>
-</tr>
-<tr>
-<td>⑤农夫带着白菜过河</td>
-<td>羊</td>
-<td>狼和白菜</td>
-</tr>
-<tr>
-<td>⑥农夫独自返回A</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>⑦农夫带着羊过河</td>
-<td></td>
-<td>狼、白菜和羊</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/10/农夫带着狼、羊和白菜过河问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -1447,10 +1360,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -1459,11 +1368,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1479,19 +1396,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1507,10 +1428,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
@@ -1520,10 +1437,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">

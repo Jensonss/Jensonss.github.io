@@ -180,6 +180,129 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-用Python提取excel中有用数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/21/用Python提取excel中有用数据/">用Python提取excel中有用数据</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/21/用Python提取excel中有用数据/" class="archive-article-date">
+  	<time datetime="2017-07-21T02:06:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。</p>
+<h1 id="0x01-第三方模块引入"><a href="#0x01-第三方模块引入" class="headerlink" title="0x01 第三方模块引入"></a>0x01 第三方模块引入</h1><p>在Python中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel</span></div><div class="line"><span class="comment"># 针对 03版excel（xls结尾的），我们可以使用xlrd读，xlwt包来写</span></div><div class="line"><span class="comment"># 针对 doc文档，我们可以使用docx操作</span></div></pre></td></tr></table></figure>
+<p>知道需要哪些模块了，接下来就是安装所需模块。</p>
+<p>网上很多都是先下载包，解压后本地执行<code>python setup.py install</code>。这显得很麻烦，我直接使用pip命令进行安装了。终端执行<code>pip install xlrd</code>，同样使用该方式安装其他所需库即可。</p>
+<blockquote>
+<p>无须下载，简单快捷。</p>
+</blockquote>
+<h1 id="0x02-开始编程"><a href="#0x02-开始编程" class="headerlink" title="0x02 开始编程"></a>0x02 开始编程</h1><h2 id="创建项目并把excel拷贝到项目根目录"><a href="#创建项目并把excel拷贝到项目根目录" class="headerlink" title="创建项目并把excel拷贝到项目根目录"></a>创建项目并把excel拷贝到项目根目录</h2><p><img src="/2017/07/21/用Python提取excel中有用数据/创建项目.png" alt="创建项目"></p>
+<h2 id="导入刚才安装的模块"><a href="#导入刚才安装的模块" class="headerlink" title="导入刚才安装的模块"></a>导入刚才安装的模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> xlrd</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> docx</div></pre></td></tr></table></figure>
+<p><code>threading</code>是Python自带的线程模块</p>
+<h2 id="读取excel"><a href="#读取excel" class="headerlink" title="读取excel"></a>读取excel</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_xls</span><span class="params">(path, find=<span class="string">''</span>, row=<span class="number">-1</span>, col=<span class="number">-1</span>)</span>:</span></div><div class="line">    <span class="string">"""接收xls文件并读取指定内容返回</span></div><div class="line">    *path* 接收xls路径</div><div class="line">    *find* 要查找的内容，为列表格式</div><div class="line">    *row* 行数，-1说明没有指定，查找所有行</div><div class="line">    *col* 列数，-1说明没有指定，查找所有列</div><div class="line">    """</div><div class="line">    xls = xlrd.open_workbook(path)</div><div class="line">    names = xls.sheet_names()</div><div class="line">    print(names)</div><div class="line">    sheet = xls.sheet_by_name(names[<span class="number">0</span>])</div><div class="line">    row = int(row)</div><div class="line">    col = int(col)</div><div class="line">    python_books = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, sheet.nrows):</div><div class="line">        <span class="keyword">if</span> <span class="number">-1</span> != row:  <span class="comment"># 指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    <span class="keyword">for</span> j <span class="keyword">in</span> sheet.ncols:</div><div class="line">                        <span class="keyword">if</span> j == col:</div><div class="line">                            text = sheet.cell_value(i, j)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    text = sheet.row_values(i)</div><div class="line">        <span class="keyword">else</span>:  <span class="comment"># 没指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                text = sheet.cell_value(i, col)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                text = sheet.cell_value(i, <span class="number">4</span>)</div><div class="line">        <span class="keyword">if</span> find != <span class="string">""</span>:</div><div class="line">            <span class="keyword">for</span> content <span class="keyword">in</span> find:</div><div class="line">                <span class="keyword">if</span> content <span class="keyword">in</span> text:</div><div class="line">                    print(text + <span class="string">'\n'</span>)</div><div class="line">                    python_books.append(text)</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(text + <span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> python_books</div></pre></td></tr></table></figure>
+<p>虽然只是个简单的数据提取，但是为了提高程序灵活性，文件路径、行列及搜索值仍然通过传参方式。</p>
+<p><code>read_xls</code>实现了读取excel中指定的相关内容到列表，下面要实现存储内容到doc文档。</p>
+<h2 id="保存内容到doc文档"><a href="#保存内容到doc文档" class="headerlink" title="保存内容到doc文档"></a>保存内容到doc文档</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_doc</span><span class="params">(name, contents, create_new=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    *param name* doc文档名称</div><div class="line">    *param contents* 文档内容，为列表格式</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc = docx.Document()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc = docx.Document(name)</div><div class="line">    <span class="keyword">for</span> pb <span class="keyword">in</span> contents:</div><div class="line">        doc.add_paragraph(pb)</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc.save(name + <span class="string">'.docx'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc.save(name)</div></pre></td></tr></table></figure>
+<p>该方法实现的是，如果create_new为true则直接创建一个doc文档存储内容，并将文档命名为name。如果为false则直接打开一个名称为name的文档进行存储。</p>
+<p>因为这些都是IO操作，应该在工作线程执行。但是这是两个独立的方法，所以还需进行一次包装。</p>
+<h2 id="2个方法封装"><a href="#2个方法封装" class="headerlink" title="2个方法封装"></a>2个方法封装</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(path, find, row, col)</span>:</span></div><div class="line">    <span class="string">"""包装类，封装读取xls文件方法和保存到doc文档方法</span></div><div class="line">    *param path*</div><div class="line">    *param find*</div><div class="line">    *param row*</div><div class="line">    *param col*</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    python_books = read_xls(path, find, row, col)</div><div class="line">    save_doc(name=path, contents=python_books, create_new=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<h2 id="开启2个工作线程读取并存储内容"><a href="#开启2个工作线程读取并存储内容" class="headerlink" title="开启2个工作线程读取并存储内容"></a>开启2个工作线程读取并存储内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">find = [<span class="string">'python'</span>, <span class="string">'PYTHON'</span>, <span class="string">'Python'</span>]</div><div class="line">thread1 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook1.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread1.start()</div><div class="line"></div><div class="line">thread2 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook2.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread2.start()</div></pre></td></tr></table></figure>
+<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>执行后会在项目根目录生成2个对应的doc文档：</p>
+<p><img src="/2017/07/21/用Python提取excel中有用数据/项目结果.png" alt="项目结果"></p>
+<p>打开doc文档看看具体内容吧：</p>
+<p><img src="/2017/07/21/用Python提取excel中有用数据/doc文档内容.png" alt="doc文档内容"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">excel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">xlrd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/excel/" class="article-tag-list-link color1">excel</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/xlrd/" class="article-tag-list-link color5">xlrd</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/07/21/用Python提取excel中有用数据/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1223,99 +1346,6 @@
 
 
   
-    <article id="post-Java知识点" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/30/Java知识点/">Java知识点</a>
-    </h1>
-  
-
-        
-        <a href="/2017/06/30/Java知识点/" class="archive-article-date">
-  	<time datetime="2017-06-30T10:51:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年06月30日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>1、==对基本数据类型来说比较的是值是否相等，但对于引用类型来说，其和equals医院，比较的都是对象地址，前提是equals没有被重写。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s1 == s3);<span class="comment">//false</span></div><div class="line">System.out.println(s2 == s3);<span class="comment">//true</span></div></pre></td></tr></table></figure>
-<p>根据Java编译时优化方案，s2中加号的三个值都为固定常量，所以s2在编译时也被认为是常量，即编译期就确定了s2的值，并且和s3一样，所以打印true</p>
-<p>在s1中，a和b的值是常量，但是c属于局部变量，而且也没有谁指定c这个值是不可变的。既然是可变量，导致s1也被编译期认为是不确定值，</p>
-<p>接下来s0，a和b不用说了都是常量，而c1虽然和c一样也是局部变量，但是c1有finla修饰，明确告诉编译器明面上我是一个局部变量，但是同时我的值是不可变的，final修饰了，现在不变，将来也不会改变，所以编译器在编译期确定了s0 的值。所以把s0也作为常量和s3一样，都在常量池</p>
-<p><strong><em>编译器优化要在编译期能确定的值得情况下进行，而能确定值的只能是在常量池中的内容。</em></strong></p>
-<p>2、string.intern()，当字符串调用这个方法时，都会拿着当前字符串的值去常量池中找，如果找到则返回常量池这个常量地址，否则在常量池创建一个常量并把字符串填进去，然后返回创建的地址。当然这是在JDK1.6情况下，在1.7及以后会有不同</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);</div><div class="line">System.out.println(s1.intern() == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s2 == s3);</div></pre></td></tr></table></figure>
-<p><strong><em>由于intern()需要去常量池中做字符串比较，而常量池又很可能有多个常量，所以一般来说intern()效率并不高</em></strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/30/Java知识点/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -1434,10 +1464,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -1446,11 +1472,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1466,19 +1500,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1494,10 +1532,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
@@ -1507,10 +1541,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
