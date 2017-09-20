@@ -180,6 +180,99 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-bytes和str转换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/13/bytes和str转换/">bytes和str转换</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/13/bytes和str转换/" class="archive-article-date">
+  	<time datetime="2017-08-13T08:27:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月13日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>日常开发中很多时候要用到bytes和str的互相转换，每次都查浪费时间。干脆整理一次记在脑子里。</p>
+<h1 id="bytes转str"><a href="#bytes转str" class="headerlink" title="bytes转str"></a>bytes转str</h1><ul>
+<li>默认解码 bytes.decode()</li>
+<li>gbk方式解码 bytes.decode(‘gbk’)</li>
+</ul>
+<h1 id="str转bytes"><a href="#str转bytes" class="headerlink" title="str转bytes"></a>str转bytes</h1><ul>
+<li>utf8方式编码 str.encode(encoding=”utf-8”)</li>
+<li>gbk方式编码 str.encode(encoding=”gbk”)</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/13/bytes和str转换/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-使用sychronized注意事项" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1215,209 +1308,6 @@
 
 
   
-    <article id="post-关于Canvas的一些概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/03/关于Canvas的一些概念/">关于Canvas的一些概念</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/03/关于Canvas的一些概念/" class="archive-article-date">
-  	<time datetime="2017-08-03T06:46:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月03日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在Android开发中不管是图片的绘制还是控件的绘制都少不了<strong>Canvas</strong>的参与。</p>
-<p><strong>Canvas</strong>如此重要，对其多一些了解自然是对开发有益的。</p>
-<h1 id="获得对象"><a href="#获得对象" class="headerlink" title="获得对象"></a>获得对象</h1><p>有两种获得Canvas对象的方法：</p>
-<ul>
-<li>重写onDraw方法，使用参数中的Canvas</li>
-<li>直接创建Canvas对象</li>
-</ul>
-<h1 id="它有什么用"><a href="#它有什么用" class="headerlink" title="它有什么用"></a>它有什么用</h1><p>Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为Android开发中，Canvas不仅提供了动画特效还提供了常见图形绘制方法，比如圆形、矩形、扇形等。</p>
-<p>在进行绘制过程中，还需要借助Pain辅助，Paint可以理解为画笔。</p>
-<h1 id="绘制图形方法"><a href="#绘制图形方法" class="headerlink" title="绘制图形方法"></a>绘制图形方法</h1><ul>
-<li><p>绘制文字</p>
-<p><code>drawText(String text, float x, float y, Paint paint)</code></p>
-<p><code>drawText(char[] text, int index, int count, float x, float y, Paint paint)</code></p>
-<p><code>drawText(CharSequence text, int start, int end, float x, float y, Paint paint)</code></p>
-<p><strong>float x</strong>：文本开始的x轴位置</p>
-<p><strong>float y</strong>：文本开始的y轴位置</p>
-<p><strong>text</strong>：要绘制的文本</p>
-<p><strong>paint</strong>: 使用的画笔</p>
-<p><strong>start</strong>：文本开始的位置</p>
-<p><strong>end</strong>：文本结束的位置</p>
-<p>​</p>
-</li>
-<li><p>绘制圆形</p>
-<p><code>drawCircle(float cx, float cy, float radius, Paint paint)</code></p>
-<p><strong>float cx</strong>：圆心x轴坐标</p>
-<p><strong>float cy</strong>：圆心y轴坐标</p>
-<p><strong>float radius</strong>：圆半径</p>
-<p><strong>paint</strong>：画笔</p>
-<p>​</p>
-</li>
-<li><p>绘制线条</p>
-<p><code>drawLine(float startX, float startY, float stopX, float stopY, Paint paint)</code></p>
-<p><strong>float startX</strong>：起点x坐标</p>
-<p><strong>float startY</strong>：起点y坐标</p>
-<p><strong>float stopX</strong>：终点x坐标</p>
-<p><strong>float stopY</strong>：终点y坐标</p>
-<p>​</p>
-</li>
-<li><p>绘制椭圆</p>
-<p><code>drawOval(float left, float top, float right, float bottom, Paint paint)</code></p>
-<p><code>drawOval(RectF oval, Paint paint)</code></p>
-<p>这里的两个方法可以是一样的，因为绘制一个<strong>RectF</strong>也是需要方法一中的四个点。</p>
-<p><strong>float left</strong>：左下</p>
-<p><strong>float top</strong>：左上</p>
-<p><strong>float right</strong>：右上</p>
-<p><strong>float bottom</strong>：右下</p>
-<p>​</p>
-</li>
-<li><p>绘制弧度</p>
-<p><code>drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
-<p>​</p>
-<p><code>drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</code></p>
-<p><strong>float startAngle</strong>：开始角度</p>
-<p><strong>float sweepAngle</strong>：扫过角度</p>
-<p><strong>boolean useCenter</strong>：是否和中心连线 </p>
-<p>​</p>
-</li>
-<li><p>绘制矩形</p>
-<p><code>drawRect(float left, float top, float right, float bottom, Paint paint)</code></p>
-<p><code>drawRect(Rect r, Paint paint)</code></p>
-<p>​</p>
-</li>
-<li><p>绘制多边形</p>
-<p>多边形绘制需要用到Path，路径类</p>
-<p>用到moveTo，lineTo等常用方法</p>
-<p><code>moveTo(float x, float y)</code></p>
-<p><code>lineTo(float x, float y)</code></p>
-<p>​</p>
-</li>
-<li><p>绘制赛贝尔曲线</p>
-<p>赛贝尔曲线的绘制也用到了Path。</p>
-<p><code>quadTo(float x1, float y1, float x2, float y2)</code></p>
-<p>​</p>
-</li>
-<li><p>绘制点</p>
-<p><code>drawPoint(float x, float y, Paint paint)</code></p>
-<p><code>drawPoints(float[] pts, Paint paint)</code></p>
-<p><strong>float x</strong>：点x轴坐标</p>
-<p><strong>float y</strong>：点y轴坐标</p>
-<p><strong>float pts</strong>：点数组，每两个值组合一个点，最后如果不够2个点则忽略。</p>
-<p>​</p>
-</li>
-<li><p>绘制图片</p>
-<p><code>drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint)</code></p>
-<p>​</p>
-<p>​</p>
-</li>
-</ul>
-<h1 id="动画方法"><a href="#动画方法" class="headerlink" title="动画方法"></a>动画方法</h1><ul>
-<li><p>位移</p>
-<p><code>translate(float dx, float dy)</code></p>
-<p><strong>float dx</strong>：x轴移动距离</p>
-<p><strong>float dy</strong>：y轴移动距离</p>
-<p>​</p>
-</li>
-<li><p>缩放</p>
-<p><code>scale(float sx, float sy)</code></p>
-<p><code>scale(float sx, float sy, float px, float py)</code></p>
-<p><strong>float sx</strong>：x轴放大倍数</p>
-<p><strong>float sy</strong>：y轴放大倍数</p>
-<p><strong>float px, float py</strong>：以该点为中心缩放</p>
-</li>
-<li><p>旋转</p>
-<p><code>rotate(float degrees)</code></p>
-<p><code>rotate(float degrees, float px, float py)</code></p>
-<p><strong>float degrees</strong>：旋转角度</p>
-<p><strong>float px, float py</strong>：以px，py组成的点为中心旋转degrees角度</p>
-</li>
-</ul>
-<h1 id="save和restore"><a href="#save和restore" class="headerlink" title="save和restore"></a>save和restore</h1><ul>
-<li><p>save保存画布</p>
-<p>把save之前的数据保存起来，以便后续的操作在一个新的图层。</p>
-</li>
-<li><p>restore合并图层</p>
-<p>把save之前和之后的多个图层进行合并</p>
-<p>​</p>
-<p>​</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/03/关于Canvas的一些概念/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
@@ -1536,10 +1426,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -1548,11 +1434,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1568,19 +1462,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1596,10 +1494,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
@@ -1609,10 +1503,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
