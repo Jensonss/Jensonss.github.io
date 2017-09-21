@@ -202,7 +202,138 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>这道题和我之前的农夫过河、四人过桥问题都是一个类型的，不过该题较之前两道题更简单，因为涉及 元素更少。</p>
 <p>下面直接说下思路</p>
-<h1 id="0x01-思路"><a href="#0x01-思路" class="headerlink" title="0x01 思路"></a>0x01 思路</h1>
+<h1 id="0x01-思路"><a href="#0x01-思路" class="headerlink" title="0x01 思路"></a>0x01 思路</h1><p>4L和5L、3L的杯子有什么关系？找到关系，再从关系入手</p>
+<p>譬如4L可以用1L和3L合并得来，而3L可以直接通过3L杯子拿到。</p>
+<p>接下来就是如何拿到1L的量，而这又可以通过3L-2L得到，那么再继续2L又是如何得到呢？</p>
+<p>有现成的5L和3L，简单的就可以得到2L，所以实现步骤就很简单了：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">步骤</th>
+<th style="text-align:center">操作</th>
+<th style="text-align:center">5L杯子</th>
+<th style="text-align:center">3L杯子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3L装满</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3L倒入5L</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3L装满</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3L倒入5L</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">5L清空</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">3L倒入5L</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">3L装满</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">3L倒入5L</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">完成</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">0</td>
+</tr>
+</tbody>
+</table>
+<p>上面是通过1L和3L合并得来的，下面通过5L-1L得到4L，下面看看实现步骤：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>操作</th>
+<th>5L杯子</th>
+<th>3L杯子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>5L装满</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>5L倒入3L</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3L清空</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5L倒入3L</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5L装满</td>
+<td>5</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>5L倒入3L</td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>完成</td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>这种方式实现步骤更简单一些。细想一下会发现，这两种方式都有点类似递归</p>
+
       
 
       
