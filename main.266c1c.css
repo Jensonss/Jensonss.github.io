@@ -1640,9 +1640,6 @@ pre .css ~ * .id, pre .id {
   font-size: 16px;
   color: #333;
   transition: all .3s;
-  left: 50%;
-  width: 0;
-  position: relative;
   text-decoration: none;
 }
 
