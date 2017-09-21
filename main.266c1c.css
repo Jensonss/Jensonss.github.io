@@ -1643,7 +1643,8 @@ pre .css ~ * .id, pre .id {
 }
 
 .archives .archive-article-title:hover {
-  color: #657b83
+  /*color: #657b83;*/
+  text-decoration: underline;
 }
 
 .archives .archive-article-title span {
