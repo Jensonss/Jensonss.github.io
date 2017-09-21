@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>关于Android魅族不重要通知 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言魅族不重要通知是什么鬼？ 先直接看图：   通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。 通知优先级在android通知中重要性可以分为5个优先级： 12345public static final int PRIORITY_DEFAULT = 0;public st">
+  <meta name="description" content="0x00 前言魅族不重要通知是什么鬼？ 先直接看图：   通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。 0x01 通知优先级在android通知中重要性可以分为5个优先级： 12345public static final int PRIORITY_DEFAULT = 0;publ">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于Android魅族不重要通知">
 <meta property="og:url" content="http://yoursite.com/2017/09/21/关于Android魅族不重要通知/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00 前言魅族不重要通知是什么鬼？ 先直接看图：   通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。 通知优先级在android通知中重要性可以分为5个优先级： 12345public static final int PRIORITY_DEFAULT = 0;public st">
+<meta property="og:description" content="0x00 前言魅族不重要通知是什么鬼？ 先直接看图：   通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。 0x01 通知优先级在android通知中重要性可以分为5个优先级： 12345public static final int PRIORITY_DEFAULT = 0;publ">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E4%B8%8D%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5.jpg">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E4%B8%80%E8%88%AC%E9%80%9A%E7%9F%A5.jpg">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E9%80%9A%E7%9F%A5%E6%B5%8B%E8%AF%95.jpg">
-<meta property="og:updated_time" content="2017-09-21T08:57:51.000Z">
+<meta property="og:updated_time" content="2017-09-21T09:19:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于Android魅族不重要通知">
-<meta name="twitter:description" content="0x00 前言魅族不重要通知是什么鬼？ 先直接看图：   通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。 通知优先级在android通知中重要性可以分为5个优先级： 12345public static final int PRIORITY_DEFAULT = 0;public st">
+<meta name="twitter:description" content="0x00 前言魅族不重要通知是什么鬼？ 先直接看图：   通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。 0x01 通知优先级在android通知中重要性可以分为5个优先级： 12345public static final int PRIORITY_DEFAULT = 0;publ">
 <meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/%E4%B8%8D%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -209,7 +209,7 @@
 <p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%B8%8D%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5.jpg" alt="不重要通知"></p>
 <p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%B8%80%E8%88%AC%E9%80%9A%E7%9F%A5.jpg" alt="一般通知"></p>
 <p>通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。</p>
-<h1 id="通知优先级"><a href="#通知优先级" class="headerlink" title="通知优先级"></a>通知优先级</h1><p>在android通知中重要性可以分为5个优先级：</p>
+<h1 id="0x01-通知优先级"><a href="#0x01-通知优先级" class="headerlink" title="0x01 通知优先级"></a>0x01 通知优先级</h1><p>在android通知中重要性可以分为5个优先级：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_DEFAULT = <span class="number">0</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_LOW = -<span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_MIN = -<span class="number">2</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_HIGH = <span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_MAX = <span class="number">2</span>;</div></pre></td></tr></table></figure>
 <p>既然都提到了优先级，所以自然就以为魅族只是根据这个值的不同来显示在不同的页面，把LOW和MIN显示在不重要通知页面了。</p>
 <p>赶紧写个demo测试下假想：</p>
