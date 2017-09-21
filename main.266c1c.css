@@ -1642,16 +1642,17 @@ pre .css ~ * .id, pre .id {
   transition: all .3s;
   left: 50%;
   width: 0;
-
+  position: relative;
+  text-decoration: none;
 }
 
-.archives .archive-article-title:hover {
+/*.archives .archive-article-title:hover {*/
   /*color: #657b83;*/
-  text-decoration: underline;
-  width: 100%;
-  left: 0;
-  right: 0;
-}
+  /*text-decoration: underline;*/
+  /*width: 100%;*/
+  /*left: 0;*/
+  /*right: 0;*/
+/*}*/
 
 .archives .archive-article-title:before {
   content: "";
