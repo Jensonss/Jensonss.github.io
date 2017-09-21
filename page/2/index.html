@@ -180,6 +180,105 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-python去除字符串中间空格的方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/20/python去除字符串中间空格的方法/">Python在Windows下提示ModuleNotFoundError No module named win32api</a>
+    </h1>
+  
+
+        
+        <a href="/2017/08/20/python去除字符串中间空格的方法/" class="archive-article-date">
+  	<time datetime="2017-08-20T03:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月20日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在windows下运行python时提示该异常信息。</p>
+<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><ul>
+<li><p>使用字符串函数replace</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">'hello world'</span></div><div class="line">a.replace(<span class="string">' '</span>, <span class="string">''</span>)</div><div class="line"><span class="string">'helloworld'</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>使用字符串函数split</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">''</span>.join(a.split())</div><div class="line">print(a)</div><div class="line">helloworld</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>使用正则表达式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">strinfo = re.compile()</div><div class="line">strinfo = re.compile(<span class="string">' '</span>)</div><div class="line">b = strinfo.sub(<span class="string">''</span>, a)</div><div class="line">print(b)</div><div class="line">helloworld</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/08/20/python去除字符串中间空格的方法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ModuleNotFoundError No module named win32api" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1103,99 +1202,6 @@
 
 
   
-    <article id="post-Python操作xml" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/13/Python操作xml/">Python操作xml</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/13/Python操作xml/" class="archive-article-date">
-  	<time datetime="2017-08-13T08:30:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月13日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>xml和json是客户端和服务端进行数据交互的常用格式。所以掌握这些数据格式的解析是很必要的。python提供了两种xml解析方法。一种是常见的行业标准做法：sax和dom解析，另一种是python特有的解析方法，而在标准库中ElementTree首先推荐。</p>
-<h1 id="ElementTree模块"><a href="#ElementTree模块" class="headerlink" title="ElementTree模块"></a>ElementTree模块</h1><h2 id="导入模块"><a href="#导入模块" class="headerlink" title="导入模块"></a>导入模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> ElementTree, parse <span class="keyword">as</span> eleParse, Element</div><div class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> request, parse</div></pre></td></tr></table></figure>
-<h2 id="开始解析"><a href="#开始解析" class="headerlink" title="开始解析"></a>开始解析</h2><p>通过数据源，创建<strong>ElementTree</strong>。这里使用模块中的<strong>parse</strong>方法。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">doc = parse(source=source)</div></pre></td></tr></table></figure>
-<p><strong>这里的参数source是一个文件名或者包含xml数据的文件对象。</strong></p>
-<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><p><code>doc.findtext(&#39;username&#39;)</code>返回指定标签的元素文本</p>
-<p><code>doc.iterfind(&#39;category&#39;)</code>返回所有匹配子元素</p>
-<p><code>doc.findall(path)</code>返回所有匹配子元素</p>
-<p><code>item.attrib[&#39;id&#39;]</code>返回元素属性，这里的item是Element对象</p>
-<h1 id="DOM模块"><a href="#DOM模块" class="headerlink" title="DOM模块"></a>DOM模块</h1><h1 id="SAX模块"><a href="#SAX模块" class="headerlink" title="SAX模块"></a>SAX模块</h1>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/13/Python操作xml/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1342,15 +1348,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1358,15 +1360,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1402,15 +1408,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
