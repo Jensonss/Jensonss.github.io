@@ -180,6 +180,110 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-关于Android魅族不重要通知" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/21/关于Android魅族不重要通知/">关于Android魅族不重要通知</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/21/关于Android魅族不重要通知/" class="archive-article-date">
+  	<time datetime="2017-09-21T07:36:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>魅族不重要通知是什么鬼？</p>
+<p>先直接看图：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%B8%8D%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5.jpg" alt="不重要通知"></p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%B8%80%E8%88%AC%E9%80%9A%E7%9F%A5.jpg" alt="一般通知"></p>
+<p>通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。</p>
+<h1 id="通知优先级"><a href="#通知优先级" class="headerlink" title="通知优先级"></a>通知优先级</h1><p>在android通知中重要性可以分为5个优先级：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_DEFAULT = <span class="number">0</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_LOW = -<span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_MIN = -<span class="number">2</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_HIGH = <span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_MAX = <span class="number">2</span>;</div></pre></td></tr></table></figure>
+<p>既然都提到了优先级，所以自然就以为魅族只是根据这个值的不同来显示在不同的页面，把LOW和MIN显示在不重要通知页面了。</p>
+<p>赶紧写个demo测试下假想：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (v.getId()) &#123;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_normal:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条默认通知"</span>).setSmallIcon(R.drawable.ic_launcher)</div><div class="line">                    .setContentText(<span class="string">"这是内容"</span>);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_normal, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_high:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条high通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_HIGH);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_high, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_low:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条low通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_LOW);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_low, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_min:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条min通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_MIN);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_min, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_max:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条max通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_MAX);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_max, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面是点击发送通知的部分代码，发送完通知再看看显示结果：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E9%80%9A%E7%9F%A5%E6%B5%8B%E8%AF%95.jpg" alt="通知测试"></p>
+<p>测试发现不同优先级的通知都还在默认的通知界面。并没有按假想的那样把LOW和MIN放到不重要通知！但是有一点不同的是通知顺序和点击的顺序不一样。所以<strong>通知优先级只是改变了通知显示顺序</strong></p>
+<p>那么魅族是如何区分通知是否重要呢？</p>
+<p>网上查了下资料发现了真相：</p>
+<blockquote>
+<p>具体的触发就是，如果你想把垃圾的信息放到盒子里面，就是当手机状态栏弹出了消息以后，你选择右滑动删除消息，千万不要点击进入，是直接右滑动删除消息，当时连续几次这样操作以后，系统就会把以后类似的消息放到消息盒子里面了。 同理如果你希望把已经在消息盒子里面的消息独立出来，当看到消息盒子里面的信息出现后，你直接点击消息进入，连续操作几次以后就会从消息盒子里面出来了哈。希望对还在困扰的你们有帮助，一个一个字打出来的，觉得有用的就支持下吧。</p>
+</blockquote>
+<p>这个号称智能通知栏的家伙居然只靠滑动和点击就果断的给你归为是否重要，而且还说智能学习。真是有点名不副实了。</p>
+<p>另外还要吐槽一下<strong>淘票票</strong>，我特么的猩球崛起3都已经用这个APP买票都已经看了，还在给我推消息！！</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/09/21/关于Android魅族不重要通知/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-5L杯子和3L杯子取出4L水的问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1371,105 +1475,6 @@
 
 
   
-    <article id="post-python去除字符串中间空格的方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/20/python去除字符串中间空格的方法/">Python在Windows下提示ModuleNotFoundError No module named win32api</a>
-    </h1>
-  
-
-        
-        <a href="/2017/08/20/python去除字符串中间空格的方法/" class="archive-article-date">
-  	<time datetime="2017-08-20T03:08:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年08月20日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在windows下运行python时提示该异常信息。</p>
-<h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><ul>
-<li><p>使用字符串函数replace</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">'hello world'</span></div><div class="line">a.replace(<span class="string">' '</span>, <span class="string">''</span>)</div><div class="line"><span class="string">'helloworld'</span></div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>使用字符串函数split</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">''</span>.join(a.split())</div><div class="line">print(a)</div><div class="line">helloworld</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>使用正则表达式</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">strinfo = re.compile()</div><div class="line">strinfo = re.compile(<span class="string">' '</span>)</div><div class="line">b = strinfo.sub(<span class="string">''</span>, a)</div><div class="line">print(b)</div><div class="line">helloworld</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/20/python去除字符串中间空格的方法/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1616,15 +1621,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1632,15 +1633,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1676,15 +1681,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
