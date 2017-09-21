@@ -1639,12 +1639,18 @@ pre .css ~ * .id, pre .id {
 .archives .archive-article-title {
   font-size: 16px;
   color: #333;
-  transition: color .3s
+  transition: all .3s;
+  left: 50%;
+  width: 0;
+
 }
 
 .archives .archive-article-title:hover {
   /*color: #657b83;*/
   text-decoration: underline;
+  width: 100%;
+  left: 0;
+  right: 0;
 }
 
 .archives .archive-article-title span {
