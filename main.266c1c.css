@@ -1653,6 +1653,22 @@ pre .css ~ * .id, pre .id {
   right: 0;
 }
 
+.archives .archive-article-title:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: #4285f4;
+  transform: scale(0);
+  transition: all 0.3s;
+}
+
+.archives .archive-article-title:hover:before {
+  transform: scale(1);
+}
+
 .archives .archive-article-title span {
   display: block;
   color: #a8a8a8;
