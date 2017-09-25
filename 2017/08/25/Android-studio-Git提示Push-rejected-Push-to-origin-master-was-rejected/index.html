@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/25/Android-studio-Git提示Push-rejected-Push-to-origin-master-was-rejected/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言最近做一个IPTV项目，由于经常和历史记录做对比或者实现新思路不行而还原，所以要把项目添加到Git。 但是当用Android studio push的时候出现异常信息： 12Push rejected: Push to origin/master was rejectedGit Pull Failed: fatal: refusing to merge unrelated histo">
-<meta property="og:updated_time" content="2017-08-25T05:34:58.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:03:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android studio Git提示Push rejected: Push to origin/master was rejected">
 <meta name="twitter:description" content="0x00 前言最近做一个IPTV项目，由于经常和历史记录做对比或者实现新思路不行而还原，所以要把项目添加到Git。 但是当用Android studio push的时候出现异常信息： 12Push rejected: Push to origin/master was rejectedGit Pull Failed: fatal: refusing to merge unrelated histo">
@@ -205,6 +205,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Push rejected: Push to origin/master was rejected</div><div class="line">Git Pull Failed: fatal: refusing to merge unrelated histories</div></pre></td></tr></table></figure>
 <p>因为刚创建的Git remote仓库初始化时顺带创建了一个read.me文件，</p>
 <p>而本地已经add过了。</p>
+<a id="more"></a>
 <h1 id="0x01-解决"><a href="#0x01-解决" class="headerlink" title="0x01 解决"></a>0x01 解决</h1><p>因为Android studio可以执行的命令有限（或者还未发现新天地），所以cd到项目目录执行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git pull origin master --allow-unrelated-histories</div></pre></td></tr></table></figure>
 <p>即可。</p>

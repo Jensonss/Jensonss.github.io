@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/04/Android性能优化之UI优化/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="为什么要进行UI优化UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。 优化到什">
-<meta property="og:updated_time" content="2017-05-04T10:23:36.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:15:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android性能优化之UI优化">
 <meta name="twitter:description" content="为什么要进行UI优化UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。 优化到什">
@@ -202,6 +202,7 @@
       
         <h1 id="为什么要进行UI优化"><a href="#为什么要进行UI优化" class="headerlink" title="为什么要进行UI优化"></a>为什么要进行UI优化</h1><p>UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。</p>
 <h1 id="优化到什么程度"><a href="#优化到什么程度" class="headerlink" title="优化到什么程度"></a>优化到什么程度</h1><p>如今屏幕刷新频率大都是60FPS，就是说每帧绘制只要16ms，即保证你的UI页面在16ms内绘制渲染完成，就会让用户感觉到体验是流畅的，所以我们需要做的就是确保我们的APP页面渲染小于16ms。</p>
+<a id="more"></a>
 <h1 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h1><h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><ul>
 <li><p>减少xml布局层级</p>
 <ul>

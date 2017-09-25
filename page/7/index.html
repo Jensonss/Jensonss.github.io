@@ -235,10 +235,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/Mac终端光标变成粗体/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -288,14 +284,9 @@
       
         <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>1、==对基本数据类型来说比较的是值是否相等，但对于引用类型来说，其和equals医院，比较的都是对象地址，前提是equals没有被重写。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s1 == s3);<span class="comment">//false</span></div><div class="line">System.out.println(s2 == s3);<span class="comment">//true</span></div></pre></td></tr></table></figure>
-<p>根据Java编译时优化方案，s2中加号的三个值都为固定常量，所以s2在编译时也被认为是常量，即编译期就确定了s2的值，并且和s3一样，所以打印true</p>
-<p>在s1中，a和b的值是常量，但是c属于局部变量，而且也没有谁指定c这个值是不可变的。既然是可变量，导致s1也被编译期认为是不确定值，</p>
-<p>接下来s0，a和b不用说了都是常量，而c1虽然和c一样也是局部变量，但是c1有finla修饰，明确告诉编译器明面上我是一个局部变量，但是同时我的值是不可变的，final修饰了，现在不变，将来也不会改变，所以编译器在编译期确定了s0 的值。所以把s0也作为常量和s3一样，都在常量池</p>
-<p><strong><em>编译器优化要在编译期能确定的值得情况下进行，而能确定值的只能是在常量池中的内容。</em></strong></p>
-<p>2、string.intern()，当字符串调用这个方法时，都会拿着当前字符串的值去常量池中找，如果找到则返回常量池这个常量地址，否则在常量池创建一个常量并把字符串填进去，然后返回创建的地址。当然这是在JDK1.6情况下，在1.7及以后会有不同</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">String c = <span class="string">"c"</span>;</div><div class="line"><span class="keyword">final</span> String c1 = <span class="string">"c"</span>;</div><div class="line">String s0 = <span class="string">"a"</span> + <span class="string">"b"</span> + c1;</div><div class="line">String s1 = <span class="string">"a"</span> + <span class="string">"b"</span> + c;</div><div class="line">String s2 = <span class="string">"a"</span> + <span class="string">"b"</span> + <span class="string">"c"</span>;</div><div class="line">String s3 = <span class="string">"abc"</span>;</div><div class="line">System.out.println(s0 == s3);</div><div class="line">System.out.println(s1.intern() == s3);<span class="comment">//true</span></div><div class="line">System.out.println(s2 == s3);</div></pre></td></tr></table></figure>
-<p><strong><em>由于intern()需要去常量池中做字符串比较，而常量池又很可能有多个常量，所以一般来说intern()效率并不高</em></strong></p>
-
+        
+          <a class="article-more-a" href="/2017/06/30/Java知识点/#more">展开全文 >></a>
+        
       
 
       
@@ -327,10 +318,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/30/Java知识点/">展开全文 >></a>
-        </p>
       
 
       
@@ -381,12 +368,9 @@
       
         <p>异常信息如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdb</div><div class="line">Unknown command: &apos;syncdb&apos;</div><div class="line">Type &apos;manage.py help&apos; for usage.</div></pre></td></tr></table></figure>
-<p>主要是因为使用的版本太新，如果你安装的Django Version &gt;= 1.9就会出现这个问题</p>
-<p>解决方法就是把<code>python3 ./manage.py syncdb</code></p>
-<p>替换成<code>python3 ./manage.py migrate</code></p>
-<p>之后就会初始化数据表成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py migrate</div><div class="line">Operations to perform:</div><div class="line">  Apply all migrations: admin, auth, contenttypes, sessions</div><div class="line">Running migrations:</div><div class="line">  Applying contenttypes.0001_initial... OK</div><div class="line">  Applying auth.0001_initial... OK</div><div class="line">  Applying admin.0001_initial... OK</div><div class="line">  Applying admin.0002_logentry_remove_auto_add... OK</div><div class="line">  Applying contenttypes.0002_remove_content_type_name... OK</div><div class="line">  Applying auth.0002_alter_permission_name_max_length... OK</div><div class="line">  Applying auth.0003_alter_user_email_max_length... OK</div><div class="line">  Applying auth.0004_alter_user_username_opts... OK</div><div class="line">  Applying auth.0005_alter_user_last_login_null... OK</div><div class="line">  Applying auth.0006_require_contenttypes_0002... OK</div><div class="line">  Applying auth.0007_alter_validators_add_error_messages... OK</div><div class="line">  Applying auth.0008_alter_user_username_max_length... OK</div><div class="line">  Applying sessions.0001_initial... OK</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/#more">展开全文 >></a>
+        
       
 
       
@@ -418,10 +402,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/">展开全文 >></a>
-        </p>
       
 
       
@@ -472,52 +452,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>​    上一节说明了Python字符串和简单数据类型的基本用法，因为比较简单，所以没有做太多说明，这一节介绍下列表、元组和字典。之所以把这三个放在同一节讲是因为这三个数据结构有很多相似地方，对比学习让人印象更深。</p>
 <h1 id="0x01-列表"><a href="#0x01-列表" class="headerlink" title="0x01 列表"></a>0x01 列表</h1><h2 id="什么是列表？如何表示列表？"><a href="#什么是列表？如何表示列表？" class="headerlink" title="什么是列表？如何表示列表？"></a>什么是列表？如何表示列表？</h2><p>​    列表就是由一组特定顺序的元素组成，使用中括号“[ ]”来表示，元素之间使用逗号分隔，例如：animal = [‘cat’, ‘dog’, ‘monkey’]</p>
-<h2 id="访问列表"><a href="#访问列表" class="headerlink" title="访问列表"></a>访问列表</h2><p>​    列表的访问通过索引下标来访问，索引和其他大多数语言一样从0开始。</p>
-<p>也就是说访问第一个元素为：animal[0]。而和其他语言不一样的是Python中索引可以为负值，如：animal[-1]实际为最后一个元素，以此类推。</p>
-<h2 id="列表增加元素"><a href="#列表增加元素" class="headerlink" title="列表增加元素"></a>列表增加元素</h2><p>​    元素的添加分为两种，列表末尾追加和任意位置添加</p>
-<ul>
-<li><p>末尾追加</p>
-<p>使用方法append，animal.append(’fox‘)</p>
-</li>
-<li><p>任意位置添加</p>
-<p>使用方法insert，animal.insert(1,’fox’)。第一个参数为索引值</p>
-</li>
-</ul>
-<h2 id="列表删除元素"><a href="#列表删除元素" class="headerlink" title="列表删除元素"></a>列表删除元素</h2><p>元素删除也可以通过四种方式实现：</p>
-<ul>
-<li><p>使用del</p>
-<p>如果知道元素所处列表位置，则使用del  animal[ i ]</p>
-</li>
-<li><p>使用pop</p>
-<p>如果只需删除了列表末尾元素，则直接使用animal.pop方法。类似出栈</p>
-</li>
-<li><p>使用pop</p>
-<p>如果要删除任意位置元素，使用animal.pop（i)，参数为索引值</p>
-</li>
-<li><p>使用remove</p>
-<p>如果知道元素值而不知道位置，则使用animal.remove（value），参数为元素值</p>
-</li>
-</ul>
-<h2 id="列表修改元素"><a href="#列表修改元素" class="headerlink" title="列表修改元素"></a>列表修改元素</h2><p>​    修改列表元素的语法与访问列表元素的语法类似，如果要进行元素修改只要拿到元素后对其进行从新赋值即可：animal[1] = ‘bird’。</p>
-<h2 id="列表元素遍历"><a href="#列表元素遍历" class="headerlink" title="列表元素遍历"></a>列表元素遍历</h2><p>列表遍历使用循环即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ani <span class="keyword">in</span> animal:</div><div class="line">	print(ani)</div></pre></td></tr></table></figure>
-<h1 id="0x02-元组"><a href="#0x02-元组" class="headerlink" title="0x02 元组"></a>0x02 元组</h1><p>元组使用小括号，列表使用方括号。<br>元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可。</p>
-<ul>
-<li>Python 的元组与列表类似，不同之处在于元组的元素不能修改。</li>
-</ul>
-<ul>
-<li><p>元组中只包含一个元素时，需要在元素后面添加逗号</p>
-<p>​    tup1 = (10,)</p>
-</li>
-<li><p>元组中的元素值是不允许删除的，但我们可以使用del语句来删除整个元组</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>,<span class="string">'dm'</span>)</div><div class="line">print(cats)</div><div class="line"><span class="keyword">del</span> cats</div><div class="line">print(cats)<span class="comment">#打印异常</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>元组中的元素值是不允许修改的，但我们可以对元组进行连接组合</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cats = (<span class="string">'xm'</span>, <span class="string">'dm'</span>)</div><div class="line">cat1 = (<span class="string">'mm'</span>,)</div><div class="line">allCat = cats + cat1</div><div class="line">print(allCat)<span class="comment">#('xm', 'dm', 'mm')</span></div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="0x03-字典"><a href="#0x03-字典" class="headerlink" title="0x03 字典"></a>0x03 字典</h1>
+        
+          <a class="article-more-a" href="/2017/06/26/Python入门系列-3-元组、列表和字典/#more">展开全文 >></a>
+        
       
 
       
@@ -549,10 +486,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/06/26/Python入门系列-3-元组、列表和字典/">展开全文 >></a>
-        </p>
       
 
       
@@ -604,9 +537,9 @@
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>不论英文还是中文，在看文章时经常会遇到查找某个单词或字组的时候，把一篇文章看作是一个大的字符串，要查找的内容作为子串，这种在大串中查找子串的操作叫做串的模式匹配。</p>
 <p>我们知道了这种行为叫串的模式匹配，但我们不清楚的是到底如何匹配，具体的操作是什么？</p>
 <h1 id="0x01-我如何操作"><a href="#0x01-我如何操作" class="headerlink" title="0x01 我如何操作"></a>0x01 我如何操作</h1><p>在我看来要从大串中寻找子串，最直接的方法就是从大串起始位置开始，挨个字符比对，如果存在子串总会找出来。这种简单直接的方法称为 <strong>朴素的模式匹配算法</strong></p>
-<h1 id="0x02-代码实现"><a href="#0x02-代码实现" class="headerlink" title="0x02 代码实现"></a>0x02 代码实现</h1><p>如果借用字符串截取操作，直接实现子串的查找就比较方便：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public static int index(String s, String t, int pos) &#123;</div><div class="line">	int m = s.length();</div><div class="line">	int n = t.length();</div><div class="line">	while (pos &lt;= (m - n + 1)) &#123;</div><div class="line">		String sub = s.substring(pos, n);</div><div class="line">		//直接在对比位置截取和子串相同长度的一个串来和子串对比</div><div class="line">		if (t.equals(sub)) &#123;</div><div class="line">			return pos;</div><div class="line">		&#125; else &#123;</div><div class="line">			pos++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/05/25/算法之朴素模式匹配/#more">展开全文 >></a>
+        
       
 
       
@@ -638,10 +571,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/25/算法之朴素模式匹配/">展开全文 >></a>
-        </p>
       
 
       
@@ -692,9 +621,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>用2个栈实现队列，首先要明白栈和队列的区别：栈是FILO，队列是FIFO。明白了这两点就比较容易实现了。</p>
 <h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>栈是一端开口，队列是两端开口，如果要让栈实现队列功能，需要2个栈一个负责进数据，一个负责出数据。为了保证出数据的顺序，在出数据栈不为空时，入数据的栈中数据不能往出数据的栈里存。</p>
-<h1 id="0x02-实现"><a href="#0x02-实现" class="headerlink" title="0x02 实现"></a>0x02 实现</h1><p>在2个栈数据都为空时注意抛出异常。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.Stack;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 两个栈实现队列功能</div><div class="line"> * @author jenson</div><div class="line"> */</div><div class="line">public class StackToQueue &#123;</div><div class="line">	private Stack&lt;Integer&gt; inStack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; outStack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 添加元素</div><div class="line">	 * @param value</div><div class="line">	 */</div><div class="line">	public void add(int value) &#123;</div><div class="line">		inStack.push(value);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 出队列</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	public int poll() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.pop();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 查看队列头的元素 &lt;/br&gt;</div><div class="line">	 * 注意一点：如果出栈队列为空，则把入栈数据倒入到处栈，然后从出栈取&lt;br&gt;</div><div class="line">	 * 如果两个栈都为空抛异常</div><div class="line">	 * </div><div class="line">	 */</div><div class="line">	public int peek() &#123;</div><div class="line">		if (inStack.isEmpty() &amp;&amp; outStack.isEmpty()) &#123;</div><div class="line">			queueEmptyException();</div><div class="line">		&#125; else &#123;</div><div class="line">			if (outStack.isEmpty()) &#123;</div><div class="line">				reverse();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return outStack.peek();</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 入栈数据倒入到出栈</div><div class="line">	 */</div><div class="line">	private void reverse() &#123;</div><div class="line">		while (!inStack.isEmpty()) &#123;</div><div class="line">			outStack.push(inStack.pop());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private void queueEmptyException() &#123;</div><div class="line">		throw new RuntimeException(&quot;队列为空&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackToQueue stackToQueue = new StackToQueue();</div><div class="line">		stackToQueue.add(9);</div><div class="line">		stackToQueue.add(5);</div><div class="line">		stackToQueue.add(2);</div><div class="line">		stackToQueue.add(7);</div><div class="line"></div><div class="line">		System.out.println(stackToQueue.peek());</div><div class="line">		System.out.println(stackToQueue.poll());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/05/18/两个栈实现队列功能/#more">展开全文 >></a>
+        
       
 
       
@@ -726,10 +655,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/18/两个栈实现队列功能/">展开全文 >></a>
-        </p>
       
 
       
@@ -780,12 +705,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>栈可以看成一个瓶子，只有一个口，另一端被封底。这样数据进出都只能从一个口经过。这样就导致的一个直接结果就是数据FILO问题。要找到栈中最小数据，单靠一个栈不能完成，需要外部提供辅助。</p>
 <h1 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h1><p>一个存好数据的栈，要从里面找到最小数值，不可避免的要把数据出栈，然后进行对比。这时有个问题就来了，找到最小数值后，其他数据还有用吗？换句话说，其他数据还要不要了？如果不要的话，比较完成后不用再次存储，如果要德话，比较期间还要注意数据的保存。这里注意要分这两种情况来考虑。</p>
-<h1 id="0x02-不要其他数据的实现"><a href="#0x02-不要其他数据的实现" class="headerlink" title="0x02 不要其他数据的实现"></a>0x02 不要其他数据的实现</h1><p>既然不需要其他数据，那就直接把数据弹出栈就好了，每次弹栈时对比临时值，如果当前弹栈数据比临时值大则直接弹栈，否则就把值赋给临时值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里代码只实现了getStackMin方法，栈的其他方法就直接定义一个方法后直接调用Stack方法即可。</p>
-<h1 id="0x03-需要其他数据的实现"><a href="#0x03-需要其他数据的实现" class="headerlink" title="0x03 需要其他数据的实现"></a>0x03 需要其他数据的实现</h1><p>如果要保留栈的数据，那最直接的想法是在弹栈比较期间，把弹出栈的数据顺路给入道一个新的栈中，这里相比上面，需要多一个栈即可实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class StackMin &#123;</div><div class="line">	private Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();</div><div class="line">	private Stack&lt;Integer&gt; backUp = new Stack&lt;&gt;();//备份栈</div><div class="line"></div><div class="line">	public int getStackMin() &#123;</div><div class="line">		int min = 0;</div><div class="line">		while (!stack.isEmpty()) &#123;</div><div class="line">			int current = stack.pop();</div><div class="line">			if (min != 0) &#123;</div><div class="line">				if (min &gt; current) &#123;</div><div class="line">					min = current;</div><div class="line">				&#125;</div><div class="line">			&#125; else &#123;</div><div class="line">				min = current;</div><div class="line">			&#125;</div><div class="line">			backUp.push(current);//弹出栈时进入备份栈</div><div class="line">		&#125;</div><div class="line">		return min;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		StackMin stackMin = new StackMin();</div><div class="line">		stackMin.stack.push(9);</div><div class="line">		stackMin.stack.push(5);</div><div class="line">		stackMin.stack.push(2);</div><div class="line">		stackMin.stack.push(7);</div><div class="line">		System.out.println(stackMin.getStackMin());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/#more">展开全文 >></a>
+        
       
 
       
@@ -817,10 +739,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/17/设计一个有获取元素最小值getMin的栈/">展开全文 >></a>
-        </p>
       
 
       
@@ -872,13 +790,9 @@
         <h1 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h1><p>本例中希望通过快速排序，使得数组最终按非递减顺序排列。</p>
 <p>数组初始值为：{ 156, 141, 35, 94, 88, 61, 111 }</p>
 <p>数组最终值为：{ 35, 61, 88, 94, 111, 141, 156 }</p>
-<h1 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h1><p>快排是根据分治思想，</p>
-<p>①选取一个基数，</p>
-<p>②将无序数组分为大小两个数组，其中一个数组值全都比基数小，另一个数组值全都比基数大。</p>
-<p>③然后将这两个数组分别再次分组，递归重复①②的步骤直到每个拆分后的数组不可再分割为止。也就是说最后每个元素单独为一个数组为止。</p>
-<p>④最后得出数组就是排序好的。</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">public static int partition3(int[] arr, int low, int high) &#123;</div><div class="line">	int i, j;</div><div class="line">	i = low;</div><div class="line">	int base = arr[i];</div><div class="line">	for (j = i + 1; j &lt;= high; j++) &#123;</div><div class="line">		if (arr[j] &lt; base) &#123;</div><div class="line">			i++;</div><div class="line">			swap(arr, i, j);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	swap(arr, low, i);</div><div class="line">	return i;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line">*交换数组中两个值</div><div class="line">**/</div><div class="line">public static void swap(int[] arr, int i, int j) &#123;</div><div class="line">	if (i != j) &#123;</div><div class="line">		int tmp = arr[i];</div><div class="line">		arr[i] = arr[j];</div><div class="line">		arr[j] = tmp;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line">*right为数组最大下标而不是数组长度</div><div class="line">**/</div><div class="line">public static void quickSort(int[] arr, int left, int right) &#123;</div><div class="line">	if (left &lt; right) &#123;</div><div class="line">		int piv = partition3(arr, left, right);</div><div class="line">		quickSort(arr, left, piv - 1);</div><div class="line">		quickSort(arr, piv + 1, right);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/05/16/算法排序之快速排序/#more">展开全文 >></a>
+        
       
 
       
@@ -910,10 +824,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/16/算法排序之快速排序/">展开全文 >></a>
-        </p>
       
 
       
@@ -965,44 +875,9 @@
         <h1 id="什么是数学归纳法"><a href="#什么是数学归纳法" class="headerlink" title="什么是数学归纳法"></a>什么是数学归纳法</h1><p>数学归纳法就是证明一个命题在自然数范围内成立</p>
 <p>这里命题也可以当成是断言。</p>
 <p>比如断言自然数n，nx2为偶数。</p>
-<h1 id="求储蓄罐里的钱"><a href="#求储蓄罐里的钱" class="headerlink" title="求储蓄罐里的钱"></a>求储蓄罐里的钱</h1><p>有一个空储蓄罐，</p>
-<p>第一天，往里面存1元钱；</p>
-<p>第二天，往里面存2元钱；</p>
-<p>第三天，往里面存3元钱；</p>
-<p>第四天，往里面存4元钱；</p>
-<p>。</p>
-<p>。</p>
-<p>。</p>
-<p>每天都存钱，第一百天时储蓄罐里一共有多少钱？</p>
-<p>这个问题如何求解呢？其实最直接的方法就是从1开始加，一直加到100，但是这种暴力求解效率极差。</p>
-<p> 德国9岁孩子高斯也遇到了同样问题，但是他却马上得出了答案。</p>
-<p>他是这么考虑的：</p>
-<p>1+2+3…+100顺序计算结果和100+99+98…+1这样的逆序结果是一样的。</p>
-<p>这样的话，顺序的1+逆序的100，顺序的2+逆序的99，顺序的3+逆序的98，这样最后结果是100个101相加 = 100x101 = 10100 。因为逆序和顺序相等，所以这个和是2倍的顺序，所以顺序的和为10100/2 =5050。最终得出1加到100的和为5050。</p>
-<p>高斯据此得出以下公式：</p>
-<p>1+2+3…+100 = （100+1）x100/2；</p>
-<p>当然上面只是求1到100的和，那如果要求1到1000，到10000呢，公式是不是仍然成立？</p>
-<p>高斯断言：对于任意自然数n：1+2+3…+n = （n+1)xn/2都成立；</p>
-<p>接下来要证明高斯的断言是否成立。</p>
-<h1 id="数学归纳法证明"><a href="#数学归纳法证明" class="headerlink" title="数学归纳法证明"></a>数学归纳法证明</h1><p>最简单的数学归纳法是证明当n等于任意一个自然数时断言成立，证明包括两步：</p>
-<p>1.证明n=1时，断言p(1)成立</p>
-<p>2.证明n=k为任何自然数时，若p(k)成立，则p(k+1)也成立。</p>
-<p>由此，关于高斯公式的证明如下：</p>
-<p>1.当n=1时， 1 = （1+1）x1/2 = 1，高斯公式成立；</p>
-<p>2.当n=k时，1+2+…+k = (k+1)xk/2 成立;</p>
-<p>3.当n=k+1时，证明1+2+…+k+(k+1) = ((k+1)+1)x(k+1)/2成立；</p>
-<p>因为2成立，所以3中公式代入后：</p>
-<p> (k+1)xk/2+（k+1） = ((k+1)+1)x(k+1)/2</p>
-<p>（k+1）x（k+2）/2 =  （k+1）x（k+2）/2 </p>
-<p>左右两边相等，</p>
-<p>得出结论：对于自然数n，断言p(n)都成立。</p>
-<h1 id="为什么数学归纳法只证明两步就成立了"><a href="#为什么数学归纳法只证明两步就成立了" class="headerlink" title="为什么数学归纳法只证明两步就成立了"></a>为什么数学归纳法只证明两步就成立了</h1><p>1.证明断言p(1)成立，也就是n=1成立；</p>
-<p>2.通过p(m)成立推导出p(m+1)也成立。</p>
-<p>3.根据上面结论，p(1+1)也就是p(2)成立；</p>
-<p>4.p(2+1)也就是p(3)成立；</p>
-<p>5.p(3+1)也就是p(4)成立；</p>
-<p>6.循环推导，最终推导出值为n时p(n)成立。</p>
-
+        
+          <a class="article-more-a" href="/2017/05/16/数学归纳法/#more">展开全文 >></a>
+        
       
 
       
@@ -1034,10 +909,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/16/数学归纳法/">展开全文 >></a>
-        </p>
       
 
       
@@ -1087,57 +958,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>工欲善其事，必先利其器。可能也有强迫症的原因，上班时总是会想尽办法提高工作效率，同时给自己创造一个愉悦的工作状态。对于能提高效率的硬件因素自然不能放过。什么罗技鼠标、机械键盘宿舍公司各一套。为了方便显示器调整，又买了乐哥支架，这样能随时调整角度，避免一个姿势容易疲劳。但是最近又出现了一个问题：一个姿势坐半个小时就浑身不自在，脖子僵硬大脑供血不足，严重时候还有恶心呕吐现象。其实不用说也猜到了—颈椎病，如果置之不理以后腰椎可能也会出现病症。毕竟这是很多IT从业人员的通病，如何缓解病况才不致于影响工作效率呢？个人感觉一把人体工学电脑椅是必须的。</p>
-<h1 id="什么是人体工学电脑椅"><a href="#什么是人体工学电脑椅" class="headerlink" title="什么是人体工学电脑椅"></a>什么是人体工学电脑椅</h1><p>看下<a href="http://baike.baidu.com/link?url=DtpSA5XKbKnq0i8zuufuO3XadcstS54-xa_Yy1tgbhl2P962gqvxcBdlTMD9X38dAhw9THJrNJ4LvH3v_LrY34E1ENL3-2sLwtmJapNyawT3y9q8Q6rki5jdqYXnD9XahJADbgkPqYscZxNB0ImSqnqI62tEybnCUKPugI6sPRi" target="_blank" rel="external">百度百科</a> 对人体工学电脑椅的定义：人体工学电脑椅也称人体工学椅、人体工学办公椅，它是以“人体工程学”理论为基础，通过对人们在使用电脑椅的过程中的各个数据进行统计汇总，并根据最终统计的数据而设计研发的电脑椅。</p>
-<p>我们日常坐的椅子都是批量生产，都有固定的规格，并不能适应所有人，所以人体工学椅子和普通椅子一个明显区别就是：可调节！可调节的手托、可调节的坐垫高度、可调节的坐垫前后深度、可调节的枕托、可调节的背靠、可调节的腰托等。</p>
-<h1 id="一把质量差的电脑椅"><a href="#一把质量差的电脑椅" class="headerlink" title="一把质量差的电脑椅"></a>一把质量差的电脑椅</h1><p>质量差的电脑椅能有咋的，顶多坏了摔一跤？还是看图最直观：</p>
-<p><img src="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/1918606_151944_1.gif" alt="1918606_151944_1"></p>
-<p>上图的爆炸是气压棒爆炸引起的。</p>
-<p>电脑椅升降功能大都是靠气压棒来实现的。那么什么是气压棒呢？</p>
-<p>看下<a href="http://baike.baidu.com/item/%E6%B0%94%E5%8E%8B%E6%A3%92" target="_blank" rel="external">百度百科</a> 对气压棒的定义，其实说白了气压棒就是靠对棒内气体压缩和释放来达到升降电脑椅的。正品气压棒里面是高纯度氮气填充，并不会爆炸，而一些无良厂商为了节省成本，往往会以价格更为低廉的氧气作为填充物。氧气易燃，遇明火极易产生爆炸，酿成不可挽回的事故。</p>
-<h1 id="一个气压棒引起的事故"><a href="#一个气压棒引起的事故" class="headerlink" title="一个气压棒引起的事故"></a>一个气压棒引起的事故</h1><ul>
-<li><p>1.2007年4月20日晚，浙江省舟山市定海区，一位娄女士坐的椅子发生爆炸，座椅被炸穿，娄女士穿的裤子被炸了个大洞，硬塑料、木屑、海绵、布料、密封圈等大量碎片崩进娄女士体内达十厘米。</p>
-</li>
-<li><p>2.2007年11月26日晚，烟台开发区68岁的吴老先生所坐的气压升降椅发生爆炸，臀部、腿部、直肠肛管和小肠受伤严重。</p>
-</li>
-<li><p>3.2008年3月26日晚，江西赣州市，一位林先生家中的电脑椅突然发生爆炸，林先生背上、手上等处受伤，一根大约15厘米长的小铁棍炸飞到天花板上。</p>
-</li>
-<li><p>4.2009年1月14日，山东胶州14岁少年小刚(化名)独自在家上网，在调节气压椅升降时，突然发生爆炸，顶杆从臀部顶进小刚体内，伤及多条血管，后因失血过多，抢救无效死亡。</p>
-</li>
-<li><p>5.2010.5.12晚上9点半左右，厦门湖里殿前一户出租屋传出巨响。一名女子被突然发生爆裂的升降椅击伤。升降旋转椅突然爆炸，产生的冲击力将椅子里的螺丝小垫片等零件像子弹一样从臀部射入人体内。升降椅的气压杆插入伤者的肛门。女子当场晕倒在地。所幸经过5个多小时的手术，射入体内的椅子零件全被取出，刘小姐无生命危险。</p>
-</li>
-<li><p>6.2010年5月，福建一女子因气压升降椅爆炸伤势严重当场昏迷，臀部被炸伤，直肠被撕裂了一个口子，阴道也穿了一个孔。后检查椅子的购物单据，没有任何厂名、厂址、电话之类信息。</p>
-</li>
-<li><p>7.24岁的小林坐在升降旋转椅上吹头发，椅子爆炸，螺丝钉从她肛门边上穿进去，从子宫直肠陷凹处穿出。经过手术，医生从她的体内和臀部取出大量的螺丝钉和塑料碎片。医生说，还算幸运，穿过体内的螺丝钉没有伤及重要的脏器，手术后小林已脱离生命危险。</p>
-<blockquote>
-<p>请务必一定要提醒你的家人和朋友注意：</p>
-<p>1、务必购买正规厂家生产的升降椅，切勿贪图便宜，购买劣质货。</p>
-<p>2、椅子在使用时，不要反复升降，不要滑来滑去，更不要猛地一下子坐上去。这易造成气压杆受力不均，长时间产生不均衡磨损，易爆炸。据模拟测算，爆炸会产生24个左右大气压，其威力至少能击穿6块密度板，顷刻能洞穿血肉之躯!</p>
-<p>3、如果不是专业人士，不要拆开气缸，也不要让椅子靠近太热的东西，比如烤火炉或烤箱。</p>
-<p>4、使用一段时间后，应该及时让专业人员检查，一旦发现裂痕、松动迹象，应及时维修更换。</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="如何挑选人体工学电脑椅"><a href="#如何挑选人体工学电脑椅" class="headerlink" title="如何挑选人体工学电脑椅"></a>如何挑选人体工学电脑椅</h1><h2 id="价格"><a href="#价格" class="headerlink" title="价格"></a>价格</h2><p>从价格上来说，和其他商品一样，往往都是一分钱一分货，一块钱二分货。</p>
-<p>国际品牌有欧美的Herman Miller、日本的岗村，这些高端系列普遍价格过万或者近万元，当然也有三五千的，但是可选性比较少。</p>
-<p>国内品牌有ergonor、ergomax以及黑白调、西昊等。国产价位3000以上就算是高端了，譬如金豪+e、l和ergomax旗舰版。</p>
-<p>个人感觉如果要买人体工学电脑椅，还是要舍得投资的，毕竟这投资的是自己的健康。建议起步买2k-3k的。毕竟这个价位在国内属于高端，国外品牌也能买到。这个价位的各方面功能齐全，可以都体验下，为以后的挑选打下基础。</p>
-<h2 id="网布"><a href="#网布" class="headerlink" title="网布"></a>网布</h2><p>坐垫和椅背的材质有皮质、网布和海绵坐垫，我更喜欢全网布的，夏天透气性更好，但是也有个问题：如果网布质量不好，可能坐一段时间后网布就失去弹性，变得松垮。</p>
-<p>高端电脑椅网布大都进口，进口网布主要是美国matrex，韩国wintex次之，其他基本就是国产的。</p>
-<p><strong>进口网和国产网的差别：</strong></p>
-<p>价格：进口的美国Matrex网最贵，韩国Wintex网次之，国产网价格最便宜网，而且进口网涉及空运报关原因，货期长。</p>
-<p>耐用性：在厂家的垂直堕下机械测试中，进口Matrex网和Wintex网可以通过10万次强力冲击，国产网在按不同牌子在6-8万次之间会出现爆裂!</p>
-<p>材质：美国Matrex网和Wintex网材质柔软，弹力强，国产网比较硬，弹力及恢复力差。</p>
-<p>Matrex表面反光呈黏手手感，Wintex网表面反光呈光滑手感，国产网按不同牌子部分表面光滑，部分表面粗糙。</p>
-<p>据Matrex网和Wintex网国内代理商的说法，国内厂商用进口网布的并不多，内销产品基本都不会使用进口网，进口网一般都是外国客户指定要求才用的，原因在于进口网不仅更贵，而且在订购数量方面有要求，由于涉及空运报关因素，邮寄周期也比较长，这样就限制了小厂家的采购，掌柜曾经在网上看过一些网店几百产品也宣称使用Matrex网，那是不可能的，进口网，基本上只出现在2K以上的产品。</p>
-<p><strong>Matrex和wintex网布都是有吊牌的，如果商家真的采用这两种品牌，一定会拿出来当噱头显摆一番的，而不是轻描淡写的一句采用进口网布草草了事。网上那些说进口网布，但又不敢指明具体品牌的，就当时国产就行了或者不要买，毕竟涉嫌欺诈。</strong></p>
-<h2 id="气压棒"><a href="#气压棒" class="headerlink" title="气压棒"></a>气压棒</h2><p>气压棒是有分级的，目前是共有四级：普遍使用的时三级，少数所谓高端使用四级。</p>
-<p>常用气压棒品牌：国内知名的有：安徽莱特，安德福，常州巨威，安吉斯诺尔，等还有一些进口的：韩国KGS，韩国三弘，德国SUS棒，台湾MID棒等等。</p>
-<p><strong>买回来后看气压棒有没有钢印，查看钢印信息是否和商家描述一致，如果有问题即时质疑。</strong></p>
-<h2 id="底座"><a href="#底座" class="headerlink" title="底座"></a>底座</h2><p>一般来说都有底座防爆措施，但是价格越高底座用料越实，甚至是全铝合金底盘。我的2k 的gavee整个椅子70多斤重，厚重的材质更容易给人以安全感。</p>
-<p><strong>我对铝合金椅身有特殊好感，或许害怕塑料椅身不结实，也或许铝合金抛光后看起来更高端也更敦实。</strong></p>
-<p>这是我的电脑椅样式：</p>
-<p><img src="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/58f074a8N70fcfb6a.jpg" alt="58f074a8N70fcfb6a"></p>
-
+        
+          <a class="article-more-a" href="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/#more">展开全文 >></a>
+        
       
 
       
@@ -1169,10 +992,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/15/为什么每一个IT人员应该有一把人体工学电脑椅/">展开全文 >></a>
-        </p>
       
 
       

@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Django创建数据表时syncdb提示Unknown command：‘syncdb&#39; | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="异常信息如下 123JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdbUnknown command: &amp;apos;syncdb&amp;apos;Type &amp;apos;manage.py help&amp;apos; for usage. 主要是因为使用的版本太新，如果你安装的Django Version &amp;gt;= 1.9就会出现这个问题 解决方">
+  <meta name="description" content="异常信息如下 123JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdbUnknown command: &amp;apos;syncdb&amp;apos;Type &amp;apos;manage.py help&amp;apos; for usage.">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Django创建数据表时syncdb提示Unknown command：‘syncdb'">
 <meta property="og:url" content="http://yoursite.com/2017/06/27/Django创建数据表时syncdb提示Unknown-command：‘syncdb/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="异常信息如下 123JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdbUnknown command: &amp;apos;syncdb&amp;apos;Type &amp;apos;manage.py help&amp;apos; for usage. 主要是因为使用的版本太新，如果你安装的Django Version &amp;gt;= 1.9就会出现这个问题 解决方">
-<meta property="og:updated_time" content="2017-06-27T08:36:05.000Z">
+<meta property="og:description" content="异常信息如下 123JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdbUnknown command: &amp;apos;syncdb&amp;apos;Type &amp;apos;manage.py help&amp;apos; for usage.">
+<meta property="og:updated_time" content="2017-09-25T07:14:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django创建数据表时syncdb提示Unknown command：‘syncdb'">
-<meta name="twitter:description" content="异常信息如下 123JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdbUnknown command: &amp;apos;syncdb&amp;apos;Type &amp;apos;manage.py help&amp;apos; for usage. 主要是因为使用的版本太新，如果你安装的Django Version &amp;gt;= 1.9就会出现这个问题 解决方">
+<meta name="twitter:description" content="异常信息如下 123JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdbUnknown command: &amp;apos;syncdb&amp;apos;Type &amp;apos;manage.py help&amp;apos; for usage.">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -202,6 +202,7 @@
       
         <p>异常信息如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JensondeMini:dj_test01 jenson$ python3 ./manage.py syncdb</div><div class="line">Unknown command: &apos;syncdb&apos;</div><div class="line">Type &apos;manage.py help&apos; for usage.</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>主要是因为使用的版本太新，如果你安装的Django Version &gt;= 1.9就会出现这个问题</p>
 <p>解决方法就是把<code>python3 ./manage.py syncdb</code></p>
 <p>替换成<code>python3 ./manage.py migrate</code></p>

@@ -242,10 +242,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/13/Python操作xml/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -335,10 +331,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/13/bytes和str转换/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -393,51 +385,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> sychronized <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 <li><p>当sychronized锁定this时，锁定的也是当前对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">    sychronized(<span class="keyword">this</span>)&#123; </div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>既然锁定的是对象，也就意味着调用该函数的线程A会获得该对象lock，同样的，线程B在调用该对象的函数时也要获得该对象的lock，但是该对象的lock此时被线程A持有，所以线程B就要处于阻塞状态，直到lock被线程A释放。</strong></p>
-<p>看看下面代码有何问题：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">		<span class="keyword">private</span> <span class="keyword">int</span> key;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">TThread</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.key = key;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			go(<span class="keyword">this</span>.key);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">go</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</div><div class="line">			<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">				System.out.println(key);</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					Thread.currentThread().sleep(<span class="number">1000</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SecondThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">		TThread tt;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">SecondThread</span><span class="params">(TThread tt)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.tt = tt;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.tt.go(<span class="number">3</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		TThread t1 = <span class="keyword">new</span> TThread(<span class="number">1</span>);</div><div class="line">		t1.start();</div><div class="line">		SecondThread st = <span class="keyword">new</span> SecondThread(t1);</div><div class="line">		st.start();</div><div class="line">		TThread t2 = <span class="keyword">new</span> TThread(<span class="number">2</span>);</div><div class="line">		t2.start();</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>上述代码会打印1和2，但是却不会打印3。因为synchronized锁定的是线程对象，而t1和t2是两个不同的对象，所以可以并发执行。而实例st中run方法实际执行的是t1的同步方法，因而1和3不会同时打印。</p>
-<p><strong>另一方面，既然是锁定对象，意味着每个对象都有自己的lock，如果是同一个类的不同实例在多个线程间调用时，仍然会并发执行。</strong></p>
-</li>
-</ul>
-<h1 id="0x02-锁定类Class对象"><a href="#0x02-锁定类Class对象" class="headerlink" title="0x02 锁定类Class对象"></a>0x02 锁定类Class对象</h1><ul>
-<li><p>当sychronized修饰static方法时，锁定的是该class的Class对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> sychronized <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>当sychronized锁定xx.class时，锁定的也是该class的Class对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">    sychronized(Text.class)&#123;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如下代码有何问题：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		go1();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">go1</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">			System.out.println(<span class="number">1</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">1000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">go2</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">			System.out.println(<span class="number">2</span>);</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.currentThread().sleep(<span class="number">1000</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	TThread t1 = <span class="keyword">new</span> TThread();</div><div class="line">	t1.start();</div><div class="line">	t1.go2();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>go1函数是实例函数，go2是类函数。尽管上述两个函数都声明为synchronized，它们并非线程安全的。因为两个线程获取的是不同的lock。</p>
-<p>因此上述代码执行时，打印1和2交替执行。</p>
-<p><strong>时刻注意对象锁和类锁的区分，不要为了实现某些数据同步而同时使用两种方法。因为这两种方法获取的是不同的锁</strong></p>
-</li>
-</ul>
-<h1 id="0x03-避免因权限导致锁无效"><a href="#0x03-避免因权限导致锁无效" class="headerlink" title="0x03 避免因权限导致锁无效"></a>0x03 避免因权限导致锁无效</h1><p>直接看如下代码有何问题：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] intArr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addArr</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> len = intArr.length;</div><div class="line">	<span class="keyword">if</span> (len == arr.length) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">			intArr[i] += arr[i];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">subtrackArr</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> len = intArr.length;</div><div class="line">	<span class="keyword">if</span> (len == arr.length) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">			intArr[i] -= arr[i];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面代码是线程安全的吗？</p>
-<p>当然不是。虽然两个实例方法实现了线程同步，但是还有其他漏洞。</p>
-<p>首先要明白同步的目的是保证<strong>intArr</strong>的准确性。但是因为该实例属性权限是<strong>public</strong>状态。这导致无须通过同步方法，也能修改数组。所以应该修改权限为私有状态。</p>
-<p><strong>有时看似添加了同步方法就以为万无一失了，但是就因为权限开放导致线程安全没有生效</strong></p>
-<h1 id="0x04-避免无谓的同步导致性能降低"><a href="#0x04-避免无谓的同步导致性能降低" class="headerlink" title="0x04 避免无谓的同步导致性能降低"></a>0x04 避免无谓的同步导致性能降低</h1><p>看看如下代码正确吗：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr1;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr2;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr3;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr4;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上述操作无疑是线程安全的，但是这种方法同步带来了很大的性能问题。</p>
-<p>因为同步所以互斥，这也就决定了四个方法不能并发，但是逻辑上，method1和method2由于都操作了arr1和arr2，所以应该互斥，但是不应该和method3、method4互斥。</p>
-<p>但是现在的结果是操作arr1和arr2的时候就不能操作arr3和arr4。造成了性能下降。</p>
-<p>要避免这种情况可以缩小锁范围，<strong>创建专门的对象锁以替代方法所属对象的锁</strong></p>
-<p>如下修改：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr1;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr2;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr3;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] arr4;</div><div class="line"><span class="keyword">private</span> <span class="keyword">byte</span>[] lock1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</div><div class="line"><span class="keyword">private</span> <span class="keyword">byte</span>[] lock2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">0</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">	<span class="keyword">synchronized</span> (lock1) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr1和arr2</span></div><div class="line">	<span class="keyword">synchronized</span> (lock1) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method3</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">	<span class="keyword">synchronized</span> (lock2) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// 操作arr3和arr4</span></div><div class="line">	<span class="keyword">synchronized</span> (lock2) &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="0x05-避免多个锁顺序不同导致死锁"><a href="#0x05-避免多个锁顺序不同导致死锁" class="headerlink" title="0x05 避免多个锁顺序不同导致死锁"></a>0x05 避免多个锁顺序不同导致死锁</h1><p>要避免死锁首先要知道什么是死锁，以及死锁如何发生得。</p>
-<p><strong>线程A申请一个对象锁，但是对象锁被线程B持有了，而线程B申请的对象锁又被线程A持有了，这样导致两个线程分别阻塞了对方，这就是死锁。</strong></p>
-<p>死锁是如何形成的？</p>
-<p><strong>死锁一般是由于多个锁对象在不同的线程中获取对象锁顺序不同造成的</strong></p>
-<p>看如下代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TT</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">(<span class="keyword">int</span>[] arr1, <span class="keyword">int</span>[] arr2)</span> </span>&#123;</div><div class="line">		<span class="comment">// 操作arr1和arr2</span></div><div class="line">		<span class="keyword">synchronized</span> (arr1) &#123;</div><div class="line">			<span class="keyword">synchronized</span> (arr2) &#123;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	TT tt = <span class="keyword">new</span> TT();</div><div class="line">	<span class="keyword">int</span>[] arr1 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line">	<span class="keyword">int</span>[] arr2 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</div><div class="line">	tt.method1(arr1, arr2);</div><div class="line">	tt.method1(arr2, arr1);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在method1的方法调用中，因为两个数组参数的顺序调换，导致了多线程情况下获取对象锁顺序不同，导致死锁发生。</p>
-<p>如何解决死锁？</p>
-<p><strong>一种简单的方法就是保证不同线程中多个锁对象获取锁的顺序是相同的。</strong></p>
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">    sychronized(<span class="keyword">this</span>)&#123; </div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></li></ul>
+        
+          <a class="article-more-a" href="/2017/08/10/使用sychronized注意事项/#more">展开全文 >></a>
+        
       
 
       
@@ -469,10 +420,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/10/使用sychronized注意事项/">展开全文 >></a>
-        </p>
       
 
       
@@ -523,24 +470,9 @@
       
         <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！</p>
 <p>然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。</p>
-<h1 id="0x01-说明"><a href="#0x01-说明" class="headerlink" title="0x01 说明"></a>0x01 说明</h1><p><strong>其实Java中参数的传递都是byValue方式传递</strong>。</p>
-<p>讲道理先通过虚拟机机制来说明下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E8%AE%B2%E9%81%93%E7%90%86.jpg" alt="讲道理"></p>
-<p>虚拟机在内存中有一块区域叫Java栈，也叫虚拟机栈。栈里面装的是什么？</p>
-<p>栈中存放的是栈帧，栈帧里面又装的是什么？是局部变量表、操作数栈和方法返回地址等信息。</p>
-<p>其实一个Java线程运行时就会产生一个Java栈，每次的方法调用就会产生一个栈帧入栈，方法执行完毕则出栈。其中栈帧中的局部变量表存储的是参数和局部变量信息。</p>
-<p>当方法执行完毕，栈帧出栈内存就会被释放，如果引用类型的参数是直接把函数外的引用直接传递过来，那么出栈时，岂不是连函数外的这个变量也一同给释放掉了吗？</p>
-<p>所以为了避免这种情况发生，<strong>引用类型的参数传递，只是对引用类型值的一个拷贝。</strong></p>
-<p>就是说<strong>函数外的变量和参数是两个不同的变量，只是它们指向的地址是一样的</strong>：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%8F%82%E6%95%B0%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E4%BC%A0%E9%80%92.png" alt="参数引用类型传递"></p>
-<p>说到底，引用类型也躲不过值传递的命运。</p>
-<p>下面用示例来验证下外部变量和参数是两个不同的变量：</p>
-<h1 id="0x02-示例"><a href="#0x02-示例" class="headerlink" title="0x02 示例"></a>0x02 示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReTest</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setStu</span><span class="params">(Student stu, <span class="keyword">int</span> x)</span> </span>&#123;</div><div class="line">      	System.out.println(<span class="string">"改变前stu变量："</span>+stu+<span class="string">"##x值："</span>+x);</div><div class="line">		stu = <span class="keyword">new</span> Student(<span class="string">"lisi"</span>, <span class="number">21</span>);</div><div class="line">		x=<span class="number">20</span>;</div><div class="line">		System.out.println(<span class="string">"stu变量："</span>+stu+<span class="string">"##x值："</span>+x);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Student p = <span class="keyword">new</span> Student(<span class="string">"jenson"</span>, <span class="number">10</span>);</div><div class="line">		<span class="keyword">int</span> i = <span class="number">10</span>;</div><div class="line">		System.out.println(<span class="string">"改变前p变量："</span>+p+<span class="string">"##i值："</span>+i);</div><div class="line">		setStu(p, i);</div><div class="line">		System.out.println(<span class="string">"改变后p变量："</span>+p+<span class="string">"##i值："</span>+i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> age;</div><div class="line">		String name;</div><div class="line"></div><div class="line">		Student(String name, <span class="keyword">int</span> age) &#123;</div><div class="line">			<span class="keyword">this</span>.age = age;</div><div class="line">			<span class="keyword">this</span>.name = name;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>代码很简单，打印结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">改变前p变量：thread.ReTest$Student@7852e922##i值：10</div><div class="line">改变前stu变量：thread.ReTest$Student@7852e922##x值：10</div><div class="line">stu变量：thread.ReTest$Student@4e25154f##x值：20</div><div class="line">改变后p变量：thread.ReTest$Student@7852e922##i值：10</div></pre></td></tr></table></figure>
-<p>参考打印结果可以发现：</p>
-<p><strong>基本类型是值传递，而引用类型为Student变量p和参数stu是两个不同的变量但指向同一块内存，在函数setStu中给参数stu从新赋值时，不影响变量p的引用。证明了参数stu是p变量的一个值拷贝。</strong></p>
-
+        
+          <a class="article-more-a" href="/2017/08/10/Java参数到底是值传递还是引用传递/#more">展开全文 >></a>
+        
       
 
       
@@ -572,10 +504,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/10/Java参数到底是值传递还是引用传递/">展开全文 >></a>
-        </p>
       
 
       
@@ -626,41 +554,10 @@
       
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如果经常无人看管的项目出现了异常，那比较好的办法就是发个邮件给运营人一个提示，这样方便及时处理。</p>
 <p>所以写一个自动发邮件的模块就显得有必要了。</p>
-<p>但是默认QQ邮箱是没有开启第三方收发支持的，所以我们首先要开启支持</p>
-<h1 id="开启QQ邮箱支持"><a href="#开启QQ邮箱支持" class="headerlink" title="开启QQ邮箱支持"></a>开启QQ邮箱支持</h1><p>打开 QQ邮箱页面—&gt;设置—&gt;账户—&gt;POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV服务</p>
-<p>开启需要的服务，我这里打开<strong>POP3/SMTP服务</strong></p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/qq%E9%82%AE%E7%AE%B1%E8%AE%BE%E7%BD%AE%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1%E5%99%A8.png" alt="qq邮箱三方服务器设置"></p>
-<p>使用SSL的通用配置如下：</p>
-<p><strong>接收邮件服务器：</strong>pop.qq.com，使用SSL，端口号995</p>
-<p><strong>发送邮件服务器：</strong>smtp.qq.com，使用SSL，端口号465或587</p>
-<p><strong>账户名：</strong>您的QQ邮箱账户名（如果您是VIP帐号或Foxmail帐号，账户名需要填写完整的邮件地址）</p>
-<p><strong>密码：</strong>您的QQ邮箱密码</p>
-<p><strong>电子邮件地址：</strong>您的QQ邮箱的完整邮件地址</p>
-<p>第三方需要使用授权码作为上面的密码。</p>
-<h1 id="用qq邮箱发送邮件"><a href="#用qq邮箱发送邮件" class="headerlink" title="用qq邮箱发送邮件"></a>用qq邮箱发送邮件</h1><p>发送邮件使用<strong>smtplib库</strong>。</p>
-<h2 id="发送文本内容"><a href="#发送文本内容" class="headerlink" title="发送文本内容"></a>发送文本内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> smtplib</div><div class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</div><div class="line"><span class="keyword">from</span> email.header <span class="keyword">import</span> Header</div><div class="line"></div><div class="line">host = <span class="string">'smtp.qq.com'</span>  <span class="comment"># 发送服务器地址</span></div><div class="line">user = <span class="string">'840418528@qq.com'</span>  <span class="comment"># 验证用户名</span></div><div class="line">pwd = <span class="string">'***'</span>  <span class="comment"># 验证密码(授权码)</span></div><div class="line">sender = <span class="string">'840418528@qq.com'</span>  <span class="comment"># 发件人地址，和验证用户名应一致</span></div><div class="line">receivers = [<span class="string">'840418528@qq.com'</span>]  <span class="comment"># 接收邮件，可设置为你的QQ邮箱或者其他邮箱</span></div><div class="line"></div><div class="line">message = MIMEText(<span class="string">'a test for python'</span>, <span class="string">'plain'</span>, <span class="string">'utf-8'</span>)  <span class="comment"># 邮件内容</span></div><div class="line">message[<span class="string">'From'</span>] = Header(<span class="string">"Jenson"</span>, <span class="string">'utf-8'</span>)  <span class="comment"># 发件人名字</span></div><div class="line">message[<span class="string">'To'</span>] = Header(<span class="string">"songjl"</span>, <span class="string">'utf-8'</span>)  <span class="comment"># 收件人名字</span></div><div class="line">subject = <span class="string">'周报'</span>  <span class="comment"># 邮件标题</span></div><div class="line">message[<span class="string">'Subject'</span>] = Header(subject, <span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    smtpObj = smtplib.SMTP_SSL(host, <span class="number">465</span>)</div><div class="line">    login_result = smtpObj.login(user, pwd)</div><div class="line">    <span class="keyword">if</span> <span class="number">235</span> == login_result[<span class="number">0</span>]:  <span class="comment"># 235表示登陆成功</span></div><div class="line">        send_result = smtpObj.sendmail(sender, receivers, message.as_string())</div><div class="line">        print(<span class="string">"邮件发送成功"</span>)</div><div class="line">    smtpObj.quit()</div><div class="line"></div><div class="line"><span class="keyword">except</span> smtplib.SMTPException <span class="keyword">as</span> e:</div><div class="line">    print(e)</div></pre></td></tr></table></figure>
-<p>上面我是自己给自己发了封邮件，打印显示成功：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/qq%E9%82%AE%E7%AE%B1%E5%8F%91%E9%80%81%E6%88%90%E5%8A%9F%E6%88%AA%E5%9B%BE.png" alt="qq邮箱发送成功"></p>
-<p>接下来查看QQ邮箱：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E6%94%B6%E5%88%B0%E9%82%AE%E4%BB%B6%E6%88%AA%E5%9B%BE.png" alt="收到邮件"></p>
-<p>上面虽然发送成功了，但是内容只是文本，下面试试如何发送HTML格式</p>
-<h2 id="发送HTML内容"><a href="#发送HTML内容" class="headerlink" title="发送HTML内容"></a>发送HTML内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">message = MIMEText(<span class="string">r'&lt;p&gt;发送测试&lt;/p&gt;&lt;a href="www.jensondev.me"&gt;我的技术博客&lt;/a&gt;'</span>, <span class="string">'html'</span>, <span class="string">'utf-8'</span>)  <span class="comment"># 邮件内容</span></div></pre></td></tr></table></figure>
-<p>发送HTML内容，除了内容是HTML网页格式，还要把内容格式改为<strong>‘HTML’</strong>。</p>
-<p>收到邮件内容如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/HTML%E5%86%85%E5%AE%B9%E9%82%AE%E4%BB%B6.png" alt="html邮件内容"></p>
-<p>可以看到已经显示出链接来了。</p>
-<h2 id="发送附件内容"><a href="#发送附件内容" class="headerlink" title="发送附件内容"></a>发送附件内容</h2><p>发送附件使用<strong>MIMEMultipart</strong>类</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> smtplib</div><div class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</div><div class="line"><span class="keyword">from</span> email.header <span class="keyword">import</span> Header</div><div class="line"><span class="keyword">from</span> email.mime.multipart <span class="keyword">import</span> MIMEMultipart</div><div class="line"></div><div class="line">host = <span class="string">'smtp.qq.com'</span>  <span class="comment"># 发送服务器地址</span></div><div class="line">user = <span class="string">'840418528@qq.com'</span>  <span class="comment"># 验证用户名</span></div><div class="line">pwd = <span class="string">'***'</span>  <span class="comment"># 验证密码(授权码)</span></div><div class="line">sender = <span class="string">'840418528@qq.com'</span>  <span class="comment"># 发件人地址，和验证用户名应一致</span></div><div class="line">receivers = [<span class="string">'840418528@qq.com'</span>]  <span class="comment"># 接收邮件，可设置为你的QQ邮箱或者其他邮箱</span></div><div class="line"></div><div class="line"><span class="comment"># message = MIMEText(r'&lt;p&gt;发送测试&lt;/p&gt;&lt;a href="www.jensondev.me"&gt;我的技术博客&lt;/a&gt;', 'html', 'utf-8')  # 邮件内容</span></div><div class="line">message = MIMEMultipart()</div><div class="line"><span class="comment"># 邮件正文内容</span></div><div class="line">message.attach(MIMEText(<span class="string">'这是正文内容'</span>, <span class="string">'plain'</span>, <span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line"><span class="comment"># 附件1，传送当前目录下的 txt 文件</span></div><div class="line">att1 = MIMEText(open(<span class="string">'test.txt'</span>, <span class="string">'rb'</span>).read(), <span class="string">'base64'</span>, <span class="string">'utf-8'</span>)</div><div class="line">att1[<span class="string">"Content-Type"</span>] = <span class="string">'application/octet-stream'</span></div><div class="line"><span class="comment"># 这里的filename可以任意写，写什么名字，邮件中显示什么名字</span></div><div class="line">att1[<span class="string">"Content-Disposition"</span>] = <span class="string">'attachment; filename="test.txt"'</span></div><div class="line">message.attach(att1)</div><div class="line"></div><div class="line"><span class="comment"># 构造附件2，传送当前目录下的 图片 文件</span></div><div class="line">att2 = MIMEText(open(<span class="string">'email.png'</span>, <span class="string">'rb'</span>).read(), <span class="string">'base64'</span>, <span class="string">'utf-8'</span>)</div><div class="line">att2[<span class="string">"Content-Type"</span>] = <span class="string">'application/png'</span></div><div class="line">att2[<span class="string">"Content-Disposition"</span>] = <span class="string">'attachment; filename="email.png"'</span></div><div class="line">message.attach(att2)</div><div class="line"></div><div class="line">message[<span class="string">'From'</span>] = Header(<span class="string">"Jenson"</span>, <span class="string">'utf-8'</span>)  <span class="comment"># 发件人名字</span></div><div class="line">message[<span class="string">'To'</span>] = Header(<span class="string">"songjl"</span>, <span class="string">'utf-8'</span>)  <span class="comment"># 收件人名字</span></div><div class="line">subject = <span class="string">'带附件周报'</span>  <span class="comment"># 邮件标题</span></div><div class="line">message[<span class="string">'Subject'</span>] = Header(subject, <span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    smtpObj = smtplib.SMTP_SSL(host, <span class="number">465</span>)</div><div class="line">    login_result = smtpObj.login(user, pwd)</div><div class="line">    <span class="keyword">if</span> <span class="number">235</span> == login_result[<span class="number">0</span>]:  <span class="comment"># 235表示登陆成功</span></div><div class="line">        send_result = smtpObj.sendmail(sender, receivers, message.as_string())</div><div class="line">        print(<span class="string">"邮件发送成功"</span>)</div><div class="line">    smtpObj.quit()</div><div class="line"></div><div class="line"><span class="keyword">except</span> smtplib.SMTPException <span class="keyword">as</span> e:</div><div class="line">    print(e)</div></pre></td></tr></table></figure>
-<p>收到内容如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%B8%A6%E9%99%84%E4%BB%B6%E9%82%AE%E4%BB%B6.png" alt="带邮件附件"></p>
-<p>可见文本和图片都已经收到了。</p>
-<h2 id="附件中文乱码问题"><a href="#附件中文乱码问题" class="headerlink" title="附件中文乱码问题"></a>附件中文乱码问题</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">att2[<span class="string">"Content-Disposition"</span>] = <span class="string">'attachment; filename= '</span>+filename</div></pre></td></tr></table></figure>
-<p>这里的filename只能是字符串，但是如果encode(‘utf-8’)后是字节，这样行不通。</p>
-<p>但是<strong>Content-Disposition</strong>这个属性可以通过另一种方式添加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">att2.add_header(<span class="string">'Content-Disposition'</span>, <span class="string">'attachment'</span>,filename=(<span class="string">'gbk'</span>,<span class="string">''</span>,filename))</div></pre></td></tr></table></figure>
-<p>这时filename就可以设置为元组了，可以同时传编码和文件名称。</p>
-<p>可以参考<a href="https://docs.python.org/3/library/email.compat32-message.html#email.message.Message.add_header" target="_blank" rel="external">官方文档</a>。</p>
-
+<p>但是默认QQ邮箱是没有开启第三方收发支持的，所以我们首先要开启支持。</p>
+        
+          <a class="article-more-a" href="/2017/08/09/Python用qq邮箱发邮件/#more">展开全文 >></a>
+        
       
 
       
@@ -692,10 +589,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/09/Python用qq邮箱发邮件/">展开全文 >></a>
-        </p>
       
 
       
@@ -746,20 +639,9 @@
       
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>python中很多源码都是由单下划线和双下划线开头的函数、变量、模块。</p>
 <p>但是一直不太明白这表示什么意思。然后因为好奇就查了下资料才才明白怎么回事。</p>
-<h1 id="了解"><a href="#了解" class="headerlink" title="了解"></a>了解</h1><h2 id="单下划线（-）"><a href="#单下划线（-）" class="headerlink" title="单下划线（_）"></a>单下划线（_）</h2><p>以<strong>单下划线</strong>开头的名字都应该是内部实现.</p>
-<p>函数以单下划线开头说明这是一个特殊函数或者认为是一个隐藏函数，作为一个内部方法，只能被本模块代码使用。</p>
-<p>Python没有强制依赖于语言特性去达到封装数据目的，而是通过归约。而这里的下划线就是归约。</p>
-<blockquote>
-<p>Python 并不会真的阻止别人访问内部名称。但是如果你这么做肯定是不好的，可能会导致脆弱的代码。同时还要注意到，使用下划线开头的约定同样适用于模块名和模块级别函数。</p>
-</blockquote>
-<h2 id="双下划线（-）"><a href="#双下划线（-）" class="headerlink" title="双下划线（__）"></a>双下划线（__）</h2><p>使用双下划线开始会导致访问名称变成其他形式。这种以双下划线开头的函数不会被通过类继承覆盖。</p>
-<p>Python文档指出，“<strong>spam”这种形式（至少两个前导下划线，最多一个后续下划线）的任何标识符将会被“_classname</strong>spam”这种形式原文取代，在这里“classname”是去掉前导下划线的当前类名。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'b___private_method'</span>)</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">public_method</span><span class="params">(self)</span>:</span></div><div class="line">        self.__private_method()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(B)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super().__init__()</div><div class="line">        self.__private = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__private_method</span><span class="params">(self)</span>:</span></div><div class="line">        print(<span class="string">'c___private_method'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPrivateValue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.__private</div><div class="line"></div><div class="line"></div><div class="line">c = C()</div><div class="line">c.public_method()</div><div class="line"><span class="comment"># print(c.getPrivateValue())</span></div></pre></td></tr></table></figure>
-<p>上面代码执行后结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">b___private_method</div><div class="line"></div><div class="line">Process finished with exit code 0</div></pre></td></tr></table></figure>
-<p>可以看到打印的时B类中方法，而不是C类方法，说明虽然这两个方法方法名一样，但是没有被重写。</p>
-<h2 id="前后双下划线"><a href="#前后双下划线" class="headerlink" title="前后双下划线"></a>前后双下划线</h2><p>这种用法表示Python中特殊的方法名。其实，这只是一种惯例，对Python系统来说，这将确保不会与用户自定义的名称冲突。通常，你将会覆写这些方法，并在里面实现你所需要的功能，以便Python调用它们。例如，当定义一个类时，你经常会覆写“<strong>init</strong>”方法。</p>
-
+        
+          <a class="article-more-a" href="/2017/08/08/Python中-和-有什么意义/#more">展开全文 >></a>
+        
       
 
       
@@ -791,10 +673,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/08/Python中-和-有什么意义/">展开全文 >></a>
-        </p>
       
 
       
@@ -878,24 +756,9 @@
 </tbody>
 </table>
 <p><strong>其中b和+可以和前面模式混用</strong>。</p>
-<p>打开文件使用<strong>open*</strong>函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file= open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>open函数中第三个可选参数buffering控制着⽂件的缓冲。 如果参数是0， I/O操作就是⽆缓冲的， 直接<br>将数据写到硬盘上； 如果参数是1， I/O操作就是有缓冲的， 数据先写到内存⾥， 只有使⽤flush函数或者<br>close函数才会将数据更新到硬盘； 如果参数为⼤于1的数字则代表缓冲区的⼤⼩（单位是字节） ， -1（或者<br>是任何负数） 代表使⽤默认缓冲区的⼤⼩。 </p>
-</blockquote>
-<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><p>文件读取使用read方法。可以一次读取全部、读取一行、读取指定长度</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(file.read())</div><div class="line">print(file.readline())</div><div class="line">print(file.read(<span class="number">3</span>))</div></pre></td></tr></table></figure>
-<h2 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h2><p>写文件使用write方法。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">file.write(<span class="string">'\ntoday is sunday'</span>)</div><div class="line">str=[<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>]</div><div class="line">file.writelines(str)</div></pre></td></tr></table></figure>
-<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>IO操作完成后都要有一个关闭操作对于文件来说，不使用时要关闭：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file.close()</div></pre></td></tr></table></figure>
-<p>但是IO操作难免出现异常，如果在文件操作期间出现异常可能会导致无法关闭文件。这时需要异常处理机制：<code>try except</code></p>
-<p>但是异常处理机制又略显繁琐，so这里推荐使用<strong>with</strong>语法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span>  open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>) <span class="keyword">as</span> file_object:</div><div class="line">contents = file_object.read()</div><div class="line">print(contents)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>关键字with在不再需要访问文件后将其关闭。在这个程序中，注意到我们调用了open()，但<br>没有调用close()；你也可以调用open()和close()来打开和关闭文件，但这样做时，如果程序存<br>在bug，导致close()语句未执行，文件将不会关闭。这看似微不足道，但未妥善地关闭文件可能<br>会导致数据丢失或受损。如果在程序中过早地调用close()，你会发现需要使用文件时它已关闭<br>（无法访问），这会导致更多的错误。并非在任何情况下都能轻松确定关闭文件的恰当时机，但通<br>过使用前面所示的结构，可让Python去确定：你只管打开文件，并在需要时使用它， Python自会<br>在合适的时候自动将其关闭 </p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2017/08/06/Python入门系列(4)文件IO/#more">展开全文 >></a>
+        
       
 
       
@@ -927,10 +790,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/06/Python入门系列(4)文件IO/">展开全文 >></a>
-        </p>
       
 
       
@@ -983,23 +842,10 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">r"aa\nbb"</span>)</div><div class="line">print(<span class="string">u"aa\nbb"</span>)</div></pre></td></tr></table></figure>
 <p>字符串使用时直接引用就好了，前面的r和u这两个前缀是什么鬼？有什么作用？</p>
 <p>纸上得来终觉浅，绝知此事要躬行。</p>
-<p>要了解r和u的作用还是实际操作来看看</p>
-<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
-<li><p>r的作用</p>
-<p>首先看看r的作用，执行如下代码看看结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">"aa\nbb"</span>)</div><div class="line">print(<span class="string">r"aa\nbb"</span>)</div></pre></td></tr></table></figure>
-<p>打印结果是这样子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">aa</div><div class="line">bb</div><div class="line">aa\nbb</div></pre></td></tr></table></figure>
-<p>第一个打印，<strong>\n</strong>把字符串截开了，而第二个打印是全部打印。</p>
-<p>在python中，<strong>\n</strong>是换行符作用。所以第一个打印才是正常的。</p>
-<p>第二个打印中的<strong>r作用就是取消字符串中的转移字符的作用，让其老老实实作为一个普通字符串</strong>。</p>
-<p>接下来看看u的作用：</p>
-</li>
-<li><p>u的作用</p>
-<p>u表示将后面跟的字符串以unicode格式存储，否则会使用源文件的默认编码格式来编码字符串</p>
-</li>
-</ul>
-
+<p>要了解r和u的作用还是实际操作来看看。</p>
+        
+          <a class="article-more-a" href="/2017/08/06/字符串前的r和u/#more">展开全文 >></a>
+        
       
 
       
@@ -1031,10 +877,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/06/字符串前的r和u/">展开全文 >></a>
-        </p>
       
 
       
@@ -1089,38 +931,9 @@
 <p>而且也是感受到了天下文章一大抄的说法所言非虚。。</p>
 <p>只要搜出来的说法都是删掉<code>roundIcon</code>那个属性即可。</p>
 <p>可是我和其他网友都遇到了另一个问题：删除后再编译又会自动给添加上，而编译版本已经改为了5.0。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><ul>
-<li>简单做法</li>
-</ul>
-<p>如果只是因为没有为最新系统功能做好适配工作。那么可以把<strong>targetSdkVersion</strong>降回到所需版本，但保留<strong>compileSdkVersion 26</strong>编译版本最新。这是最简单做法，但是可能有一些过时API需要进行版本判断。</p>
-<ul>
-<li><p>我还想降低compileSdkVersion为20</p>
-<p>当把<strong>compileSdkVersion</strong>降为20的时候，再次编译项目就出现了<code>Error:(11) No resource identifier found for attribute &#39;roundIcon&#39; in package &#39;android&#39;</code>。</p>
-<p>这时想到还有构建版本还是26.0.0，然后也改为20.0.0了。再次编译</p>
-<p>这时候仍然有异常，但是信息变了：<code>Error:The SDK Build Tools revision (20.0.0) is too low for project &#39;:app&#39;. Minimum required is 25.0.0
-&lt;a href=&quot;fix.build.tools.version&quot;&gt;Update Build Tools version and sync project&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;openFile:/Users/jenson/AndroidStudioProjects/CanvasTest/app/build.gradle&quot;&gt;Open File&lt;/a&gt;</code>。</p>
-<p>这是一个好兆头，说明我们的对手变了。我现在要做的就是让项目认可低版本的bt(build tool)。</p>
-<p>这条异常是由：Gradle sync发出的。所以异常和Gradle有关，那现在问题矛头指向Gradle，而Gradle又有Gradle版本和插件版本，</p>
-<p><strong>会不会是版本太新缘故，毕竟谷歌老喜欢搞新花样，所以现在的想法是回退到一个合适的版本。</strong><br>目前版本是<strong>gradle-3.3-all</strong>和<strong>com.android.tools.build:gradle:2.3.3</strong></p>
-<p>现在使用<strong>gradle-3.0-all</strong>和<strong>com.android.tools.build:gradle:2.2.0</strong></p>
-<p>从新编译时出现了如下弹窗：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/gradle%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E6%8F%90%E7%A4%BA%E5%BC%B9%E7%AA%97.png" alt="gradle版本升级弹窗"></p>
-</li>
-</ul>
-<p>​    说明两个版本在匹配范围内，获得初步成功，但是编译完成时再次提示了<strong>roundIcon</strong>，然后这次把<strong>属性删掉</strong>，同时<strong>clean project</strong>。</p>
-<p>然后又出现了如下异常信息：</p>
-<p>Error:In <declare-styleable> ConstraintSet, unable to find attribute android:elevation</declare-styleable></p>
-<p>这可能是由于把compileSdkVersion设置20，有点太低了得缘故。</p>
-<p>既然如此，干脆一不做二不休，进入布局文件把<strong>android.support.constraint.ConstraintLayout</strong>布局替换为其他布局。同时删除该类用到的一些属性，譬如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">app:layout_constraintBottom_toBottomOf=&quot;parent&quot;</div><div class="line">app:layout_constraintLeft_toLeftOf=&quot;parent&quot;</div><div class="line">app:layout_constraintRight_toRightOf=&quot;parent&quot;</div><div class="line">app:layout_constraintTop_toTopOf=&quot;parent&quot;</div></pre></td></tr></table></figure>
-<p>斩草要除根，把依赖包也干脆去掉：</p>
-<p>删除<strong>compile ‘com.android.support.constraint:constraint-layout:1.0.2’</strong></p>
-<p>最最最后clean project，各种build后没有终于恢复正常了。。。。</p>
-<blockquote>
-<p>提示：每次升级前注意下当前Gradle版本是多少，对应的Plugin版本又是多少，如果升级后有问题，可以方便的回退。</p>
-</blockquote>
-<p>gradle本地：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">distributionUrl=file:/Users/jenson/.gradle/wrapper/dists/gradle-3.0-all.zip</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2017/08/04/No-resource-identifier-found-for-attribute-roundIcon-in-package-android/#more">展开全文 >></a>
+        
       
 
       
@@ -1152,10 +965,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/04/No-resource-identifier-found-for-attribute-roundIcon-in-package-android/">展开全文 >></a>
-        </p>
       
 
       
@@ -1248,10 +1057,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/03/WireShark-the-capture-session-could-not-be-initiated-you-don-t-have-permission-to-capture-on-that-device-异常/">展开全文 >></a>
-        </p>
       
 
       

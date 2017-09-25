@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Python分布式实现 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00前言本文只是python分布式的简单实现 分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南， 既然是多进程免不了要用到multiprocessing模块了。 当然这里主要用到Queue和multiprocessing模块下的baseManager 下面看看具体如何实现： 0x01 步骤这里分布式分为服务进程和工作进程2个。 首先创建服务进程：建立队列这">
+  <meta name="description" content="0x00前言本文只是python分布式的简单实现 分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南， 既然是多进程免不了要用到multiprocessing模块了。 当然这里主要用到Queue和multiprocessing模块下的baseManager 下面看看具体如何实现：">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python分布式实现">
 <meta property="og:url" content="http://yoursite.com/2017/08/17/Python分布式实现/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00前言本文只是python分布式的简单实现 分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南， 既然是多进程免不了要用到multiprocessing模块了。 当然这里主要用到Queue和multiprocessing模块下的baseManager 下面看看具体如何实现： 0x01 步骤这里分布式分为服务进程和工作进程2个。 首先创建服务进程：建立队列这">
-<meta property="og:updated_time" content="2017-08-17T09:57:14.000Z">
+<meta property="og:description" content="0x00前言本文只是python分布式的简单实现 分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南， 既然是多进程免不了要用到multiprocessing模块了。 当然这里主要用到Queue和multiprocessing模块下的baseManager 下面看看具体如何实现：">
+<meta property="og:updated_time" content="2017-09-25T07:05:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python分布式实现">
-<meta name="twitter:description" content="0x00前言本文只是python分布式的简单实现 分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南， 既然是多进程免不了要用到multiprocessing模块了。 当然这里主要用到Queue和multiprocessing模块下的baseManager 下面看看具体如何实现： 0x01 步骤这里分布式分为服务进程和工作进程2个。 首先创建服务进程：建立队列这">
+<meta name="twitter:description" content="0x00前言本文只是python分布式的简单实现 分布式首先要实现多进程，只是这里的多进程是网络级多进程，比较服务器可能一个北京一个海南， 既然是多进程免不了要用到multiprocessing模块了。 当然这里主要用到Queue和multiprocessing模块下的baseManager 下面看看具体如何实现：">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -205,6 +205,7 @@
 <p>既然是多进程免不了要用到<strong>multiprocessing</strong>模块了。</p>
 <p>当然这里主要用到Queue和multiprocessing模块下的<strong>baseManager</strong></p>
 <p>下面看看具体如何实现：</p>
+<a id="more"></a>
 <h1 id="0x01-步骤"><a href="#0x01-步骤" class="headerlink" title="0x01 步骤"></a>0x01 步骤</h1><p>这里分布式分为服务进程和工作进程2个。</p>
 <h2 id="首先创建服务进程："><a href="#首先创建服务进程：" class="headerlink" title="首先创建服务进程："></a>首先创建服务进程：</h2><h3 id="建立队列"><a href="#建立队列" class="headerlink" title="建立队列"></a>建立队列</h3><p>这里主要是发送任务和接收结果，所以创建2个队列：task_que和result_que</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step1.建立队列           </span></div><div class="line">task_que = Queue()     </div><div class="line">result_que = Queue()</div></pre></td></tr></table></figure>
