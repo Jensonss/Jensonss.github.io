@@ -9,6 +9,8 @@ categories: Android
 
 魅族不重要通知是什么鬼？
 
+<!-- more -->
+
 先直接看图：
 
 ![不重要通知](http://othg5ggzi.bkt.clouddn.com/%E4%B8%8D%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5.jpg)

@@ -17,6 +17,8 @@ categories: Android
 
 **Google为我们提供了本地广播服务：`LocalBroadcastManager`对广播进行管理。让我们发出的广播只在应用内传递，且广播接收器也只接收来自本应用的广播。**
 
+<!-- more -->
+
 # 0x01 使用
 
 `LocalBroadcastManager`在SDK22版本添加在v4包中。

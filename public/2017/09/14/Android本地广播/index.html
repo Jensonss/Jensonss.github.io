@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/09/14/Android本地广播/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言在android开发中广播作为四大组件之一，其重要性不言而喻。虽然重要但使用却是极其简单， 通常我们的使用无非就是sendBroadCast和继承BroadCastReceiver重写onReceive方法。 如果多想想其实这种做法是存在安全隐患的，比如我们发送的广播是全局性的，那么有被其他程序截获泄露的风险，同样的我们广播接收器也是全局性的，垃圾应用也有可能不停发送垃圾广播。 对于">
-<meta property="og:updated_time" content="2017-09-14T10:11:36.000Z">
+<meta property="og:updated_time" content="2017-09-25T06:51:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android本地广播">
 <meta name="twitter:description" content="0x00 前言在android开发中广播作为四大组件之一，其重要性不言而喻。虽然重要但使用却是极其简单， 通常我们的使用无非就是sendBroadCast和继承BroadCastReceiver重写onReceive方法。 如果多想想其实这种做法是存在安全隐患的，比如我们发送的广播是全局性的，那么有被其他程序截获泄露的风险，同样的我们广播接收器也是全局性的，垃圾应用也有可能不停发送垃圾广播。 对于">
@@ -205,6 +205,7 @@
 <p>如果多想想其实这种做法是存在安全隐患的，比如我们发送的广播是全局性的，那么有被其他程序截获泄露的风险，同样的我们广播接收器也是全局性的，垃圾应用也有可能不停发送垃圾广播。</p>
 <p>对于这种安全隐患如何避免呢？</p>
 <p><strong>Google为我们提供了本地广播服务：<code>LocalBroadcastManager</code>对广播进行管理。让我们发出的广播只在应用内传递，且广播接收器也只接收来自本应用的广播。</strong></p>
+<a id="more"></a>
 <h1 id="0x01-使用"><a href="#0x01-使用" class="headerlink" title="0x01 使用"></a>0x01 使用</h1><p><code>LocalBroadcastManager</code>在SDK22版本添加在v4包中。</p>
 <h2 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> LocalBroadcastManager manager;</div><div class="line"></div><div class="line">manager.getInstance(Context context)</div></pre></td></tr></table></figure>
 <h2 id="本地发送广播"><a href="#本地发送广播" class="headerlink" title="本地发送广播"></a>本地发送广播</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> LocalBroadcastManager manager;</div><div class="line"></div><div class="line">manager.sendBroadcast(intent);</div></pre></td></tr></table></figure>
