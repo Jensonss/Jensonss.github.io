@@ -206,83 +206,9 @@
 <p>②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少</p>
 <p>③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。</p>
 <p>所以，安装包优化还是有必要的。</p>
-<h1 id="0x01-安装包构成"><a href="#0x01-安装包构成" class="headerlink" title="0x01 安装包构成"></a>0x01 安装包构成</h1><p>要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：</p>
-<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png" alt="安装包构成"></p>
-<p>目录中com和org两个文件夹是第三方包信息，不用管着两个。</p>
-<ul>
-<li>assets可以存放资源和配置等各种文件，但是这里的资源文件不会像res中那样生成ID，而是通过AssetManager获取</li>
-<li>dex是Java文件编程成class文件后又经过虚拟机优化压缩形成的</li>
-<li>lib中存放native类库，根据不同CPU架构有四种类型：armeabi，armeabi-v7a，x86，mips。</li>
-<li>META-INF保存了app签名信息</li>
-<li>res中存放了资源文件</li>
-<li>resources.arsc 记录资源文件和资源ID映射。可以根据ID查找资源</li>
-<li>AndroidManifest.xml是app配置文件注册四大组件，声明权限等。</li>
-</ul>
-<p>知道了各个部分作用就大概知道了该从哪方面入手了：代码和资源，因为包中这两个部分占了很大一部分。</p>
-<h1 id="0x02-代码优化"><a href="#0x02-代码优化" class="headerlink" title="0x02 代码优化"></a>0x02 代码优化</h1><p>代码优化其实包含了Java代码和Native代码，但是因为Native代码涉及了C和C++，这里不做阐述，但是说下lib库还是有必要的</p>
-<h2 id="lib库"><a href="#lib库" class="headerlink" title="lib库"></a>lib库</h2><p>根据cpu架构lib中分为四种类型，但是目前大部分移动设备都是基于arm和arm-v7a的。x86和mips较少。而且据说x86兼容arm指令集，所以适配库优先考虑arm和arm-v7a两种即可。</p>
-<h2 id="Java代码优化：使用ProGuard代码混淆"><a href="#Java代码优化：使用ProGuard代码混淆" class="headerlink" title="Java代码优化：使用ProGuard代码混淆"></a>Java代码优化：使用ProGuard代码混淆</h2><p>ProGuard具有压缩(移除无效类、方法、属性)、优化、混淆功能。</p>
-<ul>
-<li><p>开启混淆</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">    release &#123;</div><div class="line">        minifyEnabled <span class="literal">true</span><span class="comment">//开启混淆</span></div><div class="line">        proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span> <span class="comment">//混淆文件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>压缩</p>
-<p>压缩功能是默认开启的，如果对某个或某些文件不想压缩可以使用：</p>
-<p><code>-dontshrink class * extends android.app.Activity</code>。</p>
-</li>
-<li><p>优化</p>
-<p>优化optimization默认开启，如果不开启可以使用：</p>
-<p><code>-dontoptimize</code>。一些相对复杂的方法时，压缩后可能会抛出errors，这时可以不压缩。</p>
-</li>
-<li><p>混淆</p>
-<p>混淆也是默认开启,如果对某些文件不想混淆可以使用：</p>
-<p><code>-dontobfuscate</code>。</p>
-</li>
-<li><p>保留</p>
-<p>如果想保留某些类、成员等不被混淆可以使用：</p>
-<p><code>-kepp</code>。</p>
-<p>​</p>
-<p>关于proguard更多使用方法可参考：</p>
-<p><a href="http://hanhailong.com/2015/12/28/Android%E8%BF%9B%E9%98%B6%E4%B9%8BProGuard%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/" target="_blank" rel="external">Android进阶之ProGuard代码混淆</a></p>
-<p><a href="https://my.oschina.net/u/659658/blog/71976" target="_blank" rel="external">Jean同学的Proguard私房物语</a></p>
-<p>​</p>
-</li>
-</ul>
-<h1 id="0x03-资源优化"><a href="#0x03-资源优化" class="headerlink" title="0x03 资源优化"></a>0x03 资源优化</h1><p>这里的资源优化主要是Res资源。</p>
-<h2 id="删除无用资源"><a href="#删除无用资源" class="headerlink" title="删除无用资源"></a>删除无用资源</h2><p>因为需求变更，版本更新等因素，很多研发只是一味的把新的资源文件让res下面扔，却没哟及时的把不用的文件给清理掉，长此以往导致res越来越臃肿。</p>
-<p>res资源的定时清理是很有必要的，但是资源那么多如何快速清理呢？</p>
-<p>Android提供了非常好用的工具Lint快速检测res中未使用的资源并给出提示。</p>
-<p>运行Analyze—&gt;Run Inspection By Name ，弹窗输入：</p>
-<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint.png" alt="lint"></p>
-<p>执行结果如下：</p>
-<p><img src="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png" alt="lint_result"></p>
-<p>其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。</p>
-<h2 id="资源图片最少化"><a href="#资源图片最少化" class="headerlink" title="资源图片最少化"></a>资源图片最少化</h2><p>这里最少化有2个参考原则：</p>
-<p>①简单的图片shape画</p>
-<p>②多状态的图片filter画</p>
-<p>下面分别说说这两个原则都是什么意思</p>
-<ul>
-<li><p>简单的图片shape画</p>
-<p>这里的简单是图形简单，颜色简单，比如矩形、圆角等纯色能用shape方便绘制出来的。</p>
-</li>
-<li><p>多状态的图片filter画</p>
-<p>这里的filter是colorFilter。</p>
-<p>比如一些按钮都有默认背景色和选中背景色。这时设计一般会提供两套图片，如果使用colorFilter，我们只要一套就可以了。</p>
-</li>
-</ul>
-<h2 id="图片再压缩"><a href="#图片再压缩" class="headerlink" title="图片再压缩"></a>图片再压缩</h2><p>在app打包时，aapt会对图片进行压缩处理，但是这种压缩比较有限。因此我们可以再拿到设计给的图片后，使用一些工具进行二次压缩，比如Zopfli，这时谷歌开源项目。再比如PNGoo。</p>
-<h1 id="0x04-其他优化"><a href="#0x04-其他优化" class="headerlink" title="0x04 其他优化"></a>0x04 其他优化</h1><ul>
-<li><p>使用webp代替png</p>
-<p>webp从4.0开始支持，但是这时不支持透明度。较好地支持从4.2.2开始。</p>
-</li>
-<li><p>精简第三方库</p>
-<p>很多时候可能只需要第三方库的一部分功能，这时可以根据公司业务需求进行精简，这样会有个问题就是后期的库版本更新会是个问题。</p>
-</li>
-<li><p>插件化</p>
-<p>把一些使用率不高的业务模块再需要的时候从服务器下载，动态加载。</p>
-</li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/#more">展开全文 >></a>
+        
       
 
       
@@ -322,10 +248,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">展开全文 >></a>
-        </p>
       
 
       
@@ -375,29 +297,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。</p>
-<h1 id="0x01-第三方模块引入"><a href="#0x01-第三方模块引入" class="headerlink" title="0x01 第三方模块引入"></a>0x01 第三方模块引入</h1><p>在Python中</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel</span></div><div class="line"><span class="comment"># 针对 03版excel（xls结尾的），我们可以使用xlrd读，xlwt包来写</span></div><div class="line"><span class="comment"># 针对 doc文档，我们可以使用docx操作</span></div></pre></td></tr></table></figure>
-<p>知道需要哪些模块了，接下来就是安装所需模块。</p>
-<p>网上很多都是先下载包，解压后本地执行<code>python setup.py install</code>。这显得很麻烦，我直接使用pip命令进行安装了。终端执行<code>pip install xlrd</code>，同样使用该方式安装其他所需库即可。</p>
-<blockquote>
-<p>无须下载，简单快捷。</p>
-</blockquote>
-<h1 id="0x02-开始编程"><a href="#0x02-开始编程" class="headerlink" title="0x02 开始编程"></a>0x02 开始编程</h1><h2 id="创建项目并把excel拷贝到项目根目录"><a href="#创建项目并把excel拷贝到项目根目录" class="headerlink" title="创建项目并把excel拷贝到项目根目录"></a>创建项目并把excel拷贝到项目根目录</h2><p><img src="/2017/07/21/用Python提取excel中有用数据/创建项目.png" alt="创建项目"></p>
-<h2 id="导入刚才安装的模块"><a href="#导入刚才安装的模块" class="headerlink" title="导入刚才安装的模块"></a>导入刚才安装的模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> xlrd</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> docx</div></pre></td></tr></table></figure>
-<p><code>threading</code>是Python自带的线程模块</p>
-<h2 id="读取excel"><a href="#读取excel" class="headerlink" title="读取excel"></a>读取excel</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_xls</span><span class="params">(path, find=<span class="string">''</span>, row=<span class="number">-1</span>, col=<span class="number">-1</span>)</span>:</span></div><div class="line">    <span class="string">"""接收xls文件并读取指定内容返回</span></div><div class="line">    *path* 接收xls路径</div><div class="line">    *find* 要查找的内容，为列表格式</div><div class="line">    *row* 行数，-1说明没有指定，查找所有行</div><div class="line">    *col* 列数，-1说明没有指定，查找所有列</div><div class="line">    """</div><div class="line">    xls = xlrd.open_workbook(path)</div><div class="line">    names = xls.sheet_names()</div><div class="line">    print(names)</div><div class="line">    sheet = xls.sheet_by_name(names[<span class="number">0</span>])</div><div class="line">    row = int(row)</div><div class="line">    col = int(col)</div><div class="line">    python_books = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, sheet.nrows):</div><div class="line">        <span class="keyword">if</span> <span class="number">-1</span> != row:  <span class="comment"># 指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    <span class="keyword">for</span> j <span class="keyword">in</span> sheet.ncols:</div><div class="line">                        <span class="keyword">if</span> j == col:</div><div class="line">                            text = sheet.cell_value(i, j)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                <span class="keyword">if</span> row == i:</div><div class="line">                    text = sheet.row_values(i)</div><div class="line">        <span class="keyword">else</span>:  <span class="comment"># 没指定行</span></div><div class="line">            <span class="keyword">if</span> <span class="number">-1</span> != col:  <span class="comment"># 指定列</span></div><div class="line">                text = sheet.cell_value(i, col)</div><div class="line">            <span class="keyword">else</span>:  <span class="comment"># 没指定列</span></div><div class="line">                text = sheet.cell_value(i, <span class="number">4</span>)</div><div class="line">        <span class="keyword">if</span> find != <span class="string">""</span>:</div><div class="line">            <span class="keyword">for</span> content <span class="keyword">in</span> find:</div><div class="line">                <span class="keyword">if</span> content <span class="keyword">in</span> text:</div><div class="line">                    print(text + <span class="string">'\n'</span>)</div><div class="line">                    python_books.append(text)</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(text + <span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> python_books</div></pre></td></tr></table></figure>
-<p>虽然只是个简单的数据提取，但是为了提高程序灵活性，文件路径、行列及搜索值仍然通过传参方式。</p>
-<p><code>read_xls</code>实现了读取excel中指定的相关内容到列表，下面要实现存储内容到doc文档。</p>
-<h2 id="保存内容到doc文档"><a href="#保存内容到doc文档" class="headerlink" title="保存内容到doc文档"></a>保存内容到doc文档</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_doc</span><span class="params">(name, contents, create_new=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    *param name* doc文档名称</div><div class="line">    *param contents* 文档内容，为列表格式</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc = docx.Document()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc = docx.Document(name)</div><div class="line">    <span class="keyword">for</span> pb <span class="keyword">in</span> contents:</div><div class="line">        doc.add_paragraph(pb)</div><div class="line">    <span class="keyword">if</span> create_new:</div><div class="line">        doc.save(name + <span class="string">'.docx'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        doc.save(name)</div></pre></td></tr></table></figure>
-<p>该方法实现的是，如果create_new为true则直接创建一个doc文档存储内容，并将文档命名为name。如果为false则直接打开一个名称为name的文档进行存储。</p>
-<p>因为这些都是IO操作，应该在工作线程执行。但是这是两个独立的方法，所以还需进行一次包装。</p>
-<h2 id="2个方法封装"><a href="#2个方法封装" class="headerlink" title="2个方法封装"></a>2个方法封装</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(path, find, row, col)</span>:</span></div><div class="line">    <span class="string">"""包装类，封装读取xls文件方法和保存到doc文档方法</span></div><div class="line">    *param path*</div><div class="line">    *param find*</div><div class="line">    *param row*</div><div class="line">    *param col*</div><div class="line">    *return*</div><div class="line">    """</div><div class="line">    python_books = read_xls(path, find, row, col)</div><div class="line">    save_doc(name=path, contents=python_books, create_new=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<h2 id="开启2个工作线程读取并存储内容"><a href="#开启2个工作线程读取并存储内容" class="headerlink" title="开启2个工作线程读取并存储内容"></a>开启2个工作线程读取并存储内容</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">find = [<span class="string">'python'</span>, <span class="string">'PYTHON'</span>, <span class="string">'Python'</span>]</div><div class="line">thread1 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook1.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread1.start()</div><div class="line"></div><div class="line">thread2 = threading.Thread(target=wrapper,</div><div class="line">                           kwargs=&#123;<span class="string">'find'</span>: find, <span class="string">'path'</span>: <span class="string">'ebook2.xls'</span>, <span class="string">'col'</span>: <span class="string">'4'</span>, <span class="string">'row'</span>: <span class="string">'-1'</span>&#125;)</div><div class="line">thread2.start()</div></pre></td></tr></table></figure>
-<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p>执行后会在项目根目录生成2个对应的doc文档：</p>
-<p><img src="/2017/07/21/用Python提取excel中有用数据/项目结果.png" alt="项目结果"></p>
-<p>打开doc文档看看具体内容吧：</p>
-<p><img src="/2017/07/21/用Python提取excel中有用数据/doc文档内容.png" alt="doc文档内容"></p>
-
+        
+          <a class="article-more-a" href="/2017/07/21/用Python提取excel中有用数据/#more">展开全文 >></a>
+        
       
 
       
@@ -445,10 +347,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/21/用Python提取excel中有用数据/">展开全文 >></a>
-        </p>
       
 
       
@@ -500,18 +398,9 @@
         <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
 <p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
 <p>为什么性能优化是我们绕不开的话题呢？</p>
-<h1 id="0x01-为什么需要性能优化"><a href="#0x01-为什么需要性能优化" class="headerlink" title="0x01 为什么需要性能优化"></a>0x01 为什么需要性能优化</h1><p>关于为什么需要性能优化这个问题，我想很多人都会即时作答：“为用户提供更好的体验”。</p>
-<p>既然说到为用户提供更好体验，设想一下，假如用户并不在意所谓的体验，只要功能完成就行了。那么这时公司还会考虑做性能优化吗？</p>
-<p>我想大多数公司都不会去做”这样一件无意义的事“了。公司是以盈利为目的，怎么会在用户不care的点上花费大量人力物力财力呢？</p>
-<p>然而现实恰恰相反的，随着科技发展，用户对产品体验要求越来越高，加上当前产品同质化严重，特色功能只能吸引用户，而良好的用户体验才是留住用户的关键。</p>
-<h1 id="0x02-从哪些方面入手性能优化"><a href="#0x02-从哪些方面入手性能优化" class="headerlink" title="0x02 从哪些方面入手性能优化"></a>0x02 从哪些方面入手性能优化</h1><p>只说性能优化太过笼统，为了提供良好用户体验，应该从哪些方面着手呢？</p>
-<p>换句话说，在产品体验上，用户会通过感知哪些方面来评价产品好坏？这样一说答案就很明显了，就是平常我们自己使用程序都会唠叨的那几个方面：点几下就崩溃、玩一会就没电、没多久流量就超了、打开页面很卡、安装包太大、占了300兆内存~</p>
-<blockquote>
-<p>把上面几个方面归纳下就是：程序稳定性优化、耗电检测优化、网络优化、UI渲染优化、安装包优化和内存优化 6个方面。</p>
-</blockquote>
-<h1 id="0x03-结束语"><a href="#0x03-结束语" class="headerlink" title="0x03 结束语"></a>0x03 结束语</h1><p>这是本系列开篇，从为什么要性能优化发散到优化入手的6各方面，为后续章节做铺垫。</p>
-<p>目前预计未来会写6篇关于具体方面优化和6篇相关方面工具使用，共计12篇。希望通过这12篇让自己当然希望也能帮助别人对Android整体性能优化有个了解，最终形成自己的知识脉络。</p>
-
+        
+          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/#more">展开全文 >></a>
+        
       
 
       
@@ -543,10 +432,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">展开全文 >></a>
-        </p>
       
 
       
@@ -597,32 +482,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。</p>
 <p>经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。</p>
-<h1 id="0x01-View绘制流程简述"><a href="#0x01-View绘制流程简述" class="headerlink" title="0x01 View绘制流程简述"></a>0x01 View绘制流程简述</h1><p>看过源码的应该知道，View的绘制是从<code>ViewRootImpl.performTraversals()</code>方法开始的。</p>
-<p>先后经历<code>performMeasure</code>、<code>performLayout</code>和<code>performDraw</code>三个阶段，就是常说的测量、布局和绘制。</p>
-<ul>
-<li>performMeasure会调用根View的measure，进而调用onMeasure方法</li>
-<li>performLayout调用根View的layout，进而调用onLayout方法</li>
-<li>performDraw调用根View的draw，进而调用onDraw方法</li>
-</ul>
-<p>鉴于两个都是ViewGroup，所以可以忽略onDraw</p>
-<p>有对比才有伤害，要比较这两个布局性能，要先看看这两个布局分别在onMeasure，onLayout都做了什么。</p>
-<h1 id="0x02-LinearLayout分析"><a href="#0x02-LinearLayout分析" class="headerlink" title="0x02 LinearLayout分析"></a>0x02 LinearLayout分析</h1><p>LinearLayout的onMeasure方法内容很简单，就是判断方向然后分别调用:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (mOrientation == VERTICAL) &#123;</div><div class="line">         measureVertical(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">         measureHorizontal(widthMeasureSpec, heightMeasureSpec);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>那就随便看看<code>measureVertical</code>方法里面干了些什么：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See how tall everyone is. Also remember max width.</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">    <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</div><div class="line">        mTotalLength += measureNullChild(i);</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (child.getVisibility() == View.GONE) &#123;</div><div class="line">       i += getChildrenSkipCount(child, i);</div><div class="line">       <span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (hasDividerBeforeChildAt(i)) &#123;</div><div class="line">        mTotalLength += mDividerHeight;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">    totalWeight += lp.weight;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY &amp;&amp; lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// Optimization: don't bother measuring children who are going to use</span></div><div class="line">        <span class="comment">// leftover space. These views will get measured again down below if</span></div><div class="line">        <span class="comment">// there is any leftover space.</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + lp.topMargin + lp.bottomMargin);</div><div class="line">        skippedMeasure = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">int</span> oldHeight = Integer.MIN_VALUE;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// heightMode is either UNSPECIFIED or AT_MOST, and this</span></div><div class="line">            <span class="comment">// child wanted to stretch to fill available space.</span></div><div class="line">            <span class="comment">// Translate that to WRAP_CONTENT so that it does not end up</span></div><div class="line">            <span class="comment">// with a height of 0</span></div><div class="line">            oldHeight = <span class="number">0</span>;</div><div class="line">            lp.height = LayoutParams.WRAP_CONTENT;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Determine how big this child would like to be. If this or</span></div><div class="line">        <span class="comment">// previous children have given a weight, then we allow it to</span></div><div class="line">        <span class="comment">// use all available space (and we will shrink things later</span></div><div class="line">        <span class="comment">// if needed).</span></div><div class="line">        measureChildBeforeLayout(</div><div class="line">               child, i, widthMeasureSpec, <span class="number">0</span>, heightMeasureSpec,</div><div class="line">               totalWeight == <span class="number">0</span> ? mTotalLength : <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldHeight != Integer.MIN_VALUE) &#123;</div><div class="line">           lp.height = oldHeight;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> childHeight = child.getMeasuredHeight();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">        mTotalLength = Math.max(totalLength, totalLength + childHeight + lp.topMargin +</div><div class="line">               lp.bottomMargin + getNextLocationOffset(child));</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (useLargestChild) &#123;</div><div class="line">            largestChildHeight = Math.max(childHeight, largestChildHeight);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * If applicable, compute the additional offset to the child's baseline</div><div class="line">     * we'll need later when asked &#123;<span class="doctag">@link</span> #getBaseline&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> ((baselineChildIndex &gt;= <span class="number">0</span>) &amp;&amp; (baselineChildIndex == i + <span class="number">1</span>)) &#123;</div><div class="line">       mBaselineChildTop = mTotalLength;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// if we are trying to use a child index for our baseline, the above</span></div><div class="line">    <span class="comment">// book keeping only works if there are no children above it with</span></div><div class="line">    <span class="comment">// weight.  fail fast to aid the developer.</span></div><div class="line">    <span class="keyword">if</span> (i &lt; baselineChildIndex &amp;&amp; lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"A child of LinearLayout with index "</span></div><div class="line">                + <span class="string">"less than mBaselineAlignedChildIndex has weight &gt; 0, which "</span></div><div class="line">                + <span class="string">"won't work.  Either remove the weight, or don't set "</span></div><div class="line">                + <span class="string">"mBaselineAlignedChildIndex."</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> matchWidthLocally = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">if</span> (widthMode != MeasureSpec.EXACTLY &amp;&amp; lp.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">        <span class="comment">// The width of the linear layout will scale, and at least one</span></div><div class="line">        <span class="comment">// child said it wanted to match our width. Set a flag</span></div><div class="line">        <span class="comment">// indicating that we need to remeasure at least that view when</span></div><div class="line">        <span class="comment">// we know our width.</span></div><div class="line">        matchWidth = <span class="keyword">true</span>;</div><div class="line">        matchWidthLocally = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> margin = lp.leftMargin + lp.rightMargin;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> measuredWidth = child.getMeasuredWidth() + margin;</div><div class="line">    maxWidth = Math.max(maxWidth, measuredWidth);</div><div class="line">    childState = combineMeasuredStates(childState, child.getMeasuredState());</div><div class="line"></div><div class="line">    allFillParent = allFillParent &amp;&amp; lp.width == LayoutParams.MATCH_PARENT;</div><div class="line">    <span class="keyword">if</span> (lp.weight &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * Widths of weighted Views are bogus if we end up</div><div class="line">         * remeasuring, so keep them separate.</div><div class="line">         */</div><div class="line">        weightedMaxWidth = Math.max(weightedMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alternativeMaxWidth = Math.max(alternativeMaxWidth,</div><div class="line">                matchWidthLocally ? margin : measuredWidth);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    i += getChildrenSkipCount(child, i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个方法主要是for循环中通过<code>measureChildBeforeLayout</code>测量子View高度，把每次测量的高度都累加到<code>mTotalLength</code>。</p>
-<h1 id="0x03-RelativeLayout分析"><a href="#0x03-RelativeLayout分析" class="headerlink" title="0x03 RelativeLayout分析"></a>0x03 RelativeLayout分析</h1><p>看看RelativeLayout的onMeasure方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">View[] views = mSortedHorizontalChildren;</div><div class="line"> <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">         applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">         measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">             offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> views = mSortedVerticalChildren;</div><div class="line"> count = views.length;</div><div class="line"> <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line"> <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">     View child = views[i];</div><div class="line">     <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">         LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">         </div><div class="line">         applyVerticalSizeRules(params, myHeight);</div><div class="line">         measureChild(child, params, myWidth, myHeight);</div><div class="line">         <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">             offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">             <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                     width = Math.max(width, params.mRight);</div><div class="line">                 &#125; <span class="keyword">else</span> &#123;</div><div class="line">                     width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                 &#125;</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">             <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                 height = Math.max(height, params.mBottom);</div><div class="line">             &#125; <span class="keyword">else</span> &#123;</div><div class="line">                 height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">             left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">             top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">         &#125;</div><div class="line"></div><div class="line">         <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">             right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">             bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>第一个for循环中<code>measureChildHorizontal</code>方法实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">           params.mRight, params.width,</div><div class="line">           params.leftMargin, params.rightMargin,</div><div class="line">           mPaddingLeft, mPaddingRight,</div><div class="line">           myWidth);</div><div class="line">   <span class="keyword">int</span> maxHeight = myHeight;</div><div class="line">   <span class="keyword">if</span> (mMeasureVerticalWithPaddingMargin) &#123;</div><div class="line">       maxHeight = Math.max(<span class="number">0</span>, myHeight - mPaddingTop - mPaddingBottom -</div><div class="line">               params.topMargin - params.bottomMargin);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">int</span> childHeightMeasureSpec;</div><div class="line">   <span class="keyword">if</span> (myHeight &lt; <span class="number">0</span> &amp;&amp; !mAllowBrokenMeasureSpecs) &#123;</div><div class="line">       <span class="keyword">if</span> (params.height &gt;= <span class="number">0</span>) &#123;</div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(</div><div class="line">                   params.height, MeasureSpec.EXACTLY);</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="comment">// Negative values in a mySize/myWidth/myWidth value in RelativeLayout measurement</span></div><div class="line">           <span class="comment">// is code for, "we got an unspecified mode in the RelativeLayout's measurespec."</span></div><div class="line">           <span class="comment">// Carry it forward.</span></div><div class="line">           childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">0</span>, MeasureSpec.UNSPECIFIED);</div><div class="line">       &#125;</div><div class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span> (params.width == LayoutParams.MATCH_PARENT) &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY);</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);</div><div class="line">   &#125;</div><div class="line">   child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
-<p>第二个for循环中<code>measureChild</code>实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,</div><div class="line">                params.mRight, params.width,</div><div class="line">                params.leftMargin, params.rightMargin,</div><div class="line">                mPaddingLeft, mPaddingRight,</div><div class="line">                myWidth);</div><div class="line">        <span class="keyword">int</span> childHeightMeasureSpec = getChildMeasureSpec(params.mTop,</div><div class="line">                params.mBottom, params.height,</div><div class="line">                params.topMargin, params.bottomMargin,</div><div class="line">                mPaddingTop, mPaddingBottom,</div><div class="line">                myHeight);</div><div class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div></pre></td></tr></table></figure>
-<p>两个for循环中都执行了<code>child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</code>这意味着子View测量执行了两遍。</p>
-<p>为什么RelativeLayout要测量两遍？</p>
-<blockquote>
-<p>因为RelativeLayout并不像LinearLayout那样有着方向单一性。RelativeLayout的灵活性就在于允许纵横双向的，这样view直接不仅横向依赖，还有纵向依赖，每个方向都要测量一遍。导致性能略差。</p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2017/07/19/为什么相对布局比线性布局性能低/#more">展开全文 >></a>
+        
       
 
       
@@ -654,10 +516,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/为什么相对布局比线性布局性能低/">展开全文 >></a>
-        </p>
       
 
       
@@ -708,39 +566,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在Java或者Android中，发现很多涉及框架和源码地方，很多int常量都是使用十六进制表示的，而不是我们日常开发中直接使用我们最熟悉的十进制。这是为什么呢？换个问法，这样做有什么好处呢？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_DEBUG_TRIAGED_MISSING = <span class="number">0x00000100</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_IGNORE_EPHEMERAL = <span class="number">0x00000200</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NO_HISTORY = <span class="number">0x40000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_NEW_TASK = <span class="number">0x10000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_MULTIPLE_TASK = <span class="number">0x08000000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_CLEAR_TASK = <span class="number">0X00008000</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ACTIVITY_TASK_ON_HOME = <span class="number">0X00004000</span>;</div></pre></td></tr></table></figure>
-<p>猜测可能的原因：</p>
-<p>①为了美观</p>
-<p>②为了方便位运算</p>
-<p>③关于①我是瞎说的</p>
-<p>既然多采用十六进制，那就先简单看看什么是十六进制</p>
-<h1 id="0x01-十六进制简单介绍"><a href="#0x01-十六进制简单介绍" class="headerlink" title="0x01 十六进制简单介绍"></a>0x01 十六进制简单介绍</h1><p>以0x或0X开头，使用数字0~9及字符A~F表示16个可能的值，这种进制方式一般称为十六进制。</p>
-<p>一个int占4个字节，32位。</p>
-<p>十六进制中0xF最大，二进制表示：1111，用4位即可表示出来，所以在用十六进制表示int时，通常0x后面跟8位数字/字符，这样就可以表示满一个int值。也就是前言中所看到的。</p>
-<h1 id="0x02-发现规律"><a href="#0x02-发现规律" class="headerlink" title="0x02 发现规律"></a>0x02 发现规律</h1><p>通过前言中的代码可以发现基本上频繁出现的只有1，2，4，8几个数字而其他位置都是0占位。为什么会出现这种情况呢？</p>
-<p>首先把上面的十六进制转换成二进制看一下：</p>
-<p><code>0x00000100</code>转换二进制<code>0001 0000 0000</code></p>
-<p><code>0x00000200</code>转换二进制<code>0010 0000 0000</code> </p>
-<p><code>0X00004000</code>转换二进制<code>0100 0000 0000 0000</code></p>
-<p><code>0X00008000</code>转换二进制<code>1000 0000 0000</code></p>
-<p>转换后可以发现，1，2，4，8这几个值很特殊，在二进制中表示这几个数时都只要某一位为1，其他位用0占位即可表示。</p>
-<p>换句话说，二进制的4位表示十六进制中的一个数字，而这4位中若只有其中一位为1的话，那么可能的值情况为1=2º，2=2¹，4=2²，8=2³。</p>
-<p>这样做有什么好处呢？</p>
-<h1 id="0x03-这样做的好处"><a href="#0x03-这样做的好处" class="headerlink" title="0x03 这样做的好处"></a>0x03 这样做的好处</h1><ul>
-<li><p>拿位移来说因为只有一个数字带值，其他都是0占位，位移时大脑中快速把十六进制转为二进制然后补0位即可。</p>
-<p>拿0x200来说，换算二进制我只要把2用二进制0010在大脑中展示出来，然后后面跟8个0就换算完成。如果0x200&gt;&gt;1,右移1位，相当于1后面的9个0被砍掉一个，左边高位补0。</p>
-<p>二进制表示由<code>0010 0000 0000</code>变成了<code>0001 0000 000</code>。值由512变成了256，可见右移1位相当于除以2。前面十六进制和二进制转换是在大脑中完成，转换到十进制我是笔算的，可能这是采用十六进制表示int原因之一吧。</p>
-<p>同样左移思路也是如此。</p>
-</li>
-<li><p>位与&amp;/位或|</p>
-<p>位与/位或是对参与运算的数的二进制进行位与/位或。</p>
-<p>位与&amp;：两数二进制对应位均为1时结果才为1，其余为0</p>
-<p>位或|：两数二进制对应位有一个为1时，结果位就为1</p>
-<p>在源码和框架中，很多时候需要存储一些状态组合，比如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">addFlags</span><span class="params">(<span class="keyword">int</span> flags)</span> </span>&#123;</div><div class="line">     mFlags |= flags;</div><div class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>最后在一些地方会根据状态组合的不同值来做出不同的响应。这时使用1，2，4，8这种格式的十六进制就很方便，因为不同的状态值只是在二进制的不同位上用1标记而已。这样最后可以根据mFlags的值二进制有多少位为1，基本就能判断有多少种状态。当然这里说的是位或。</p>
-</li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/#more">展开全文 >></a>
+        
       
 
       
@@ -780,10 +608,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/19/为什么Android中很多int常量使用十六进制表示/">展开全文 >></a>
-        </p>
       
 
       
@@ -834,73 +658,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Intent，译为“意图”。从汉语角度理解，意图是什么意思？意图谋反，就是想要谋反。所以意图可以通俗理解为想要做什么。当然这里的“想要做什么”是告诉Android系统的而不是别人。</p>
 <p>虽然想要做什么就告诉Android系统，但是并不是为所欲为的。通过Intent只能请求三大组件：Activity，Service，Broadcast。</p>
-<h1 id="0x01-抽象理解"><a href="#0x01-抽象理解" class="headerlink" title="0x01 抽象理解"></a>0x01 抽象理解</h1><p>因为涉及三个组件，这里不会单独讲每个组件和Intent。startActivity不要叫启动Activity，startService也不要叫启动服务，我们把他们抽象为一个请求。通过Intent向Android发出请求，Android去哪给你匹配呢？你不注册系统当然没地方找，所以我们要在AndroidManifest.xml中进行注册(广播可以动态注册)。注册的作用不光告诉系统可以从这找我，还告诉系统本组件只接收满足要求的请求。说到要求这就要提到IntentFilter了，每个IntentFilter代表一种要求，一个组件可以有多种要求即多个IntentFilter，但只要满足一种就能请求成功。系统所要做的就是把接收到得请求Intent和组件的要求IntentFilter进行匹配，如果匹配上了则牵手成功~</p>
-<p>这个流程抽象为：</p>
-<p><img src="/2017/07/17/关于Intent那些事/请求流程.png" alt="请求流程"></p>
-<h1 id="0x02-分类"><a href="#0x02-分类" class="headerlink" title="0x02 分类"></a>0x02 分类</h1><p>通过Intent告诉Android系统“我想要做什么”，可以有两种方式阐述，一种是直白的表述“我想要启动某个页面”，我们称之为显性，另一种是告诉系统“我想要一个满足我某些要求的页面”,至于是哪个或哪几个页面由系统决定，如果是多个可以返回列表给我，这种称之为隐性。</p>
-<blockquote>
-<p>Intent从请求性质上分为显性和隐性两种。</p>
-</blockquote>
-<p>由于显性Intent指定了具体的请求，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">intent.setClass(Context packageContext, Class&lt;?&gt; cls)</div></pre></td></tr></table></figure>
-<p>所以匹配并不会发生在显性Intent,显性组件注册时一般这样的：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">".ThirdActivity"</span> /&gt;</span></div></pre></td></tr></table></figure>
-<p>没有多余的要求。</p>
-<p>在抽象理解中，IntentFilter匹配只是为隐性准备的。</p>
-<p>下面要了解具体匹配规则如何：</p>
-<h1 id="0x03-匹配规则"><a href="#0x03-匹配规则" class="headerlink" title="0x03 匹配规则"></a>0x03 匹配规则</h1><p>要了解匹配规则是怎样的，首先要知道是从哪几方面入手匹配的，由于Android系统也是根据组件注册的要求进行匹配，所以看看注册时的IntentFilter有哪些属性就知道要匹配哪些方面了：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.CALL"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:mimeType</span>=<span class="string">"image/*"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"http"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>显然系统匹配也就是匹配category、action和data。</p>
-<p>下面分别来看看这三种是分别如何匹配的：</p>
-<p><strong>注意：下面将原理、源码、实例三管齐下</strong> </p>
-<ul>
-<li><p>category如何匹配</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①在请求的Intent中需要在IntentFilter找到匹配项才算匹配成功。</p>
-<p>②如果Intent没有添加任何category，那么系统会自动给你添加android.intent.category.DEFAULT，所以如果你的三大组件是为隐性启动准备的，那么你就要在注册时手动添加<category android:name="android.intent.category.DEFAULT">。</category></p>
-<p>③当然如果添加了其他值得category也可以不用添加default了。</p>
-</blockquote>
-<p>​</p>
-</li>
-</ul>
-<ul>
-<li><p>action如何匹配</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①IntentFilter如果没有声明action，则所有Intent都不能匹配成功。</p>
-<p>②若IntentFilter声明了action，而Intent没有不带任何action，则匹配通过。</p>
-<p>③若IntentFilter声明了action，Intent也声明了action，那么Intent中action必须是IntentFilter中action的子集才能匹配成功。</p>
-</blockquote>
-</li>
-</ul>
-<ul>
-<li><p>data如何匹配</p>
-<p>data分为两部分，MIME type和URI。</p>
-<ul>
-<li><p>MIME type就是表明数据格式类型，方便系统正确解析处理</p>
-<p>MIME type又分为两部分：主类型type和子类型subtype，以”/“分割。比如：</p>
-<p>video/mp4，image/jpeg。</p>
-</li>
-<li><p>URI 唯一资源标识符</p>
-<p>URI分为scheme、Authory和path三部分。</p>
-<p>scheme表示采用协议，既可以是http网络协议也可以是本地content和file协议。</p>
-<p>Authority由host和port组成。</p>
-<p>path表示文件在host中具体位置。</p>
-</li>
-</ul>
-<p>了解了data组成，下面说说data匹配原理</p>
-<blockquote>
-<p>匹配原理：</p>
-<p>①data只匹配IntentFilter中所拥有部分。</p>
-<p>②如果Intent中既没有MIME，也没用URI，那么IntentFilter中也都不能有才能通过。</p>
-<p>③若Intent没有指定类型，只指定了URI，那么IntentFilter必须没有指定类型。特殊情况下能根据URI推断出类型，这种情况按⑤情况算。</p>
-<p>④若Intent只指定了类型，没有URI。那么IntentFilter也必须没有指定URI</p>
-<p>⑤若Intent同时指定了类型和URI，那么必须都匹配上才能通过。</p>
-</blockquote>
-</li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2017/07/17/关于Intent那些事/#more">展开全文 >></a>
+        
       
 
       
@@ -932,10 +692,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/17/关于Intent那些事/">展开全文 >></a>
-        </p>
       
 
       
@@ -986,24 +742,10 @@
       
         <h1 id="0x00-拿到网易云音乐外链"><a href="#0x00-拿到网易云音乐外链" class="headerlink" title="0x00 拿到网易云音乐外链"></a>0x00 拿到网易云音乐外链</h1><p>因为版权问题有一些音乐不能设置外链，所以要先找到合适的音乐，然后点击生成外链播放器，音乐界面如下：</p>
 <p><img src="/2017/07/14/hexo添加网易云音乐播放器/音乐界面.png" alt="音乐界面"></p>
-<p>如果没有权限会弹出提示，如果有权限就会跳转对应页面<a href="http://music.163.com/#/outchain/2/114442/" target="_blank" rel="external">外链页面</a>。</p>
-<h1 id="0x01-给文章添加播放器"><a href="#0x01-给文章添加播放器" class="headerlink" title="0x01 给文章添加播放器"></a>0x01 给文章添加播放器</h1><p>给文章添加外链很简单，直接复制上面的外链到x.md文件中即可。运行后就会在对应的发布后的文章中显示出播放器。</p>
-<h1 id="0x02-给主题yilia添加播放器"><a href="#0x02-给主题yilia添加播放器" class="headerlink" title="0x02 给主题yilia添加播放器"></a>0x02 给主题yilia添加播放器</h1><ul>
-<li><p>找到对应布局ejs文件添加外链</p>
-<p>找到<code>theme/yilia/layout/_partial/left-col.ejs</code>文件，在末尾header标签前添加外链：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">	<span class="comment">&lt;!-- 添加网易云音乐插件--&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">"header_music"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">iframe</span> <span class="attr">frameborder</span>=<span class="string">"no"</span> <span class="attr">border</span>=<span class="string">"0"</span> 	<span class="attr">marginwidth</span>=<span class="string">"0"</span> <span class="attr">marginheight</span>=<span class="string">"0"</span> <span class="attr">width</span>=<span class="string">250</span> <span class="attr">height</span>=<span class="string">86</span> <span class="attr">src</span>=<span class="string">"//music.163.com/outchain/player?type=2&amp;id=114442&amp;auto=0&amp;height=66"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">nav</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><code>auto=0</code>为关闭自动播放，<code>auto=1</code>为开启自动播放。</p>
-</li>
-<li><p>找到对应css文件添加格式</p>
-<p>找到<code>theme/yilia/source/main.266c1c.css</code>文件。如果你的目录下没有这个文件，那就在同目录下找到类似<code>main.xxx.css</code>文件。不同版本名称可能有不同，格式都一样。</p>
-<p>在最后添加代码：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.header_music</span> &#123;</div><div class="line">  <span class="attribute">margin-top</span>: <span class="number">140px</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>最后如果当时没有刷新过来，</p>
-<p>就执行<code>hexo clean</code>清除缓存，</p>
-<p>然后在<code>hexo d -g</code>。</p>
-</li>
-</ul>
-
+<p>如果没有权限会弹出提示，如果有权限就会跳转对应页面<a href="http://music.163.com/#/outchain/2/114442/">外链页面</a>。</p>
+        
+          <a class="article-more-a" href="/2017/07/14/hexo添加网易云音乐播放器/#more">展开全文 >></a>
+        
       
 
       
@@ -1043,10 +785,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/hexo添加网易云音乐播放器/">展开全文 >></a>
-        </p>
       
 
       
@@ -1095,7 +833,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>看惯了next样式，这几天想换一款主题换个心情。挑来挑去发现<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="external">yilia</a>主题不错，左侧导航和个人信息，还能带头像。so接下来就开始主题切换流程。</p>
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>看惯了next样式，这几天想换一款主题换个心情。挑来挑去发现<a href="https://github.com/litten/hexo-theme-yilia">yilia</a>主题不错，左侧导航和个人信息，还能带头像。so接下来就开始主题切换流程。</p>
 <h1 id="0x01-下载"><a href="#0x01-下载" class="headerlink" title="0x01 下载"></a>0x01 下载</h1><ul>
 <li><p>切换到你的博客根目录下</p>
 <p>如我的是这样子：<code>cd ~/Downloads/hexo/</code> </p>
@@ -1105,69 +843,10 @@
 <p>然后把源文件全部提交：<code>git add .</code>添加临时，<code>git commit -m &quot;全部备份&quot;</code>提交本地，<code>git push origin xxx</code>push到服务器。</p>
 </li>
 <li><p>在根目录下执行clone</p>
-<p>命令：<code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p>
-</li>
-</ul>
-<h1 id="0x02-安装"><a href="#0x02-安装" class="headerlink" title="0x02 安装"></a>0x02 安装</h1><p>完成了下载和备份，接下来开始主题切换，在未确认完全完成之前不要执行<code>hexo d -g</code>部署到服务器，先在本地测试。</p>
-<ul>
-<li><p>切换到主题</p>
-<p>打开博客根目录下的<code>_config.yml</code>文件，找到<code>theme: next</code>栏目把next改为<code>yilia</code>后保存。如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/换主题.png" alt="换主题"></p>
-<p>​</p>
-</li>
-<li><p>运行本地测试</p>
-<p>执行<code>hexo s -debug</code>启动本地测试服务，打开<code>http://localhost:4000/</code>页面发现主题已经切换过来了，切换就是这么简单，但是还有很多地方要配置。</p>
-</li>
-</ul>
-<h1 id="0x03-配置"><a href="#0x03-配置" class="headerlink" title="0x03 配置"></a>0x03 配置</h1><p>这里的配置如果没有特殊说明，默认都是<code>themes/yilia/_config.yml</code>文件的配置</p>
-<ul>
-<li><p>menu配置</p>
-<p>默认menu中只有主页和相册，但是我不想要相册，同时还想添加特定的栏目。</p>
-<p>相册不要只要注释掉就好了，但是如何添加特定栏目呢？我们在写文章时头部文件都有类似的格式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">title: hexo更换主题</div><div class="line">date: 2017-07-14 10:42:33</div><div class="line">tags: 网络</div><div class="line">categories: 网络</div></pre></td></tr></table></figure>
-<p>其中tags和categories都是可以在menu中使用的，比如我想添加Android菜单，只要设置<code>Android: /tags/Android</code>即可，前提是我之前的文章中已经存在tags为Android的标签了。当然如果设置categories也可以的，只要之前有设置过这个类型即可，比如<code>Java: /categories/Java</code>。我的配置如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/menu配置.png" alt="menu配置"></p>
-<p>这样在点击Android菜单后，右侧都是Android类型的文章列表。</p>
-</li>
-<li><p>subnav配置</p>
-<p>subnav主要是个人其他站点相关页面链接，如果没有则直接注释掉，但是为了UI好看还是留了三个：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># SubNav</div><div class="line">subnav:</div><div class="line">  #github: &quot;#&quot;</div><div class="line">  #weibo: &quot;#&quot;</div><div class="line">  #rss: &quot;#&quot;</div><div class="line">  #zhihu: &quot;#&quot;</div><div class="line">  #qq: &quot;840418528&quot;</div><div class="line">  #weixin: &quot;#&quot;</div><div class="line">  jianshu: &quot;http://www.jianshu.com/u/1b5cb41384f4&quot;</div><div class="line">  #douban: &quot;#&quot;</div><div class="line">  #segmentfault: &quot;#&quot;</div><div class="line">  #bilibili: &quot;#&quot;</div><div class="line">  #acfun: &quot;#&quot;</div><div class="line">  mail: &quot;mailto:songjlforever@foxmail.com&quot;</div><div class="line">  #facebook: &quot;#&quot;</div><div class="line">  google: &quot;https://www.google.com&quot;</div><div class="line">  #twitter: &quot;#&quot;</div><div class="line">  #linkedin: &quot;#&quot;</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>头像配置</p>
-<p>在source下新建一个文件夹起个名字比如：image。头像就是一个图片为什么还要单独建个文件夹？因为下面的打赏里面还要微信和支付宝两个二维码图片！将头像图片拷贝到image目录中，在配置文件中找到<code>avatar:</code>修改如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#你的头像url</div><div class="line">avatar: /image/avatar.jpg</div></pre></td></tr></table></figure>
-<p>刷新<code>http://localhost:4000/</code>发现头像已经出现了。</p>
-</li>
-<li><p>打赏配置</p>
-<p>把支付宝和微信收款二维码拷贝到上面创建的image文件夹。然后在配置文件中修改如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 打赏</div><div class="line"># 打赏type设定：0-关闭打赏； 1-文章对应的md文件里有reward:true属性，才有打赏； 2-所有文章均有打赏</div><div class="line">reward_type: 2</div><div class="line"># 打赏wording</div><div class="line">reward_wording: &apos;谢谢您的支持!&apos;</div><div class="line"># 支付宝二维码图片地址，跟你设置头像的方式一样。比如：/assets/img/alipay.jpg</div><div class="line">alipay: /image/alipay.jpg</div><div class="line"># 微信二维码图片地址</div><div class="line">weixin: /image/weixin.png</div></pre></td></tr></table></figure>
-<p>显示效果如图：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/打赏效果图.png" alt="打赏效果图"></p>
-<p>​</p>
-<p>​</p>
-</li>
-<li><p>关于我配置</p>
-<p>smart_menu中有关于我的menu，点击后只显示配置文件中的<code>aboutme: 一个从运维转战开发的程序猿。</code>这里内容格式样式太少，我想像next主题中关于我是个单独的页面，那样看起来更舒服。</p>
-<p>当然可以实现，</p>
-<p>首先注释掉<code>smart_menu</code>中的<code>aboutme</code>。</p>
-<p>然后在配置文件顶部<code>menu</code>中添加<code>关于我: /about/</code>。这是刷新UI后点击关于我，打开新的页面如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/关于我.png" alt="关于我"></p>
-<p>​</p>
-</li>
-<li><p>点击所有文章提示模块缺失</p>
-<p>问题如下：</p>
-<p><img src="/2017/07/14/hexo更换主题及配置/模块缺失.png" alt="模块缺失"></p>
-<p>首先确保node版本在6.2以上，我的是6.10.2仍然出现这个问题。</p>
-<p>然后在博客根目录下执行<code>npm i hexo-generator-content --save</code></p>
-<p>最后在根目录中的<code>_config.yml</code>里添加如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">jsonContent:</div><div class="line">  meta: false</div><div class="line">  pages: false</div><div class="line">  posts:</div><div class="line">    title: true</div><div class="line">    date: true</div><div class="line">    path: true</div><div class="line">    text: false</div><div class="line">    raw: false</div><div class="line">    content: false</div><div class="line">    slug: false</div><div class="line">    updated: false</div><div class="line">    comments: false</div><div class="line">    link: false</div><div class="line">    permalink: false</div><div class="line">    excerpt: false</div><div class="line">    categories: false</div><div class="line">    tags: true</div></pre></td></tr></table></figure>
-<blockquote>
-<p>注意这段内容格式，尤其是多余空格，否则可能引发其他错误</p>
-</blockquote>
-</li>
-</ul>
-
+<p>命令：<code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p></li></ul>
+        
+          <a class="article-more-a" href="/2017/07/14/hexo更换主题及配置/#more">展开全文 >></a>
+        
       
 
       
@@ -1207,10 +886,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/14/hexo更换主题及配置/">展开全文 >></a>
-        </p>
       
 
       
@@ -1261,21 +936,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Mac和windows一样，如果要在终端命令行全局使用非系统命令，需要手动把命令环境配置到指定文件中，具体操作就是把命令文件所属路径配置到.bash_profile里面。</p>
 <h1 id="0x01-分别找到双方路径"><a href="#0x01-分别找到双方路径" class="headerlink" title="0x01 分别找到双方路径"></a>0x01 分别找到双方路径</h1><h2 id="找到adb"><a href="#找到adb" class="headerlink" title="找到adb"></a>找到adb</h2><p>我是通过Android studio中的idk location找到SDK位置<code>/Users/jenson/Library/Android/sdk</code> .</p>
-<h2 id="找到-bash-profile"><a href="#找到-bash-profile" class="headerlink" title="找到.bash_profile"></a>找到.bash_profile</h2><ul>
-<li><p>使用命令行<code>cd $home</code> 进入home路径下，</p>
-</li>
-<li><p>因为mac下以点开头的文件为隐藏文件，所以使用<code>ls -al</code> 查看所有文件，查看列表是否有.bash_profile文件，</p>
-</li>
-<li><p>如果没有，使用<code>touch .bash_profile</code> 创建，如果有则执行命令<code>open -e .bash_profile</code> 使用文本编辑器打开文件，</p>
-</li>
-<li><p>在下面按格式添加SDK路径：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export PATH=/Users/jenson/Library/Android/sdk/platform-tools:$PATH</div><div class="line">export PATH=/Users/jenson/Library/Android/sdk/tools:$PATH</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h2 id="open-e-bash-profile提示open命令不存在"><a href="#open-e-bash-profile提示open命令不存在" class="headerlink" title="open -e .bash_profile提示open命令不存在"></a>open -e .bash_profile提示open命令不存在</h2><p>通过Finder根据路径找到.bash_profile文件，编辑添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export PATH=&quot;/usr/bin:/bin:/usr/sbin:/sbin&quot;</div><div class="line">export PATH=&quot;/usr/local/bin:/usr/local/sbin:$PATH&quot;</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/07/13/Mac下配置adb/#more">展开全文 >></a>
+        
       
 
       
@@ -1307,10 +970,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/13/Mac下配置adb/">展开全文 >></a>
-        </p>
       
 
       
@@ -1402,10 +1061,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/07/01/hexo文章tags添加多标签/">展开全文 >></a>
-        </p>
       
 
       

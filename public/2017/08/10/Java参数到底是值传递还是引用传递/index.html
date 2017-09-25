@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Java参数到底是值传递还是引用传递 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00前言基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！ 然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。 0x01 说明其实Java中参数的传递都是byValue方式传递。 讲道理先通过虚拟机机制来说明下：  虚拟机在内存中有一块区域叫Java栈，也叫虚拟机栈。栈里面装的是什么？ 栈中存放的是栈帧，栈帧里面又装的是什么？是局部变量表、操作数栈和方">
+  <meta name="description" content="0x00前言基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！ 然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java参数到底是值传递还是引用传递">
 <meta property="og:url" content="http://yoursite.com/2017/08/10/Java参数到底是值传递还是引用传递/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00前言基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！ 然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。 0x01 说明其实Java中参数的传递都是byValue方式传递。 讲道理先通过虚拟机机制来说明下：  虚拟机在内存中有一块区域叫Java栈，也叫虚拟机栈。栈里面装的是什么？ 栈中存放的是栈帧，栈帧里面又装的是什么？是局部变量表、操作数栈和方">
+<meta property="og:description" content="0x00前言基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！ 然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E8%AE%B2%E9%81%93%E7%90%86.jpg">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%8F%82%E6%95%B0%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E4%BC%A0%E9%80%92.png">
-<meta property="og:updated_time" content="2017-08-10T07:00:26.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:06:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java参数到底是值传递还是引用传递">
-<meta name="twitter:description" content="0x00前言基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！ 然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。 0x01 说明其实Java中参数的传递都是byValue方式传递。 讲道理先通过虚拟机机制来说明下：  虚拟机在内存中有一块区域叫Java栈，也叫虚拟机栈。栈里面装的是什么？ 栈中存放的是栈帧，栈帧里面又装的是什么？是局部变量表、操作数栈和方">
+<meta name="twitter:description" content="0x00前言基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！ 然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。">
 <meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/%E8%AE%B2%E9%81%93%E7%90%86.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -205,6 +205,7 @@
       
         <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>基本类型是值传递，引用类型是引用传递，在此前很长的一段时间内，我一直是这么认为的！</p>
 <p>然鹅，这个错误的想法竟然伴随多年，仿佛多年的Java白学了。</p>
+<a id="more"></a>
 <h1 id="0x01-说明"><a href="#0x01-说明" class="headerlink" title="0x01 说明"></a>0x01 说明</h1><p><strong>其实Java中参数的传递都是byValue方式传递</strong>。</p>
 <p>讲道理先通过虚拟机机制来说明下：</p>
 <p><img src="http://othg5ggzi.bkt.clouddn.com/%E8%AE%B2%E9%81%93%E7%90%86.jpg" alt="讲道理"></p>

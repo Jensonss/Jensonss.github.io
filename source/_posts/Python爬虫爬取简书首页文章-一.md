@@ -15,7 +15,7 @@ categories: [Python, 自己写爬虫]
 
 那就采集[简书](www.jianshu.com)首页文章吧。
 
-
+<!-- more -->
 
 # 准备工作
 

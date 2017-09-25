@@ -20,6 +20,8 @@ category: [Android,Java]
 
 ```
 
+<!-- more -->
+
 猜测可能的原因：
 
 ①为了美观

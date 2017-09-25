@@ -9,6 +9,8 @@ categories: [Python, excel, xlrd ]
 
 前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。
 
+<!-- more -->
+
 # 0x01 第三方模块引入 
 
 在Python中

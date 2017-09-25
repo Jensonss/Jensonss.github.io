@@ -16,7 +16,8 @@
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="####1、什么是简单工厂模式？把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。 ####2、什么时候使用工厂模式？当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-6f2ed596ea68547b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-07-24T06:20:32.000Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-09-25T07:11:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="详解设计模式之简单工厂模式">
 <meta name="twitter:description" content="####1、什么是简单工厂模式？把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。 ####2、什么时候使用工厂模式？当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。">
@@ -204,6 +205,7 @@
       
         <p>####1、什么是简单工厂模式？<br>把一些相关类的对象的创建封装在另一个类中，这样在上层的客户端不需要明白相关类对象是如何创建的，只需要调用另一个类的相关方法获取实例即可。另一个类就是所说的工厂类。为了避免每次使用工厂时都创建工厂实例，获取相关类实例的方法一般使用静态方法，所以简单工厂一般也叫静态工厂。</p>
 <p>####2、什么时候使用工厂模式？<br>当你要对上层隐藏一些对象从而达到解耦的效果时可以使用简单工厂。</p>
+<a id="more"></a>
 <p>####3、如何使用工厂模式？</p>
 <ul>
 <li>先看下不使用模式如何创建接口实例</li>
@@ -212,16 +214,17 @@
 <p>起亚汽车实现代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class KiaImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;起亚跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>客户端代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">```  </div><div class="line">如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</div><div class="line">- 看下使用简单工厂是如何实现的</div><div class="line"></div><div class="line">![使用模式.png](http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line">汽车接口和起亚实现代码如上不变，宝马实现代码如下：</div></pre></td></tr></table></figure>
-<p>public class BmwImpl implements CarApi {</p>
-<pre><code>@Override
-public void run() {
-    // TODO Auto-generated method stub
-    System.out.println(&quot;宝马跑起来&quot;);
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">汽车工厂代码如下：</div></pre></td></tr></table></figure></p>
-<p>public class CarFactory {<br>    public static CarApi getCar(int type) {<br>        CarApi car;<br>        if (type == 0) {<br>            car = new KiaImpl();<br>        } else {<br>            car = new BmwImpl();<br>        }<br>        return car;<br>    }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">客户端代码如下：</div></pre></td></tr></table></figure></p>
-<p> public class Client {<br>    public static void main(String[] args) {<br>//        CarApi carApi = new KiaImpl();<br>//        carApi.run();<br>        CarApi kia = CarFactory.getCar(0);<br>        kia.run();<br>        CarApi bmw = CarFactory.getCar(1);<br>        bmw.run();<br>    }<br>}<br>```</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		CarApi carApi = new KiaImpl();</div><div class="line">		carApi.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如上，不使用模式的时候，客户端不仅依赖接口，更知道了接口的实现类是KiaImpl。要知道Java面向接口编程就是为了封装隔离，达到解耦模块的目的。这里虽然使用了接口，但是充其量只用到了其多态，至于封装隔离还是没影的事儿。</p>
+<ul>
+<li>看下使用简单工厂是如何实现的</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-cc51abbba4547d5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="使用模式.png"><br>汽车接口和起亚实现代码如上不变，宝马实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public class BmwImpl implements CarApi &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void run() &#123;</div><div class="line">		// TODO Auto-generated method stub</div><div class="line">		System.out.println(&quot;宝马跑起来&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>汽车工厂代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class CarFactory &#123;</div><div class="line">	public static CarApi getCar(int type) &#123;</div><div class="line">		CarApi car;</div><div class="line">		if (type == 0) &#123;</div><div class="line">			car = new KiaImpl();</div><div class="line">		&#125; else &#123;</div><div class="line">			car = new BmwImpl();</div><div class="line">		&#125;</div><div class="line">		return car;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>客户端代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"> public class Client &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">//		CarApi carApi = new KiaImpl();</div><div class="line">//		carApi.run();</div><div class="line">		CarApi kia = CarFactory.getCar(0);</div><div class="line">		kia.run();</div><div class="line">		CarApi bmw = CarFactory.getCar(1);</div><div class="line">		bmw.run();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>通过客户端代码可知，把实现类封装在工厂后，客户端只需要调用工厂静态方法就能拿到实现类实例，而不需要知道这些实现类是如何创建实现的，达到了解耦的目的。</p>
 <p>有一点要注意：如果接口有多个实现类，在工厂中如何确定想要获取哪个实例？这时就要在静态方法中传入参数，这时客户端就要知道参数类型代表的意思。所以此时底层要向上层暴露一些信息以供使用。</p>
 

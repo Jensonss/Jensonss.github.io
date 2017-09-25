@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%88%86%E4%BB%A3%E5%9B%9E%E6%94%B6.png">
-<meta property="og:updated_time" content="2017-07-27T04:45:07.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:09:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="垃圾回收机制~关于GC">
 <meta name="twitter:description" content="0x00 前言很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。 虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。 说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就">
@@ -211,6 +211,7 @@
 <p>如果是一门语言可以从基础语法学起，但是GC该如何学习呢？</p>
 <p><strong>其实问答形式就是最好的学习方式</strong></p>
 <h1 id="0x01-什么是GC"><a href="#0x01-什么是GC" class="headerlink" title="0x01 什么是GC"></a>0x01 什么是GC</h1><p>GC(垃圾回收)，通过查找无效对象释放空间达到自动管理内存的目的。</p>
+<a id="more"></a>
 <h1 id="0x02-如何确定垃圾"><a href="#0x02-如何确定垃圾" class="headerlink" title="0x02 如何确定垃圾"></a>0x02 如何确定垃圾</h1><p>要查找垃圾对象，首先要知道什么样对象才算是垃圾对象才好对症下药。</p>
 <p><strong>在内存中，不再被引用的对象就称为垃圾对象</strong></p>
 <p>现在的问题又转到如何确定一个对象是否被引用？</p>

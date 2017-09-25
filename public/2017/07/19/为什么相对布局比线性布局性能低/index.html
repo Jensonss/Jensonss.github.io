@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>为什么相对布局比线性布局性能低 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。 经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。 0x01 View绘制流程简述看过源码的应该知道，View的绘制是从ViewRootImpl.performTraversals()方法开始的。 先后经历performMeasure、performLayout和per">
+  <meta name="description" content="0x00 前言UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。 经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为什么相对布局比线性布局性能低">
 <meta property="og:url" content="http://yoursite.com/2017/07/19/为什么相对布局比线性布局性能低/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00 前言UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。 经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。 0x01 View绘制流程简述看过源码的应该知道，View的绘制是从ViewRootImpl.performTraversals()方法开始的。 先后经历performMeasure、performLayout和per">
-<meta property="og:updated_time" content="2017-07-19T10:36:26.000Z">
+<meta property="og:description" content="0x00 前言UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。 经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。">
+<meta property="og:updated_time" content="2017-09-25T07:13:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为什么相对布局比线性布局性能低">
-<meta name="twitter:description" content="0x00 前言UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。 经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。 0x01 View绘制流程简述看过源码的应该知道，View的绘制是从ViewRootImpl.performTraversals()方法开始的。 先后经历performMeasure、performLayout和per">
+<meta name="twitter:description" content="0x00 前言UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。 经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -202,6 +202,7 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI优化原则之一：如果使用线性布局和相对布局的层级一样，那么优先使用线性布局。</p>
 <p>经常说出这个原则的时候就会顺便被问到为什么。为了避免尴尬还是抽时间把源码大概看了一下。</p>
+<a id="more"></a>
 <h1 id="0x01-View绘制流程简述"><a href="#0x01-View绘制流程简述" class="headerlink" title="0x01 View绘制流程简述"></a>0x01 View绘制流程简述</h1><p>看过源码的应该知道，View的绘制是从<code>ViewRootImpl.performTraversals()</code>方法开始的。</p>
 <p>先后经历<code>performMeasure</code>、<code>performLayout</code>和<code>performDraw</code>三个阶段，就是常说的测量、布局和绘制。</p>
 <ul>

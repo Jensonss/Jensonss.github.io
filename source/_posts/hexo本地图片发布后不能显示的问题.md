@@ -11,6 +11,8 @@ categories: [hexo,博客]
 
 经过查找发现hexo-asset-image插件可以比较好的支持本地图片发布。
 
+<!-- more -->
+
 # 开启资源文件支持
 
 在hexo目录下的_config.yml配置文件中找到这个配置：

@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/17/Python中执行shell命令/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00前言这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式 0x01 方式os模块 os.system(‘ls’) 这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。 该方法没有返回值    os.popen(‘ls’) popen方法通过p">
-<meta property="og:updated_time" content="2017-08-17T12:23:17.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:04:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python中执行shell命令">
 <meta name="twitter:description" content="0x00前言这几天频繁用到python和shell命令打交道。所以就总结下在python中执行shell命令的几种方式 0x01 方式os模块 os.system(‘ls’) 这个调用相当直接，且是同步进行的，程序需要阻塞并等待返回。返回值是依赖于系统的，直接返回系统的调用返回值，所以windows和linux是不一样的。 该方法没有返回值    os.popen(‘ls’) popen方法通过p">
@@ -210,6 +210,7 @@
 <ul>
 <li><p>os.popen(‘ls’)</p>
 <p>popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。</p>
+<a id="more"></a>
 </li>
 </ul>
 <h2 id="commands模块"><a href="#commands模块" class="headerlink" title="commands模块"></a>commands模块</h2><p>​    根据你需要的不同，commands模块有三个方法可供选择。getstatusoutput, getoutput, getstatus。</p>

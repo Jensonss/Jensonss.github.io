@@ -21,6 +21,8 @@ categories: Android
        }).start();
     }
 ```
+<!-- more -->
+
 期待已久的crash没有出现，反而页面是这样显示的：
 
 ![屏幕快照 2017-03-26 下午7.14.46.png](http://upload-images.jianshu.io/upload_images/1796052-7be6319d0fc94867.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -822,10 +824,10 @@ ActivityClientRecord r = performResumeActivity(token, clearHide);
                     r.pendingResults = null;
                 }
                 r.activity.performResume();
-
+    
                 EventLog.writeEvent(LOG_ON_RESUME_CALLED,
                         UserHandle.myUserId(), r.activity.getComponentName().getClassName());
-
+    
                 r.paused = false;
                 r.stopped = false;
                 r.state = null;
@@ -848,11 +850,11 @@ ActivityClientRecord r = performResumeActivity(token, clearHide);
 
     final void performResume() {
         performRestart();
-
+    
         mFragments.execPendingActions();
-
+    
         mLastNonConfigurationInstances = null;
-
+    
         mCalled = false;
         // mResumed is set by the instrumentation
         mInstrumentation.callActivityOnResume(this);
@@ -861,13 +863,13 @@ ActivityClientRecord r = performResumeActivity(token, clearHide);
                 "Activity " + mComponent.toShortString() +
                 " did not call through to super.onResume()");
         }
-
+    
         // Now really resume, and install the current status bar and menu.
         mCalled = false;
-
+    
         mFragments.dispatchResume();
         mFragments.execPendingActions();
-
+    
         onPostResume();
         if (!mCalled) {
             throw new SuperNotCalledException(
@@ -909,7 +911,7 @@ ActivityClientRecord r = performResumeActivity(token, clearHide);
             final int forwardBit = isForward ?
             WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION : 0;
             boolean willBeVisible = !a.mStartedActivity;
-
+    
             if (r.window == null && !a.mFinished && willBeVisible) {
                 r.window = r.activity.getWindow();
                 View decor = r.window.getDecorView();
@@ -936,3 +938,4 @@ ActivityClientRecord r = performResumeActivity(token, clearHide);
 
 
 另外关于阅读源码问题，win下当然使用SourceInsight不二选，如果是在mac下可以参考我的[osx下如何使用SublimeText阅读Android系统源码](http://www.jianshu.com/p/c295d2729ecf).。
+```

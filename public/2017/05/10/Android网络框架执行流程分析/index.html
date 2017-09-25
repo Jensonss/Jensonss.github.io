@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Android网络框架okhttp执行流程分析 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="说在前面的话Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。 执行流程">
+  <meta name="description" content="说在前面的话Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android网络框架okhttp执行流程分析">
 <meta property="og:url" content="http://yoursite.com/2017/05/10/Android网络框架执行流程分析/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="说在前面的话Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。 执行流程">
+<meta property="og:description" content="说在前面的话Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。">
 <meta property="og:image" content="http://yoursite.com/2017/05/10/Android网络框架执行流程分析/流程.png">
-<meta property="og:updated_time" content="2017-05-09T17:10:51.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:15:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android网络框架okhttp执行流程分析">
-<meta name="twitter:description" content="说在前面的话Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。 执行流程">
+<meta name="twitter:description" content="说在前面的话Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。">
 <meta name="twitter:image" content="http://yoursite.com/2017/05/10/Android网络框架执行流程分析/流程.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -203,6 +203,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>Android开发中，网络框架okhttp可以说是越来越风光，Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp，能够被谷歌认可，足见okhttp的强大之处了。既如此还有什么理由不去深入理解下它呢？很惭愧，这么好的东西以前一直处于简单调用，今天有时间把流程看了一下，简单总结了下执行请求时的大概流程作为备忘。</p>
+<a id="more"></a>
 <h1 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h1><p><img src="/2017/05/10/Android网络框架执行流程分析/流程.png" alt="流程"></p>
 
       

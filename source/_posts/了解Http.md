@@ -13,6 +13,8 @@ categories: [网络,读书笔记]
 
 ![了解Http](http://othg5ggzi.bkt.clouddn.com/%E4%BA%86%E8%A7%A3http.png)
 
+<!-- more -->
+
 # 0x01 Http历史
 
 ## 一次web请求

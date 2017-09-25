@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-947f3215a5f6169e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-67bfb13669a8dce2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-a2d7e548c4a118cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-07-24T06:20:32.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:10:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搞清minSDKVersion、targetSDKVersion和compileSDKVersion都是什么鬼">
 <meta name="twitter:description" content="一直以来对这几个SDK版本概念都有点模糊不清，对于API的使用又会产生什么样的影响。所以今天花点时间来记录下。   minSDKVersion顾名思义是设置sdk最低版本的。作用就是操作系统会拒绝低于该标准的APP的安装。 例如，minSDKVersion设置为16(Jelly Bean 4.1系统)，那么该APP将只能运行在4.1系统以上的设备中，想要在2.3系统上安装是不被允许的。 minS">
@@ -211,6 +211,7 @@
 <h4 id="minSDKVersion"><a href="#minSDKVersion" class="headerlink" title="minSDKVersion"></a>minSDKVersion</h4><p>顾名思义是设置sdk最低版本的。作用就是操作系统会拒绝低于<br>该标准的APP的安装。</p>
 <p>例如，minSDKVersion设置为16(Jelly Bean 4.1系统)，那么该APP将只能运行在4.1系统以上的设备中，想要在2.3系统上安装是不被允许的。</p>
 <p>minSDKVersion比较容易理解，经常让我混淆的时其他两个版本设置会对API产生的影响。</p>
+<a id="more"></a>
 <h4 id="targetSDKVersion"><a href="#targetSDKVersion" class="headerlink" title="targetSDKVersion"></a>targetSDKVersion</h4><p>targetSDKVersion就是设置SDK目标版本，目标版本的设置就是为了告诉Android系统：本APP是设计计划给哪个API级别运行的。</p>
 <p>一般情况下目标版本设置为当前Android最新版本即可。既然是一般那也就有特殊情况，什么情况下需要修改目标版本呢？</p>
 <p>如果新发布的SDK版本会对UI显示甚至操作系统运行机制产生影响，而你的APP又没有做好应对措施，为了保证你的APP正常运行，那你需要降低目标版本。因为你的目标版本仍然是旧的SDK，所以在新版系统中那些新的变化会在你的APP中被忽略，继而保证其正常运行。</p>

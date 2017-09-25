@@ -24,8 +24,11 @@ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out
 ```
 
+<!-- more -->
+
 搜索了下异常发现很早就有这个问题，比如[这里](https://github.com/npm/npm/issues/10037)
 但是好像没什么好的解决方法。网传有其他地址可以使用，但是没有继续浪费时间了，不能一条路走到黑。
+
 #### 使用国内资源
 国外太麻烦，毕竟只是想看源码，不想在下载方面浪费太多精力。所以把想法转战到国内的源上。
 分享2个源，[科大源](https://lug.ustc.edu.cn/wiki/mirrors/help/aosp#已有仓库如何改用科大源)和[清大源](https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/)
@@ -56,5 +59,4 @@ repo has been initialized in /Users/jenson/Downloads/aosp
 
 ```
 /Users/jenson/Downloads/aosp/.repo/repo/repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-6.0.1_r58  --config
-
 ```

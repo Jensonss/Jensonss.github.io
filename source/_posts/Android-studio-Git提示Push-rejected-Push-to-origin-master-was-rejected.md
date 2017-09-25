@@ -21,6 +21,8 @@ Git Pull Failed: fatal: refusing to merge unrelated histories
 
 而本地已经add过了。
 
+<!-- more -->
+
 # 0x01 解决
 
 因为Android studio可以执行的命令有限（或者还未发现新天地），所以cd到项目目录执行

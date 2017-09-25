@@ -25,6 +25,8 @@ categories: [Android, 源码解析]
 
 有了输入设备，系统是如何从中采集数据的呢？
 
+<!-- more -->
+
 # 0x02 设备节点到ViewRootImpl
 
 ## Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。

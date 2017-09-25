@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Python入门系列(1):如何使用Sublime text开发Python | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="下载并安装Sublime text3点击下载osx版直接安装即可。如果需要其他系统版本请移步这里安装完成，在launcher启动Sublime  配置Python3的编译环境 找到Python3的安装路径终端中输入命令  -a python3 ```123456可以看到结果![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.i">
+  <meta name="description" content="下载并安装Sublime text3点击下载osx版直接安装即可。如果需要其他系统版本请移步这里安装完成，在launcher启动Sublime">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python入门系列(1):如何使用Sublime text开发Python">
 <meta property="og:url" content="http://yoursite.com/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="下载并安装Sublime text3点击下载osx版直接安装即可。如果需要其他系统版本请移步这里安装完成，在launcher启动Sublime  配置Python3的编译环境 找到Python3的安装路径终端中输入命令  -a python3 ```123456可以看到结果![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.i">
+<meta property="og:description" content="下载并安装Sublime text3点击下载osx版直接安装即可。如果需要其他系统版本请移步这里安装完成，在launcher启动Sublime">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-07-24T06:20:32.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:13:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python入门系列(1):如何使用Sublime text开发Python">
-<meta name="twitter:description" content="下载并安装Sublime text3点击下载osx版直接安装即可。如果需要其他系统版本请移步这里安装完成，在launcher启动Sublime  配置Python3的编译环境 找到Python3的安装路径终端中输入命令  -a python3 ```123456可以看到结果![屏幕快照 2017-01-06 下午8.37.07.png](http://upload-images.jianshu.i">
+<meta name="twitter:description" content="下载并安装Sublime text3点击下载osx版直接安装即可。如果需要其他系统版本请移步这里安装完成，在launcher启动Sublime">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -207,6 +207,7 @@
       
         <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg" target="_blank" rel="external">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3" target="_blank" rel="external">这里</a><br>安装完成，在launcher启动Sublime</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
+<a id="more"></a>
 <h1 id="配置Python3的编译环境"><a href="#配置Python3的编译环境" class="headerlink" title="配置Python3的编译环境"></a>配置Python3的编译环境</h1><ul>
 <li>找到Python3的安装路径<br>终端中输入命令</li>
 </ul>
@@ -218,7 +219,7 @@
 <p>点击new build system 后的窗口如下图：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-e855b34a3025e14a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.46.29.png"></p>
 <p>将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;cmd&quot;: [&quot;之前得到的python3路径&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
+<p>然后点击save as保存为<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">此时再次查看build system列表发现Python3已经出现了，至此Sublime的Python3编译环境已经完成。</div><div class="line"></div><div class="line">![屏幕快照 2017-01-06 下午8.51.22.png](http://upload-images.jianshu.io/upload_images/1796052-81e3e153c615759e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</div><div class="line"></div><div class="line"># 开始我们的第一个程序hello Python！</div><div class="line">- 新建工作目录</div><div class="line">  桌面新建一个名为python_work的文件夹，用来存放python文件</div><div class="line">- 新建文件</div><div class="line">  使用Sublime--&gt;new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)</div><div class="line"></div><div class="line">- 打印hello python</div></pre></td></tr></table></figure></p>
 <p>print(“hello python!”)<br>```</p>
 <p>编写完代码保存，command+B执行编译</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-a4f30b1ba7ac0f9e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午9.03.31.png"></p>

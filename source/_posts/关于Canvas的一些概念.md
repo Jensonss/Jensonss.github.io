@@ -18,6 +18,8 @@ categories: Android
 - 重写onDraw方法，使用参数中的Canvas
 - 直接创建Canvas对象
 
+<!-- more -->
+
 # 它有什么用
 
 Canvas一般译为“画布”。而画布一般只是用来承载画像的，显然在Android中叫Canvas为画布，显然狭隘了。因为Android开发中，Canvas不仅提供了动画特效还提供了常见图形绘制方法，比如圆形、矩形、扇形等。

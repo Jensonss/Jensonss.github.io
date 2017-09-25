@@ -25,6 +25,8 @@ categories: [hexo,博客]
 
   命令：`git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia`
 
+  <!-- more -->
+
 # 0x02 安装
 
 完成了下载和备份，接下来开始主题切换，在未确认完全完成之前不要执行`hexo d -g`部署到服务器，先在本地测试。

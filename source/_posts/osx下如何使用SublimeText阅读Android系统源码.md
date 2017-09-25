@@ -14,6 +14,8 @@ categories: 工具
 　　Project > Add Folder to Project 选择源码目录即可
 　　这时在窗口左边栏中将出现刚刚添加的文件目录，如果还需要添加其他目录，则重复这一操作即可。
 
+<!-- more -->
+
 #### 2. 保存工程
 
 　　Project > Save Project As
@@ -45,14 +47,14 @@ import urllib.request,os;pf='Package Control.sublime-package';ipp=sublime.instal
   - 2. Preference -> Package control, 输入“install package”，它会找出你可以安装的插件，在列表中选择ctag插件进行安装
 
    - 3.创建索引
-  
+
 ![屏幕快照 2017-03-22 下午2.55.23.png](http://upload-images.jianshu.io/upload_images/1796052-38f35a1199d9e85a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 4、异常处理
 
 - 期间出现Package Control:There are no packages available for installation弹窗提示
-选择Preference->Browser Packages打开文件夹后
-删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。
+  选择Preference->Browser Packages打开文件夹后
+  删除Package Control目录、删除User目录下相关Package Control名称文件等，再次安装。
 - ctag rebuild时弹窗异常如图：
 
 ![屏幕快照 2017-03-22 下午3.01.14.png](http://upload-images.jianshu.io/upload_images/1796052-ad6b9e4b667a7b5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -68,8 +70,8 @@ sudo make install
 把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径/usr/local/bin/ctags（可以通过which ctags命令查看ctags路径）
 #### 5、快捷键
 - 修改跳转
-默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：
- Perference->Package Settings->CTags->Mouse Binding Default->复制到Mouse Binding User，把里面的"ctrl+shift"，修改为“command”，这样就可以用“command+左键”跳转了：
+  默认函数跳转：Ctrl+shift+左键; 跳转返回：Ctrl+shift+右键。修改方法：
+   Perference->Package Settings->CTags->Mouse Binding Default->复制到Mouse Binding User，把里面的"ctrl+shift"，修改为“command”，这样就可以用“command+左键”跳转了：
 
 ```
         Command+P：查找文件

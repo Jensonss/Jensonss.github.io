@@ -15,6 +15,8 @@ python --version
 
 可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续
 
+<!-- more -->
+
 # Python3下载与安装
 
 先附上[python3.6](https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg)下载地址。

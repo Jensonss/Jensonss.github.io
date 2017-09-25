@@ -25,7 +25,7 @@ categories: Android
 
 - 了解jni源码和机制
 
-  ​
+  <!-- more -->
 
 # 什么是jni、ndk
 

@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/06/Python入门系列(4)文件IO/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="前言文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。 操作mode不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？ 什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？ 下面表格列出了mode值及含义：    值 描述     ‘r’ 读模式   ‘w’ 写模式   ‘a’ 追加模式">
-<meta property="og:updated_time" content="2017-08-08T05:53:00.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:07:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python入门系列(4):文件IO">
 <meta name="twitter:description" content="前言文件读写是最常见的IO操作，而python也内置了文件读写的函数，下面看看如何读写文件。 操作mode不论读还是写，只要想操作文件就要先打开文件，而打开文件时要告诉系统你的mode是什么？ 什么是mode？就是你打算对这个文件操作的类型，是读还是写，如果是写是覆盖还是追加？ 下面表格列出了mode值及含义：    值 描述     ‘r’ 读模式   ‘w’ 写模式   ‘a’ 追加模式">
@@ -235,6 +235,7 @@
 </tbody>
 </table>
 <p><strong>其中b和+可以和前面模式混用</strong>。</p>
+<a id="more"></a>
 <p>打开文件使用<strong>open*</strong>函数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file= open(<span class="string">r"file\t.txt"</span>, mode=<span class="string">'a+'</span>)</div></pre></td></tr></table></figure>
 <blockquote>

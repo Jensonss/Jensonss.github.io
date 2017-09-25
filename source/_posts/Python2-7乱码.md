@@ -31,6 +31,8 @@ if sys.getdefaultencoding() != defaultencoding:
 
 所以推荐方法二：修改全局编码环境
 
+<!-- more -->
+
 ### 修改全局编码环境
 
 Mac中有两处sitepackage，找到目录：

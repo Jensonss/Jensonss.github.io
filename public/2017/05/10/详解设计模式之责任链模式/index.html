@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>详解设计模式之责任链模式 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="说在前面的话责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。 面试流程分析作为技术人员离职再就业少不了要面试的，那么我们就拿面试流程来细说。假设面试流程分为三步：组长面试，CTO面试，HR终面">
+  <meta name="description" content="说在前面的话责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="详解设计模式之责任链模式">
 <meta property="og:url" content="http://yoursite.com/2017/05/10/详解设计模式之责任链模式/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="说在前面的话责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。 面试流程分析作为技术人员离职再就业少不了要面试的，那么我们就拿面试流程来细说。假设面试流程分为三步：组长面试，CTO面试，HR终面">
+<meta property="og:description" content="说在前面的话责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。">
 <meta property="og:image" content="http://yoursite.com/2017/05/10/详解设计模式之责任链模式/屏幕快照%202017-05-10%20下午4.21.27.png">
 <meta property="og:image" content="http://yoursite.com/2017/05/10/详解设计模式之责任链模式/屏幕快照%202017-05-10%20下午5.17.19.png">
-<meta property="og:updated_time" content="2017-05-10T09:18:28.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:15:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="详解设计模式之责任链模式">
-<meta name="twitter:description" content="说在前面的话责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。 面试流程分析作为技术人员离职再就业少不了要面试的，那么我们就拿面试流程来细说。假设面试流程分为三步：组长面试，CTO面试，HR终面">
+<meta name="twitter:description" content="说在前面的话责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。">
 <meta name="twitter:image" content="http://yoursite.com/2017/05/10/详解设计模式之责任链模式/屏幕快照%202017-05-10%20下午4.21.27.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -204,6 +204,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>责任链模式也叫职责链，抛开设计模式不谈，单看“责任链”这三个字，关注点一下子就放到了“链”字上了。链即锁链、链条，像链子一样环环相扣的东西。比如我们数据结构中的链表，当前对象持有下一个对象的地址。同样，设计模式中的责任链也是如此，任务一环套一环，环环相扣。</p>
+<a id="more"></a>
 <h1 id="面试流程分析"><a href="#面试流程分析" class="headerlink" title="面试流程分析"></a>面试流程分析</h1><p>作为技术人员离职再就业少不了要面试的，那么我们就拿面试流程来细说。假设面试流程分为三步：组长面试，CTO面试，HR终面，一共三面。</p>
 <h2 id="不考虑其他任何方面的优化，一个人的面试如何实现？"><a href="#不考虑其他任何方面的优化，一个人的面试如何实现？" class="headerlink" title="不考虑其他任何方面的优化，一个人的面试如何实现？"></a>不考虑其他任何方面的优化，一个人的面试如何实现？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//面试类</div><div class="line">static class Viewer &#123;</div><div class="line">	public void interview(int level) &#123;</div><div class="line"></div><div class="line">		if (0 == level) &#123;// 组长面试</div><div class="line">			// TODO</div><div class="line">		&#125; else if (1 == level) &#123;// CTO面试</div><div class="line">			// TODO</div><div class="line">		&#125; else if (2 == level) &#123;// HR终面</div><div class="line">			// TODO</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//客户端</div><div class="line">public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">	Viewer viewer = new Viewer();</div><div class="line">	viewer.interview(0);</div><div class="line">	viewer.interview(1);</div><div class="line">	viewer.interview(2);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>

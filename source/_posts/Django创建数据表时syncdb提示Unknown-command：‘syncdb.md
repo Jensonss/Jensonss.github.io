@@ -13,6 +13,8 @@ Unknown command: 'syncdb'
 Type 'manage.py help' for usage.
 ```
 
+<!-- more -->
+
 主要是因为使用的版本太新，如果你安装的Django Version >= 1.9就会出现这个问题
 
 解决方法就是把`python3 ./manage.py syncdb`

@@ -29,6 +29,8 @@ categories: Python
 
 **其中b和+可以和前面模式混用**。
 
+<!-- more -->
+
 打开文件使用**open***函数：
 
 ```python

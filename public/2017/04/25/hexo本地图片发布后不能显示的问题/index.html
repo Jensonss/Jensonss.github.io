@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.33.13.png">
 <meta property="og:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.34.46.png">
 <meta property="og:image" content="http://yoursite.com/2017/04/25/hexo本地图片发布后不能显示的问题/屏幕快照%202017-04-25%20下午3.45.37.png">
-<meta property="og:updated_time" content="2017-08-17T05:01:57.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:05:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo本地图片发布后不能显示的问题">
 <meta name="twitter:description" content="说在前面的话工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是u">
@@ -206,6 +206,7 @@
       
         <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><p>工作好几年，终于花了点时间搞了个自己的网站，基于Hexo+Github+个性域名，玩的不亦乐乎。但是这两天发现个问题比较蛋疼。就是Hexo基于MarkDown文本的。如果在写文章时想加入图片，如果你的图片来自其他网站，那么当你发布后是没有问题的，因为其url就是那个图片网址。但是如果你的图片来自你的本地、这样在你预览时是没有问题的，但是细心看下就会发现，markdown中的本地图片是url地址是本地地址。这样如果你发布文章后，别人肯定是看不到你的图片的。这样体验很不好。最开始的想法就是先在简书发布，发布后图片url都是来自简书网站url，而非本地，这样是没问题的，但是这样自己的网站显示个图片还要依赖简书平台，可能代码写多了，总感觉耦合性太强啊~~所以就在找怎么把两个平台独立开来，而自己网站又能发布图片的方法。</p>
 <p>经过查找发现hexo-asset-image插件可以比较好的支持本地图片发布。</p>
+<a id="more"></a>
 <h1 id="开启资源文件支持"><a href="#开启资源文件支持" class="headerlink" title="开启资源文件支持"></a>开启资源文件支持</h1><p>在hexo目录下的_config.yml配置文件中找到这个配置：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">post_asset_folder: false</div></pre></td></tr></table></figure>
 <p>把这里的false改为true。开启hexo的媒体文件支持。</p>

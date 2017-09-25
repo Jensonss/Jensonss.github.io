@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>用Python提取excel中有用数据 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。 0x01 第三方模块引入在Python中 123# 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel# 针对 03版exce">
+  <meta name="description" content="0x00 前言前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。">
 <meta name="keywords" content="Python,excel,xlrd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用Python提取excel中有用数据">
 <meta property="og:url" content="http://yoursite.com/2017/07/21/用Python提取excel中有用数据/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00 前言前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。 0x01 第三方模块引入在Python中 123# 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel# 针对 03版exce">
+<meta property="og:description" content="0x00 前言前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。">
 <meta property="og:image" content="http://yoursite.com/2017/07/21/用Python提取excel中有用数据/创建项目.png">
 <meta property="og:image" content="http://yoursite.com/2017/07/21/用Python提取excel中有用数据/项目结果.png">
 <meta property="og:image" content="http://yoursite.com/2017/07/21/用Python提取excel中有用数据/doc文档内容.png">
-<meta property="og:updated_time" content="2017-07-21T03:08:31.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:13:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用Python提取excel中有用数据">
-<meta name="twitter:description" content="0x00 前言前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。 0x01 第三方模块引入在Python中 123# 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel# 针对 03版exce">
+<meta name="twitter:description" content="0x00 前言前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。">
 <meta name="twitter:image" content="http://yoursite.com/2017/07/21/用Python提取excel中有用数据/创建项目.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -205,6 +205,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前些天有人给了我两个书单列表，都是excel样式的，每个excel中有大概三千个书名的样子。如果让我找我需要的相关书籍，这是一个不小的工作量。既然才学过Python，就萌生了使用Python提取自己感兴趣的书籍的想法。</p>
+<a id="more"></a>
 <h1 id="0x01-第三方模块引入"><a href="#0x01-第三方模块引入" class="headerlink" title="0x01 第三方模块引入"></a>0x01 第三方模块引入</h1><p>在Python中</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 针对 07版excel（xlsx结尾的）,我们可以使用openpyxl来操作读写excel</span></div><div class="line"><span class="comment"># 针对 03版excel（xls结尾的），我们可以使用xlrd读，xlwt包来写</span></div><div class="line"><span class="comment"># 针对 doc文档，我们可以使用docx操作</span></div></pre></td></tr></table></figure>
 <p>知道需要哪些模块了，接下来就是安装所需模块。</p>

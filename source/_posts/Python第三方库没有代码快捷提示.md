@@ -9,7 +9,7 @@ categories: Python
 
 做Python开发IDE首选当然是Pycharm，但是有个问题是如果安装第三方库后，在使用的时候，第三方库返回的变量调用方法时没有代码快捷提示。
 
-
+<!-- more -->
 
 # 解决
 

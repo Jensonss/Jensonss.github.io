@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Android开发之JNI深入解析 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。  通过本章可以了解到这些： jni介绍  为什么要学习jni  jni使用流程是怎样的  如何Java调用C  如何C调用Java  了解jni源码和机制 ​   什么是jni、ndkjni(java native interface)，Java本地接口。在Java中接口就是一套协议">
+  <meta name="description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。  通过本章可以了解到这些： jni介绍  为什么要学习jni  jni使用流程是怎样的  如何Java调用C  如何C调用Java  了解jni源码和机制">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android开发之JNI深入解析">
 <meta property="og:url" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。  通过本章可以了解到这些： jni介绍  为什么要学习jni  jni使用流程是怎样的  如何Java调用C  如何C调用Java  了解jni源码和机制 ​   什么是jni、ndkjni(java native interface)，Java本地接口。在Java中接口就是一套协议">
+<meta property="og:description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。  通过本章可以了解到这些： jni介绍  为什么要学习jni  jni使用流程是怎样的  如何Java调用C  如何C调用Java  了解jni源码和机制">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-062e7ea6f0c17ef3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-a4792879d689f210.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午9.57.43.png">
@@ -23,10 +23,10 @@
 <meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-24%20下午11.14.36.png">
 <meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-25%20下午12.56.36.png">
 <meta property="og:image" content="http://yoursite.com/2017/04/25/Android开发之JNI深入解析/屏幕快照%202017-04-25%20下午2.54.18.png">
-<meta property="og:updated_time" content="2017-04-25T07:17:12.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:16:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android开发之JNI深入解析">
-<meta name="twitter:description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。  通过本章可以了解到这些： jni介绍  为什么要学习jni  jni使用流程是怎样的  如何Java调用C  如何C调用Java  了解jni源码和机制 ​   什么是jni、ndkjni(java native interface)，Java本地接口。在Java中接口就是一套协议">
+<meta name="twitter:description" content="说在前面的话 本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。  通过本章可以了解到这些： jni介绍  为什么要学习jni  jni使用流程是怎样的  如何Java调用C  如何C调用Java  了解jni源码和机制">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1796052-062e7ea6f0c17ef3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -224,7 +224,7 @@
 <li><p>如何C调用Java</p>
 </li>
 <li><p>了解jni源码和机制</p>
-<p>​</p>
+<a id="more"></a>
 </li>
 </ul>
 <h1 id="什么是jni、ndk"><a href="#什么是jni、ndk" class="headerlink" title="什么是jni、ndk"></a>什么是jni、ndk</h1><p>jni(java native interface)，Java本地接口。在Java中接口就是一套协议标准，同样这里也是如此，jni是一套让Java和C互通有无的一套标准。看到这脑子里应该有个大概情况：</p>

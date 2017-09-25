@@ -27,6 +27,8 @@ categories: Python
 
 **所以并行可以理解为硬件上的，并发理解为逻辑上的**。
 
+<!-- more -->
+
 对以上都有了了解，下面看看在Python中如何使用：
 
 # 进程
@@ -110,6 +112,7 @@ Python提供了多种进程间通信方式如Queue、Pipe。
   ```python
   from multiprocessing import Process, Queue
   import time
+  ```
 
 
   def write_proc(queue, urls):

@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/21/Java-wait，notify和notifyAll使用分析/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言提起多线程想当然的就会想到synchronized 。但是synchronized只能用于线程同步，如果是线程交替执行(生产者/消费者)，synchronized也无能为力了。这时wait，notify和notifyAll派上用场了。 0x01 它们只是Object里的方法点开源码发现这三个方法只是object里面的方法，和多线程有神马关系呢？我相信不止我一个人曾经有过这个疑问。 不">
-<meta property="og:updated_time" content="2017-07-24T06:08:07.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:13:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java wait，notify和notifyAll使用分析">
 <meta name="twitter:description" content="0x00 前言提起多线程想当然的就会想到synchronized 。但是synchronized只能用于线程同步，如果是线程交替执行(生产者/消费者)，synchronized也无能为力了。这时wait，notify和notifyAll派上用场了。 0x01 它们只是Object里的方法点开源码发现这三个方法只是object里面的方法，和多线程有神马关系呢？我相信不止我一个人曾经有过这个疑问。 不">
@@ -203,6 +203,7 @@
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>提起多线程想当然的就会想到<code>synchronized</code> 。但是<code>synchronized</code>只能用于线程同步，如果是线程交替执行(生产者/消费者)，<code>synchronized</code>也无能为力了。这时wait，notify和notifyAll派上用场了。</p>
 <h1 id="0x01-它们只是Object里的方法"><a href="#0x01-它们只是Object里的方法" class="headerlink" title="0x01 它们只是Object里的方法"></a>0x01 它们只是Object里的方法</h1><p>点开源码发现这三个方法只是object里面的方法，和多线程有神马关系呢？我相信不止我一个人曾经有过这个疑问。</p>
 <p>不只是object里的方法，而且还都是native方法。这是Java有意为之。因为Java设计之初就是要每个对象都有一个监控锁(Monitor)。而wait，notify和notifyAll三个方法也必须要在当前线程已经持有监控锁状态下才能执行，否则就会报<code>java.lang.IllegalMonitorStateException</code>。</p>
+<a id="more"></a>
 <h1 id="0x02-怎么知道线程是否持有状态锁"><a href="#0x02-怎么知道线程是否持有状态锁" class="headerlink" title="0x02 怎么知道线程是否持有状态锁"></a>0x02 怎么知道线程是否持有状态锁</h1><p>线程同步原理就是利用了锁的互斥，所以在<code>synchronized</code>代码块内能确定是持有锁的。也就是说wait，notify和notifyAll方法需要在<code>synchronized</code>代码块内使用。</p>
 <p>具体来说有三种方式：</p>
 <ul>

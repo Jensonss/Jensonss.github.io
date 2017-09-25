@@ -17,6 +17,8 @@ categories: Android
 
 minSDKVersion比较容易理解，经常让我混淆的时其他两个版本设置会对API产生的影响。
 
+<!-- more -->
+
 #### targetSDKVersion
 targetSDKVersion就是设置SDK目标版本，目标版本的设置就是为了告诉Android系统：本APP是设计计划给哪个API级别运行的。
 

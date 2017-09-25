@@ -26,6 +26,8 @@ categories: Python
 
   popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。
 
+  <!-- more -->
+
 ## commands模块
 
 ​	根据你需要的不同，commands模块有三个方法可供选择。getstatusoutput, getoutput, getstatus。

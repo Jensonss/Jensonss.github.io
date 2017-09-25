@@ -15,6 +15,8 @@ categories: [Java, 多线程]
 
 不只是object里的方法，而且还都是native方法。这是Java有意为之。因为Java设计之初就是要每个对象都有一个监控锁(Monitor)。而wait，notify和notifyAll三个方法也必须要在当前线程已经持有监控锁状态下才能执行，否则就会报`java.lang.IllegalMonitorStateException`。
 
+<!-- more -->
+
 # 0x02 怎么知道线程是否持有状态锁
 
 线程同步原理就是利用了锁的互斥，所以在`synchronized`代码块内能确定是持有锁的。也就是说wait，notify和notifyAll方法需要在`synchronized`代码块内使用。

@@ -11,9 +11,11 @@ categories: Python
 
 ![屏幕快照 2017-01-06 下午8.32.28.png](http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+<!-- more -->
+
 # 配置Python3的编译环境
 -  找到Python3的安装路径
-终端中输入命令
+  终端中输入命令
 
 ``` type -a python3 ```
 
@@ -25,7 +27,7 @@ categories: Python
 
 - 配置Sublime
   打开Sublime->Tools->build system->new build system 
-如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。
+  如下图可以看到列表里面已经有了Python编译环境，但这是针对Python2.x的版本的，需要我们手动添加3.x版本。
 
 ![屏幕快照 2017-01-06 下午8.41.06.png](http://upload-images.jianshu.io/upload_images/1796052-8353a6ec526679ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -47,9 +49,9 @@ categories: Python
 
 # 开始我们的第一个程序hello Python！
 - 新建工作目录
-桌面新建一个名为python_work的文件夹，用来存放python文件
+  桌面新建一个名为python_work的文件夹，用来存放python文件
 - 新建文件
-使用Sublime-->new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)
+  使用Sublime-->new file 新建一个空文件保存到刚才创建的python_work中，命名为hello_python.py 。(*这里命名时加了.py后缀是告诉Sublime说我这个文件是python程序，这样在编写时候会给出关键字的颜色标示，并且 编译时候会使用python编译环境*)
 
 - 打印hello python
 

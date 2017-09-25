@@ -9,6 +9,8 @@ categories: Android
 
 关于Android内存优化可参见我的另一篇文章[[Android性能优化之内存优化](http://www.jensondev.me/2017/04/21/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/)]。Android性能优化中内存优化可谓重中之重，而内存泄露又是Android内存优化的重灾区。重灾区就要重拳出击，整治内存泄露，Mat是必备的利器。
 
+<!-- more -->
+
 # 关于Mat
 
 

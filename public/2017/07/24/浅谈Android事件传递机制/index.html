@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言为什么点下屏幕某个位置时候，系统会找到正确地控件来响应？ 为什么按下按下返回键系统会让当前窗口页面关闭而不是下面的那个页面？ 很多时候多问自己个为什么就发现自己会的其实还很少。 0x01 冯诺依曼模型回顾 讲事件传递为什么把冯诺依曼模型带进来了？ 事件传递的事件来自哪里？ 基本的事件来自按键、屏幕，属于输入设备，而最终事件的结果要显示在屏幕上(输出设备)，这样才算完成一次交互。其实这">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E6%A8%A1%E5%9E%8B.png">
-<meta property="og:updated_time" content="2017-07-25T17:31:15.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:09:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android事件传递机制">
 <meta name="twitter:description" content="0x00 前言为什么点下屏幕某个位置时候，系统会找到正确地控件来响应？ 为什么按下按下返回键系统会让当前窗口页面关闭而不是下面的那个页面？ 很多时候多问自己个为什么就发现自己会的其实还很少。 0x01 冯诺依曼模型回顾 讲事件传递为什么把冯诺依曼模型带进来了？ 事件传递的事件来自哪里？ 基本的事件来自按键、屏幕，属于输入设备，而最终事件的结果要显示在屏幕上(输出设备)，这样才算完成一次交互。其实这">
@@ -210,6 +210,7 @@
 <p>事件传递的事件来自哪里？</p>
 <p>基本的事件来自按键、屏幕，属于输入设备，而最终事件的结果要显示在屏幕上(输出设备)，这样才算完成一次交互。其实这里屏幕同时兼顾输入和输出。</p>
 <p>有了输入设备，系统是如何从中采集数据的呢？</p>
+<a id="more"></a>
 <h1 id="0x02-设备节点到ViewRootImpl"><a href="#0x02-设备节点到ViewRootImpl" class="headerlink" title="0x02 设备节点到ViewRootImpl"></a>0x02 设备节点到ViewRootImpl</h1><h2 id="Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。"><a href="#Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。" class="headerlink" title="Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。"></a>Android系统是基于Linux的，而输入事件是接收是由Linux内核完成的。</h2><p>当发现输入设备可用时，Linux内核会在/dev/input/目录下创建名称为event0~n的设备节点。当设备不可用时则删除对应节点。</p>
 <p><em>如果刚才的不好理解，那么可以理解windows这种情况：当我们新买的鼠标插入USB口时，右下角一般弹窗正在安装USB驱动，而最终会在设备管理中多出一个USBHub设备节点，拔掉USB时就会消失</em></p>
 <p>输入设备准备就绪，当有事件发生时，Linux内核收到硬件中断，然后把中断加工成原始输入事件存入对应设备节点中。</p>

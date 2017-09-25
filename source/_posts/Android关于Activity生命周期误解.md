@@ -21,6 +21,8 @@ B关闭之后
 
 ` B onPause onStop onDestory ,A onRestart onStart onResume`
 
+<!-- more -->
+
 但是想的太简单了，我以为的并不是我以为的。下面是打印的生命周期执行：
 
 ```

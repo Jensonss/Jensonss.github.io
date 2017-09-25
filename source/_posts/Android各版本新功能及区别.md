@@ -27,7 +27,7 @@ waiting...
 
 - 删除了三个常用隐式广播 — `CONNECTIVITY_ACTION`、`ACTION_NEW_PICTURE` 和`ACTION_NEW_VIDEO` 
 
-  ​
+  ​<!-- more -->
 
 # 0x03 Android 6.0 Marshmallow
 

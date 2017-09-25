@@ -22,6 +22,8 @@ categories: Android
 
 **sp：**Scale-Independent Pixels的缩写，可以根据系统自动进行缩放。通常可以使用12sp，14sp，18sp，22sp，为了避免精度失真一般不使用奇数和小数。
 
+<!-- more -->
+
 不同密度区分：
 
 | 名称      | 密度范围        | 图片大小      | 比例   |

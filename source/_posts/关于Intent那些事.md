@@ -11,6 +11,8 @@ Intent，译为“意图”。从汉语角度理解，意图是什么意思？�
 
 虽然想要做什么就告诉Android系统，但是并不是为所欲为的。通过Intent只能请求三大组件：Activity，Service，Broadcast。
 
+<!-- more -->
+
 # 0x01 抽象理解
 
 因为涉及三个组件，这里不会单独讲每个组件和Intent。startActivity不要叫启动Activity，startService也不要叫启动服务，我们把他们抽象为一个请求。通过Intent向Android发出请求，Android去哪给你匹配呢？你不注册系统当然没地方找，所以我们要在AndroidManifest.xml中进行注册(广播可以动态注册)。注册的作用不光告诉系统可以从这找我，还告诉系统本组件只接收满足要求的请求。说到要求这就要提到IntentFilter了，每个IntentFilter代表一种要求，一个组件可以有多种要求即多个IntentFilter，但只要满足一种就能请求成功。系统所要做的就是把接收到得请求Intent和组件的要求IntentFilter进行匹配，如果匹配上了则牵手成功~

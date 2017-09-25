@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Python爬虫爬取简书首页文章(二) | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言在 Python爬虫爬取简书首页文章(一) 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。 但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。 要实现分页爬取，首先要知道网站如何分页的 网站如何分页这里以简书为例，要想知道简书首页文章如何实现分页，首先打开官网和抓包工具进行监听。 这里的抓包工具我使用的时Wireshark。刚开始时数据流是空的：  现在开始滑动简书官网，">
+  <meta name="description" content="前言在 Python爬虫爬取简书首页文章(一) 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。 但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。 要实现分页爬取，首先要知道网站如何分页的。">
 <meta name="keywords" content="Python,自己写爬虫">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python爬虫爬取简书首页文章(二)">
 <meta property="og:url" content="http://yoursite.com/2017/08/02/Python爬虫爬取简书首页文章-二/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="前言在 Python爬虫爬取简书首页文章(一) 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。 但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。 要实现分页爬取，首先要知道网站如何分页的 网站如何分页这里以简书为例，要想知道简书首页文章如何实现分页，首先打开官网和抓包工具进行监听。 这里的抓包工具我使用的时Wireshark。刚开始时数据流是空的：  现在开始滑动简书官网，">
+<meta property="og:description" content="前言在 Python爬虫爬取简书首页文章(一) 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。 但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。 要实现分页爬取，首先要知道网站如何分页的。">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E7%A9%BAWireshark.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%BB%91%E5%8A%A8%E4%B8%A4%E6%AC%A1%E8%AF%B7%E6%B1%82.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/selenium%E6%8E%A7%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%90%E7%A4%BA.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%9C%AB%E5%B0%BE%E6%96%87%E7%AB%A0%E7%88%AC%E5%8F%96%E7%BB%93%E6%9D%9F.png">
-<meta property="og:updated_time" content="2017-08-02T09:32:59.000Z">
+<meta property="og:updated_time" content="2017-09-25T07:08:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python爬虫爬取简书首页文章(二)">
-<meta name="twitter:description" content="前言在 Python爬虫爬取简书首页文章(一) 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。 但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。 要实现分页爬取，首先要知道网站如何分页的 网站如何分页这里以简书为例，要想知道简书首页文章如何实现分页，首先打开官网和抓包工具进行监听。 这里的抓包工具我使用的时Wireshark。刚开始时数据流是空的：  现在开始滑动简书官网，">
+<meta name="twitter:description" content="前言在 Python爬虫爬取简书首页文章(一) 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。 但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。 要实现分页爬取，首先要知道网站如何分页的。">
 <meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/%E7%A9%BAWireshark.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -207,7 +207,8 @@
       
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在 <a href="http://www.jensondev.me/2017/08/02/Python%E7%88%AC%E8%99%AB%E7%88%AC%E5%8F%96%E7%AE%80%E4%B9%A6%E9%A6%96%E9%A1%B5%E6%96%87%E7%AB%A0-%E4%B8%80/" target="_blank" rel="external">Python爬虫爬取简书首页文章(一)</a> 中已经完成了一个mini爬虫，完成了基本的爬取和存储工作。</p>
 <p>但是还有很多问题需要亟需解决，譬如分页抓取就是本章要解决的。</p>
-<p>要实现分页爬取，首先要知道网站如何分页的</p>
+<p>要实现分页爬取，首先要知道网站如何分页的。</p>
+<a id="more"></a>
 <h1 id="网站如何分页"><a href="#网站如何分页" class="headerlink" title="网站如何分页"></a>网站如何分页</h1><p>这里以简书为例，要想知道简书首页文章如何实现分页，首先打开官网和抓包工具进行监听。</p>
 <p>这里的抓包工具我使用的时<strong>Wireshark</strong>。刚开始时数据流是空的：</p>
 <p><img src="http://othg5ggzi.bkt.clouddn.com/%E7%A9%BAWireshark.png" alt="空"></p>

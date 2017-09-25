@@ -248,10 +248,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/20/python去除字符串中间空格的方法/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -336,10 +332,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/19/ModuleNotFoundError No module named win32api/">展开全文 >></a>
-        </p>
       
 
       
@@ -427,10 +419,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/18/Widows下wordcloud安装异常/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -514,10 +502,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/18/Python文件编码/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -573,19 +557,9 @@
 <p>这种情况有个问题就是如果系统默认环境是2.7，而开发工具是3.6，此时如果你的项目创建时使用默认环境2.7创建，但是确使用3.6版本IDE来开发，这样就导致<strong>reload</strong>不能被识别。</p>
 </blockquote>
 <p>所以推荐方法二：修改全局编码环境</p>
-<h3 id="修改全局编码环境"><a href="#修改全局编码环境" class="headerlink" title="修改全局编码环境"></a>修改全局编码环境</h3><p>Mac中有两处sitepackage，找到目录：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/local/lib/python2.7/site-packages</div><div class="line">/Library/Python/2.7/site-packages</div></pre></td></tr></table></figure>
-<p>在目录下创建文件：<strong>sitecustomize.py</strong>，添加内容：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div></pre></td></tr></table></figure>
-<p> 这种方式可以解决所有项目的encoding问题，具体说明可参考/usr/lib/python2.7/site.py文件：</p>
-<h1 id="SyntaxError-Non-ASCII-character-‘-xe7’-in-file"><a href="#SyntaxError-Non-ASCII-character-‘-xe7’-in-file" class="headerlink" title="SyntaxError: Non-ASCII character ‘\xe7’ in file"></a>SyntaxError: Non-ASCII character ‘\xe7’ in file</h1><h3 id="0x01-解决-1"><a href="#0x01-解决-1" class="headerlink" title="0x01 解决"></a>0x01 解决</h3><p>这个异常是因为在2.7版本中，python源文件中出现了ASCII以外格式编码，我这是当然就是出现中文了，</p>
-<p>只要在源文件顶部添加编码注释即可：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#-*- coding: UTF-8 -*-</span></div></pre></td></tr></table></figure>
-<h1 id="ValueError-All-strings-must-be-XML-compatible-Unicode-or-ASCII-no-NULL-bytes-or-control-characters"><a href="#ValueError-All-strings-must-be-XML-compatible-Unicode-or-ASCII-no-NULL-bytes-or-control-characters" class="headerlink" title="ValueError: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters"></a>ValueError: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters</h1><h3 id="0x00-前言-1"><a href="#0x00-前言-1" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p>这是在使用xpath解析时，路径中带了中文导致的，版本仍然为2.7</p>
-<h3 id="0x01-解决-2"><a href="#0x01-解决-2" class="headerlink" title="0x01 解决"></a>0x01 解决</h3><p>异常信息已经告诉我们了，字符串只能是unicode或者ascii编码。</p>
-<p>把xpath加u即可：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">recommend_count = div.xpath(query=<span class="string">u"./p/span[@title='推荐']/text()"</span>)[<span class="number">0</span>].extract()</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/08/18/Python2-7乱码/#more">展开全文 >></a>
+        
       
 
       
@@ -617,10 +591,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/18/Python2-7乱码/">展开全文 >></a>
-        </p>
       
 
       
@@ -711,10 +681,6 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/如何在Pycharm中运行Scrapy爬虫/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
@@ -771,17 +737,10 @@
 </ul>
 <ul>
 <li><p>os.popen(‘ls’)</p>
-<p>popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。</p>
-</li>
-</ul>
-<h2 id="commands模块"><a href="#commands模块" class="headerlink" title="commands模块"></a>commands模块</h2><p>​    根据你需要的不同，commands模块有三个方法可供选择。getstatusoutput, getoutput, getstatus。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import commands</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;ls /bin/ls&apos;)</div><div class="line">(0, &apos;/bin/ls&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;cat /bin/junk&apos;)</div><div class="line">(256, &apos;cat: /bin/junk: No such file or directory&apos;)</div><div class="line">&gt;&gt;&gt; commands.getstatusoutput(&apos;/bin/junk&apos;)</div><div class="line">(256, &apos;sh: /bin/junk: not found&apos;)</div><div class="line">&gt;&gt;&gt; commands.getoutput(&apos;ls /bin/ls&apos;)</div><div class="line">&apos;/bin/ls&apos;</div><div class="line">&gt;&gt;&gt; commands.getstatus(&apos;/bin/ls&apos;)</div><div class="line">&apos;-rwxr-xr-x  1 root        13352 Oct 14  1994 /bin/ls&apos;</div></pre></td></tr></table></figure>
-<p><strong>该模块在python3.6中已经不存在，不知道具体从哪个版本移除了，所以这部分代码来自网友分析</strong></p>
-<h2 id="subprocess模块"><a href="#subprocess模块" class="headerlink" title="subprocess模块"></a>subprocess模块</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<p>shell=True表示命令最终在shell中运行。Python文档中出于安全考虑，不建议使用shell=True。建议使用Python库来代替shell命令，或使用pipe的一些功能做一些转义。</p>
-<p>如果是多条命令可以使用‘&amp;&amp;’</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls&amp;&amp;pwd'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-
+<p>popen方法通过p.read()获取终端输出，而且popen需要关闭close().当执行成功时，close()不返回任何值，失败时，close()返回系统返回值. 可见它获取返回值的方式和os.system不同。</p></li></ul>
+        
+          <a class="article-more-a" href="/2017/08/17/Python中执行shell命令/#more">展开全文 >></a>
+        
       
 
       
@@ -813,10 +772,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/Python中执行shell命令/">展开全文 >></a>
-        </p>
       
 
       
@@ -870,29 +825,9 @@
 <p>既然是多进程免不了要用到<strong>multiprocessing</strong>模块了。</p>
 <p>当然这里主要用到Queue和multiprocessing模块下的<strong>baseManager</strong></p>
 <p>下面看看具体如何实现：</p>
-<h1 id="0x01-步骤"><a href="#0x01-步骤" class="headerlink" title="0x01 步骤"></a>0x01 步骤</h1><p>这里分布式分为服务进程和工作进程2个。</p>
-<h2 id="首先创建服务进程："><a href="#首先创建服务进程：" class="headerlink" title="首先创建服务进程："></a>首先创建服务进程：</h2><h3 id="建立队列"><a href="#建立队列" class="headerlink" title="建立队列"></a>建立队列</h3><p>这里主要是发送任务和接收结果，所以创建2个队列：task_que和result_que</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step1.建立队列           </span></div><div class="line">task_que = Queue()     </div><div class="line">result_que = Queue()</div></pre></td></tr></table></figure>
-<p>这时创建的队列还只能在本地使用，如果成为网络级还要通过manager注册，也就是第二步</p>
-<h3 id="把队列通过manager注册到网络"><a href="#把队列通过manager注册到网络" class="headerlink" title="把队列通过manager注册到网络"></a>把队列通过manager注册到网络</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueueManager</span><span class="params">(BaseManager)</span>:</span>                               </div><div class="line">    <span class="keyword">pass</span>                                                                                                               </div><div class="line">                                                               </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">task_queue</span><span class="params">()</span>:</span>                                              </div><div class="line">    <span class="keyword">return</span> task_que                                                                                                        </div><div class="line">                                                               </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">result_queue</span><span class="params">()</span>:</span>                                            </div><div class="line">    <span class="keyword">return</span> result_que                                          </div><div class="line">                                                                                                                          </div><div class="line"><span class="comment"># step2.把队列通过manager注册到网络                                      </span></div><div class="line">QueueManager.register(<span class="string">'get_task_que'</span>, callable=task_queue)     </div><div class="line">QueueManager.register(<span class="string">'get_result_que'</span>, callable=result_queue)</div></pre></td></tr></table></figure>
-<p>参数1为typeid，参数2为调用方法。</p>
-<p>这里的typeid在任务进程也要使用，</p>
-<p><strong>这里的注册可以认为是给QueueManager添加了typeid为属性方法，后面通过该方法获得经过处理的callable(也就是Queue队列)。就是说通过typeid方法获得的队列是网络队列</strong></p>
-<h3 id="创建并启动manager"><a href="#创建并启动manager" class="headerlink" title="创建并启动manager"></a>创建并启动manager</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">step3.创建并启动manager                                          </div><div class="line">nager = QueueManager(address=(<span class="string">''</span>, <span class="number">8001</span>), authkey=<span class="string">b'jenson'</span>) </div><div class="line">nager.start()</div></pre></td></tr></table></figure>
-<p><strong>注意：authkey需要为bytes，多个进程要保证authkey相同</strong></p>
-<h3 id="通过manager获得网络队列"><a href="#通过manager获得网络队列" class="headerlink" title="通过manager获得网络队列"></a>通过manager获得网络队列</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step4.通过manager获取网络中的Queue       </span></div><div class="line">task = manager.get_task_que()      </div><div class="line">result = manager.get_result_que()</div></pre></td></tr></table></figure>
-<h3 id="操作网络队列进行任务分发和结果获取"><a href="#操作网络队列进行任务分发和结果获取" class="headerlink" title="操作网络队列进行任务分发和结果获取"></a>操作网络队列进行任务分发和结果获取</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step5.操作该网络Queue                                     </span></div><div class="line"><span class="keyword">for</span> url <span class="keyword">in</span> [<span class="string">"ImageUrl_"</span> + str(i) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]:  </div><div class="line">    print(<span class="string">'put task %s ...'</span> % url)                     </div><div class="line">    task.put(url)                                      </div><div class="line">    time.sleep(<span class="number">1</span>)                                      </div><div class="line">                                                       </div><div class="line">print(<span class="string">'try get result...'</span>)                             </div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):                                    </div><div class="line">    print(<span class="string">'result is %s'</span> % result.get(timeout=<span class="number">10</span>))     </div><div class="line">    time.sleep(<span class="number">1</span>)                                      </div><div class="line"><span class="comment"># 关闭管理                                                 </span></div><div class="line">manager.shutdown()</div></pre></td></tr></table></figure>
-<h2 id="接下来创建任务进程"><a href="#接下来创建任务进程" class="headerlink" title="接下来创建任务进程"></a>接下来创建任务进程</h2><h3 id="通过manager注册"><a href="#通过manager注册" class="headerlink" title="通过manager注册"></a>通过manager注册</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueueManager</span><span class="params">(BaseManager)</span>:</span>         </div><div class="line">    <span class="keyword">pass</span>                                 </div><div class="line"> <span class="comment"># step1.注册和服务进程                         </span></div><div class="line">QueueManager.register(<span class="string">'get_task_que'</span>)    </div><div class="line">QueueManager.register(<span class="string">'get_result_que'</span>)</div></pre></td></tr></table></figure>
-<h3 id="创建并连接manager"><a href="#创建并连接manager" class="headerlink" title="创建并连接manager"></a>创建并连接manager</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step2.创建并启动manager</span></div><div class="line">m = QueueManager(address=(<span class="string">'127.0.0.1'</span>, <span class="number">8001</span>), authkey=<span class="string">b'jenson'</span>)</div><div class="line">m.connect()</div></pre></td></tr></table></figure>
-<h3 id="获取网络队列"><a href="#获取网络队列" class="headerlink" title="获取网络队列"></a>获取网络队列</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># step3.通过manager获取网络队列</span></div><div class="line">task = m.get_task_que()  <span class="comment"># type: Queue</span></div><div class="line">result = m.get_result_que()  <span class="comment"># type: Queue</span></div></pre></td></tr></table></figure>
-<h3 id="操作网络队列"><a href="#操作网络队列" class="headerlink" title="操作网络队列"></a>操作网络队列</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> (<span class="keyword">not</span> task.empty()):</div><div class="line">    url = task.get(<span class="keyword">True</span>, <span class="number">5</span>)</div><div class="line">    print(<span class="string">'download=='</span> + url)</div><div class="line">    time.sleep(<span class="number">1</span>)</div><div class="line">    result.put(<span class="string">'already download'</span> + url)</div></pre></td></tr></table></figure>
-<h1 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h1><p>服务进程首先执行，结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">put task ImageUrl_0 ...</div><div class="line">put task ImageUrl_1 ...</div><div class="line">put task ImageUrl_2 ...</div><div class="line">put task ImageUrl_3 ...</div><div class="line">put task ImageUrl_4 ...</div><div class="line">put task ImageUrl_5 ...</div><div class="line">put task ImageUrl_6 ...</div><div class="line">put task ImageUrl_7 ...</div><div class="line">put task ImageUrl_8 ...</div><div class="line">put task ImageUrl_9 ...</div><div class="line">try get result...</div></pre></td></tr></table></figure>
-<p>然后运行工作进程，结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">download==ImageUrl_0</div><div class="line">download==ImageUrl_1</div><div class="line">download==ImageUrl_2</div><div class="line">download==ImageUrl_3</div><div class="line">download==ImageUrl_4</div><div class="line">download==ImageUrl_5</div><div class="line">download==ImageUrl_6</div><div class="line">download==ImageUrl_7</div><div class="line">download==ImageUrl_8</div><div class="line">download==ImageUrl_9</div></pre></td></tr></table></figure>
-<p>最后服务进程又收到信息如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">result is already downloadImageUrl_0</div><div class="line">result is already downloadImageUrl_1</div><div class="line">result is already downloadImageUrl_2</div><div class="line">result is already downloadImageUrl_3</div><div class="line">result is already downloadImageUrl_4</div><div class="line">result is already downloadImageUrl_5</div><div class="line">result is already downloadImageUrl_6</div><div class="line">result is already downloadImageUrl_7</div><div class="line">result is already downloadImageUrl_8</div><div class="line">result is already downloadImageUrl_9</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/08/17/Python分布式实现/#more">展开全文 >></a>
+        
       
 
       
@@ -913,10 +848,6 @@
 
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/Python分布式实现/">展开全文 >></a>
-        </p>
       
 
       
@@ -974,81 +905,9 @@
 <p><strong>并行，同时运行，可以理解为多个不同实体处理多个任务</strong>，</p>
 <p><strong>并发，同时发生，可以理解为一个实体不同时间段处理多个任务</strong>，</p>
 <p><strong>所以并行可以理解为硬件上的，并发理解为逻辑上的</strong>。</p>
-<p>对以上都有了了解，下面看看在Python中如何使用：</p>
-<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><h2 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h2><ul>
-<li><p>os.fork()</p>
-<p>fork⽅法来⾃于Unix/Linux操作系统中提供的⼀个fork系统调⽤， 这个⽅法⾮常特殊。 </p>
-<p>普通的⽅法都是调⽤⼀次， 返回⼀次， ⽽fork⽅法是调⽤⼀次， 返回两次， </p>
-<p>原因在于操作系统将当前进程（⽗进程） 复制出⼀份进程（⼦进程） ， 这两个进程⼏乎完<br>全相同， 于是fork⽅法分别在⽗进程和⼦进程中返回。 ⼦进程中永远返回0， ⽗进程中返回的是⼦进程的ID。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPidTest</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"></div><div class="line">print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line">pid = os.fork()</div><div class="line"><span class="keyword">if</span> pid == <span class="number">0</span>:<span class="comment">#子进程</span></div><div class="line">    getPidTest()</div><div class="line"><span class="keyword">elif</span> pid &gt; <span class="number">0</span>:<span class="comment"># 父进程</span></div><div class="line">    getPidTest()</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>subprocess</p>
-<p>subprocess模块可以用来创建子进程，但是主要功能是执行外部的命令和程序，而不是运行python文件中的函数，另外这里的IPC只能通过管道进行文本交流。</p>
-<p>比如执行终端命令时：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">subprocess.Popen(<span class="string">'ls -al'</span>, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>multiprocessing</p>
-<p>multiprocessing模块提供了⼀个Process类来描述⼀个进程对象。</p>
-<p>创建⼦进程时， 只需要传⼊⼀个执⾏函数和函数的参数， 即可完成⼀个Process实例的创建， ⽤start（） ⽅法启动进程， ⽤join（） ⽅法实现进程间的同步。  </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPidTest</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"></div><div class="line">print(<span class="string">"当前进程ID："</span> + str(os.getpid()))</div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    p = Process(target=getPidTest, name=<span class="string">'p1'</span>, args=())</div><div class="line">    p.start()</div></pre></td></tr></table></figure>
-<p><strong>target</strong>表示进程要调用的函数名</p>
-<p><strong>name</strong>表示进程名</p>
-<p><strong>args</strong>表示函数参数的元组形式</p>
-<p><strong>kargs</strong>表示函数参数的字典形式</p>
-</li>
-</ul>
-<h2 id="IPC"><a href="#IPC" class="headerlink" title="IPC"></a>IPC</h2><p>Python提供了多种进程间通信方式如Queue、Pipe。</p>
-<p>这里两种方式都体验一下：</p>
-<ul>
-<li><p>Queue</p>
-<p>Queue是多进程安全的队列， 可以使⽤Queue实现多进程之间的数据传<br>递。 有两个⽅法： Put和Get可以进⾏Queue操作：</p>
-<p><strong>·Put</strong>⽅法⽤以插⼊数据到队列中， 它还有两个可选参数： blocked和timeout。 如果blocked为True（ 默认值） ， 并且timeout为正值， 该⽅法会阻塞timeout指定的时间， 直到该队列有剩余的空间。 如果超时， 会抛出Queue.Full异常。 如果blocked为False， 但该Queue已满， 会⽴即抛出Queue.Full异常。</p>
-<p><strong>.Get</strong>⽅法可以从队列读取并且删除⼀个元素。 同样， Get⽅法有两个可选参数： blocked和timeout。 如果blocked为True（ 默认值） ， 并且timeout为正值， 那么在等待时间内没有取到任何元素， 会抛出Queue.Empty异常。 如果blocked为False， 分两种情况： 如果Queue有⼀个值可⽤， 则⽴即返回该值； 否则，如果队列为空， 则⽴即抛出Queue.Empty异常。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process, Queue</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_proc</span><span class="params">(queue, urls)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type queue Queue</div><div class="line">    :param queue:</div><div class="line">    :param urls:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urls:</div><div class="line">        print(<span class="string">"put:"</span> + url)</div><div class="line">        queue.put(url)</div><div class="line">        time.sleep(<span class="number">1</span>)<span class="comment">#这里睡眠时间是秒，Java中是毫秒</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_proc</span><span class="params">(queue)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type queue Queue</div><div class="line">    :param queue:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">       url = queue.get(<span class="keyword">True</span>)</div><div class="line">       print(<span class="string">'get:'</span> + url)</div><div class="line"></div><div class="line"></div><div class="line">q =  Queue()</div><div class="line">write1 = Process(target=write_proc,args=(q,[<span class="string">'url1'</span>,<span class="string">'url2'</span>,<span class="string">'url3'</span>]))</div><div class="line">write2 = Process(target=write_proc,args=(q,[<span class="string">'url4'</span>,<span class="string">'url5'</span>,<span class="string">'url6'</span>]))</div><div class="line">read  = Process(target=read_proc,args=(q,))</div><div class="line">write1.start()</div><div class="line">write2.start()</div><div class="line">read.start()</div><div class="line">write1.join()</div><div class="line">write2.join()</div><div class="line">read.terminate()</div></pre></td></tr></table></figure>
-<p>执行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">put:url1</div><div class="line">put:url4</div><div class="line">get:url1</div><div class="line">get:url4</div><div class="line">put:url5</div><div class="line">put:url2</div><div class="line">get:url2</div><div class="line">get:url5</div><div class="line">put:url6</div><div class="line">put:url3</div><div class="line">get:url6</div><div class="line">get:url3</div></pre></td></tr></table></figure>
-</li>
-<li><p>Pipe</p>
-<p>Pipe常⽤来在两个进程间进⾏通信， 两个进程分别位于管道的两端。</p>
-<p>Pipe⽅法返回（ conn1， conn2） 代表⼀个管道的两个端。</p>
-<p> Pipe⽅法有duplex参数， 如果duplex参数为True（ 默认值） ， 那么这个管道是全双⼯模式， 也就是说conn1和conn2均可收发。 </p>
-<p>若duplex为False， conn1只负责接收消息， conn2只负责发送消息。 send和recv⽅法分别是发送和接收消息的⽅法。 例如， 在全双⼯模式下， 可以调⽤conn1.send发送消息，conn1.recv接收消息。 如果没有消息可接收， recv⽅法会⼀直阻塞。 如果管道已经被关闭， 那么recv⽅法会抛出EOFError。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Process,Pipe</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_proc</span><span class="params">(pipe,urls)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type pipe Connection</div><div class="line">    :param pipe:</div><div class="line">    :param urls:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urls:</div><div class="line">        print(<span class="string">'send:'</span>+url)</div><div class="line">        pipe.send(url)</div><div class="line">        time.sleep(<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">recv_proc</span><span class="params">(pipe)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    :type pipe Connection</div><div class="line">    :param pipe:</div><div class="line">    :return:</div><div class="line">    '''</div><div class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">        url = pipe.recv()</div><div class="line">        print(<span class="string">'recv:'</span>+url)</div><div class="line">        time.sleep(<span class="number">1</span>)</div><div class="line"></div><div class="line">pipe = Pipe()</div><div class="line">p1 = Process(target=send_proc,args=(pipe[<span class="number">0</span>],[<span class="string">'url1'</span>,<span class="string">'url2'</span>,<span class="string">'url3'</span>]))</div><div class="line">p2 = Process(target=recv_proc,args=(pipe[<span class="number">1</span>],))</div><div class="line">p1.start()</div><div class="line">p2.start()</div><div class="line">p1.join()</div><div class="line">p2.join()</div></pre></td></tr></table></figure>
-<p>执行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">send:url1</div><div class="line">recv:url1</div><div class="line">send:url2</div><div class="line">recv:url2</div><div class="line">send:url3</div><div class="line">recv:url3</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>Python中有多个模块都可以实现多线程，比如thread，threading，但是由于thread模块自身一些原因，推荐使用threading模块。</p>
-<ul>
-<li><p>thread模块</p>
-<p> thread 模块提供了基本的线程和锁定支持。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> _thread</div><div class="line">_thread.start_new_thread(function=getPidTest, args=(),kwargs=&#123;&#125;)</div></pre></td></tr></table></figure>
-<p>thread 模块的核心函数是 start_new_thread()。它的参数包括函数、函数的参数以及可选的关键字参数。</p>
-<p><strong>该模块基本已经作为保留模块，原本的thread模块已经变为_thread</strong>  </p>
-</li>
-<li><p>threading 模块</p>
-<p>threading模块下有个Thread类，可以帮助我们实现多线程：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line">threading.Thread(target=wrapper,args=(),kwargs=&#123;&#125;,name=<span class="string">"thread1"</span>).start()</div></pre></td></tr></table></figure>
-<p><strong>target</strong>表示线程要调用的函数名</p>
-<p><strong>name</strong>表示线程名</p>
-<p><strong>args</strong>表示函数参数的元组形式</p>
-<p><strong>kargs</strong>表示函数参数的字典形式</p>
-</li>
-</ul>
-<h2 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h2><h2 id="线程同步和锁"><a href="#线程同步和锁" class="headerlink" title="线程同步和锁"></a>线程同步和锁</h2><h1 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h1><p>协程是什么东西呢？</p>
-<p>我们知道线程是轻量级进程，而协程又是轻量级线程。</p>
-<p>协程拥有⾃⼰的寄存器上下⽂和栈。 协程调度切换时， 将寄存器上下⽂和栈保存到其他地⽅， 在切回来的时候， 恢复先前保存的寄存器上下⽂和栈。 因此协程能保留上⼀次调⽤时的状态， 每次过程重⼊时， 就相当于进⼊上⼀次调⽤的状态。</p>
-<p>在并发编程中， 协程与线程类似， 每个协程表⽰⼀个执⾏单元， 有⾃⼰的本地数据， 与其他协程共享全局数据和其他资源。</p>
-<p>Python通过yield提供了对协程的基本⽀持， 但是不完全， ⽽使⽤第三⽅gevent库是更好的选择， gevent提供了⽐较完善的协程⽀持。 gevent是⼀个基于协程的Python⽹络函数库， 使⽤greenlet在libev事件循环顶部提供了⼀个有⾼级别并发性的API。</p>
-<h2 id="创建协程"><a href="#创建协程" class="headerlink" title="创建协程"></a>创建协程</h2><p>这里使用gevent库创建协程:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey;</div><div class="line">monkey.patch_all()</div><div class="line"><span class="keyword">import</span> gevent</div><div class="line"><span class="keyword">from</span>  urllib <span class="keyword">import</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_task</span><span class="params">(url)</span>:</span></div><div class="line">    print(<span class="string">"visit=="</span>+url)</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        response = request.urlopen(url)</div><div class="line">        data = response.read()</div><div class="line">        print(<span class="string">'%d bytes received from %s.'</span> % (len(data), url))</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(e)</div><div class="line">    <span class="comment"># print(threading.Thread.getName())</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    urls = [<span class="string">'http://jensondev.me/'</span>, <span class="string">'http://www.baidu.com'</span>, <span class="string">'http://www.cnblogs.com/'</span>]</div><div class="line">    greenlets = [gevent.spawn(run_task, url) <span class="keyword">for</span> url <span class="keyword">in</span> urls]</div><div class="line">    gevent.joinall(greenlets)</div></pre></td></tr></table></figure>
-<p>以上程序主要⽤了gevent中的spawn⽅法和joinall⽅法。 spawn⽅法可以看做是⽤来形成协程， joinall⽅法就是添加这些协程任务， 并且启动运⾏。 从运⾏结果来看， 3个⽹络操作是并发执⾏的， ⽽且结束顺序不同， 但其实只有⼀个线程。</p>
-<p>gevent中还提供了对池的⽀持。 当拥有动态数量的greenlet需要进⾏并发管理（ 限制并发数） 时， 就可以使⽤池， 这在处理⼤量的⽹络和IO操作时是⾮常需要的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey,pool;</div><div class="line">monkey.patch_all()</div><div class="line"><span class="keyword">import</span> gevent</div><div class="line"><span class="keyword">from</span>  urllib <span class="keyword">import</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_task</span><span class="params">(url)</span>:</span></div><div class="line">    print(<span class="string">"visit=="</span>+url)</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        response = request.urlopen(url)</div><div class="line">        data = response.read()</div><div class="line">        print(<span class="string">'%d bytes received from %s.'</span> % (len(data), url))</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(e)</div><div class="line">    <span class="comment"># print(threading.Thread.getName())</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    urls = [<span class="string">'http://jensondev.me/'</span>, <span class="string">'http://www.baidu.com'</span>, <span class="string">'http://www.cnblogs.com/'</span>]</div><div class="line">    <span class="comment"># greenlets = [gevent.spawn(run_task, url) for url in urls]</span></div><div class="line">    <span class="comment"># gevent.joinall(greenlets)</span></div><div class="line">    p =pool.Pool(<span class="number">2</span>)</div><div class="line">    p.map(func=run_task,iterable=urls)</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/08/17/Python入门系列(5)：进程、线程和协程/#more">展开全文 >></a>
+        
       
 
       
@@ -1080,10 +939,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/17/Python入门系列(5)：进程、线程和协程/">展开全文 >></a>
-        </p>
       
 
       
@@ -1170,10 +1025,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/13/Python使用MD5/">展开全文 >></a>
-        </p>
       
 
       

@@ -17,7 +17,7 @@ Mac和windows一样，如果要在终端命令行全局使用非系统命令，�
 
 
 
-
+<!-- more -->
 
 ## 找到.bash_profile
 
