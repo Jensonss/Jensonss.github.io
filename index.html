@@ -201,26 +201,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>魅族不重要通知是什么鬼？</p>
-<p>先直接看图：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%B8%8D%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5.jpg" alt="不重要通知"></p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E4%B8%80%E8%88%AC%E9%80%9A%E7%9F%A5.jpg" alt="一般通知"></p>
-<p>通过这两个通知页面就能看到问题了，有些Rom厂商根据通知优先级设置了不同的显示页面。这有每次消通知时候要消两次，所以就好奇这个优先级是不是代码里的那个优先级设置。</p>
-<h1 id="0x01-通知优先级"><a href="#0x01-通知优先级" class="headerlink" title="0x01 通知优先级"></a>0x01 通知优先级</h1><p>在android通知中重要性可以分为5个优先级：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_DEFAULT = <span class="number">0</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_LOW = -<span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_MIN = -<span class="number">2</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_HIGH = <span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PRIORITY_MAX = <span class="number">2</span>;</div></pre></td></tr></table></figure>
-<p>既然都提到了优先级，所以自然就以为魅族只是根据这个值的不同来显示在不同的页面，把LOW和MIN显示在不重要通知页面了。</p>
-<p>赶紧写个demo测试下假想：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (v.getId()) &#123;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_normal:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条默认通知"</span>).setSmallIcon(R.drawable.ic_launcher)</div><div class="line">                    .setContentText(<span class="string">"这是内容"</span>);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_normal, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_high:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条high通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_HIGH);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_high, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_low:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条low通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_LOW);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_low, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_min:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条min通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_MIN);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_min, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> R.id.send_btn_max:</div><div class="line">            builder.setContentTitle(<span class="string">"这是一条max通知"</span>).setContentText(<span class="string">"这是内容"</span>).setSmallIcon(R.drawable.ic_launcher).</div><div class="line">                    setPriority(NotificationCompat.PRIORITY_MAX);</div><div class="line">            mNotificationManager.notify(R.id.send_btn_max, builder.build());</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面是点击发送通知的部分代码，发送完通知再看看显示结果：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/%E9%80%9A%E7%9F%A5%E6%B5%8B%E8%AF%95.jpg" alt="通知测试"></p>
-<p>测试发现不同优先级的通知都还在默认的通知界面。并没有按假想的那样把LOW和MIN放到不重要通知！但是有一点不同的是通知顺序和点击的顺序不一样。所以<strong>通知优先级只是改变了通知显示顺序</strong></p>
-<p>那么魅族是如何区分通知是否重要呢？</p>
-<p>网上查了下资料发现了真相：</p>
-<blockquote>
-<p>具体的触发就是，如果你想把垃圾的信息放到盒子里面，就是当手机状态栏弹出了消息以后，你选择右滑动删除消息，千万不要点击进入，是直接右滑动删除消息，当时连续几次这样操作以后，系统就会把以后类似的消息放到消息盒子里面了。 同理如果你希望把已经在消息盒子里面的消息独立出来，当看到消息盒子里面的信息出现后，你直接点击消息进入，连续操作几次以后就会从消息盒子里面出来了哈。希望对还在困扰的你们有帮助，一个一个字打出来的，觉得有用的就支持下吧。</p>
-</blockquote>
-<p>这个号称智能通知栏的家伙居然只靠滑动和点击就果断的给你归为是否重要，而且还说智能学习。真是有点名不副实了。</p>
-<p>另外还要吐槽一下<strong>淘票票</strong>，我特么的猩球崛起3都已经用这个APP买票都已经看了，还在给我推消息！！</p>
-
+        
+          <a class="article-more-a" href="/2017/09/21/关于Android魅族不重要通知/#more">more >></a>
+        
       
 
       
@@ -306,138 +289,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>这道题和我之前的农夫过河、四人过桥问题都是一个类型的，不过该题较之前两道题更简单，因为涉及 元素更少。</p>
 <p>下面直接说下思路</p>
-<h1 id="0x01-思路"><a href="#0x01-思路" class="headerlink" title="0x01 思路"></a>0x01 思路</h1><p>4L和5L、3L的杯子有什么关系？找到关系，再从关系入手</p>
-<p>譬如4L可以用1L和3L合并得来，而3L可以直接通过3L杯子拿到。</p>
-<p>接下来就是如何拿到1L的量，而这又可以通过3L-2L得到，那么再继续2L又是如何得到呢？</p>
-<p>有现成的5L和3L，简单的就可以得到2L，所以实现步骤就很简单了：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">步骤</th>
-<th style="text-align:center">操作</th>
-<th style="text-align:center">5L杯子</th>
-<th style="text-align:center">3L杯子</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">3L装满</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">3</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">3L倒入5L</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">3L装满</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">3</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">3L倒入5L</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">5</td>
-<td style="text-align:center">5L清空</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">6</td>
-<td style="text-align:center">3L倒入5L</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">7</td>
-<td style="text-align:center">3L装满</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">3</td>
-</tr>
-<tr>
-<td style="text-align:center">8</td>
-<td style="text-align:center">3L倒入5L</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">9</td>
-<td style="text-align:center">完成</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">0</td>
-</tr>
-</tbody>
-</table>
-<p>上面是通过1L和3L合并得来的，下面通过5L-1L得到4L，下面看看实现步骤：</p>
-<table>
-<thead>
-<tr>
-<th>步骤</th>
-<th>操作</th>
-<th>5L杯子</th>
-<th>3L杯子</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>5L装满</td>
-<td>5</td>
-<td>0</td>
-</tr>
-<tr>
-<td>2</td>
-<td>5L倒入3L</td>
-<td>2</td>
-<td>3</td>
-</tr>
-<tr>
-<td>3</td>
-<td>3L清空</td>
-<td>2</td>
-<td>0</td>
-</tr>
-<tr>
-<td>4</td>
-<td>5L倒入3L</td>
-<td>0</td>
-<td>2</td>
-</tr>
-<tr>
-<td>5</td>
-<td>5L装满</td>
-<td>5</td>
-<td>2</td>
-</tr>
-<tr>
-<td>6</td>
-<td>5L倒入3L</td>
-<td>4</td>
-<td>3</td>
-</tr>
-<tr>
-<td>7</td>
-<td>完成</td>
-<td>4</td>
-<td>3</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>这种方式实现步骤更简单一些。细想一下会发现，这两种方式都有点类似递归</p>
-
+        
+          <a class="article-more-a" href="/2017/09/20/5L杯子和3L杯子取出4L水的问题/#more">more >></a>
+        
       
 
       
@@ -523,19 +377,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在看算法书时看到几个数学上的定义：向上取整、向下取整和素数。</p>
 <p>不知道这几个定义就难以理解文章意思。所以查了资料后做个记录，防止下次还不会。</p>
-<h1 id="0x01-解释"><a href="#0x01-解释" class="headerlink" title="0x01 解释"></a>0x01 解释</h1><ul>
-<li><p>素数</p>
-<p>这个在初高中时候就学过，因为素数就是质数的别称，质数就是只能被1和数字本身整除的数。</p>
-<p>​</p>
-</li>
-<li><p>向上取整、向下取整</p>
-<p>向上取整、向下取整的前提是要先有个基数整数</p>
-<p>比如数列1，3，4，6，7，9，11，以6为基数，其向下取整为4，向上取整为7</p>
-<p><strong>对基数x向下取整为小于等于x的最大整数，对基数x向上取整为大于等于x的最小整数</strong></p>
-<p>​</p>
-</li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2017/09/19/向上取整、向下取整和素数/#more">more >></a>
+        
       
 
       
@@ -624,12 +468,9 @@
 <p>如果多想想其实这种做法是存在安全隐患的，比如我们发送的广播是全局性的，那么有被其他程序截获泄露的风险，同样的我们广播接收器也是全局性的，垃圾应用也有可能不停发送垃圾广播。</p>
 <p>对于这种安全隐患如何避免呢？</p>
 <p><strong>Google为我们提供了本地广播服务：<code>LocalBroadcastManager</code>对广播进行管理。让我们发出的广播只在应用内传递，且广播接收器也只接收来自本应用的广播。</strong></p>
-<h1 id="0x01-使用"><a href="#0x01-使用" class="headerlink" title="0x01 使用"></a>0x01 使用</h1><p><code>LocalBroadcastManager</code>在SDK22版本添加在v4包中。</p>
-<h2 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> LocalBroadcastManager manager;</div><div class="line"></div><div class="line">manager.getInstance(Context context)</div></pre></td></tr></table></figure>
-<h2 id="本地发送广播"><a href="#本地发送广播" class="headerlink" title="本地发送广播"></a>本地发送广播</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> LocalBroadcastManager manager;</div><div class="line"></div><div class="line">manager.sendBroadcast(intent);</div></pre></td></tr></table></figure>
-<h2 id="本地注册广播"><a href="#本地注册广播" class="headerlink" title="本地注册广播"></a>本地注册广播</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> LocalBroadcastManager manager;</div><div class="line"></div><div class="line">manager.registerReceiver(receiver,filter)</div></pre></td></tr></table></figure>
-<h2 id="本地取消广播"><a href="#本地取消广播" class="headerlink" title="本地取消广播"></a>本地取消广播</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> LocalBroadcastManager manager;</div><div class="line"></div><div class="line">manager.unregisterReceiver(receiver)</div></pre></td></tr></table></figure>
-
+        
+          <a class="article-more-a" href="/2017/09/14/Android本地广播/#more">more >></a>
+        
       
 
       
@@ -716,14 +557,9 @@
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：</p>
 <p><img src="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E5%BC%95%E8%B5%B7%E9%87%8D%E5%8F%A0.png" alt="css浮动引起重叠"></p>
 <p>图中可以看到表单和右边的导航栏重叠了造成布局混乱。</p>
-<h1 id="0x00-解决"><a href="#0x00-解决" class="headerlink" title="0x00 解决"></a>0x00 解决</h1><p>如果由CSS浮动造成的布局重叠混乱，可以在浮动标签下新建一个空div：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>给该div设置样式：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.clear</span> &#123;</div><div class="line">           <span class="attribute">clear</span>: both;</div><div class="line">       &#125;</div></pre></td></tr></table></figure>
-<p>最终显示结果如图：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E4%BF%AE%E5%A4%8D.png" alt="css浮动错乱修复"></p>
-<p>如果不想使用clear方法也可以使用多个空div+<code>text-align: right;</code>属性</p>
-
+        
+          <a class="article-more-a" href="/2017/09/12/CSS浮动float引起布局错乱/#more">more >></a>
+        
       
 
       
@@ -809,18 +645,9 @@
       
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>作为前端一部分，html5近两年发展很快，不管移动端还是服务端或多或少都会涉及到些许html5。</p>
 <p>掌握一样东西就要先了解它的历史。所以下面一张图描述下html5的发展史。</p>
-<h1 id="0x01-一张图了解html5发展史"><a href="#0x01-一张图了解html5发展史" class="headerlink" title="0x01 一张图了解html5发展史"></a>0x01 一张图了解html5发展史</h1><p><img src="http://othg5ggzi.bkt.clouddn.com/html5%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2.jpg" alt="html5发展史"></p>
-<p>上面一张图描述了html5的发展史，下面根据顺序阐述下历程：</p>
-<p>1、html2.0及其以前，标准制定由IETF负责，html2.0的一个标志性标签是<code>&lt;img&gt;</code></p>
-<p>2、后来W3C接手成为html标准制定者，经过几年的发展到html4.01</p>
-<p>3、html4.0.1后的修订版称为XHTML1.0，而XHTML1.0与html4.0.1规范完全相同，没有添加新元素，不同的地方是，这个时候html标签的定义标准是宽松的，大小写均可即<code>&lt;DIV&gt;</code>或者<code>&lt;div&gt;</code>都正确。而XHTML1.0要求严格也更规范化，要求开发人员遵守XML规则，所有标签和属性都要小写。</p>
-<p>4、随着XHTML规范化的普及本来是件好事的，但是随后W3C随后推出了XHTML1.1，这是纯粹的XML，就是说这个标准只能识别XML，甚至不能识别MIME类型为text/html的文档。但是如果开发人员以XML标准发布页面，这些页面又不能被当时最主流的浏览器IE所识别。逐渐W3C与普通网页开始脱轨。</p>
-<p>5、随后W3C又继续推出XHTML2.0版本，听起来这只是XHTML1.0的升级，但是它们差别巨大，XHTML2.0目的是成为一门纯粹的语言，与现有网页都不兼容，这时已经感到W3C越来越作死了。</p>
-<p>6、官逼民反，既然官方标准制定者不给力，那么民间组织必然兴起，各大浏览器Opera、 Apple 和 Mozilla成立自己的组织：WHATWG( Web Hypertext Application Technology Working Group（Web 超文本应用技术工作组）)。此时W3C继续开发XHTML2.0，而WHATWG组织开发WebForm2.0和WebAPPS1.0两个规范，后来这两个规范合并到一起，称为Html5。</p>
-<p>7、在WHATWG开发html5期间，W3C继续开发XHTML2.0。但是2006年Tim认为把Html迁移到XML行不通，所以内部成立了HTML工作组（也叫Html 5，这里的Html和5之间有空格，这是和WHATWG组织的Html5不同的地方），该工作组没有从零开始而是沿用WHATWG组织的成功继续开发。此时的W3C是有两个工作组的：XHTML2.0和后来的HTML。WHATWG工作组期间正在开发HTML5规范。</p>
-<p>8、2009年W3C宣布XHTML2.0不再继续，宣告死亡。</p>
-<p>9、HTML5并不是一门新语言，而是在前几个html标准基础上发展起来的，相对前几个版本标准，HTml5标记变化只是革新而非革命。所以只要接触过html就可以说你使用过html5。</p>
-
+        
+          <a class="article-more-a" href="/2017/09/12/html5发展史简述/#more">more >></a>
+        
       
 
       

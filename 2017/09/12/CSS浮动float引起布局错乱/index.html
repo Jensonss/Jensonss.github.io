@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>CSS浮动float引起布局错乱 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 前言html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：  图中可以看到表单和右边的导航栏重叠了造成布局混乱。 0x00 解决如果由CSS浮动造成的布局重叠混乱，可以在浮动标签下新建一个空div： 1&amp;lt;div class=&quot;clear&quot;&amp;gt;&amp;lt;/div&amp;gt; 给该div设置样式： 1">
+  <meta name="description" content="0x00 前言html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：  图中可以看到表单和右边的导航栏重叠了造成布局混乱。">
 <meta name="keywords" content="前端">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSS浮动float引起布局错乱">
 <meta property="og:url" content="http://yoursite.com/2017/09/12/CSS浮动float引起布局错乱/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="0x00 前言html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：  图中可以看到表单和右边的导航栏重叠了造成布局混乱。 0x00 解决如果由CSS浮动造成的布局重叠混乱，可以在浮动标签下新建一个空div： 1&amp;lt;div class=&quot;clear&quot;&amp;gt;&amp;lt;/div&amp;gt; 给该div设置样式： 1">
+<meta property="og:description" content="0x00 前言html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：  图中可以看到表单和右边的导航栏重叠了造成布局混乱。">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E5%BC%95%E8%B5%B7%E9%87%8D%E5%8F%A0.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E4%BF%AE%E5%A4%8D.png">
-<meta property="og:updated_time" content="2017-09-12T13:22:02.000Z">
+<meta property="og:updated_time" content="2017-09-25T06:51:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSS浮动float引起布局错乱">
-<meta name="twitter:description" content="0x00 前言html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：  图中可以看到表单和右边的导航栏重叠了造成布局混乱。 0x00 解决如果由CSS浮动造成的布局重叠混乱，可以在浮动标签下新建一个空div： 1&amp;lt;div class=&quot;clear&quot;&amp;gt;&amp;lt;/div&amp;gt; 给该div设置样式： 1">
+<meta name="twitter:description" content="0x00 前言html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：  图中可以看到表单和右边的导航栏重叠了造成布局混乱。">
 <meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E5%BC%95%E8%B5%B7%E9%87%8D%E5%8F%A0.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -206,6 +206,7 @@
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：</p>
 <p><img src="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E5%BC%95%E8%B5%B7%E9%87%8D%E5%8F%A0.png" alt="css浮动引起重叠"></p>
 <p>图中可以看到表单和右边的导航栏重叠了造成布局混乱。</p>
+<a id="more"></a>
 <h1 id="0x00-解决"><a href="#0x00-解决" class="headerlink" title="0x00 解决"></a>0x00 解决</h1><p>如果由CSS浮动造成的布局重叠混乱，可以在浮动标签下新建一个空div：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>给该div设置样式：</p>
