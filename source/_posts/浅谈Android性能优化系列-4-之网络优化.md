@@ -22,6 +22,8 @@ categories: Android
 
 ![mobile_radio_state_machine.png](http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+<!--more-->
+
 > 可以看出，三种状态耗电不同，要使耗电最低应该尽量保持状态在空闲或低功率下。从空闲状态转换到高功率状态需要2s，从低功率状态转换到高功率状态需要1.5s。应用中每创建一个网络连接，网络射频都会转到高功率状态，数据传输完毕降回低功率状态，降回过程需要5s，这5s耗电量保持在高功率状态，低功率降回到空闲状态需要12s，期间一直保持低功率状态。所以每次的数据传输都将导致将近20s电量的消耗。
 
 ### WIFI网络
