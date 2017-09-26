@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言无线网络主要是WIFI和移动运营商网络，通常情况下使用移动网络要比WIFI耗电要多一些。 0x01 无线状态机移动网络移动网络数据传输有3种状态：Full power：高功率状态，网络激活，允许设备以最大传输速率进行传输。Low power：低功率状态，传输速率低于15kbps，耗电是Full Power状态的一半，一般不能直接从程序中进入该状态，而是由Full Power状态降级进">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-09-26T11:18:39.000Z">
+<meta property="og:updated_time" content="2017-09-26T11:22:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android性能优化系列(4)之网络优化">
 <meta name="twitter:description" content="0x00 前言无线网络主要是WIFI和移动运营商网络，通常情况下使用移动网络要比WIFI耗电要多一些。 0x01 无线状态机移动网络移动网络数据传输有3种状态：Full power：高功率状态，网络激活，允许设备以最大传输速率进行传输。Low power：低功率状态，传输速率低于15kbps，耗电是Full Power状态的一半，一般不能直接从程序中进入该状态，而是由Full Power状态降级进">
@@ -206,6 +206,7 @@
 <h1 id="0x01-无线状态机"><a href="#0x01-无线状态机" class="headerlink" title="0x01 无线状态机"></a>0x01 无线状态机</h1><h3 id="移动网络"><a href="#移动网络" class="headerlink" title="移动网络"></a>移动网络</h3><p>移动网络数据传输有3种状态：<br><strong>Full power</strong>：高功率状态，网络激活，允许设备以最大传输速率进行传输。<br><strong>Low power</strong>：低功率状态，传输速率低于15kbps，耗电是Full Power状态的一半，一般不能直接从程序中进入该状态，而是由Full Power状态降级进入。<br><strong>Standby</strong>：空闲状态，没有数据连接需要传输，耗电最少。</p>
 <p>这三种状态有一个转换流程：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mobile_radio_state_machine.png"></p>
+<a id="more"></a>
 <blockquote>
 <p>可以看出，三种状态耗电不同，要使耗电最低应该尽量保持状态在空闲或低功率下。从空闲状态转换到高功率状态需要2s，从低功率状态转换到高功率状态需要1.5s。应用中每创建一个网络连接，网络射频都会转到高功率状态，数据传输完毕降回低功率状态，降回过程需要5s，这5s耗电量保持在高功率状态，低功率降回到空闲状态需要12s，期间一直保持低功率状态。所以每次的数据传输都将导致将近20s电量的消耗。</p>
 </blockquote>
