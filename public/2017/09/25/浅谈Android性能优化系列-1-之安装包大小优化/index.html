@@ -15,14 +15,14 @@
 <meta property="og:url" content="http://yoursite.com/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！ 这样来说吧，优化有多方面好处的： ①节省用户流量 ②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少 ③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。 所以，安装包优化还是有必要的。">
-<meta property="og:image" content="http://yoursite.com/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png">
-<meta property="og:image" content="http://yoursite.com/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/lint.png">
-<meta property="og:image" content="http://yoursite.com/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png">
-<meta property="og:updated_time" content="2017-09-26T09:46:14.000Z">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%AE%89%E8%A3%85%E5%8C%85%E6%9E%84%E6%88%90.png">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/lint.png">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/lint_result.png">
+<meta property="og:updated_time" content="2017-09-26T10:45:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android性能优化系列(1)之安装包大小优化">
 <meta name="twitter:description" content="0x00 前言可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！ 这样来说吧，优化有多方面好处的： ①节省用户流量 ②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少 ③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。 所以，安装包优化还是有必要的。">
-<meta name="twitter:image" content="http://yoursite.com/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png">
+<meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%AE%89%E8%A3%85%E5%8C%85%E6%9E%84%E6%88%90.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -212,7 +212,7 @@
 <p>所以，安装包优化还是有必要的。</p>
 <a id="more"></a>
 <h1 id="0x01-安装包构成"><a href="#0x01-安装包构成" class="headerlink" title="0x01 安装包构成"></a>0x01 安装包构成</h1><p>要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：</p>
-<p><img src="/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png" alt="安装包构成"></p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%AE%89%E8%A3%85%E5%8C%85%E6%9E%84%E6%88%90.png" alt="安装包构成"></p>
 <p>目录中com和org两个文件夹是第三方包信息，不用管着两个。</p>
 <ul>
 <li>assets可以存放资源和配置等各种文件，但是这里的资源文件不会像res中那样生成ID，而是通过AssetManager获取</li>
@@ -258,9 +258,9 @@
 <p>res资源的定时清理是很有必要的，但是资源那么多如何快速清理呢？</p>
 <p>Android提供了非常好用的工具Lint快速检测res中未使用的资源并给出提示。</p>
 <p>运行Analyze—&gt;Run Inspection By Name ，弹窗输入：</p>
-<p><img src="/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/lint.png" alt="lint"></p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/lint.png" alt="lint"></p>
 <p>执行结果如下：</p>
-<p><img src="/2017/09/25/浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png" alt="lint_result"></p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/lint_result.png" alt="lint_result"></p>
 <p>其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。</p>
 <h2 id="资源图片最少化"><a href="#资源图片最少化" class="headerlink" title="资源图片最少化"></a>资源图片最少化</h2><p>这里最少化有2个参考原则：</p>
 <p>①简单的图片shape画</p>
@@ -545,11 +545,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -557,7 +553,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -573,14 +573,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -589,11 +581,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -602,6 +602,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -614,10 +618,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -645,15 +645,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">excel</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
             
             <div class="clearfix"></div>

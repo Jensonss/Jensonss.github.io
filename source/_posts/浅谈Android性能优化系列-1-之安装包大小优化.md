@@ -25,7 +25,9 @@ categories: [Android, 性能优化]
 
 要想优化安装包，首先知道包由哪些部分组成的。这是电视猫app解压后目录：
 
-![安装包构成](浅谈Android性能优化系列-1-之安装包大小优化/安装包构成.png)
+![安装包构成](http://othg5ggzi.bkt.clouddn.com/%E5%AE%89%E8%A3%85%E5%8C%85%E6%9E%84%E6%88%90.png)
+
+
 
 目录中com和org两个文件夹是第三方包信息，不用管着两个。
 
@@ -112,11 +114,11 @@ Android提供了非常好用的工具Lint快速检测res中未使用的资源并
 
 运行Analyze—>Run Inspection By Name ，弹窗输入：
 
-![lint](浅谈Android性能优化系列-1-之安装包大小优化/lint.png)
+![lint](http://othg5ggzi.bkt.clouddn.com/lint.png)
 
 执行结果如下：
 
-![lint_result](浅谈Android性能优化系列-1-之安装包大小优化/lint_result.png)
+![lint_result](http://othg5ggzi.bkt.clouddn.com/lint_result.png)
 
 其中lint.png图片没有使用，可以删除。Lint不只检测图片，而是res中所有资源包括未使用的string。
 
