@@ -6,17 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Category: excel | Jenson</title>
+  <title>算法排序之归并 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录工作、生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jenson">
-<meta property="og:url" content="http://yoursite.com/categories/Python/excel/index.html">
+  <meta name="description" content="0x00 前言归并排序也叫合并排序，基于分治思想。 0x01 实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950public class MergeSort &amp;#123;	/**	 * 合并	 * 	 * @param arr	 * @param low	 * @">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法排序之归并">
+<meta property="og:url" content="http://yoursite.com/2017/09/26/算法排序之归并/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="记录工作、生活">
+<meta property="og:description" content="0x00 前言归并排序也叫合并排序，基于分治思想。 0x01 实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950public class MergeSort &amp;#123;	/**	 * 合并	 * 	 * @param arr	 * @param low	 * @">
+<meta property="og:updated_time" content="2017-09-26T15:25:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jenson">
-<meta name="twitter:description" content="记录工作、生活">
+<meta name="twitter:title" content="算法排序之归并">
+<meta name="twitter:description" content="0x00 前言归并排序也叫合并排序，基于分治思想。 0x01 实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950public class MergeSort &amp;#123;	/**	 * 合并	 * 	 * @param arr	 * @param low	 * @">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -178,87 +180,170 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-算法排序之归并" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/07/21/用Python提取excel中有用数据/" class="archive-article-date">
-  	<time datetime="2017-07-21T02:06:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/07/21/用Python提取excel中有用数据/">用Python提取excel中有用数据</a>
+    <h1 class="article-title" itemprop="name">
+      算法排序之归并
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/09/26/算法排序之归并/" class="archive-article-date">
+  	<time datetime="2017-09-26T14:46:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>归并排序也叫合并排序，基于分治思想。</p>
+<h1 id="0x01-实现"><a href="#0x01-实现" class="headerlink" title="0x01 实现"></a>0x01 实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MergeSort</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 合并</div><div class="line">	 * </div><div class="line">	 * <span class="doctag">@param</span> arr</div><div class="line">	 * <span class="doctag">@param</span> low</div><div class="line">	 * <span class="doctag">@param</span> high</div><div class="line">	 * <span class="doctag">@param</span> mid</div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high, <span class="keyword">int</span> mid)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span>[] tmp = <span class="keyword">new</span> <span class="keyword">int</span>[high - low + <span class="number">1</span>];</div><div class="line">		<span class="keyword">int</span> i = low, j = mid + <span class="number">1</span>, k = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (i &lt;= mid &amp;&amp; j &lt;= high) &#123;</div><div class="line">			<span class="keyword">if</span> (arr[i] &lt;= arr[j]) &#123;</div><div class="line">				tmp[k++] = arr[i++];</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				tmp[k++] = arr[j++];</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">while</span> (i &lt;= mid) &#123;</div><div class="line">			tmp[k++] = arr[i++];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">while</span> (j &lt;= high) &#123;</div><div class="line">			tmp[k++] = arr[j++];</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		k = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (low &lt;= high) &#123;</div><div class="line">			arr[low++] = tmp[k++];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (low &lt; high) &#123;</div><div class="line">			<span class="keyword">int</span> mid = (low + high) &gt;&gt; <span class="number">1</span>;</div><div class="line">			mergeSort(arr, low, mid);</div><div class="line">			mergeSort(arr, mid + <span class="number">1</span>, high);</div><div class="line">			merge(arr, low, high, mid);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span>[] arr_sort = &#123; <span class="number">156</span>, <span class="number">141</span>, <span class="number">35</span>, <span class="number">94</span>, <span class="number">88</span>, <span class="number">61</span>, <span class="number">111</span> &#125;;</div><div class="line">		mergeSort(arr_sort, <span class="number">0</span>, arr_sort.length - <span class="number">1</span>);</div><div class="line">		Constant.printArr(arr_sort);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="算法复杂度"><a href="#算法复杂度" class="headerlink" title="算法复杂度"></a>算法复杂度</h1><p>当n=1时，T(n) = 1 ;</p>
+<p>当n&gt;1时，T(n) = 2T(n/2)+n;</p>
+<p>T(n) = 2(2T(n/4)+n/2)+n</p>
+<p>​    =4T(n/4)+2n</p>
+<p>​    =8T(n/8)+3n</p>
+<p>​    =16T(n/16)+4n</p>
+<p>​    =2^xT(n/2^x)+xn</p>
+<p>当数列切分到1时不可切分，此时T(1)=T(n/2^x)，所以n=2^x，所以x=logn</p>
+<p>T(n) = nT(1)+logn *n;</p>
+<p>由于T(1) = 1,所以T(n) = n+lognO(n)；如果n较大时，lognO(n)&gt;n，所以T(n)=  O(nlogn);</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">excel</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">xlrd</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/excel/" class="article-tag-list-link color1">excel</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/xlrd/" class="article-tag-list-link color5">xlrd</a>
+        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/09/26/算法排序之归并/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2017/09/26/浅谈Android性能优化系列-6-之内存优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          浅谈Android性能优化系列(6)之内存优化
+        
+      </div>
+    </a>
   
   
-    </div></section>
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
 
 
           </div>
@@ -281,10 +366,10 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/",
