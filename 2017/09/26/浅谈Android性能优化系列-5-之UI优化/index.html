@@ -15,7 +15,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/09/26/浅谈Android性能优化系列-5-之UI优化/index.html">
 <meta property="og:site_name" content="Jenson">
 <meta property="og:description" content="0x00 前言UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。 0x01 优化">
-<meta property="og:updated_time" content="2017-09-26T10:30:19.000Z">
+<meta property="og:updated_time" content="2017-09-26T11:10:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android性能优化系列(5)之UI优化">
 <meta name="twitter:description" content="0x00 前言UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。 0x01 优化">
@@ -203,11 +203,7 @@
         <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>UI的现实在应用层需要经过测量、布局、绘制三步，每一步都会耗费一定时间，如果UI繁重，导致耗费时间过多造成画面卡顿，造成不好的用户体验。研究显示，0-100ms的延迟会让用户感知到瞬时的卡顿，100-300ms的延迟会让用户感觉迟缓，300-1000ms的延迟让用户感觉“手机卡死了”，1000ms以上的延迟会让用户想要去干别的事情，由此可见有良好的UI优化习惯很重要。</p>
 <h1 id="0x01-优化到什么程度"><a href="#0x01-优化到什么程度" class="headerlink" title="0x01 优化到什么程度"></a>0x01 优化到什么程度</h1><p>如今屏幕刷新频率大都是60FPS，就是说每帧绘制只要16ms，即保证你的UI页面在16ms内绘制渲染完成，就会让用户感觉到体验是流畅的，所以我们需要做的就是确保我们的APP页面渲染小于16ms。</p>
 <a id="more"></a>
-<h1 id="0x02-如何优化"><a href="#0x02-如何优化" class="headerlink" title="0x02 如何优化"></a>0x02 如何优化</h1><h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><ul>
-<li><p>减少xml布局层级</p>
-<ul>
-<li><p>Merge的使用</p>
-<p>Merge是合并的意思，使用Merge合并子元素和父View，而Merge本身可以被忽略。使用Merge的场合：</p>
+<h1 id="0x02-如何优化"><a href="#0x02-如何优化" class="headerlink" title="0x02 如何优化"></a>0x02 如何优化</h1><h2 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h2><h3 id="减少xml布局层级"><a href="#减少xml布局层级" class="headerlink" title="减少xml布局层级"></a>减少xml布局层级</h3><h3 id="Merge的使用"><a href="#Merge的使用" class="headerlink" title="Merge的使用"></a>Merge的使用</h3><p>Merge是合并的意思，使用Merge合并子元素和父View，而Merge本身可以被忽略。使用Merge的场合：</p>
 <p>xml布局中，根元素是FrameLayout时；</p>
 <p>自定义View中，父元素尽量是FrameLayout或者LinearLayout；</p>
 <blockquote>
@@ -216,14 +212,8 @@
 <p>使用Merge加载一个布局时，必须制定一个ViewGroup作为其父元素，并且设置attachToRoot参数为True（inflate(int,ViewGroup,boolean)）；</p>
 <p>不能在ViewStub中使用Merge标签，原因就是ViewStub的inflate方法中没有attachToRoot的设置</p>
 </blockquote>
-</li>
-<li><p>合理使用RelativeLayout和LinearLayout</p>
-<p>RelativeLayout一定程度上可以减少布局层级，但是其对子View测量次数多于LinearLayout。所以综合考虑：如果层级较多情况下，使用RelativeLayout能减少层级的话，优先使用RelativeLayout以便保持界面扁平化；如果层级相同的情况下优先使用LinearLayout，这样能减少子View多次测量。</p>
-</li>
-</ul>
-</li>
-<li><p>ViewStub提高加载速度</p>
-<p>ViewStub默认不可见不占位置，</p>
+<h3 id="合理使用RelativeLayout和LinearLayout"><a href="#合理使用RelativeLayout和LinearLayout" class="headerlink" title="合理使用RelativeLayout和LinearLayout"></a>合理使用RelativeLayout和LinearLayout</h3><p>RelativeLayout一定程度上可以减少布局层级，但是其对子View测量次数多于LinearLayout。所以综合考虑：如果层级较多情况下，使用RelativeLayout能减少层级的话，优先使用RelativeLayout以便保持界面扁平化；如果层级相同的情况下优先使用LinearLayout，这样能减少子View多次测量。</p>
+<h3 id="ViewStub提高加载速度"><a href="#ViewStub提高加载速度" class="headerlink" title="ViewStub提高加载速度"></a>ViewStub提高加载速度</h3><p>ViewStub默认不可见不占位置，</p>
 <p>如果在特定情况下才显示某些布局，可以使用ViewStub。</p>
 <p>显示ViewStub有两种方法：ViewStub.inflate()和ViewStub.setVisibility(View.Visible)；</p>
 <blockquote>
@@ -232,21 +222,11 @@
 <p>Viewstub只能用来加载一个布局文件，而不是某个View</p>
 <p>Viewstub中不能嵌套Merge</p>
 </blockquote>
-</li>
-<li><p>include实现view复用</p>
-<p>对于在多个页面都会使用的公共布局诸如Title栏或导航栏，提取出来通过使用inlucde引入，这样只需要维护一份代码即可。</p>
-</li>
-</ul>
-<h2 id="避免过度绘制"><a href="#避免过度绘制" class="headerlink" title="避免过度绘制"></a>避免过度绘制</h2><ul>
-<li><p>什么是过度绘制</p>
-<p>过度绘制是说屏幕上某一像素在同一帧时间内被绘制多次。在UI布局中如果不可见的部分UI也在进行绘制，这会导致浪费多余的CPU和GPU资源。</p>
-</li>
-<li><p>引起过度绘制原因</p>
-<p>xml布局中控件重叠且都设置了背景或图片</p>
+<h3 id="include实现view复用"><a href="#include实现view复用" class="headerlink" title="include实现view复用"></a>include实现view复用</h3><p>对于在多个页面都会使用的公共布局诸如Title栏或导航栏，提取出来通过使用inlucde引入，这样只需要维护一份代码即可。</p>
+<h2 id="避免过度绘制"><a href="#避免过度绘制" class="headerlink" title="避免过度绘制"></a>避免过度绘制</h2><h3 id="什么是过度绘制"><a href="#什么是过度绘制" class="headerlink" title="什么是过度绘制"></a>什么是过度绘制</h3><p>过度绘制是说屏幕上某一像素在同一帧时间内被绘制多次。在UI布局中如果不可见的部分UI也在进行绘制，这会导致浪费多余的CPU和GPU资源。</p>
+<h3 id="引起过度绘制原因"><a href="#引起过度绘制原因" class="headerlink" title="引起过度绘制原因"></a>引起过度绘制原因</h3><p>xml布局中控件重叠且都设置了背景或图片</p>
 <p>自定义View，onDraw方法中同一区域绘制了多次</p>
-</li>
-<li><p>如何避免过度绘制</p>
-<ul>
+<h3 id="如何避免过度绘制"><a href="#如何避免过度绘制" class="headerlink" title="如何避免过度绘制"></a>如何避免过度绘制</h3><ul>
 <li><p>布局优化</p>
 <p>移除xml中非必须背景，或根据条件设置</p>
 <p>移除window默认背景</p>
@@ -256,8 +236,8 @@
 <p>在自定义 V i e w中可以通过 c a n v a s . c l i p R e c t （ ）来帮助系统识别那些可见的区域 。这个方法可以指定一块矩形区域 ，只有在这个区域内才会被绘制 ，其他的区域会被忽视 。 c a n v a s . c l i p R e c t （ ）可以很好地帮助那些有多组重叠组件的自定义 V i e w来控制显示的区域 。 c l i p R e c t方法还可以帮助节约 C P U与 G P U资源 ，在 c l i p R e c t区域之外的绘制指令都不会被执行 ，那些部分内容在矩形区域内的组件 ，仍然会得到绘制 ，并且可以使用 c a n v a s . q u i c k r e j e c t （ ）来判断是否没和某个矩形相交 ，从而跳过那些非矩形区域内的绘制操作 。</p>
 </li>
 </ul>
-</li>
-</ul>
+<h2 id="合理使用动画"><a href="#合理使用动画" class="headerlink" title="合理使用动画"></a>合理使用动画</h2><p>动画对于提高视觉感官舒适度很有帮助，</p>
+<p>对于IO等耗时操作给予适当的动画提示在一定程度上提高用户体验。</p>
 
       
 
