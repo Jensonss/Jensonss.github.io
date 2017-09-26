@@ -180,6 +180,321 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-垃圾回收机制-关于GC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/垃圾回收机制-关于GC/">垃圾回收机制~关于GC</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/垃圾回收机制-关于GC/" class="archive-article-date">
+  	<time datetime="2017-07-26T12:25:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>很多人通过Java才听说GC的，甚至刚开始做开发时以为GC是Java独有的。其实不然，GC是一项很古老的技术，与Lisp语言在20世纪60年代一同出现的。</p>
+<p>虽然GC不是Java独有的，但是不得不承认，GC很大成分上是因为Java的广泛应用才被广大开发者所熟知的。</p>
+<p>说到GC不得不提一个人：John McCarthy，Lisp语言之父和人工智能之父，同时还是GC之父，其论文中提到的算法就是标记-清除算法。</p>
+<p>如果是一门语言可以从基础语法学起，但是GC该如何学习呢？</p>
+<p><strong>其实问答形式就是最好的学习方式</strong></p>
+<h1 id="0x01-什么是GC"><a href="#0x01-什么是GC" class="headerlink" title="0x01 什么是GC"></a>0x01 什么是GC</h1><p>GC(垃圾回收)，通过查找无效对象释放空间达到自动管理内存的目的。</p>
+        
+          <a class="article-more-a" href="/2017/07/26/垃圾回收机制-关于GC/#more">展开全文 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/GC/" class="article-tag-list-link color3">GC</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Python自动化之hexo自动发布和提交源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/Python自动化之hexo自动发布和提交源码/">Python自动化之hexo自动发布和提交源码</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/Python自动化之hexo自动发布和提交源码/" class="archive-article-date">
+  	<time datetime="2017-07-26T08:43:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>现在的博客系统是使用hexo+github搭建的静态页面系统。</p>
+<p>博客文章页面和源码都由github托管。所以每次发布文章时要跳转到相应目录下，执行<code>hexo d -g</code>命令发布新文章。如果要同步源码方便其他机器也能写文章，那么还要使用<code>git add .</code>添加暂存，<code>git commit -m message</code>添加本地和<code>git push</code>推送远程分支。</p>
+<h1 id="0x01-自动化设想"><a href="#0x01-自动化设想" class="headerlink" title="0x01 自动化设想"></a>0x01 自动化设想</h1><p>开始因为新鲜感这些操作都还好，顺便练手。但是时间久了就觉得每次都操作这么多次太浪费时间了。</p>
+<p>这时候就萌生了自动化命令的想法，一步操作完成所有这些命令，该多省心！</p>
+<h1 id="0x02-自动化设计"><a href="#0x02-自动化设计" class="headerlink" title="0x02 自动化设计"></a>0x02 自动化设计</h1><p>实现自动化首先想到的是Python，而且最近也学了不久，练练手也刚好。</p>
+<p>由于都是终端命令，所以要先实现让Python执行终端命令的方法：</p>
+<p>①通过<code>os.system</code>方法</p>
+<p>②通过<code>subprocess.Popen</code>方法</p>
+<p>通过使用发现都可以执行命令，但是如果命令分开执行，命令之间的前后结果不会关联起来，比如我第一个命令执行<code>cd /jenson/</code>，再执行第二个命令<code>pwd</code>时时发现路径仍然是旧路径。</p>
+<p>所以现在面临新的问题：多个命令一起执行。如何一起执行呢？</p>
+<p>其实上面①和②都支持多命令一起，譬如：</p>
+<p>如果多个命令共同执行，不管前一个命令是否成功，都要执行后一个则使用<strong>&amp;&amp;</strong>连接命令：</p>
+<ul>
+<li><code>os.system(&#39;cmd1 &amp;&amp; cmd2&#39;)</code></li>
+<li><code>subprocess.Popen(&#39;cmd1 &amp;&amp; cmd2&#39;, shell=True)</code></li>
+</ul>
+<p>如果前一个命令执行成功才执行后一个命令，则使用<strong>;</strong>连接：</p>
+<ul>
+<li><code>os.system(&#39;cmd1 ; cmd2&#39;)</code></li>
+<li><code>subprocess.Popen(&#39;cmd1 ; cmd2&#39;, shell=True)</code></li>
+</ul>
+<p>接下来代码实现：</p>
+<h1 id="0x03-自动化实现"><a href="#0x03-自动化实现" class="headerlink" title="0x03 自动化实现"></a>0x03 自动化实现</h1><p>创建<code>AutoCommit.py</code>文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line"></div><div class="line"><span class="comment"># 跳转工作目录</span></div><div class="line">to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line"><span class="comment"># 发布命令</span></div><div class="line">to_deploy = <span class="string">'hexo d -g'</span></div><div class="line"><span class="comment"># git add命令</span></div><div class="line">to_add = <span class="string">'git add .'</span></div><div class="line"><span class="comment"># git commit命令</span></div><div class="line">to_commit = <span class="string">'git commit -m 新添加文章'</span> </div><div class="line"><span class="comment"># git push命令</span></div><div class="line">to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>这就算完成了，运行<code>python3 AutoCommit.py</code>时候也能正常提交。</p>
+<p>但是这样感觉还能再完善些，继续改造：</p>
+<h1 id="0x04-自动化优化"><a href="#0x04-自动化优化" class="headerlink" title="0x04 自动化优化"></a>0x04 自动化优化</h1><p>首先关于git commit的信息，我想实现自定义，而不是每次都固定这几个内容，这样不容易区分每次版本提交了哪些内容。</p>
+<p>现在的初步想法是在终端执行<code>python3 AutoCommit.py</code>命令时，同时接收命令行参数作为提交的内容，比如这样<code>python3 AutoCommit.py  message</code>。</p>
+<p>Python文件要接收命令行参数，需要使用<code>sys</code>模块，接收参数：</p>
+<p><code>message = sys.argv[1]</code>。</p>
+<p>这里argv[0]表示脚本名，argv[1]开始才表示后面的参数</p>
+<p>同时接收message后判断是否为空，如果为空在使用默认提交信息，所以封装一个方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isNullMessage</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    判断消息是否为空,如果为空赋默认值</div><div class="line">    :param message:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> len(message.strip()) == <span class="number">0</span>:</div><div class="line">        message = <span class="string">'提交新文章'</span></div><div class="line">    <span class="keyword">return</span> message</div></pre></td></tr></table></figure>
+<p>既然判断提交信息都封装到方法了，那么这一些列命令也应该封装到方法中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deployAndGitPush</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    hexo静态页面发布和源码push git服务器</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="comment"># 跳转工作目录</span></div><div class="line">    to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line">    <span class="comment"># 发布命令</span></div><div class="line">    to_deploy = <span class="string">'hexo d -g'</span></div><div class="line">    <span class="comment"># git add命令</span></div><div class="line">    to_add = <span class="string">'git add .'</span></div><div class="line">    <span class="comment"># git commit命令</span></div><div class="line">    to_commit = <span class="string">'git commit -m '</span> + message</div><div class="line">    <span class="comment"># git push命令</span></div><div class="line">    to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">    tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>最终调用如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deployAndGitPush(message=isNullMessage(message=message))</div></pre></td></tr></table></figure>
+<p>OK，自动化优化完成。执行<code>python3 AutpCommit.py Android文章提交</code>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">自动化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/自动化/" class="article-tag-list-link color4">自动化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Android各版本新功能及区别" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/Android各版本新功能及区别/">Android各版本新功能及区别</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/Android各版本新功能及区别/" class="archive-article-date">
+  	<time datetime="2017-07-26T05:17:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Android版本更新快，版本越来越越多，兼容性也就要越来越注意，注意各个版本新加了哪些功能，哪些功能和API对开发有帮助，都要心里有个数</p>
+<h1 id="0x01-Android8-0"><a href="#0x01-Android8-0" class="headerlink" title="0x01 Android8.0"></a>0x01 Android8.0</h1><p>waiting…</p>
+<h1 id="0x02-Android-7-0-Nougat"><a href="#0x02-Android-7-0-Nougat" class="headerlink" title="0x02 Android 7.0 Nougat"></a>0x02 Android 7.0 Nougat</h1><ul>
+<li><p>引入了一个新的而且非常需要的多任务处理功能 — 多窗口支持。</p>
+</li>
+<li><p><strong>通知增强</strong> 通知界面直接回复等</p>
+</li>
+<li><p>进一步的低耗电模式Doze 增强版</p>
+</li>
+<li><p>删除了三个常用隐式广播 — <code>CONNECTIVITY_ACTION</code>、<code>ACTION_NEW_PICTURE</code> 和<code>ACTION_NEW_VIDEO</code> </p>
+<p>​</p></li></ul>
+        
+          <a class="article-more-a" href="/2017/07/26/Android各版本新功能及区别/#more">展开全文 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android事件传递机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -371,102 +686,6 @@
 
 
   
-    <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/">浅谈Android性能优化系列(1)之安装包大小优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/" class="archive-article-date">
-  	<time datetime="2017-07-21T03:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月21日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>可能会有人有疑问，安装包还需要优化吗？现在流量都用不完的！</p>
-<p>这样来说吧，优化有多方面好处的：</p>
-<p>①节省用户流量</p>
-<p>②安装包越小，用户就越快下载完，缩短了联网时间，联网时间短耗电也就越少</p>
-<p>③越快下载完，用户就越能提前使用APP，避免对用户耐心的过多消磨。</p>
-<p>所以，安装包优化还是有必要的。</p>
-        
-          <a class="article-more-a" href="/2017/07/21/浅谈Android性能优化系列-1-之安装包大小优化/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/性能优化/" class="article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-用Python提取excel中有用数据" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -532,91 +751,6 @@
       		 
         		<li class="article-tag-list-item">
         			<a href="/categories/xlrd/" class="article-tag-list-link color5">xlrd</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/">浅谈Android性能优化系列(0)之为什么需要性能优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/" class="archive-article-date">
-  	<time datetime="2017-07-19T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月19日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
-<p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
-<p>为什么性能优化是我们绕不开的话题呢？</p>
-        
-          <a class="article-more-a" href="/2017/07/19/浅谈Android性能优化系列-0-之为什么需要性能优化/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
@@ -1004,107 +1138,6 @@
 
 
   
-    <article id="post-hexo更换主题及配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/14/hexo更换主题及配置/">hexo更换主题及配置</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/14/hexo更换主题及配置/" class="archive-article-date">
-  	<time datetime="2017-07-14T02:42:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月14日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>看惯了next样式，这几天想换一款主题换个心情。挑来挑去发现<a href="https://github.com/litten/hexo-theme-yilia">yilia</a>主题不错，左侧导航和个人信息，还能带头像。so接下来就开始主题切换流程。</p>
-<h1 id="0x01-下载"><a href="#0x01-下载" class="headerlink" title="0x01 下载"></a>0x01 下载</h1><ul>
-<li><p>切换到你的博客根目录下</p>
-<p>如我的是这样子：<code>cd ~/Downloads/hexo/</code> </p>
-</li>
-<li><p>下载前进行源文件备份</p>
-<p>首先<code>hero d -g</code>把当前博客从新部署，</p>
-<p>然后把源文件全部提交：<code>git add .</code>添加临时，<code>git commit -m &quot;全部备份&quot;</code>提交本地，<code>git push origin xxx</code>push到服务器。</p>
-</li>
-<li><p>在根目录下执行clone</p>
-<p>命令：<code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p></li></ul>
-        
-          <a class="article-more-a" href="/2017/07/14/hexo更换主题及配置/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/hexo/" class="article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/博客/" class="article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -1223,19 +1256,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1251,7 +1284,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1263,11 +1300,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1283,10 +1316,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
               </li>
              
@@ -1299,7 +1328,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1307,7 +1336,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GC</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1315,11 +1344,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
+                <a href="javascript:void(0)" class="js-tag color3">GC</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1332,6 +1361,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
             
             <div class="clearfix"></div>
