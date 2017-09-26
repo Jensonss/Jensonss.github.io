@@ -180,19 +180,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Android性能优化之耗电优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Android源码下载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/Android性能优化之耗电优化/">Android性能优化之耗电优化</a>
+      <a class="article-title" href="/2017/04/21/Android源码下载/">Android源码下载</a>
     </h1>
   
 
         
-        <a href="/2017/04/21/Android性能优化之耗电优化/" class="archive-article-date">
+        <a href="/2017/04/21/Android源码下载/" class="archive-article-date">
   	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
 </a>
         
@@ -200,14 +200,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>作为移动设备，电池重要性不言而喻，设备没有电那就真的只能拿来砸核桃了。所以作为开发者的我们，为了给用户带来更好的体验，耗电优化一直是我们撇不开的话题。</p>
-</blockquote>
-<p>####1、为什么耗电</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-09bf2f70fae572b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-23 下午2.51.24.png"></p>
-<p>通过上图先把用户-电量这一流程抽象出来，设备的耗电根本原因在于对硬件的使用，耗电越严重说明对硬件使用的越频繁。用户对app频繁使用说明了你用户黏性做的好，我们不能左右，所以我们要在app对硬件调用上做优化来达到节省电量的目的。</p>
+        <h4 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h4><p>win系统的笔记本过年回来就没有带回北京。最近打算看看Android源码，所以需要在mac中从新下载。</p>
+<h4 id="从官网下载"><a href="#从官网下载" class="headerlink" title="从官网下载"></a>从官网下载</h4><p>下载Android源码首先想到的就是<a href="https://source.android.com/source/downloading.html">官网</a><br>按照指示要先安装repo。但是在执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div></pre></td></tr></table></figure></p>
+<p>时候就出现异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--    0</div><div class="line">curl: (7) Failed to connect to storage.googleapis.com port 443: Operation timed out</div></pre></td></tr></table></figure>
         
-          <a class="article-more-a" href="/2017/04/21/Android性能优化之耗电优化/#more">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/21/Android源码下载/#more">展开全文 >></a>
         
       
 
@@ -292,6 +290,92 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest</div></pre></td></tr></table></figure>
 <p>没有写上分支然后就直接同步了，下载完了不知道版本是多少。<br>在</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 build/make/core/version_defaults.mk文件打开</div><div class="line">搜索 PLATFORM_SDK_VERSION</div><div class="line">找到了   PLATFORM_SDK_VERSION := 25</div><div class="line">sdk版本知道了晓得原来是最新的7.1</div></pre></td></tr></table></figure>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-为什么我在工作线程刷新UI没报错" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/21/为什么我在工作线程刷新UI没报错/">为什么我在工作线程刷新UI没报错？</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/21/为什么我在工作线程刷新UI没报错/" class="archive-article-date">
+  	<time datetime="2017-04-21T12:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>从做Android开发以来就一直被灌输“只能在主线程刷新UI”的思想，但是这两天发现个问题，在onCreate中创建工作线程并刷新UI没有报错。代码是这样的：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_main);</div><div class="line">   final TextView tv = (TextView) findViewById(R.id.sample_text);</div><div class="line">   new Thread(new Runnable() &#123;</div><div class="line">       @Override</div><div class="line">       public void run() &#123;</div><div class="line">           tv.setText(&quot;来自&quot;+Thread.currentThread().getName()+&quot;线程的更新&quot;);</div><div class="line">       &#125;</div><div class="line">   &#125;).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2017/04/21/为什么我在工作线程刷新UI没报错/#more">展开全文 >></a>
+        
       
 
       
@@ -558,11 +642,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -570,7 +650,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">趣题</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -586,14 +670,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
@@ -602,11 +678,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Mac</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -615,6 +699,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -627,10 +715,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -658,15 +742,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">excel</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
             
             <div class="clearfix"></div>
