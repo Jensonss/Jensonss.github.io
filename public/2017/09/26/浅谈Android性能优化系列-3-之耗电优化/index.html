@@ -17,8 +17,7 @@
 <meta property="og:description" content="0x00 前言作为移动设备，电池重要性不言而喻，设备没有电那就真的只能拿来砸核桃了。所以作为开发者的我们，为了给用户带来更好的体验，耗电优化一直是我们撇不开的话题。 0x01 为什么耗电 通过上图先把用户-电量这一流程抽象出来，设备的耗电根本原因在于对硬件的使用，耗电越严重说明对硬件使用的越频繁。用户对app频繁使用说明了你用户黏性做的好，我们不能左右，所以我们要在app对硬件调用上做优化来达到节">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-09bf2f70fae572b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-9f6e93db0de1fb2a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-09-26T11:01:31.000Z">
+<meta property="og:updated_time" content="2017-09-26T11:19:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android性能优化系列(3)之耗电优化">
 <meta name="twitter:description" content="0x00 前言作为移动设备，电池重要性不言而喻，设备没有电那就真的只能拿来砸核桃了。所以作为开发者的我们，为了给用户带来更好的体验，耗电优化一直是我们撇不开的话题。 0x01 为什么耗电 通过上图先把用户-电量这一流程抽象出来，设备的耗电根本原因在于对硬件的使用，耗电越严重说明对硬件使用的越频繁。用户对app频繁使用说明了你用户黏性做的好，我们不能左右，所以我们要在app对硬件调用上做优化来达到节">
@@ -215,38 +214,7 @@
 <li>LCD概述<br>LCD又名液晶显示屏，屏幕由成千上万液晶分子负责像素显示，并通过背光来将其照亮。所以说每个像素点都使用了同一个光源，每个像素消耗的电量是相同的。</li>
 <li>LED概述<br>LED每个屏幕像素都可以看成是一个LED灯，由RGB三种颜色共同呈现，不同颜色能量消耗也各不相同。黑色不使用任何颜色，不消耗能量，白色相反使用了所有颜色且亮度高，所以能量消耗也更多。<br><strong>优化方案：较暗的颜色比明亮的颜色更节能，所以在很多留白的地方可以考虑使用偏暗的色调，当然这要在不影响用户体验的前提下。</strong></li>
 </ul>
-<h1 id="0x03-无线网络"><a href="#0x03-无线网络" class="headerlink" title="0x03 无线网络"></a>0x03 无线网络</h1><p>无线网络主要是WIFI和移动运营商网络，通常情况下使用移动网络要比WIFI耗电要多一些。</p>
-<ul>
-<li>移动网络<br>移动网络数据传输有3种状态：<br>Full power：高功率状态，网络激活，允许设备以最大传输速率进行传输。<br>Low power：低功率状态，传输速率低于15kbps，耗电是Full Power状态的一半，一般不能直接从程序中进入该状态，而是由Full Power状态降级进入。<br>Standby：空闲状态，没有数据连接需要传输，耗电最少。</li>
-</ul>
-<p>这三种状态有一个转换流程：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mobile_radio_state_machine.png"></p>
-<blockquote>
-<p>可以看出，三种状态耗电不同，要使耗电最低应该尽量保持状态在空闲或低功率下。从空闲状态转换到高功率状态需要2s，从低功率状态转换到高功率状态需要1.5s。应用中每创建一个网络连接，网络射频都会转到高功率状态，数据传输完毕降回低功率状态，降回过程需要5s，这5s耗电量保持在高功率状态，低功率降回到空闲状态需要12s，期间一直保持低功率状态。所以每次的数据传输都将导致将近20s电量的消耗。</p>
-</blockquote>
-<ul>
-<li>WIFI网络<br>WIFI在active状态下有4种模式：低功率、高功率、低传输、高传输。<br>当从低(高)功率状态传输数据时，WIFI会暂时进入相应地低(高)传输状态，一旦数据传输完毕就回到初始状态。<blockquote>
-<p>WIFI耗电是受包率(每秒接收和发送的数据包)和网速因素影响的。如果因素良好，即网络良好时，数据传输的很快，所以WIFI的高功率状态维持时间很短。这也就是为什么说移动网络耗电高于WIFI耗电，因为同样的数据大小传输时，移动网络固定状态转换就需要近20s的电量消耗。</p>
-</blockquote>
-</li>
-</ul>
-<p>通过上面了解网络连接过程，应该心里有了大概的优化建议。</p>
-<h2 id="网络优化方案："><a href="#网络优化方案：" class="headerlink" title="网络优化方案："></a>网络优化方案：</h2><h3 id="减少网络高功率保持时间："><a href="#减少网络高功率保持时间：" class="headerlink" title="减少网络高功率保持时间："></a>减少网络高功率保持时间：</h3><ul>
-<li><p>1.文本和文件压缩传输。<br>不管发送还是请求数据，在数据传输过程中使用gzip将数据进行压缩。经过压缩的数据需要更短的时间传输即可完成，这样是无线所处的高功率状态时间更短，从而减少了耗电。</p>
-</li>
-<li><p>2.精简文本文件。所谓精简就是去掉文本中空行、空格、注释等无意义内容。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span>  </div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span> A Sample Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span> </div><div class="line"> 	 with some sample text </div><div class="line">		<span class="tag">&lt;<span class="name">--do</span> <span class="attr">more</span> <span class="attr">here--</span>&gt;</span> </div><div class="line">	<span class="tag">&lt;/<span class="name">body</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>精简后</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span>  <span class="tag">&lt;<span class="name">title</span>&gt;</span> A Sample Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span> with some sample text 			<span class="tag">&lt;<span class="name">--do</span> <span class="attr">more</span> <span class="attr">here--</span>&gt;</span> <span class="tag">&lt;/<span class="name">body</span>&gt;</span> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>3.根据显示大小从服务器获取图片</p>
-<p>①请求一个图片时，客户端提供一个分辨率大小，服务器根据分辨率把裁剪缩放后的图片给客户端返回。也可以使用Android端使用Bitmap.Option自行获取缩放的图片<br>②使用webp图片。</p>
-</li>
-</ul>
-<h3 id="减少网络请求次数"><a href="#减少网络请求次数" class="headerlink" title="减少网络请求次数"></a>减少网络请求次数</h3><ul>
-<li>1.使用缓存。<br>把经常使用的文件缓存到本地，如头像icon、好友信息等。以后很多时间都可以直接从本地读取缓存减少网络请求次数。</li>
-<li>2.移动网络下最好批量执行网络请求，利用一次高功率状态执行尽可能多的事情，从而减少频繁间隔请求导致状态转换消耗更多电量。</li>
-</ul>
+<h1 id="0x03-无线网络"><a href="#0x03-无线网络" class="headerlink" title="0x03 无线网络"></a>0x03 无线网络</h1><p>参考<a href="http://www.jensondev.me/2017/09/26/%E6%B5%85%E8%B0%88Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%B3%BB%E5%88%97-4-%E4%B9%8B%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96/" target="_blank" rel="external">浅谈Android性能优化系列(4)之网络优化</a></p>
 <h1 id="0x04-CPU"><a href="#0x04-CPU" class="headerlink" title="0x04 CPU"></a>0x04 CPU</h1><blockquote>
 <p>cpu利用率高和cpu的频率高没有必然关系，这取决于cpu调频策略。高利用率和高频率的cpu都会导致高耗电。</p>
 </blockquote>
