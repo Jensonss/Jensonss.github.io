@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-09bf2f70fae572b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-9f6e93db0de1fb2a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-09-26T10:40:44.000Z">
+<meta property="og:updated_time" content="2017-09-26T11:01:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android性能优化系列(3)之耗电优化">
 <meta name="twitter:description" content="0x00 前言作为移动设备，电池重要性不言而喻，设备没有电那就真的只能拿来砸核桃了。所以作为开发者的我们，为了给用户带来更好的体验，耗电优化一直是我们撇不开的话题。 0x01 为什么耗电 通过上图先把用户-电量这一流程抽象出来，设备的耗电根本原因在于对硬件的使用，耗电越严重说明对硬件使用的越频繁。用户对app频繁使用说明了你用户黏性做的好，我们不能左右，所以我们要在app对硬件调用上做优化来达到节">
@@ -233,24 +233,19 @@
 <p>通过上面了解网络连接过程，应该心里有了大概的优化建议。</p>
 <h2 id="网络优化方案："><a href="#网络优化方案：" class="headerlink" title="网络优化方案："></a>网络优化方案：</h2><h3 id="减少网络高功率保持时间："><a href="#减少网络高功率保持时间：" class="headerlink" title="减少网络高功率保持时间："></a>减少网络高功率保持时间：</h3><ul>
 <li><p>1.文本和文件压缩传输。<br>不管发送还是请求数据，在数据传输过程中使用gzip将数据进行压缩。经过压缩的数据需要更短的时间传输即可完成，这样是无线所处的高功率状态时间更短，从而减少了耗电。</p>
-<ul>
-<li>2.精简文本文件。所谓精简就是去掉文本中空行、空格、注释等无意义内容。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;  </div><div class="line">  &lt;title&gt; A Sample Page&lt;/title&gt; </div><div class="line">  &lt;body&gt; </div><div class="line"> 	 with some sample text </div><div class="line">		&lt;--do more here--&gt; </div><div class="line">	&lt;/body&gt; </div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>2.精简文本文件。所谓精简就是去掉文本中空行、空格、注释等无意义内容。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span>  </div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span> A Sample Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span> </div><div class="line"> 	 with some sample text </div><div class="line">		<span class="tag">&lt;<span class="name">--do</span> <span class="attr">more</span> <span class="attr">here--</span>&gt;</span> </div><div class="line">	<span class="tag">&lt;/<span class="name">body</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>精简后</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;  &lt;title&gt; A Sample Page&lt;/title&gt; &lt;body&gt; with some sample text 			&lt;--do more here--&gt; &lt;/body&gt; &lt;/html&gt;</div></pre></td></tr></table></figure>
-<ul>
-<li>3.根据显示大小从服务器获取图片<br>  ①请求一个图片时，客户端提供一个分辨率大小，服务器根据分辨率把裁剪缩放后的图片给客户端返回。也可以使用Android端使用Bitmap.Option自行获取缩放的图片<pre><code>②使用webp图片。
-</code></pre></li>
-</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span>  <span class="tag">&lt;<span class="name">title</span>&gt;</span> A Sample Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span> with some sample text 			<span class="tag">&lt;<span class="name">--do</span> <span class="attr">more</span> <span class="attr">here--</span>&gt;</span> <span class="tag">&lt;/<span class="name">body</span>&gt;</span> <span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>3.根据显示大小从服务器获取图片</p>
+<p>①请求一个图片时，客户端提供一个分辨率大小，服务器根据分辨率把裁剪缩放后的图片给客户端返回。也可以使用Android端使用Bitmap.Option自行获取缩放的图片<br>②使用webp图片。</p>
 </li>
 </ul>
 <h3 id="减少网络请求次数"><a href="#减少网络请求次数" class="headerlink" title="减少网络请求次数"></a>减少网络请求次数</h3><ul>
-<li><p>1.使用缓存。<br>把经常使用的文件缓存到本地，如头像icon、好友信息等。以后很多时间都可以直接从本地读取缓存减少网络请求次数。</p>
-<ul>
+<li>1.使用缓存。<br>把经常使用的文件缓存到本地，如头像icon、好友信息等。以后很多时间都可以直接从本地读取缓存减少网络请求次数。</li>
 <li>2.移动网络下最好批量执行网络请求，利用一次高功率状态执行尽可能多的事情，从而减少频繁间隔请求导致状态转换消耗更多电量。</li>
-</ul>
-</li>
 </ul>
 <h1 id="0x04-CPU"><a href="#0x04-CPU" class="headerlink" title="0x04 CPU"></a>0x04 CPU</h1><blockquote>
 <p>cpu利用率高和cpu的频率高没有必然关系，这取决于cpu调频策略。高利用率和高频率的cpu都会导致高耗电。</p>
