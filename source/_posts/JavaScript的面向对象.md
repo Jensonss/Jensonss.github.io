@@ -19,7 +19,7 @@ categories: JavaScript
 
 那javascript如何实现面向对象？
 
-
+<!--more-->
 
 # 0x01 对象
 
