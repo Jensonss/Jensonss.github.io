@@ -180,6 +180,114 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaScript的面向对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/11/JavaScript的面向对象/">JavaScript的面向对象理解</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/11/JavaScript的面向对象/" class="archive-article-date">
+  	<time datetime="2017-10-11T07:12:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年10月11日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>学过其他语言再学javascript时会有些不习惯。面向对象（Object-Oriented， OO）的语言有一个标志，那就是它们都有类的概念，而通过类可以创建任意多个具有相同属性和方法的对象。但是 ECMAScript 中没有类的概念，因</p>
+<p>此它的对象也与基于类的语言中的对象有所不同。</p>
+<p>既然没有类又如何按面向对象规则编程呢？</p>
+<p>还记得面向对象的三大特征：封装、继承、多态。</p>
+<p>只要实现这三个特性就是面向对象，并不一定要和类联系到一起，或许这种类式面向对象只是面向对象的一种而已。</p>
+<p>那javascript如何实现面向对象？</p>
+<h1 id="0x01-对象"><a href="#0x01-对象" class="headerlink" title="0x01 对象"></a>0x01 对象</h1><p><strong>ECMA-262 把对象定义为：“无序属性的集合，其属性可以包含基本值、对象或者函数。”</strong></p>
+<p>我们可以把 ECMAScript 的对象想象成散列表：无非就是一组名值对，其中值可以是数据或函数。</p>
+<p>javascript创建一个对象也很简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> cat = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">"kity"</span>,</div><div class="line">    <span class="attr">age</span>: <span class="number">3</span>,</div><div class="line">    <span class="attr">run</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">document</span>.writeln(<span class="keyword">this</span>.name + <span class="string">"跑起来&lt;br&gt;"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">cat.run();</div></pre></td></tr></table></figure>
+<p><strong>javascript总对象可以简单理解为键值对集合</strong></p>
+<p>上面定义一个猫对象很简单，2个属性一个方法。但是如果要创建的对象很多的话，每个对象都要把这些属性写一遍很费时费力，更不利于代码维护。这时可以使用构造函数解决同类属性问题。</p>
+<h1 id="0x02-构造函数"><a href="#0x02-构造函数" class="headerlink" title="0x02 构造函数"></a>0x02 构造函数</h1><p>从代码的角度看，构造函数很像返回对象的函数：定义后，每当需要创建新对象时都可调用它。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">      <span class="keyword">this</span>.name = name;</div><div class="line">      <span class="keyword">this</span>.age = age;</div><div class="line">      <span class="keyword">this</span>.run = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">          <span class="built_in">document</span>.writeln(<span class="keyword">this</span>.name + <span class="string">"跑起来&lt;br&gt;"</span>);</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line"><span class="keyword">var</span> kity = <span class="keyword">new</span> Cat(<span class="string">"kity"</span>,<span class="number">3</span>);</div></pre></td></tr></table></figure>
+<p><strong>注意到我们给构造函数命名时， 采用了首字母大写的方式。 并非必须这样做，但人人都将此视为一种约定加以遵守。与大多数函数中不同， 我们没有使用局部变量， 而是使用关键字this。</strong></p>
+<p>上面只是方便了同类属性每次的声明，但是不同类又如何优化？比如狗类也有这这几个属性。这个时候继承也就应运而生了。</p>
+<p>学过其他语言人可能又有疑问了，javascript中又没有类的概念，如何实现继承呢？</p>
+<h1 id="0X02-继承"><a href="#0X02-继承" class="headerlink" title="0X02 继承"></a>0X02 继承</h1><p>继承是 OO 语言中的一个最为人津津乐道的概念。许多 OO 语言都支持两种继承方式：接口继承和<br>实现继承。 <strong>ECMAScript 只支持实现继承，而且其实现继承主要是依靠原型链来实现的。</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.age = age;</div><div class="line">    <span class="keyword">this</span>.run = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">document</span>.writeln(<span class="keyword">this</span>.name + <span class="string">"跑起来&lt;br&gt;"</span>)</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Dog</span>(<span class="params"></span>) </span>&#123;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params"></span>) </span>&#123;</div><div class="line">&#125;</div><div class="line">Dog.prototype = <span class="keyword">new</span> Animal(<span class="string">"贝贝"</span>, <span class="number">11</span>);</div><div class="line">Cat.prototype = <span class="keyword">new</span> Animal(<span class="string">"kity"</span>, <span class="number">3</span>);</div><div class="line"><span class="keyword">var</span> dog = <span class="keyword">new</span> Dog();</div><div class="line"><span class="keyword">var</span> cat = <span class="keyword">new</span> Cat();</div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"狗名："</span> + dog.name + <span class="string">"&lt;br&gt;"</span>);</div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"狗年龄："</span> + dog.age + <span class="string">"&lt;br&gt;"</span>);</div><div class="line">dog.run();</div><div class="line"></div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"猫名："</span> + cat.name + <span class="string">"&lt;br&gt;"</span>);</div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"猫年龄："</span> + cat.age + <span class="string">"&lt;br&gt;"</span>);</div><div class="line">cat.run();</div></pre></td></tr></table></figure>
+<h1 id="0x03-封装"><a href="#0x03-封装" class="headerlink" title="0x03 封装"></a>0x03 封装</h1><p>上面获取属性值时直接使用<code>对象.属性名</code>的方式，这种方式虽然简单但是同样也存在隐患。</p>
+<p>如果只想让其他人获取值而不想让人修改值，那这种方式是不能实现的。</p>
+<p>虽然javascript中没有像Java那样提供访问权限的public、private关键字，但是可以通过其他方式体现封装的特性：局部变量+内嵌方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> name = name;</div><div class="line">    <span class="keyword">var</span> age = age;</div><div class="line">    <span class="keyword">this</span>.run = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">document</span>.writeln(name + <span class="string">"跑起来&lt;br&gt;"</span>)</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">this</span>.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.getAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> age;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Dog</span>(<span class="params"></span>) </span>&#123;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cat</span>(<span class="params"></span>) </span>&#123;</div><div class="line">&#125;</div><div class="line">Dog.prototype = <span class="keyword">new</span> Animal(<span class="string">"贝贝"</span>, <span class="number">11</span>);</div><div class="line">Cat.prototype = <span class="keyword">new</span> Animal(<span class="string">"kity"</span>, <span class="number">3</span>);</div><div class="line"><span class="keyword">var</span> dog = <span class="keyword">new</span> Dog();</div><div class="line"><span class="keyword">var</span> cat = <span class="keyword">new</span> Cat();</div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"狗名："</span> + dog.getName() + <span class="string">"&lt;br&gt;"</span>);</div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"狗年龄："</span> + dog.getAge() + <span class="string">"&lt;br&gt;"</span>);</div><div class="line">dog.run();</div><div class="line"></div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"猫名："</span> + cat.getName() + <span class="string">"&lt;br&gt;"</span>);</div><div class="line"><span class="built_in">document</span>.writeln(<span class="string">"猫年龄："</span> + cat.getAge() + <span class="string">"&lt;br&gt;"</span>);</div><div class="line">cat.run();</div></pre></td></tr></table></figure>
+<h1 id="0x04-多态"><a href="#0x04-多态" class="headerlink" title="0x04 多态"></a>0x04 多态</h1><p>多态这个吓人的词汇，是面向对象的特性，意思是一个实例不仅是它自身类的实例，也可以被当做它的任何父类的实例来使用。</p>
+<p>在很多面向对象语言中，多态是OOP 中的一个很特殊的特性。而在 JavaScript 中，因为没有类型的概念，所以任何对象可以在任何地方被使用（虽然不能保证正确的结果），从这个角度来说，JavaScript 具备终极的多态性。</p>
+<p>接着上面的代码写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (dog <span class="keyword">instanceof</span> Animal)&#123;</div><div class="line">    <span class="built_in">document</span>.writeln(<span class="string">"True"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从打印结果就会发现<code>dog instanceof Animal</code>为True。可见dog除了是Dog实例，也是Animal实例。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/JavaScript/" class="article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-算法排序之归并" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -982,92 +1090,6 @@
 
 
   
-    <article id="post-Android获取IP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/25/Android获取IP/">Android获取IP</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/25/Android获取IP/" class="archive-article-date">
-  	<time datetime="2017-09-25T12:11:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月25日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>学过计算机网络的都知道，计算机IP地址分为内网IP和外网IP。</p>
-<p>在Android中API只提供了获取内网IP的方法，那如何获取外网IP呢？要解决这个问题要借助于服务器或者提供该服务的网站了。</p>
-<h1 id="0x01-内网IP"><a href="#0x01-内网IP" class="headerlink" title="0x01 内网IP"></a>0x01 内网IP</h1><p>Android系统提供了获取内网IP的API，下面看如何使用API实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 获取本地ip地址</div><div class="line"> *</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getHostIP</span><span class="params">()</span> </span>&#123;</div><div class="line">    String hostIp = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Enumeration nis = NetworkInterface.getNetworkInterfaces();</div><div class="line">        InetAddress ia = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">while</span> (nis.hasMoreElements()) &#123;</div><div class="line">            NetworkInterface ni = (NetworkInterface) nis.nextElement();</div><div class="line">            Enumeration&lt;InetAddress&gt; ias = ni.getInetAddresses();</div><div class="line">            <span class="keyword">while</span> (ias.hasMoreElements()) &#123;</div><div class="line">                ia = ias.nextElement();</div><div class="line">                <span class="keyword">if</span> (ia <span class="keyword">instanceof</span> Inet6Address) &#123;</div><div class="line">                    <span class="keyword">continue</span>;<span class="comment">// skip ipv6</span></div><div class="line">                &#125;</div><div class="line">                String ip = ia.getHostAddress();</div><div class="line">                <span class="keyword">if</span> (!<span class="string">"127.0.0.1"</span>.equals(ip)) &#123;</div><div class="line">                    hostIp = ia.getHostAddress();</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (SocketException e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> hostIp;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2017/09/25/Android获取IP/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1194,15 +1216,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">前端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1214,15 +1240,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MAC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1231,10 +1261,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Mac</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1250,15 +1276,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">WireShakr</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">网络</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">WordCloud</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1282,11 +1308,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
