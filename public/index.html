@@ -264,6 +264,90 @@
 
 
   
+    <article id="post-django时区显示不正确比本地时间小8小时" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/31/django时区显示不正确比本地时间小8小时/">django时区显示不正确比本地时间小8小时</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/31/django时区显示不正确比本地时间小8小时/" class="archive-article-date">
+  	<time datetime="2017-10-31T04:28:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年10月31日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>页面显示时间一直比本地时间小8小时，明显是时区设置有问题。</p>
+<p>时区的设置在<strong>settings.py</strong>中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># TIME_ZONE = 'UTC'时区会比本地小8个小时</span></div><div class="line">TIME_ZONE = <span class="string">'Asia/Shanghai'</span></div></pre></td></tr></table></figure>
+<p>把UTC时区设置为<strong>Asia/Shanghai</strong>刷新页面后时间恢复正常。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Django</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Django/" class="article-tag-list-link color2">Django</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-算法排序之归并" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -935,91 +1019,6 @@
       		 
         		<li class="article-tag-list-item">
         			<a href="/categories/性能优化/" class="article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浅谈Android性能优化系列-0-之为什么需要性能优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/25/浅谈Android性能优化系列-0-之为什么需要性能优化/">浅谈Android性能优化系列(0)之为什么需要性能优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/25/浅谈Android性能优化系列-0-之为什么需要性能优化/" class="archive-article-date">
-  	<time datetime="2017-09-25T14:40:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月25日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0X00-前言"><a href="#0X00-前言" class="headerlink" title="0X00 前言"></a>0X00 前言</h1><p>现在做开发，不管刚入门菜鸟还是资深大牛，总是离不开性能优化/性能调优的话题。那么到底什么是性能优化呢？</p>
-<p>个人认为通过技术手段，使程序运行达到了比之前版本更好的效果，就是性能优化。</p>
-<p>为什么性能优化是我们绕不开的话题呢？</p>
-        
-          <a class="article-more-a" href="/2017/09/25/浅谈Android性能优化系列-0-之为什么需要性能优化/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
