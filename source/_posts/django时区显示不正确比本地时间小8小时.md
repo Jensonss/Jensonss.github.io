@@ -2,7 +2,7 @@
 title: django时区显示不正确比本地时间小8小时
 date: 2017-10-31 12:28:15
 tags:Django
-categories: Django
+categories:Django
 ---
 
 
