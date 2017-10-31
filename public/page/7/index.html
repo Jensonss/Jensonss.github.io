@@ -180,6 +180,132 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python自动化之hexo自动发布和提交源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/26/Python自动化之hexo自动发布和提交源码/">Python自动化之hexo自动发布和提交源码</a>
+    </h1>
+  
+
+        
+        <a href="/2017/07/26/Python自动化之hexo自动发布和提交源码/" class="archive-article-date">
+  	<time datetime="2017-07-26T08:43:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>现在的博客系统是使用hexo+github搭建的静态页面系统。</p>
+<p>博客文章页面和源码都由github托管。所以每次发布文章时要跳转到相应目录下，执行<code>hexo d -g</code>命令发布新文章。如果要同步源码方便其他机器也能写文章，那么还要使用<code>git add .</code>添加暂存，<code>git commit -m message</code>添加本地和<code>git push</code>推送远程分支。</p>
+<h1 id="0x01-自动化设想"><a href="#0x01-自动化设想" class="headerlink" title="0x01 自动化设想"></a>0x01 自动化设想</h1><p>开始因为新鲜感这些操作都还好，顺便练手。但是时间久了就觉得每次都操作这么多次太浪费时间了。</p>
+<p>这时候就萌生了自动化命令的想法，一步操作完成所有这些命令，该多省心！</p>
+<h1 id="0x02-自动化设计"><a href="#0x02-自动化设计" class="headerlink" title="0x02 自动化设计"></a>0x02 自动化设计</h1><p>实现自动化首先想到的是Python，而且最近也学了不久，练练手也刚好。</p>
+<p>由于都是终端命令，所以要先实现让Python执行终端命令的方法：</p>
+<p>①通过<code>os.system</code>方法</p>
+<p>②通过<code>subprocess.Popen</code>方法</p>
+<p>通过使用发现都可以执行命令，但是如果命令分开执行，命令之间的前后结果不会关联起来，比如我第一个命令执行<code>cd /jenson/</code>，再执行第二个命令<code>pwd</code>时时发现路径仍然是旧路径。</p>
+<p>所以现在面临新的问题：多个命令一起执行。如何一起执行呢？</p>
+<p>其实上面①和②都支持多命令一起，譬如：</p>
+<p>如果多个命令共同执行，不管前一个命令是否成功，都要执行后一个则使用<strong>&amp;&amp;</strong>连接命令：</p>
+<ul>
+<li><code>os.system(&#39;cmd1 &amp;&amp; cmd2&#39;)</code></li>
+<li><code>subprocess.Popen(&#39;cmd1 &amp;&amp; cmd2&#39;, shell=True)</code></li>
+</ul>
+<p>如果前一个命令执行成功才执行后一个命令，则使用<strong>;</strong>连接：</p>
+<ul>
+<li><code>os.system(&#39;cmd1 ; cmd2&#39;)</code></li>
+<li><code>subprocess.Popen(&#39;cmd1 ; cmd2&#39;, shell=True)</code></li>
+</ul>
+<p>接下来代码实现：</p>
+<h1 id="0x03-自动化实现"><a href="#0x03-自动化实现" class="headerlink" title="0x03 自动化实现"></a>0x03 自动化实现</h1><p>创建<code>AutoCommit.py</code>文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> subprocess</div><div class="line"></div><div class="line"><span class="comment"># 跳转工作目录</span></div><div class="line">to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line"><span class="comment"># 发布命令</span></div><div class="line">to_deploy = <span class="string">'hexo d -g'</span></div><div class="line"><span class="comment"># git add命令</span></div><div class="line">to_add = <span class="string">'git add .'</span></div><div class="line"><span class="comment"># git commit命令</span></div><div class="line">to_commit = <span class="string">'git commit -m 新添加文章'</span> </div><div class="line"><span class="comment"># git push命令</span></div><div class="line">to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                       to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>这就算完成了，运行<code>python3 AutoCommit.py</code>时候也能正常提交。</p>
+<p>但是这样感觉还能再完善些，继续改造：</p>
+<h1 id="0x04-自动化优化"><a href="#0x04-自动化优化" class="headerlink" title="0x04 自动化优化"></a>0x04 自动化优化</h1><p>首先关于git commit的信息，我想实现自定义，而不是每次都固定这几个内容，这样不容易区分每次版本提交了哪些内容。</p>
+<p>现在的初步想法是在终端执行<code>python3 AutoCommit.py</code>命令时，同时接收命令行参数作为提交的内容，比如这样<code>python3 AutoCommit.py  message</code>。</p>
+<p>Python文件要接收命令行参数，需要使用<code>sys</code>模块，接收参数：</p>
+<p><code>message = sys.argv[1]</code>。</p>
+<p>这里argv[0]表示脚本名，argv[1]开始才表示后面的参数</p>
+<p>同时接收message后判断是否为空，如果为空在使用默认提交信息，所以封装一个方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isNullMessage</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    判断消息是否为空,如果为空赋默认值</div><div class="line">    :param message:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> len(message.strip()) == <span class="number">0</span>:</div><div class="line">        message = <span class="string">'提交新文章'</span></div><div class="line">    <span class="keyword">return</span> message</div></pre></td></tr></table></figure>
+<p>既然判断提交信息都封装到方法了，那么这一些列命令也应该封装到方法中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deployAndGitPush</span><span class="params">(message)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    hexo静态页面发布和源码push git服务器</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="comment"># 跳转工作目录</span></div><div class="line">    to_path = <span class="string">'cd ~/Downloads/hexo/'</span></div><div class="line">    <span class="comment"># 发布命令</span></div><div class="line">    to_deploy = <span class="string">'hexo d -g'</span></div><div class="line">    <span class="comment"># git add命令</span></div><div class="line">    to_add = <span class="string">'git add .'</span></div><div class="line">    <span class="comment"># git commit命令</span></div><div class="line">    to_commit = <span class="string">'git commit -m '</span> + message</div><div class="line">    <span class="comment"># git push命令</span></div><div class="line">    to_push = <span class="string">'git push origin hexoSource'</span></div><div class="line">    tmp = subprocess.Popen(to_path + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_deploy + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_add + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_commit + <span class="string">'&amp;&amp;'</span> +</div><div class="line">                           to_push, shell=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>最终调用如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deployAndGitPush(message=isNullMessage(message=message))</div></pre></td></tr></table></figure>
+<p>OK，自动化优化完成。执行<code>python3 AutpCommit.py Android文章提交</code>。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">自动化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/自动化/" class="article-tag-list-link color4">自动化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android各版本新功能及区别" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1017,90 +1143,6 @@
 
 
   
-    <article id="post-Mac下配置adb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/13/Mac下配置adb/">Mac下配置adb</a>
-    </h1>
-  
-
-        
-        <a href="/2017/07/13/Mac下配置adb/" class="archive-article-date">
-  	<time datetime="2017-07-13T13:10:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年07月13日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>Mac和windows一样，如果要在终端命令行全局使用非系统命令，需要手动把命令环境配置到指定文件中，具体操作就是把命令文件所属路径配置到.bash_profile里面。</p>
-<h1 id="0x01-分别找到双方路径"><a href="#0x01-分别找到双方路径" class="headerlink" title="0x01 分别找到双方路径"></a>0x01 分别找到双方路径</h1><h2 id="找到adb"><a href="#找到adb" class="headerlink" title="找到adb"></a>找到adb</h2><p>我是通过Android studio中的idk location找到SDK位置<code>/Users/jenson/Library/Android/sdk</code> .</p>
-        
-          <a class="article-more-a" href="/2017/07/13/Mac下配置adb/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
@@ -1219,14 +1261,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">趣题</a>
               </li>
              
@@ -1235,23 +1269,23 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">博客</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1275,15 +1309,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">自己写爬虫</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">自动化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1299,15 +1337,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Django</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">职场杂谈</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1319,15 +1361,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">程序员的数学</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
               </li>
              
               <li class="article-tag-list-item">
