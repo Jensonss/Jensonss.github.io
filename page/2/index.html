@@ -180,6 +180,185 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Android性能优化系列-3-之耗电优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/26/浅谈Android性能优化系列-3-之耗电优化/">浅谈Android性能优化系列(3)之耗电优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/26/浅谈Android性能优化系列-3-之耗电优化/" class="archive-article-date">
+  	<time datetime="2017-09-26T10:26:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>作为移动设备，电池重要性不言而喻，设备没有电那就真的只能拿来砸核桃了。所以作为开发者的我们，为了给用户带来更好的体验，耗电优化一直是我们撇不开的话题。</p>
+<h1 id="0x01-为什么耗电"><a href="#0x01-为什么耗电" class="headerlink" title="0x01 为什么耗电"></a>0x01 为什么耗电</h1><p><img src="http://upload-images.jianshu.io/upload_images/1796052-09bf2f70fae572b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-23 下午2.51.24.png"></p>
+<p>通过上图先把用户-电量这一流程抽象出来，设备的耗电根本原因在于对硬件的使用，耗电越严重说明对硬件使用的越频繁。用户对app频繁使用说明了你用户黏性做的好，我们不能左右，所以我们要在app对硬件调用上做优化来达到节省电量的目的。</p>
+        
+          <a class="article-more-a" href="/2017/09/26/浅谈Android性能优化系列-3-之耗电优化/#more">展开全文 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-浅谈Android性能优化系列-2-之稳定性优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/26/浅谈Android性能优化系列-2-之稳定性优化/">浅谈Android性能优化系列(2)之稳定性优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/26/浅谈Android性能优化系列-2-之稳定性优化/" class="archive-article-date">
+  	<time datetime="2017-09-26T09:47:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>上一节讲了安装包优化，本节说下稳定性优化方面入手点。</p>
+<p>相比于电量和网络，稳定性可视性更高，什么是可视性？就是用户的感知程度！</p>
+<p>电量多耗了百分之几和网络流量多跑了几兆，可能用户并不会注意到，但是一旦发生ANR或者Crash，用户基本是必感知的，而且每一次的感知都会降低对你的APP的忍耐度，一旦忍耐度耗光，你的APP也就要该卸载了。</p>
+<p>虽然稳定性很重要，但是稳定性优化还是很简单的（相对其他几个方面来说）。</p>
+<h1 id="0x01-稳定性优化"><a href="#0x01-稳定性优化" class="headerlink" title="0x01 稳定性优化"></a>0x01 稳定性优化</h1><h2 id="避免ANR"><a href="#避免ANR" class="headerlink" title="避免ANR"></a>避免ANR</h2><p>什么是ANR？Application Not Response，应用无响应。</p>
+<p>要解决ANR，首先要知道什么原因引起的ANR才好入手：</p>
+<ul>
+<li>输入事件5s未完成</li>
+<li>广播10s未完成</li>
+<li>服务20s未完成</li>
+</ul>
+<p><strong>其实这几个方面的根本原因就是在主线程做了耗时操作，在处理ANR时可以使用traceview查看方法耗时以便修复。</strong></p>
+        
+          <a class="article-more-a" href="/2017/09/26/浅谈Android性能优化系列-2-之稳定性优化/#more">展开全文 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android性能优化系列-1-之安装包大小优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -885,178 +1064,9 @@
 
 
   
-    <article id="post-CSS浮动float引起布局错乱" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/12/CSS浮动float引起布局错乱/">CSS浮动float引起布局错乱</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/12/CSS浮动float引起布局错乱/" class="archive-article-date">
-  	<time datetime="2017-09-12T13:09:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月12日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>html默认是流式布局从上到下，但是使用float后可以让当前标签跳出流式布局限制，但同时下面的标签可能会和float标签产生重叠情况，如下：</p>
-<p><img src="http://othg5ggzi.bkt.clouddn.com/css%E6%B5%AE%E5%8A%A8%E5%BC%95%E8%B5%B7%E9%87%8D%E5%8F%A0.png" alt="css浮动引起重叠"></p>
-<p>图中可以看到表单和右边的导航栏重叠了造成布局混乱。</p>
-        
-          <a class="article-more-a" href="/2017/09/12/CSS浮动float引起布局错乱/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端/" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-html5发展史简述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/12/html5发展史简述/">html5发展史简述</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/12/html5发展史简述/" class="archive-article-date">
-  	<time datetime="2017-09-12T12:12:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月12日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>作为前端一部分，html5近两年发展很快，不管移动端还是服务端或多或少都会涉及到些许html5。</p>
-<p>掌握一样东西就要先了解它的历史。所以下面一张图描述下html5的发展史。</p>
-        
-          <a class="article-more-a" href="/2017/09/12/html5发展史简述/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端/" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
