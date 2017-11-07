@@ -180,286 +180,44 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Android开发之JNI深入解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">Python入门系列(0):OSX系统下Python3的配置与安装</a>
+      <a class="article-title" href="/2017/04/25/Android开发之JNI深入解析/">Android开发之JNI深入解析</a>
     </h1>
   
 
         
-        <a href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+        <a href="/2017/04/25/Android开发之JNI深入解析/" class="archive-article-date">
+  	<time datetime="2017-04-24T16:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月25日</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
-<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
-        
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">使用Sublime text编译python3时中文打印异常问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
-<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
-<p>mark一下</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
-<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
+<p>本来是没有打算写JNI的，因为本来是在看Binder机制原理的，但是看着看着就跑偏看到了JNI。。。</p>
+</blockquote>
+<h1 id="通过本章可以了解到这些："><a href="#通过本章可以了解到这些：" class="headerlink" title="通过本章可以了解到这些："></a>通过本章可以了解到这些：</h1><ul>
+<li><p>jni介绍</p>
 </li>
-<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
+<li><p>为什么要学习jni</p>
 </li>
-<li>3.执行执行<code>brew help</code>看是否有提示</li>
-</ul>
-
+<li><p>jni使用流程是怎样的</p>
+</li>
+<li><p>如何Java调用C</p>
+</li>
+<li><p>如何C调用Java</p>
+</li>
+<li><p>了解jni源码和机制</p></li></ul>
+        
+          <a class="article-more-a" href="/2017/04/25/Android开发之JNI深入解析/#more">展开全文 >></a>
+        
       
 
       
@@ -472,7 +230,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
@@ -484,7 +242,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
@@ -519,30 +277,32 @@
 
 
   
-    <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-30分钟搭建自己的网站" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">Python入门系列(1):如何使用Sublime text开发Python</a>
+      <a class="article-title" href="/2017/04/23/30分钟搭建自己的网站/">Hexo+GitHub 30分钟拥有属于自己的网站</a>
     </h1>
   
 
         
-        <a href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+        <a href="/2017/04/23/30分钟搭建自己的网站/" class="archive-article-date">
+  	<time datetime="2017-04-23T04:57:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月23日</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3">这里</a><br>安装完成，在launcher启动Sublime</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
+        <h1 id="说在前面的话"><a href="#说在前面的话" class="headerlink" title="说在前面的话"></a>说在前面的话</h1><blockquote>
+<p>很多ITer都想拥有一个个人网站，记录自己工作经验和生活。哪怕已经有了简书这样好的一个平台，但是那种情节并没有就此打消。下面给大家分享下我个人网站创建流程及中途遇到的坑，希望对那些想建站却又嫌麻烦的朋友有所帮助。</p>
+</blockquote>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>在开始前要做好系列准备工作，如环境搭建、GitHub账号注册等。下面分别来看下要做哪些：</p>
         
-          <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/#more">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/23/30分钟搭建自己的网站/#more">展开全文 >></a>
         
       
 
@@ -556,7 +316,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
         		</li>
       		
 		</ul>
@@ -568,7 +332,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        			<a href="/categories/hexo/" class="article-tag-list-link color5">hexo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/博客/" class="article-tag-list-link color3">博客</a>
         		</li>
       		
 		</ul>
@@ -768,6 +536,91 @@
 
 
   
+    <article id="post-使用Sublime text编译python3时中文打印异常问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/">使用Sublime text编译python3时中文打印异常问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/使用Sublime text编译python3时中文打印异常问题/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>按照网上的一些方法改了几个地方都是没有效果，就又都给还原回来了。后来发现只要修改先前配置的环境即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	&quot;cmd&quot;: [&quot;/Library/Frameworks/Python.framework/Versions/3.5/bin/python3&quot;,&quot;-u&quot;,&quot;$file&quot;],</div><div class="line">	&quot;env&quot;: &#123;&quot;LANG&quot;: &quot;en_US.UTF-8&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>加上一句env的配置就可以了。<br>什么？不知道去哪里找配置文件了？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-06e6c7cff8200bb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.35.31.png"></p>
+<p>打开Preferences -&gt; Browse Packages -&gt; 会自动打开一个新的窗口-打开user编辑之前的文件保存即可。<br><img src="http://upload-images.jianshu.io/upload_images/1796052-a48410d9dd488b78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.36.46.png"><br><img src="http://upload-images.jianshu.io/upload_images/1796052-50806a0e72ca3dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-07 上午11.37.09.png"></p>
+<p>mark一下</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-osx下如何使用SublimeText阅读Android系统源码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -855,31 +708,32 @@
 
 
   
-    <article id="post-Mac版eclipse中每次重启电脑后字体自动变小" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Python入门系列(0) OSX系统下Python3的配置与安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/Mac版eclipse中每次重启电脑后字体自动变小/">Mac版eclipse中每次重启电脑后字体自动变小</a>
+      <a class="article-title" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/">Python入门系列(0):OSX系统下Python3的配置与安装</a>
     </h1>
   
 
         
-        <a href="/2017/04/22/Mac版eclipse中每次重启电脑后字体自动变小/" class="archive-article-date">
-  	<time datetime="2017-04-22T10:50:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+        <a href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>如题每次开机后打开eclipse时，发现上次调好的字体又变小了。每次都这样，比较影响心情。今天决定把这个问题解决掉。<br>网友的做法是：<br>打开 应用程序/Eclipse.app/Contents/Eclipse/eclipse.ini 文件中，<br>把文中“-Dorg.eclipse.swt.internal.carbon.smallFonts”删掉。<br>这样可以避免Eclipse里面的字体奇怪地自动变小。。</p>
-<p>发现很久以前就存在这个问题，不过当时的fix方法和最新的不一样。<br><a href="http://t-machine.org/index.php/2011/08/21/fix-eclipses-fonts-on-os-x/" target="_blank" rel="external">传送通道</a></p>
-<p>但是上面的2方法好像对我来说没有效果(我只试了第一种)。后来在偏好设置里发现Theme为mac时使用的是Reduced Palette这个选项，我好奇的把选项改为了Default。然后点了确认再调整好需要的字体并重启。然后真的没有再恢复小字体了。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-3ea1ef0bbc0ed211.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-08 下午12.04.34.png"></p>
-
+        <h1 id="关于Python默认安装的问题"><a href="#关于Python默认安装的问题" class="headerlink" title="关于Python默认安装的问题"></a>关于Python默认安装的问题</h1><p>在Linux和osx中都默认集成了Python，这时我们要查看集成的版本是不是我们需要的3.x。如果是，那么恭喜你不用往下看了，如果不是请继续。<br>如何查看Python版本呢？打开终端输入如下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python --version</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-8911115b3e35e144.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午6.45.53.png"></p>
+<p>可以看到我的系统默认的版本是2.7.10，看来还是需要安装3.x的。咱门继续</p>
+        
+          <a class="article-more-a" href="/2017/04/22/Python入门系列(0) OSX系统下Python3的配置与安装/#more">展开全文 >></a>
+        
       
 
       
@@ -892,7 +746,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
@@ -904,7 +758,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/工具/" class="article-tag-list-link color3">工具</a>
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
@@ -939,34 +793,30 @@
 
 
   
-    <article id="post-关于家庭网络宽带、路由及上网设备那些事---后续篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Python入门系列(1) 如何使用Sublime text开发Python" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事---后续篇/">关于家庭网络宽带、路由及上网设备那些事---后续篇</a>
+      <a class="article-title" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/">Python入门系列(1):如何使用Sublime text开发Python</a>
     </h1>
   
 
         
-        <a href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事---后续篇/" class="archive-article-date">
-  	<time datetime="2017-04-21T14:50:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月21日</time>
+        <a href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>上一篇主要写了几点制约网速的可能原因，没有看过上一篇的请移步<a href="http://www.jianshu.com/p/f1018427d0eb">关于家庭网络宽带、路由及上网设备那些事</a>。这一篇就分别介绍下宽带、路由和用网设备的一些知识。</p>
-<h3 id="家庭宽带的那些事"><a href="#家庭宽带的那些事" class="headerlink" title="家庭宽带的那些事"></a>家庭宽带的那些事</h3><p>网络出了问题都会打客服咨询，但是你知道你家的网络服务商是几级的吗？</p>
-<p>####1.宽带运营商分级</p>
-<p>目前宽带运营商一般分为三级即可，三级··立马就邪恶了。<br>一级服运营商是国家、省市、城域骨干网的建设者。主要有联通、电信、移动和广电，以前小的时候就有种说法叫南电信北联通。</p>
-<p>电信在一级运营商里算是老前辈了。之所以就叫北联通是因为北方以前上网是通过电话线来拨号的，座机的电话那时候归属网通，后来联通收购了网通。移动以前只有无限上网的业务，宽带业务应该是合并了铁通后才有的，广电应该近些年发展起来的，据说广电是租用电信和自建都有的。<br>二级运营商是租用了一级运营商的网络设备来发展的。如果一级运营商是厂家的话，二级运营商就相当于批发商了。主要有歌华宽带、长城宽带等。二级运营商的优势就是性价比较高和比较优质的售后。<br>三级运营商是写字楼和办公楼这类，背靠房地产开发商和物业提供商发展的。比如有些写字楼只提供某一种宽带，网络 差但又不允许公司拉其他服务商的宽带，着实可恨。</p>
-<p>看到这里相信大家对自家的网络提供商有了个大概了解，如果感兴趣请继续：</p>
+        <h1 id="下载并安装Sublime-text3"><a href="#下载并安装Sublime-text3" class="headerlink" title="下载并安装Sublime text3"></a>下载并安装Sublime text3</h1><p>点击下载<a href="https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg">osx版</a>直接安装即可。<br>如果需要其他系统版本请移步<a href="http://www.sublimetext.com/3">这里</a><br>安装完成，在launcher启动Sublime</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c2bc5a099511d506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-01-06 下午8.32.28.png"></p>
         
-          <a class="article-more-a" href="/2017/04/21/关于家庭网络宽带、路由及上网设备那些事---后续篇/#more">展开全文 >></a>
+          <a class="article-more-a" href="/2017/04/22/Python入门系列(1) 如何使用Sublime text开发Python/#more">展开全文 >></a>
         
       
 
@@ -980,7 +830,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">网络</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
@@ -992,7 +842,176 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/网络/" class="article-tag-list-link color3">网络</a>
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-osx如何安装Homrbrew" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx如何安装Homrbrew/">osx如何安装Homrbrew</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx如何安装Homrbrew/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>1.homebrew依赖于xcode，所以在终端先执行 <code>xcode-select --install</code> 期间弹窗一直确定即可，根据网络速度不同，可能稍有延迟</p>
+</li>
+<li><p>2.上一步完成了，终端继续输入<br><code>ruby -e &quot;$(curl -fsSLhttps://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code>直到看到终端中显示install successful字样</p>
+</li>
+<li>3.执行执行<code>brew help</code>看是否有提示</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-osx下pip3安装matplotlib时The following required packages can not be built freetype" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/">osx下pip3安装matplotlib时 The following required packages can not be built freetype</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/22/osx下pip3安装matplotlib时The following required packages can not be built freetype/" class="archive-article-date">
+  	<time datetime="2017-04-22T10:55:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年04月22日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>‘The following required packages can not be built: * freetype’<br>出现这个提示，乍一看以为没有安装freetype的原因，后来找其安装方法。使用brew install freetype  ，有提示already installed。然后又看了很多文章，照着改了很多都没有办法。后来胡乱一通查找看到了这个<a href="http://stackoverflow.com/questions/12363557/matplotlib-install-failure-on-mac-osx-10-8-mountain-lion" target="_blank" rel="external">问答</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">I think the other answers are on the right track, but I encountered this same problem and can attest that:</div><div class="line">brew install pkg-config</div><div class="line">brew install freetype</div><div class="line">pip install matplotlib</div></pre></td></tr></table></figure></p>
+<p>上面意思说这哥们遇到过同样的问题，下面的能解决。所以试了下<code>brew install pkg-config</code>然后自动安装了，因为freetype已经提示安装了。最后又安装了一次<code>pip3 install matplotlib</code>成功了</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Python/" class="article-tag-list-link color2">Python</a>
         		</li>
       		
 		</ul>
@@ -1029,7 +1048,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
     </nav>
   
 
