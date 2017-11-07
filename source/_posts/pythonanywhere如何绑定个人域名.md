@@ -1,6 +1,6 @@
 
 ---
-title: django时区显示不正确比本地时间小8小时
+title: pythonanywhere如何绑定个人域名
 date: 2017-11-07 16:45:15
 tags: Django
 categories: [Django,python]
@@ -15,6 +15,7 @@ categories: [Django,python]
 另外如果没有购买空间，你部署的项目只能以二级域名形式访问，譬如：jenson.pythonanywhere.com。
 
 关于如何部署自己的项目到[pythonanywhere](www.pythonanywhere.com)这里不在赘述，网上很多资料，这里主要记录下我绑定自己域名的过程。
+ <-- more-->
 
 # 购买域名
 
