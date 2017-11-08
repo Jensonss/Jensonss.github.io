@@ -180,6 +180,92 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Android性能优化系列-4-之网络优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/26/浅谈Android性能优化系列-4-之网络优化/">浅谈Android性能优化系列(4)之网络优化</a>
+    </h1>
+  
+
+        
+        <a href="/2017/09/26/浅谈Android性能优化系列-4-之网络优化/" class="archive-article-date">
+  	<time datetime="2017-09-26T10:28:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月26日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>无线网络主要是WIFI和移动运营商网络，通常情况下使用移动网络要比WIFI耗电要多一些。</p>
+<h1 id="0x01-无线状态机"><a href="#0x01-无线状态机" class="headerlink" title="0x01 无线状态机"></a>0x01 无线状态机</h1><h3 id="移动网络"><a href="#移动网络" class="headerlink" title="移动网络"></a>移动网络</h3><p>移动网络数据传输有3种状态：<br><strong>Full power</strong>：高功率状态，网络激活，允许设备以最大传输速率进行传输。<br><strong>Low power</strong>：低功率状态，传输速率低于15kbps，耗电是Full Power状态的一半，一般不能直接从程序中进入该状态，而是由Full Power状态降级进入。<br><strong>Standby</strong>：空闲状态，没有数据连接需要传输，耗电最少。</p>
+<p>这三种状态有一个转换流程：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mobile_radio_state_machine.png"></p>
+        
+          <a class="article-more-a" href="/2017/09/26/浅谈Android性能优化系列-4-之网络优化/#more">展开全文 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android性能优化系列-3-之耗电优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -943,93 +1029,6 @@
 			 
         		<li class="article-tag-list-item">
         			<a href="/categories/数学/" class="article-tag-list-link color3">数学</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Android本地广播" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/14/Android本地广播/">Android本地广播</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/14/Android本地广播/" class="archive-article-date">
-  	<time datetime="2017-09-14T09:50:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月14日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>在android开发中广播作为四大组件之一，其重要性不言而喻。虽然重要但使用却是极其简单，</p>
-<p>通常我们的使用无非就是<code>sendBroadCast</code>和继承BroadCastReceiver重写<code>onReceive</code>方法。</p>
-<p>如果多想想其实这种做法是存在安全隐患的，比如我们发送的广播是全局性的，那么有被其他程序截获泄露的风险，同样的我们广播接收器也是全局性的，垃圾应用也有可能不停发送垃圾广播。</p>
-<p>对于这种安全隐患如何避免呢？</p>
-<p><strong>Google为我们提供了本地广播服务：<code>LocalBroadcastManager</code>对广播进行管理。让我们发出的广播只在应用内传递，且广播接收器也只接收来自本应用的广播。</strong></p>
-        
-          <a class="article-more-a" href="/2017/09/14/Android本地广播/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>

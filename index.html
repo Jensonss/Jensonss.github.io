@@ -180,6 +180,145 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/09/浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用/">浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/09/浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用/" class="archive-article-date">
+  	<time datetime="2017-11-08T16:30:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年11月09日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。</p>
+<p>去<a href="https://github.com/google/battery-historian" target="_blank" rel="external">Google的github项目</a>下载Battery Historian。</p>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="电池重置"><a href="#电池重置" class="headerlink" title="电池重置"></a>电池重置</h2><p>使用命令<code>adb shell dumpsys batterystats --reset</code>重置电池</p>
+<p><strong>电池重置的目的是为了让下次电量统计时从当前时间开始，而不是从最初开机或上次充满电(具体何时开始不清楚)。</strong></p>
+<h2 id="开启全部wakelock"><a href="#开启全部wakelock" class="headerlink" title="开启全部wakelock"></a>开启全部wakelock</h2><p>使用命令<code>adb shell dumpsys batterystats --enable full-wake-history</code>开启全部wakelock</p>
+<h1 id="导出统计数据"><a href="#导出统计数据" class="headerlink" title="导出统计数据"></a>导出统计数据</h1><p>接下来应该断开设备的充电连接，对我们的app进行各种操作，等操作完成重新连接设备，然后进行电量统计。</p>
+<p>其实电量统计系统已经为我们做了，我们要做的就是把电量统计信息以文件形式导出到我们的电脑。</p>
+<p>老版本的导出命令为：<code>adb shell dumpsys batterystats &gt; out.txt</code>。</p>
+<p><code>adb shell dumpsys batterystats &gt; 包名 &gt; out.txt</code>得到给定的app相关的电量消耗信息</p>
+<p>新版本的导出命令为：<code>adb bugreport out.zip</code>，也可以使用<code>adb bugreport &gt; out.txt</code>。</p>
+<p>新版本同样也可以统计指定APP</p>
+<p>导出的out.txt文件在你命令行执行时的所属目录。</p>
+<h3 id="异常1"><a href="#异常1" class="headerlink" title="异常1"></a>异常1</h3><p>这里我出现一个异常：当前SDK最新版本为7.0(25)，而我的手机系统版本为5.0，</p>
+<p>所以使用命令行：<strong>adb bugreport &gt; report.txt</strong>时出现了如下异常：</p>
+<p><strong>Failed to get bugreportz version, which is only available on devices running Android 7.0 or later.</strong></p>
+<p>这是由于SDK版本太新了，既然手机系统不能升级，那就只好把SDK降级，</p>
+<p>其实这里只是使用了plantform下的adb命令，所以从新下载<strong>platform-tools</strong>即可。</p>
+<p>我下载和手机系统版本一致的platform-tools，然后解压。</p>
+<p>使用新下载的platform-tools的adb命令执行<code>adb bugreport &gt; out.txt</code>时提示没有设备。</p>
+<h3 id="异常2"><a href="#异常2" class="headerlink" title="异常2"></a>异常2</h3><p>又使用<strong>adb devices</strong>查看列表仍然没有。重启adb也没用效果。</p>
+<p>因为我的是Mac设备，所以命令行执行<code>system_profiler SPUSBDataType</code>时会显示一系列外接设备信息，找到你的Android设备，复制Vendor ID。</p>
+<p>进入你下载的低版本<strong>platform-tools</strong>文件夹下，修改或创建<strong>adb_usb.ini</strong>文件，把刚才复制的Vendor ID粘贴到这里。</p>
+<p>再次执行<strong>adb devices</strong>就可以查看到设备列表了。</p>
+<p>然后再次执行<code>adb bugreport &gt; out.txt</code>就会产生一个设备耗能统计信息文件。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>导出电量统计数据是一个持续输出的过程，就是说如果你不手动停止，那会一直统计。</p>
+<p>所以看到文件中已经写入内容后就可以CTRL+C了。</p>
+<h1 id="数据可视化"><a href="#数据可视化" class="headerlink" title="数据可视化"></a>数据可视化</h1><p>我们得到的是一个可读性很差的txt文件，接下来就是把out.txt文件转为方便我们可视化的图表信息html</p>
+<p><strong>老版本</strong>使用命令<code>python historian.py out.txt &gt; out.html</code>，其中<strong>historian.py</strong>在我们前言中下载的项目中scripts目录下。</p>
+<p>转换后的页面如图：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/historian-01.png" alt="historian01"></p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/historian-02.png" alt="historian02"></p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/historian-03.png" alt="historian03"></p>
+<p><strong>注意：刚打开html时可能页面只显示Battery Historian analysis for bugreport.txt，看不到其他内容，是因为页面正在分析txt，耐心等待下，不要关闭页面。</strong></p>
+<p>图中垂直白线每个间隔在我这里表示半分钟，</p>
+<p>battery_level（ 剩余电量）<br>鼠标悬停在 battery_level 变化处，显示剩余电量，以及距上次 battery_level 变化的间隔</p>
+<p>plugged（连接）<br>电量来源（类似于上面的电量信息）。</p>
+<p>screen（屏幕）<br>屏幕开启的时长。</p>
+<p>top（上栏）<br>列举了当前屏幕上显示的进程</p>
+<p>sync（同步）<br>处理与服务器的同步。</p>
+<p>wake_lock</p>
+<p>running（运行）<br>游戏时，电话一直在后台运行。</p>
+<p> wake_lock_in（唤醒锁）<br>可以看到哪些进程正在运行，以及所引起的 WakeLock 或 Alarm。在这张截图中，游<br>戏音频控制进程多次调用 WakeLock（ 播放不同的示例音乐引发了将近 2000 次音频<br>WakeLock）。同时也可以看到屏幕 WakeLock。</p>
+<p>Job    后台的工作，比如服务service的运行</p>
+<p>wifi</p>
+<p>wifi_full_lock</p>
+<p>wifi_scan（WIFI扫描）</p>
+<p>wifi_running（WIFI运行状态）</p>
+<p>我这里一条全是绿，说明一直在连接WIFI使用中</p>
+<p>wifi_suppl（ Wi-Fi状态）</p>
+<p>wifi_signal_strength（ Wi-Fi信号强度）<br>图 3-8 中，有 Wi-Fi 信号被检测到——尽管 Wi-Fi 已经被关闭，但由于高级 Wi-Fi 设置，<br>也会一直搜索 Wi-Fi 信号。</p>
+<p>phone_signal_strength（无线网络信息 ）<br>显示信号变化（有差、中、好 三种）。</p>
+<p>audio</p>
+<p>fg<br>这里指的是前台应用。前台程序很少被销毁来释放内存。即使关闭屏幕，我们也可以看<br>到 Facebook 客户端在前台处理收到的信息。</p>
+<p>status（状态）<br>正在放电（与充电状态相对应）。</p>
+<p>health（健康）<br>电池健康状态，来自电池管理器 API。</p>
+<p>plug（连接状态）<br>设备是否接通电源。</p>
+<p><strong>通过上面的数据展示可以看出各个硬件耗电信息，根据相关信息和自己APP的相关设置，看哪些是不该出现的硬件使用而执行了，那这就是该优化的地方。比如在wake_lock_in横条中，左半部分红色竖条还是比较均匀的，但是到了右半部分，红条多了很多而且同一时间有多个wakelock发生了，这些都是需要的吗？不是的话就要想办法优化了。</strong></p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>这里使用的一直是Battery Historian1.0，新版本的由于是GO语言重新的，所以需要安装Go的环境，有时间在尝试下。</p>
+<p>新版本内容也更丰富，页面有四个标签：SystemStats（系统统计）、 Historian 2.0、 Historian（ legacy） 和 App Stats（应用程序统计）。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-pythonanywhere如何绑定个人域名" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -860,92 +999,6 @@
 <h1 id="0x01-优化到什么程度"><a href="#0x01-优化到什么程度" class="headerlink" title="0x01 优化到什么程度"></a>0x01 优化到什么程度</h1><p>如今屏幕刷新频率大都是60FPS，就是说每帧绘制只要16ms，即保证你的UI页面在16ms内绘制渲染完成，就会让用户感觉到体验是流畅的，所以我们需要做的就是确保我们的APP页面渲染小于16ms。</p>
         
           <a class="article-more-a" href="/2017/09/26/浅谈Android性能优化系列-5-之UI优化/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浅谈Android性能优化系列-4-之网络优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/26/浅谈Android性能优化系列-4-之网络优化/">浅谈Android性能优化系列(4)之网络优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/26/浅谈Android性能优化系列-4-之网络优化/" class="archive-article-date">
-  	<time datetime="2017-09-26T10:28:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月26日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>无线网络主要是WIFI和移动运营商网络，通常情况下使用移动网络要比WIFI耗电要多一些。</p>
-<h1 id="0x01-无线状态机"><a href="#0x01-无线状态机" class="headerlink" title="0x01 无线状态机"></a>0x01 无线状态机</h1><h3 id="移动网络"><a href="#移动网络" class="headerlink" title="移动网络"></a>移动网络</h3><p>移动网络数据传输有3种状态：<br><strong>Full power</strong>：高功率状态，网络激活，允许设备以最大传输速率进行传输。<br><strong>Low power</strong>：低功率状态，传输速率低于15kbps，耗电是Full Power状态的一半，一般不能直接从程序中进入该状态，而是由Full Power状态降级进入。<br><strong>Standby</strong>：空闲状态，没有数据连接需要传输，耗电最少。</p>
-<p>这三种状态有一个转换流程：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-c669c0cfaae7f3b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mobile_radio_state_machine.png"></p>
-        
-          <a class="article-more-a" href="/2017/09/26/浅谈Android性能优化系列-4-之网络优化/#more">展开全文 >></a>
         
       
 
