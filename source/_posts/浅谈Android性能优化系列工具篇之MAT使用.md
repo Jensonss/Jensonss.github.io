@@ -1,6 +1,6 @@
 ---
-title: Android内存分析工具之MAT详解
-date: 2017-04-27 13:07:09
+title: 浅谈Android性能优化系列工具篇之MAT使用
+date: 2017-11-09 13:07:09
 tags: Android
 categories: Android
 ---
@@ -13,8 +13,6 @@ categories: Android
 
 # 关于Mat
 
-
-
 Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat是由eclipse社区维护，所以如果使用Android studio开发的话，需要单独下载，[官方通道](http://www.eclipse.org/mat/downloads.php)。我用的是mac版，后面也会使用mac版来分析。
 
 # Mat使用
@@ -25,13 +23,19 @@ Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat�
 
 ## Android studio导出dump文件
 
-打开Android Monitor窗口，![0B8D42B7-E5A5-431D-9658-2A99C923CF4E](Android内存分析工具之MAT详解/0B8D42B7-E5A5-431D-9658-2A99C923CF4E.png)
+打开Android Monitor窗口，![dump生成按钮](http://othg5ggzi.bkt.clouddn.com/dump%E7%94%9F%E6%88%90%E6%8C%89%E9%92%AE.png)
 
-点击圆圈中的按钮，过几秒中会自动生成一个dump文件，然后自动打开如下图的窗口：![1A94CD89-1BE9-46BC-9449-8B55EE34D741](Android内存分析工具之MAT详解/1A94CD89-1BE9-46BC-9449-8B55EE34D741.png)
+点击圆圈中的按钮，过几秒中会自动生成一个dump文件，然后自动打开如下图的窗口：![自动生成的dump文件](http://othg5ggzi.bkt.clouddn.com/%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%9A%84dump%E6%96%87%E4%BB%B6.png)
+
+
+
+## 导出标准dump文件
 
 在Heap Snapshot下的几个文件就是自动生成的dump文件，但是这不是标准的dump文件，所以需要选择文件右键导出标准dump文件，保存到一个目录下：
 
-![屏幕快照 2017-04-27 下午1.49.26](Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午1.49.26.png)
+![导出标准dump文件](http://othg5ggzi.bkt.clouddn.com/%E5%AF%BC%E5%87%BA%E6%A0%87%E5%87%86dump%E6%96%87%E4%BB%B6.png)
+
+
 
 
 
@@ -39,7 +43,11 @@ Mat，全面Memory Analyzer Tool，Java内存分析工具。注意一点，Mat�
 
 使用Mat，菜单open File选择刚才导出的dump文件，经过分析后回显示如下所示的项目：
 
-![屏幕快照 2017-04-27 下午2.08.27](Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午2.08.27.png)
+![打开标准文件](http://othg5ggzi.bkt.clouddn.com/%E6%89%93%E5%BC%80%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6.png)
+
+
+
+![图2](http://othg5ggzi.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-04-27%20%E4%B8%8B%E5%8D%882.21.48.png)
 
 
 
@@ -57,15 +65,15 @@ Leak Suspectss是一个关于内存泄露猜想的饼图，Problem Suspect 1是�
 
 内存分析是分析的整个系统的内存泄露，而我们只要查找我们APP的内存泄露情况。这无疑增加了很多工作，不过幸亏Histogram支持正则表达式查找，在Regex中输入我们的包名进行过滤，直奔和我们APP有关的内存泄露：
 
-![屏幕快照 2017-04-27 下午3.11.33](Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.11.33.png)
+![包名过滤](http://othg5ggzi.bkt.clouddn.com/%E5%8C%85%E5%90%8D%E8%BF%87%E6%BB%A4.png)
 
 过滤后就显示了我们APP相关内存信息，按Retained Heap大小排列下，发现Student和MainActivity这两个类问题比较大。但是MainActivity的Objects数量为1，而Student的为130，看起来Student问题更严重，所以先从Student入手：
 
-首先看下是哪里的引用导致了Student不能被GC回收。![屏幕快照 2017-04-27 下午3.19.06](Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.19.06.png)
+首先看下是哪里的引用导致了Student不能被GC回收。![GC Root](http://othg5ggzi.bkt.clouddn.com/GC%20Root.png)
 
 右键使用Merge Shortest Paths to GC Roots显示距GC Root最短路径，当然选择过程中要排除软引用和弱引用，因为这些标记的一般都是可以被回收的。进入结果页查看：
 
-![屏幕快照 2017-04-27 下午3.22.23](Android内存分析工具之MAT详解/屏幕快照 2017-04-27 下午3.22.23.png)
+![结果页面](http://othg5ggzi.bkt.clouddn.com/%E7%BB%93%E6%9E%9C%E9%A1%B5%E9%9D%A2.png)
 
 啧啧，原来Student不能被回收竟然就是这个MainActivity搞的鬼，可以看到这个类里面有个students集合里面存放的正式不能回收的Student对象。
 
@@ -91,3 +99,6 @@ Leak Suspectss是一个关于内存泄露猜想的饼图，Problem Suspect 1是�
 
 原来不能被回收是因为用static修饰了students集合。这导致其生命周期边长，在Activity销毁时，仍然存在。问题找到了，去掉static完成内存泄露修复。
 
+# 结束语
+
+MAT功能不止于此，还有很多实用有趣的功能等着我们自己去探索。
