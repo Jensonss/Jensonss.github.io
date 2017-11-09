@@ -10,6 +10,8 @@ categories: Android
 Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。
 
 去[Google的github项目](https://github.com/google/battery-historian)下载Battery Historian。
+<!--more-->
+
 
 # 准备
 
