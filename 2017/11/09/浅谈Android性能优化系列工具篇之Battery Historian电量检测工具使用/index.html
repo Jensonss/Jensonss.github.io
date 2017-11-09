@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。 去Google的github项目下载Battery Historian。 准备电池重置使用命令adb shell dumpsys batterystats --reset">
+  <meta name="description" content="前言Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。 去Google的github项目下载Battery Historian。">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用">
 <meta property="og:url" content="http://yoursite.com/2017/11/09/浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="前言Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。 去Google的github项目下载Battery Historian。 准备电池重置使用命令adb shell dumpsys batterystats --reset">
+<meta property="og:description" content="前言Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。 去Google的github项目下载Battery Historian。">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/historian-01.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/historian-02.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/historian-03.png">
-<meta property="og:updated_time" content="2017-11-08T16:30:53.000Z">
+<meta property="og:updated_time" content="2017-11-09T05:04:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Android性能优化系列工具篇之Battery Historian电量检测工具使用">
-<meta name="twitter:description" content="前言Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。 去Google的github项目下载Battery Historian。 准备电池重置使用命令adb shell dumpsys batterystats --reset">
+<meta name="twitter:description" content="前言Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。 去Google的github项目下载Battery Historian。">
 <meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/historian-01.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -205,7 +205,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Battery Historian是谷歌开放的电量检测工具，目前发布2个版本：首个版本是由python编写，但是在2015年谷歌IO大会发布的Battery Historian2.0版本使用Go重写，新版本提供的信息更全面。</p>
-<p>去<a href="https://github.com/google/battery-historian" target="_blank" rel="external">Google的github项目</a>下载Battery Historian。</p>
+<p>去<a href="https://github.com/google/battery-historian" target="_blank" rel="external">Google的github项目</a>下载Battery Historian。<br><a id="more"></a></p>
 <h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="电池重置"><a href="#电池重置" class="headerlink" title="电池重置"></a>电池重置</h2><p>使用命令<code>adb shell dumpsys batterystats --reset</code>重置电池</p>
 <p><strong>电池重置的目的是为了让下次电量统计时从当前时间开始，而不是从最初开机或上次充满电(具体何时开始不清楚)。</strong></p>
 <h2 id="开启全部wakelock"><a href="#开启全部wakelock" class="headerlink" title="开启全部wakelock"></a>开启全部wakelock</h2><p>使用命令<code>adb shell dumpsys batterystats --enable full-wake-history</code>开启全部wakelock</p>
@@ -625,6 +625,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">xlrd</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">版本控制</a>
               </li>
             
             <div class="clearfix"></div>
