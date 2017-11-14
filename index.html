@@ -180,6 +180,100 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-猫扑素数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/14/猫扑素数/">猫扑素数</a>
+    </h1>
+  
+
+        
+        <a href="/2017/11/14/猫扑素数/" class="archive-article-date">
+  	<time datetime="2017-11-14T07:23:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年11月14日</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>关于<strong>猫扑素数</strong>，首先我有2个定义不明白：</p>
+<p>什么是素数？</p>
+<p>怎么才算猫扑素数？</p>
+<p>或许弄清这两个问题就方便下手了。</p>
+<h1 id="素数"><a href="#素数" class="headerlink" title="素数"></a>素数</h1><p>说素数不懂，但是换个说法，质数，应该很多人就明白了。</p>
+<p>百科里这样定义：<em>质数</em>（prime number）又称<em>素数</em>，有无限个。<em>质数</em>定义为在大于1的自然数中，除了1和它本身以外不再有其他因数，这样的数称为<em>质数</em>。</p>
+<p>这样一下子就明朗起来了，质数的定义在中学就学过了。</p>
+<p>3，5，7是质数，9不是，所以可以认为质数一定是奇数，但是奇数不一定是质数。</p>
+<h1 id="猫扑素数"><a href="#猫扑素数" class="headerlink" title="猫扑素数"></a>猫扑素数</h1><p>关于猫扑素数的来源没有在网络上找到，不知道为什么起了个这样名字。</p>
+<p>所以只能强制记住以2开头，后面根若干个3的如23，233，23333这样的就是猫扑素数。</p>
+<p>不过233333不是，因为233333=353x661。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> math</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isPrime</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    是否为素数</div><div class="line">    :param value:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    isPrime = <span class="keyword">True</span></div><div class="line">    <span class="keyword">if</span> value &lt; <span class="number">2</span>:</div><div class="line">        isPrime = <span class="keyword">False</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        sq = int(math.sqrt(value))</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, sq):</div><div class="line">            <span class="keyword">if</span> (value % i == <span class="number">0</span>):</div><div class="line">                isPrime = <span class="keyword">False</span></div><div class="line">                <span class="keyword">break</span></div><div class="line">    <span class="keyword">return</span> isPrime</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">isMop</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    是否为猫扑素数</div><div class="line">    :param value:</div><div class="line">    :return:</div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> value &lt; <span class="number">10</span>:</div><div class="line">        <span class="keyword">return</span> value == <span class="number">2</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">if</span> value % <span class="number">10</span> == <span class="number">3</span>:</div><div class="line">            <span class="keyword">return</span> isMop(int(value / <span class="number">10</span>))</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">numIsMop</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="keyword">if</span> isMop(value):</div><div class="line">        <span class="keyword">if</span> isPrime(value):</div><div class="line">            print(value)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">1000000</span>):</div><div class="line">    numIsMop(i)</div></pre></td></tr></table></figure>
+<p>打印结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">2</div><div class="line">23</div><div class="line">233</div><div class="line">2333</div><div class="line">23333</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-浅谈Android性能优化系列工具篇之MAT使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -912,94 +1006,6 @@
 			 
         		<li class="article-tag-list-item">
         			<a href="/categories/JavaScript/" class="article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浅谈Android性能优化系列-6-之内存优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/26/浅谈Android性能优化系列-6-之内存优化/">浅谈Android性能优化系列(6)之内存优化</a>
-    </h1>
-  
-
-        
-        <a href="/2017/09/26/浅谈Android性能优化系列-6-之内存优化/" class="archive-article-date">
-  	<time datetime="2017-09-26T10:35:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年09月26日</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><blockquote>
-<p>上一章讲了<a href="http://www.jianshu.com/p/bd3d673aa979">Android性能优化之耗电优化
-</a>，感兴趣的可以看下。这一章来说说Android内存方面如何优化，虽说是讲内存优化但是并不涉及虚拟机底层原理，力求通俗易懂。</p>
-</blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1796052-0956f76fd0a3e36b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="屏幕快照 2017-03-29 下午2.58.41.png"></p>
-<p>养成好习惯先上图。内存从状态上来说只有已使用和未使用两种。本章内存优化也从这两方面下手：已使用的内存如何保证虚拟机的顺利回收、未使用的内存如何在满足需求的情况下尽量小的申请。</p>
-        
-          <a class="article-more-a" href="/2017/09/26/浅谈Android性能优化系列-6-之内存优化/#more">展开全文 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
         		</li>
       		
 		</ul>
