@@ -6,17 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Jenson</title>
+  <title>Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录工作、生活">
-<meta property="og:type" content="website">
+  <meta name="description" content="浅谈Java注解 前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步 知道什么是注解Jav">
+<meta name="keywords">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Jenson">
-<meta property="og:url" content="http://yoursite.com/archives/page/10/index.html">
+<meta property="og:url" content="http://yoursite.com/2017/11/15/浅谈Java注解/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="记录工作、生活">
+<meta property="og:description" content="浅谈Java注解 前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步 知道什么是注解Jav">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%AD%A6%E4%B9%A0%E5%9B%9B%E6%AD%A5.png">
+<meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%86%85%E7%BD%AE%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8.png">
+<meta property="og:updated_time" content="2017-11-15T10:08:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jenson">
-<meta name="twitter:description" content="记录工作、生活">
+<meta name="twitter:description" content="浅谈Java注解 前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步 知道什么是注解Jav">
+<meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%AD%A6%E4%B9%A0%E5%9B%9B%E6%AD%A5.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
   
@@ -178,523 +183,251 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-浅谈Java注解" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>浅谈Java注解</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一直以来对于Java注解的理解都停留在<code>@Override</code>的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。</p>
+<p>对于注解的学习可以按照图下的四个步骤：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%AD%A6%E4%B9%A0%E5%9B%9B%E6%AD%A5.png" alt="学习四步"></p>
+<p><strong>知道</strong>就是了解什么是注解？它有什么用？</p>
+<p><strong>使用</strong>就是初级的使用方法</p>
+<p><strong>自定义</strong>就是根据需求定义自己的注解实现</p>
+<p><strong>原理</strong>就是介绍下注解如何实现的</p>
+<p>下面分别来介绍下每步</p>
+<h1 id="知道"><a href="#知道" class="headerlink" title="知道"></a>知道</h1><h2 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h2><p>Java注解从5.0版本推出，</p>
+<p>注解就是对类、方法、参数、变量、构造器及包声明中的特殊修饰符，实现对元数据的描述。</p>
+<p>元数据是什么？</p>
+<p>简单点说元数据就是用来存储数据的数据，比如用来描述学生信息需要定义一个Student类，那么Student类用来描述学生信息，但是谁又来描述Student类本身呢？就是元类了(meta class)，即Java中Class类。</p>
+<h2 id="注解作用"><a href="#注解作用" class="headerlink" title="注解作用"></a>注解作用</h2><p>其实在注解出现之前，它的功能也有其他一些方法来实现，但是那个时候的实现是比较随意的，由开发人员自行实现。所以注解的出现相当于统一了标准。</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="内置标准注解"><a href="#内置标准注解" class="headerlink" title="内置标准注解"></a>内置标准注解</h2><p>Java注解在推出时便内置了三种标准注解：</p>
+<p><code>@Override</code>，说明当前方法覆盖父类的方法实现。</p>
+<p><code>@Deprecated</code>，说明该代码已经废弃了，不建议使用，如果使用了编译器会发出警告。</p>
+<p><code>@SuppressWarnings</code>，说明关闭当前修饰代码段内的编译器警告信息。</p>
+<p>使用方法如下：</p>
+<p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%86%85%E7%BD%AE%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8.png" alt="内置注解"></p>
+<p>可以清楚看到标记了<code>@Deprecated</code>的方法会被划线来表示已经过期废弃。</p>
+<p>而<code>test()</code>和<code>test1()</code>两个方法同样的实现，因为<code>test1()</code>标记了<code>@SuppressWarnings</code>而没有出现黄色警告信息。</p>
+<p><code>@Override</code>更不用说，如果父类没有该方法就出现错误提示的。</p>
+<h1 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h1><h2 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h2><p>上面简单介绍了Java内置的三种标准注解，但是这三种根本不够看的，我们需要实现自己的注解。</p>
+<p>但是在自定义注解之前需要了解一个知识点：元注解。</p>
+<p>上面有说到描述类的类叫元类 ，所以这里描述注解的注解自然就是元注解。</p>
+<p>Java提供了四种元注解用来帮助自定义新注解：</p>
+<table>
+<thead>
+<tr>
+<th>@Document</th>
+<th>将注解信息加入Javadoc文档</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@Inherited</td>
+<td>是否允许子类继承本注解</td>
+</tr>
+<tr>
+<td>@Retention</td>
+<td>注解存活日期</td>
+</tr>
+<tr>
+<td>@Target</td>
+<td>注解的作用目标</td>
+</tr>
+</tbody>
+</table>
+<p>其中<code>@Retention</code>有三个可选值：</p>
+<table>
+<thead>
+<tr>
+<th>RetentionPolicy.SOURCE</th>
+<th>存在于编译阶段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RetentionPolicy.CLASS</td>
+<td>存在于字节码文件中，但是类加载时候不会用到。这是默认的注解方式</td>
+</tr>
+<tr>
+<td>RetentionPolicy.RUNTIME</td>
+<td>存在于整个运行期，可以通过反射拿到注解信息</td>
+</tr>
+</tbody>
+</table>
+<p>网上关于<code>RetentionPolicy.SOURCE</code>的说法有说“在编译阶段丢弃”,一时让我很费解，既然在编译阶段就丢弃了，那<code>@override</code>重写标记也是编译阶段丢弃，但是它又如何实现父类没有该方法时出现编译错误提示呢？所以我觉得对于<code>RetentionPolicy.SOURCE</code>的描述还是用<strong>仅存在于编译阶段</strong>更准确一些。</p>
+<p>关于<code>@Target</code>也有多个属性值可选：</p>
+<table>
+<thead>
+<tr>
+<th>ElementType.TYPE</th>
+<th>类、接口或enum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ElementType.FIELD</td>
+<td>实例变量</td>
+</tr>
+<tr>
+<td>ElementType.METHOD</td>
+<td>方法</td>
+</tr>
+<tr>
+<td>ElementType.PARAMETER</td>
+<td>参数</td>
+</tr>
+<tr>
+<td>ElementType.CONSTRUCTOR</td>
+<td>构造器</td>
+</tr>
+<tr>
+<td>ElementType.LOCAL_VARIABLE</td>
+<td>局部变量</td>
+</tr>
+<tr>
+<td>ElementType.PACKAGE</td>
+<td>包</td>
+</tr>
+</tbody>
+</table>
+<p>关于元注解已经说完了，下面开始元注解实战</p>
+<h2 id="实战元注解"><a href="#实战元注解" class="headerlink" title="实战元注解"></a>实战元注解</h2><p>先看下需求：</p>
+<p>现在从服务器返回一个json串{age:29,name:Jenson}</p>
+<p>我在本地已有实体类，代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> String pName;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> pAge;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getpName</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> pName;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setpName</span><span class="params">(String pName)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.pName = pName;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getpAge</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> pAge;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setpAge</span><span class="params">(<span class="keyword">int</span> pAge)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.pAge = pAge;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在我们要设计一个JsonParser类，通过方法JsonParser.parse(String json, People.class)；可以直接解析成功并返回一个People对象。</p>
+<p>那么问题来了，本地类的属性和json的key值不一样，我们如何通过注解实现json的属性和People实例属性一一对应呢？</p>
+<p>我希望通过给People的实例属性添加注解来达到一致：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@json</span>(<span class="string">"name"</span>)</div><div class="line"><span class="keyword">private</span> String pName;</div><div class="line"><span class="meta">@json</span>(<span class="string">"age"</span>)</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> pAge;</div></pre></td></tr></table></figure>
+<p>在注解中的值为json中的key值。接下来看看注解json的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Target</span>(value = ElementType.FIELD)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> json &#123;</div><div class="line">	<span class="function">String <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为是给People<strong>属性</strong>设置注解所以使用<code>@Target(value = ElementType.FIELD)</code>，</p>
+<p>因为要用到<strong>反射</strong>，所以设置周期为<code>@Retention(RetentionPolicy.RUNTIME)</code>。</p>
+<p>下面看JsonParser.parse的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SuppressWarnings</span>(value = &#123; <span class="string">"unchecked"</span> &#125;)</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">parse</span><span class="params">(String json, Class clz)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Class clss = clz;</div><div class="line">		Object obj = clss.newInstance();</div><div class="line">		<span class="keyword">for</span> (Field f : clss.getDeclaredFields()) &#123;</div><div class="line">			Json j = f.getAnnotation(Json.class);</div><div class="line">			String key = j.value();</div><div class="line">			JSONObject jo = JSONObject.fromObject(json);</div><div class="line">			Method method = clss.getDeclaredMethod(<span class="string">"set"</span> + f.getName(), <span class="keyword">new</span> Class[] &#123; f.getType() &#125;);</div><div class="line">			method.invoke(obj, jo.get(key));</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> obj;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>因为通过注解绑定了People的属性和json的key值。所以通过反射拿到注解信息的value，通过这个value作为key拿到json的value。最后通过set方法把json的value赋值给对应的属性。这样完成了解析过程。</p>
+<p>这样看起来好像比直接使用JSONObject解析麻烦，但是其实这样做更灵活，而且一般服务器交互过程都是若干个实体类，而我们只要实现这一次就可以达到通用的目的。</p>
+<p>其实看下jackson和gson等解析应该都是类似的方法。另外注解在hibernate和各种测试框架都有广泛应用。</p>
+<p>最后看看main方法实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		String json = <span class="string">"&#123;age:29,name:'Jenosn'&#125;"</span>;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			People p = (People) JsonParser.parse(json, People.class);</div><div class="line">			System.out.println(<span class="string">"年龄："</span> + p.getpAge());</div><div class="line">			System.out.println(<span class="string">"姓名："</span> + p.getpName());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">年龄：29</div><div class="line">姓名：Jenosn</div></pre></td></tr></table></figure>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/11/四个人过桥问题/" class="archive-article-date">
-  	<time datetime="2017-05-11T07:55:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月11日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/11/四个人过桥问题/">四个人过桥问题</a>
-    </h1>
-  
+      </div>
+    </span>
+  </div>
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/11/15/浅谈Java注解/" alt="微信分享二维码">
+    </div>
+</div>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/10/农夫带着狼、羊和白菜过河问题/" class="archive-article-date">
-  	<time datetime="2017-05-10T09:55:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2017/11/14/技术追求深度还是广度？/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          技术追求深度还是广度？
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/11/28/Log工具封装Tag显示类方法和行数/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/10/农夫带着狼、羊和白菜过河问题/">农夫带着狼、羊和白菜过河问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/趣题/" class="article-tag-list-link color3">趣题</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/10/详解设计模式之责任链模式/" class="archive-article-date">
-  	<time datetime="2017-05-10T04:36:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/10/详解设计模式之责任链模式/">详解设计模式之责任链模式</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/10/详解设计模式之建造者模式/" class="archive-article-date">
-  	<time datetime="2017-05-10T04:28:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/10/详解设计模式之建造者模式/">详解设计模式之建造者模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/设计模式/" class="article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/10/Android网络框架执行流程分析/" class="archive-article-date">
-  	<time datetime="2017-05-09T16:58:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月10日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/10/Android网络框架执行流程分析/">Android网络框架okhttp执行流程分析</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/05/Android关于Activity生命周期误解/" class="archive-article-date">
-  	<time datetime="2017-05-05T03:03:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月05日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/05/Android关于Activity生命周期误解/">Android关于Activity生命周期误解</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/03/算法查找之二分查找/" class="archive-article-date">
-  	<time datetime="2017-05-03T14:52:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/03/算法查找之二分查找/">算法查找之二分查找</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/03/算法排序之交换排序/" class="archive-article-date">
-  	<time datetime="2017-05-03T13:04:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/03/算法排序之交换排序/">算法排序之交换排序</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/算法/" class="article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/03/Java字符串压缩去重/" class="archive-article-date">
-  	<time datetime="2017-05-03T09:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月03日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/03/Java字符串压缩去重/">Java字符串压缩去重</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/02/hexo博客换电脑后怎么办/" class="archive-article-date">
-  	<time datetime="2017-05-02T08:31:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年05月02日</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/02/hexo博客换电脑后怎么办/">hexo网站换电脑后怎么办</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/hexo/" class="article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/博客/" class="article-tag-list-link color3">博客</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/9/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/8/">8</a><a class="page-number" href="/archives/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/archives/page/11/">11</a><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><a class="extend next" rel="next" href="/archives/page/11/">Next &raquo;</a>
-    </nav>
+  
+
   
 
 
@@ -718,8 +451,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
