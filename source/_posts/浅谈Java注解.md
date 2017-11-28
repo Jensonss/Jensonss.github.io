@@ -1,4 +1,10 @@
-浅谈Java注解
+
+---
+title: 浅谈Java注解
+date: 2017-11-28 23:23:02
+tags: Java
+categories: Java
+---
 
 
 
@@ -21,6 +27,7 @@
 **原理**就是介绍下注解如何实现的
 
 下面分别来介绍下每步
+<!-- more -->
 
 # 知道
 
@@ -209,8 +216,6 @@ public static void main(String[] args) {
 年龄：29
 姓名：Jenosn
 ```
-
-
 
 
 

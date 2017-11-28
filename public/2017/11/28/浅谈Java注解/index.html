@@ -6,21 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Jenson</title>
+  <title>浅谈Java注解 | Jenson</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="浅谈Java注解 前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步 知道什么是注解Jav">
-<meta name="keywords">
+  <meta name="description" content="前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jenson">
-<meta property="og:url" content="http://yoursite.com/2017/11/15/浅谈Java注解/index.html">
+<meta property="og:title" content="浅谈Java注解">
+<meta property="og:url" content="http://yoursite.com/2017/11/28/浅谈Java注解/index.html">
 <meta property="og:site_name" content="Jenson">
-<meta property="og:description" content="浅谈Java注解 前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步 知道什么是注解Jav">
+<meta property="og:description" content="前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%AD%A6%E4%B9%A0%E5%9B%9B%E6%AD%A5.png">
 <meta property="og:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%86%85%E7%BD%AE%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8.png">
-<meta property="og:updated_time" content="2017-11-15T10:08:13.000Z">
+<meta property="og:updated_time" content="2017-11-28T15:38:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jenson">
-<meta name="twitter:description" content="浅谈Java注解 前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步 知道什么是注解Jav">
+<meta name="twitter:title" content="浅谈Java注解">
+<meta name="twitter:description" content="前言一直以来对于Java注解的理解都停留在@Override的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。 对于注解的学习可以按照图下的四个步骤：  知道就是了解什么是注解？它有什么用？ 使用就是初级的使用方法 自定义就是根据需求定义自己的注解实现 原理就是介绍下注解如何实现的 下面分别来介绍下每步">
 <meta name="twitter:image" content="http://othg5ggzi.bkt.clouddn.com/%E5%AD%A6%E4%B9%A0%E5%9B%9B%E6%AD%A5.png">
   
     <link rel="alternative" href="/atom.xml" title="Jenson" type="application/atom+xml">
@@ -186,17 +186,31 @@
             <article id="post-浅谈Java注解" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      浅谈Java注解
+    </h1>
+  
+
+        
+        <a href="/2017/11/28/浅谈Java注解/" class="archive-article-date">
+  	<time datetime="2017-11-28T15:23:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017年11月28日</time>
+</a>
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>浅谈Java注解</p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一直以来对于Java注解的理解都停留在<code>@Override</code>的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一直以来对于Java注解的理解都停留在<code>@Override</code>的使用上面。对于其他则一无所知，但是慢慢发现很多框架都使用了注解功能，越来越觉得有必要了解下注解的实现了。</p>
 <p>对于注解的学习可以按照图下的四个步骤：</p>
 <p><img src="http://othg5ggzi.bkt.clouddn.com/%E5%AD%A6%E4%B9%A0%E5%9B%9B%E6%AD%A5.png" alt="学习四步"></p>
 <p><strong>知道</strong>就是了解什么是注解？它有什么用？</p>
 <p><strong>使用</strong>就是初级的使用方法</p>
 <p><strong>自定义</strong>就是根据需求定义自己的注解实现</p>
 <p><strong>原理</strong>就是介绍下注解如何实现的</p>
-<p>下面分别来介绍下每步</p>
+<p>下面分别来介绍下每步<br><a id="more"></a></p>
 <h1 id="知道"><a href="#知道" class="headerlink" title="知道"></a>知道</h1><h2 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h2><p>Java注解从5.0版本推出，</p>
 <p>注解就是对类、方法、参数、变量、构造器及包声明中的特殊修饰符，实现对元数据的描述。</p>
 <p>元数据是什么？</p>
@@ -322,7 +336,29 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java/" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
 
       
 
@@ -372,7 +408,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/11/15/浅谈Java注解/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/11/28/浅谈Java注解/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -386,20 +422,15 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/11/14/技术追求深度还是广度？/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/11/28/Log工具封装Tag显示类方法和行数/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          技术追求深度还是广度？
+          Log工具封装Tag显示类方法和行数
         
       </div>
     </a>
   
-  
-    <a href="/2017/11/28/Log工具封装Tag显示类方法和行数/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title"></div>
-      <i class="icon-circle-right"></i>
-    </a>
   
 </nav>
 

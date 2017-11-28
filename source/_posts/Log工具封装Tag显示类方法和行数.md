@@ -1,3 +1,14 @@
+
+---
+title: Log工具封装Tag显示类方法和行数
+date: 2017-11-28 23:23:02
+tags: Android
+categories: Android
+---
+
+<!-- more -->
+
+
 ```java
 import android.text.TextUtils;
 import android.util.Log;
